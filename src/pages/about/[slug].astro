@@ -1,0 +1,12 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import tools from '../../data/catalog.json';
+export function getStaticPaths(){return tools.map(tool=>({params:{slug:tool.slug},props:{tool}}));}
+const {tool:t} = Astro.props;
+---
+<Layout title={t.title} description={t.summary} image={t.image}>
+  <article class="content detail"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">All tools</a><span aria-hidden="true">/</span><span>{t.title}</span></nav><header><div class="metadata"><span class="kind">{t.category}</span><span class:list={['status',t.status]}>{t.status}</span></div><h1>{t.title}</h1><p class="lead">{t.summary}</p>{t.updated && <p class="updated">Updated <time datetime={t.updated}>{t.updated}</time></p>}<div class="accent-rule"></div></header>
+    <div class="detail-grid"><div class="detail-main">{t.image && <img class="detail-image" src={t.image} alt={t.imageAlt || t.title} width="1200" height="675" />}<div class="prose" set:html={t.html} />{t.features.length > 0 && <section><h2>Features</h2><ul>{t.features.map(f=><li>{f}</li>)}</ul></section>}{t.screenshots.filter(s=>s!==t.image).map(s=><img class="detail-image" src={s} alt={`${t.title} screenshot`} loading="lazy" width="1200" height="675" />)}</div>
+    <aside class="detail-sidebar"><a class="primary button" href={t.launch}>Open {t.title} <span aria-hidden="true">↗</span></a><p class="host-label">{t.migrated ? 'Runs on tools.tedt.org.' : `Opens on ${new URL(t.launch).hostname}.`}</p><p class="migration-note">Saved content and settings from tedt.org stay on that domain. Start fresh here and re-enter any API keys you use.</p><h2>Source</h2><a href={`https://github.com/TedTschopp/tools.tedt.org/blob/main/${t.sourcePath}`}>View source</a>{t.upstream && t.upstream !== t.repo && <p><a href={t.upstream}>Original project</a></p>}<h2>Tags</h2><div class="tags">{t.tags.map(tag=><a href={`/?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}</div></aside></div>
+  </article>
+</Layout>

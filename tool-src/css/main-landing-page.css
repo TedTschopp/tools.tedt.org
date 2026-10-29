@@ -1,0 +1,62 @@
+
+header h1 {
+  font-size: 2rem;
+}
+header h1 {
+  font-size: 1.5rem;
+}
+
+header .intro-image-avatar {
+    border-radius: 50% 50% 50% 50%;
+}
+
+/* TODO: Remove and replace with .d-none */
+.hidden {
+  display: block;
+  visibility: hidden;
+}
+
+/* TODO: Move to LinkTree Component */
+
+#social-links {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.post-bullets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-bullets .post-bullet-item {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin: .5rem 0;
+  font-size: smaller;
+}
+
+.post-bullets .post-bullet-item:last-child {
+  margin-bottom: 0;
+}
+
+.post-bullet-dot {
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 .45rem;
+}
+
+[data-bs-theme="dark"] .post-bullet-dot {
+  opacity: .85;
+}
+
+.post-bullet-text {
+  line-height: 1.25;
+}

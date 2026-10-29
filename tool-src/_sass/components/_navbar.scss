@@ -1,0 +1,69 @@
+// Navbar component styles extracted from inline <style> in top-nav-bar.html
+// Maintains accessible 44px targets, spacing, and dropdown positioning.
+// If adjusting spacing, keep .dropdown adjacency rule for Career/Projects separation.
+
+// Ensure navbar-collapse vertically centers its content
+nav[aria-label="Primary"] .navbar-collapse {
+  display: flex;
+  align-items: center;
+}
+
+nav[aria-label="Primary"] .navbar-nav {
+  display: flex;
+  align-items: center;
+  /* Spacing is handled via Bootstrap utility margins in markup (e.g. `mx-2`).
+     Avoid double-spacing by not adding a container gap here. */
+  gap: 0;
+}
+
+nav[aria-label="Primary"] .navbar-nav > li,
+nav[aria-label="Primary"] .navbar-nav > .nav-item { display: flex; align-items: center; }
+
+nav[aria-label="Primary"] .navbar-nav > li > .nav-link.menu-item,
+nav[aria-label="Primary"] .navbar-nav > li > button.nav-link.menu-item,
+nav[aria-label="Primary"] .navbar-nav > .nav-item > .nav-link.menu-item,
+nav[aria-label="Primary"] .navbar-nav > .nav-item > button.nav-link.menu-item {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  line-height: 1.1;
+  padding: 0 0.25rem; // minimal horizontal padding
+}
+
+nav[aria-label="Primary"] .navbar-brand img { vertical-align: middle; }
+nav[aria-label="Primary"] .nav-link.menu-item { font-size: 20px; }
+
+// Dropdown positioning fix
+nav[aria-label="Primary"] .navbar-nav > li.dropdown,
+nav[aria-label="Primary"] .navbar-nav > li.dropdown-center,
+nav[aria-label="Primary"] .navbar-nav > .nav-item.dropdown,
+nav[aria-label="Primary"] .navbar-nav > .nav-item.dropdown-center { position: relative; }
+nav[aria-label="Primary"] .navbar-nav > li .dropdown-menu,
+nav[aria-label="Primary"] .navbar-nav > .nav-item .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.4rem;
+  transform: none !important;
+}
+nav[aria-label="Primary"] .navbar-nav > li .dropdown-menu-end,
+nav[aria-label="Primary"] .navbar-nav > .nav-item .dropdown-menu-end { right: 0; left: auto; }
+
+// Dropdown item sizing smaller than top-level buttons
+nav[aria-label="Primary"] .dropdown-menu .dropdown-item {
+  font-size: 16px; // smaller than 20px top-level
+  line-height: 1.2;
+}
+
+// Focus styles for keyboard users
+nav[aria-label="Primary"] .navbar-nav .menu-item:focus-visible,
+nav[aria-label="Primary"] .navbar-nav .menu-item:focus {
+  outline: 2px solid var(--bs-warning,#ffc107);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// Provide subtle hover state for clarity (non-color reliant for contrast)
+nav[aria-label="Primary"] .navbar-nav .menu-item:hover {
+  text-decoration: underline;
+}

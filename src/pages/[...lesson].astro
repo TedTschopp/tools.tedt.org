@@ -1,0 +1,7 @@
+---
+import LessonLayout from '../layouts/LessonLayout.astro';
+import data from '../data/lessons.json';
+export function getStaticPaths(){return data.lessons.map(page=>({params:{lesson:page.path},props:{page,gameData:data.gameData}}));}
+const {page, gameData} = Astro.props;
+---
+<LessonLayout {page} {gameData} />

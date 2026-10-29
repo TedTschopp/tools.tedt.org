@@ -1,0 +1,88 @@
+// Search and topic filtering controls for the presentation library.
+
+.slides-library-tools {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1fr) minmax(0, 2fr);
+  gap: 1rem 1.5rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: .75rem;
+  background: var(--bs-tertiary-bg);
+}
+
+.slides-library-search label,
+.slides-filter-label {
+  display: block;
+  margin-bottom: .4rem;
+  color: var(--bs-body-color);
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.slides-library-search input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: .55rem .75rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: .4rem;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.slides-library-search input:focus-visible {
+  border-color: var(--bs-body-color);
+  outline: 3px solid color-mix(in srgb, var(--bs-body-color) 30%, transparent);
+  outline-offset: 1px;
+}
+
+.slides-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.slides-filter-buttons .filter-toggle {
+  min-height: 2.35rem;
+  padding: .4rem .68rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 999px;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  cursor: pointer;
+  font-size: .75rem;
+  line-height: 1.1;
+}
+
+.slides-filter-buttons .filter-toggle:hover {
+  border-color: var(--bs-body-color);
+}
+
+.slides-filter-buttons .filter-toggle[aria-pressed="true"] {
+  border-color: var(--bs-body-color);
+  background: var(--bs-body-color);
+  color: var(--bs-body-bg);
+  font-weight: 800;
+}
+
+.slides-filter-buttons .filter-toggle:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--bs-body-color) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.slides-library-status {
+  grid-column: 1 / -1;
+  min-height: 1.25rem;
+  margin: -.25rem 0 0;
+  color: var(--bs-secondary-color);
+  font-size: .78rem;
+}
+
+@media (max-width: 768px) {
+  .slides-library-tools {
+    grid-template-columns: 1fr;
+  }
+}

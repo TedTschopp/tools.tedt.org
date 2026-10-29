@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import tools from '../data/catalog.json';
+const categories = [...new Set(tools.map(t=>t.category))].sort();
+const statuses = [...new Set(tools.map(t=>t.status))].sort();
+const tags = [...new Set(tools.flatMap(t=>t.tags))].sort();
+---
+<Layout>
+  <header class="catalog-heading content"><p class="eyebrow">The Public Workbench</p><h1>Ted’s Tools</h1><p class="lead">Tools for text, code, images, maps, and small experiments.<br />Find a tool. Open it. Work in your browser.</p><div class="accent-rule"></div></header>
+  <section class="content" aria-label="Browse tools">
+    <p class="migration-note"><strong>A new home for the collection.</strong> Saved drafts, settings, and API keys from tedt.org do not transfer to this domain. Traveller and separately hosted tools open at their existing addresses.</p>
+    <form class="filters" data-filters role="search" aria-label="Find a tool">
+      <div class="search-field"><label for="search">Search</label><div class="search-input"><input id="search" type="search" placeholder="Title, purpose, or tag…" autocomplete="off" /><button class="text-button" type="button" data-clear>Clear</button></div></div>
+      <div><label for="category">Category</label><select id="category"><option value="">All categories</option>{categories.map(c=><option>{c}</option>)}</select></div>
+      <div><label for="status">Status</label><select id="status"><option value="">All statuses</option>{statuses.map(s=><option>{s}</option>)}</select></div>
+      <div><label for="tag">Tag</label><select id="tag"><option value="">All tags</option>{tags.map(t=><option>{t}</option>)}</select></div>
+      <button type="reset" class="secondary">Reset filters</button>
+    </form>
+    <div class="catalog-bar"><h2>Tools <span data-count>({tools.length})</span></h2><label class="sort">Sort <select id="sort"><option value="featured">Featured</option><option value="recent">Recently updated</option><option value="title">Alphabetical</option></select></label></div>
+    <p class="sr-only" aria-live="polite" aria-atomic="true" data-results-live></p>
+    <div class="tool-grid" data-tool-grid>{tools.map((t,index)=><article class:list={['tool-card',{'featured':t.featured}]} data-tool-card data-index={index} data-title={t.title.toLowerCase()} data-search={[t.title,t.summary,...t.tags].join(' ').toLowerCase()} data-category={t.category} data-status={t.status} data-tags={JSON.stringify(t.tags)} data-updated={t.updated}>
+      <a class="tool-cover" href={`/about/${t.slug}/`} tabindex="-1" aria-hidden="true">{t.image ? <img src={t.image} alt="" loading="lazy" width="640" height="360" /> : <span class="text-cover"><span>tt.</span><span>{t.category}</span></span>}</a>
+      <div class="tool-card-body"><div class="metadata"><span class="kind">{t.category}</span><span class:list={['status',t.status]}>{t.status}</span></div><h3><a href={`/about/${t.slug}/`}>{t.title}</a></h3><p class="card-description">{t.summary}</p><div class="tags">{t.tags.slice(0,3).map(tag=><span>{tag}</span>)}</div><div class="card-bottom"><span>{t.migrated ? 'On this site' : new URL(t.launch).hostname}</span>{t.updated && <time datetime={t.updated}>{t.updated}</time>}</div><div class="card-actions"><a class="open-link" href={t.launch}>Open <span aria-hidden="true">↗</span></a><a href={`/about/${t.slug}/`}>Details</a></div></div>
+    </article>)}</div>
+    <p class="empty-state" data-empty hidden>Nothing matches those filters. Reset one and try again.</p>
+  </section>
+</Layout>

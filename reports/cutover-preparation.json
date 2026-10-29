@@ -1,0 +1,38 @@
+{
+  "deletedPaths": [
+    "tools",
+    "_tools",
+    "_apps/inside-ai",
+    "inside-ai",
+    "game-theory",
+    "math-guide",
+    "js/game-theory",
+    "_includes/game-theory",
+    "_layouts/game-theory.html",
+    "_layouts/inside-ai.html",
+    "_layouts/tool.html",
+    "_data/game_theory.yml",
+    "RPG/world-map.html",
+    "RPG/tile-map-viewer.html",
+    "tests/game-theory",
+    "tests/social-bot-check",
+    "tests/quick-study-painter",
+    "tests/inside-ai",
+    "tests/check_tools_css_sync.rb",
+    "_code/cloudflare/social-bot-check-preview",
+    ".github/workflows/social-bot-check-preview.yml",
+    "scripts/check-inside-ai-build.mjs",
+    "scripts/prepare-inside-ai-model.mjs",
+    "playwright.inside-ai.config.ts"
+  ],
+  "updatedReferences": [
+    "_includes/layout/top-nav-bar.html",
+    "_includes/content/inside-ai-callout.html",
+    "_posts/Blog Posts/2026-01-12-Color-Chart-Pan-Zoom.md"
+  ],
+  "retained": [
+    "RPG/Traveller/",
+    "shared CSS, fonts, images, and RPG support dependencies"
+  ],
+  "destination": "https://tools.tedt.org/"
+}

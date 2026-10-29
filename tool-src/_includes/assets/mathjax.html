@@ -1,0 +1,18 @@
+<!-- MathJax configuration (loaded only when page.math or page.mathjax is truthy) -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    tags: 'ams'
+  },
+  options: {
+    skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<!-- Removed integrity attribute: previous hash mismatched CDN optimized payload causing load failure -->
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.min.js"></script>

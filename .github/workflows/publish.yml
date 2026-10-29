@@ -1,0 +1,63 @@
+name: Validate and publish Ted's Tools
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: tools-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm ci --prefix worker
+      - run: npm run test:worker
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification
+          path: |
+            reports/build-verification.json
+            reports/browser-smoke.json
+            playwright-report/
+      - uses: actions/upload-pages-artifact@v4
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: dist
+  deploy:
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: pages
+      - name: Verify published source
+        env:
+          EXPECTED: ${{ github.sha }}
+        run: |
+          for attempt in $(seq 1 24); do
+            if curl -fsS "https://tools.tedt.org/version.json?commit=$EXPECTED" | jq -e --arg sha "$EXPECTED" '.commit == $sha'; then
+              exit 0
+            fi
+            sleep 5
+          done
+          exit 1

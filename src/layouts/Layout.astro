@@ -1,0 +1,28 @@
+---
+import '../styles/global.css';
+import '../styles/tools.css';
+import UniversalHeader from '../components/UniversalHeader.astro';
+const {title = 'Ted’s Tools', description = 'Browser tools for text, code, images, maps, and small experiments.', image = '/img/2026-02/morph-tool-screenshot.png'} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title === 'Ted’s Tools' ? title : `${title} · Ted’s Tools`}</title>
+    <meta name="description" content={description} /><meta name="color-scheme" content="light dark" />
+    <link rel="canonical" href={canonical} /><link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" /><meta property="og:site_name" content="Ted’s Tools" /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={new URL(image || '/img/2026-02/morph-tool-screenshot.png', Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={new URL(image || '/img/2026-02/morph-tool-screenshot.png', Astro.site).href} />
+    <script is:inline>try{const p=localStorage.getItem('tools-theme')||'system';const t=p==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;document.documentElement.dataset.theme=t;document.documentElement.dataset.bsTheme=t;document.documentElement.dataset.themePreference=p;}catch{}</script>
+    <script type="application/ld+json" set:html={JSON.stringify({'@context':'https://schema.org','@type':'WebSite',name:'Ted’s Tools',url:'https://tools.tedt.org/',author:{'@type':'Person',name:'Ted Tschopp',url:'https://tedt.org/'}})} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <UniversalHeader />
+    <div class="shelf"><a class="shelf-brand" href="/">Tools.Tedt.org <span>Ted’s Tools</span></a><nav aria-label="Tools"><a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Catalog</a><a href="/about/">About</a><a href="https://github.com/TedTschopp/tools.tedt.org">Source</a></nav></div>
+    <main id="main"><slot /></main>
+    <footer class="site-footer content"><div><a href="https://tedt.org/">Ted Tschopp’s Public Workbench</a><p>Small tools. Clear boundaries. Work in your browser.</p></div><div><a href="https://ai.tedt.org/">AI Library</a> · <a href="https://busy.tedt.org/">BUSY Bar Apps</a> · <a href="/catalog.json">Catalog JSON</a><p><a href="/about/#credits">Credits and licenses</a></p></div></footer>
+    <script src="../scripts/site.ts"></script>
+  </body>
+</html>

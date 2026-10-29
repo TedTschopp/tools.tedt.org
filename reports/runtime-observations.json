@@ -1,0 +1,17 @@
+[
+  {
+    "url": "/mastodon/multiple.html",
+    "errors": [
+      "Stopping the script due to an error building the timeline.",
+      "Stopping the script due to an error building the timeline."
+    ],
+    "missingResources": []
+  },
+  {
+    "url": "/mastodon/theme.html",
+    "errors": [
+      "Stopping the script due to an error building the timeline."
+    ],
+    "missingResources": []
+  }
+]
