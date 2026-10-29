@@ -79,3 +79,7 @@ domain starts fresh and does not copy or erase browser data from TedT.org.
 Original notices and individual licenses remain with the imported files. This
 repository does not apply a new blanket license to third-party tools. The catalog
 uses Ted Tschopp's Public Workbench design, matching AI.Tedt.org and BUSY.Tedt.org.
+
+## Shared TedT.org Navigation
+
+The global header loads `https://tedt.org/assets/global-header/v1/header.js`. Menu changes belong in the TedT.org repository, rather than in this site. The small local fallback and pre-paint bootstrap keep navigation and appearance usable while loading. The shared `tedt-appearance` cookie and `tedt:theme-change` event synchronize appearance; keep local site navigation and application controls separate. See https://tedt.org/docs/global-header.md for the embed contract.

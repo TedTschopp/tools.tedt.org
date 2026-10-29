@@ -98,6 +98,7 @@ await json('src/data/name-generator-references.json',references);
 catalog.push({slug:'name-generator-research',title:'Name Generator Research',summary:'An unfinished name-generator project: a preserved reference list and extraction notes. The referenced generators remain on their original websites.',status:'prototype',category:'Maps and RPG',tags:['names','reference','rpg'],type:'reference',updated:'',featured:false,launch:site+'/name-generator-research/',migrated:true,image:'',screenshots:[],features:[],repo:'https://github.com/TedTschopp/tools.tedt.org',sourcePath:'tool-src/'+researchPath,html:'<p>This unfinished project contains a reference list and extraction notes. It does not provide a local name generator.</p><p><a href="/name-generator-research/">Browse the references</a>, <a href="/Under-Development-Name-Generator/name-generator-js-report.md">read the extraction notes</a>, or <a href="/Under-Development-Name-Generator/Name-Generator.html">open the preserved source list</a>.</p>'});
 await json('src/data/catalog.json', catalog);
 
+const sharedHeader = "<link rel=\"stylesheet\" href=\"/css/tedt-header-embed.css\">\n<script src=\"/js/tedt-theme-init.js\"></script>\n<tedt-global-header site=\"tools\" section=\"tools\">\n<nav class=\"tedt-header-fallback\" aria-label=\"Primary\"><a href=\"https://tedt.org/\">Ted Tschopp</a><a href=\"https://tedt.org/essays/\">Essays</a><a href=\"https://tedt.org/stories/\">Stories &amp; Folklore</a><a href=\"https://tedt.org/games/\">Games &amp; Worlds</a><a href=\"https://tools.tedt.org/\">Tools</a><a href=\"https://tedt.org/learn/\">Learn</a><a href=\"https://tedt.org/about-ted/\">About</a></nav>\n</tedt-global-header>\n<script defer src=\"https://tedt.org/assets/global-header/v1/header.js\"></script>\n";
 const returnLink = '<a class="tt-catalog-return" href="/" aria-label="Return to Ted’s Tools catalog">← Tools</a><style>.tt-catalog-return{position:fixed;bottom:.6rem;left:.6rem;z-index:2147480000;padding:.3rem .65rem;border:1px solid #c8c7c3;border-radius:6px;background:#f8f6f0;color:#00446f;font:600 13px/1.5 system-ui;text-decoration:none}.tt-catalog-return:focus-visible{outline:3px solid #00a9e0;outline-offset:3px}</style>';
 function rebase(text) {
   return text.replaceAll('https://tedt.org/tools/', site + '/').replaceAll('http://tedt.org/tools/', site + '/').replaceAll('/tools/', '/');
@@ -120,8 +121,10 @@ async function writeStatic(original, dest) {
       text = text.replace(/<script>\(function\(\)\{var s=document\.createElement\('script'\);[\s\S]*?<\/script>/g, `<script src="${loader}"></script>`);
       if (original === 'tools/mastodon/index.html') text = await render(matter(text).content);
       text = rebase(text);
+      text = text.replaceAll("script-src 'self'", "script-src 'self' https://tedt.org/assets/global-header/v1/").replaceAll("style-src 'self'", "style-src 'self' https://tedt.org/assets/global-header/v1/");
       if (/<html[\s>]/i.test(text)) {
-        text = text.replace(/(<body\b[^>]*>)/i, '$1' + returnLink);
+        text = text.replace('</head>', sharedHeader.slice(0, sharedHeader.indexOf('<tedt-global-header')) + '</head>');
+        text = text.replace(/(<body\b[^>]*>)/i, '$1' + sharedHeader.slice(sharedHeader.indexOf('<tedt-global-header')) + returnLink);
         if (!/<link[^>]+rel=["']canonical/.test(text)) text = text.replace('</head>', `<link rel="canonical" href="${site}${canonicalPath('/' + dest)}"></head>`);
       }
     } else text = rebase(text);
@@ -166,3 +169,8 @@ const {execFileSync} = await import('node:child_process');
 let commit='local';try{commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();}catch{}
 await json(path.join(out,'version.json'),{commit,sourceCommit:inventory.commit,tools:catalog.length});
 console.log(`Prepared ${catalog.length} catalog tools, ${new Set(pageUrls).size} tool pages, and ${staticFiles.length} supporting files.`);
+
+await fs.mkdir(path.join(out,'css'), {recursive:true});
+await fs.mkdir(path.join(out,'js'), {recursive:true});
+await fs.copyFile('src/shared-header/embed.css',path.join(out,'css/tedt-header-embed.css'));
+await fs.copyFile('src/shared-header/theme-init.js',path.join(out,'js/tedt-theme-init.js'));

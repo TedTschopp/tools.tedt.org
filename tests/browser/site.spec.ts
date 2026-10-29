@@ -1,3 +1,4 @@
+import { routeHeaderAssets } from '../shared-header.mjs';
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 const routes=JSON.parse(fs.readFileSync('reports/migration-routes.json','utf8'));
@@ -56,3 +57,5 @@ test('OCR recognizes and exports a local image',async({page})=>{
  await expect(page.locator('#ocrStatus')).toContainText('Completed OCR',{timeout:90000});await expect(page.locator('#ocrFullDocument')).toHaveValue(/TOOLS MIGRATION CHECK/);
  const download=page.waitForEvent('download');await page.locator('#ocrDownloadFullBtn').click();expect((await download).suggestedFilename()).toMatch(/\.txt$/);
 });
+
+test.beforeEach(async ({ page }) => { await routeHeaderAssets(page); });
