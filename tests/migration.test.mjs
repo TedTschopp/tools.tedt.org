@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 const routes=JSON.parse(await fs.readFile(new URL('../reports/migration-routes.json',import.meta.url),'utf8'));
+test('every inventoried source file is present in a clean checkout',async()=>{
+ const inventory=JSON.parse(await fs.readFile(new URL('../reports/source-inventory.json',import.meta.url),'utf8'));
+ await Promise.all(inventory.importedFiles.map(async file=>{await fs.access(new URL('../'+file.destination,import.meta.url));}));
+});
 test('Traveller and external launch addresses remain at their original hosts',()=>{
  assert.ok(routes.retainedLaunchUrls.includes('https://tedt.org/RPG/Traveller/Character-Sheet.html'));
  assert.ok(routes.retainedLaunchUrls.includes('https://tedt.org/RPG/Traveller/Ship-Sheet.html'));

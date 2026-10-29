@@ -42722,6 +42722,83 @@
       "disposition": "supporting-file",
       "sha256": "aa618d7d98cd57020ddc2b90c42b0f6bf8bd6fa4b7feb812551062a1a8241ea3",
       "bytes": 662214
+    },
+    {
+      "source": "tests/a11y/game-theory-rules.spec.ts",
+      "destination": "tool-src/tests/a11y/game-theory-rules.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "99984955a311ff5b95154607ac08dbbfe0816a22e4c1844b876cd63ddd3b5d88",
+      "bytes": 5081
+    },
+    {
+      "source": "tests/a11y/game-theory.spec.ts",
+      "destination": "tool-src/tests/a11y/game-theory.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "af038fcef540d2f1a084ac54bce27c281f94dfc5fc480136a6958291c5d19fe6",
+      "bytes": 12806
+    },
+    {
+      "source": "tests/a11y/game-theory-cooperation.spec.ts",
+      "destination": "tool-src/tests/a11y/game-theory-cooperation.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "6207ca2f4913c93e6b7694bcc3df323902286fe96e0c9533bcd954531684eaaf",
+      "bytes": 4599
+    },
+    {
+      "source": "tests/a11y/game-theory-beliefs.spec.ts",
+      "destination": "tool-src/tests/a11y/game-theory-beliefs.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "4c67e97e0e2251925d328cac6f049c443ae66fef337420d12410c62e7825c507",
+      "bytes": 4142
+    },
+    {
+      "source": "tests/a11y/social-bot-check.spec.ts",
+      "destination": "tool-src/tests/a11y/social-bot-check.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "3c026abc5e450d7977e073f8d25cfb308c22a4f998b996092228eb5853e68f9d",
+      "bytes": 12756
+    },
+    {
+      "source": "tests/a11y/quick-study-painter.spec.ts",
+      "destination": "tool-src/tests/a11y/quick-study-painter.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "2bd195792bddb497c523a3a60d472c3b1263baa67f8e0fe6be1f15711033fb1e",
+      "bytes": 7811
+    },
+    {
+      "source": "tests/a11y/ocr-tool-recognition.spec.ts",
+      "destination": "tool-src/tests/a11y/ocr-tool-recognition.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "b9ca2a555ac9b3c9972e13724f228029ec13ed0e306e44faf494e1ed5b269bb7",
+      "bytes": 1276
+    },
+    {
+      "source": "tests/a11y/ocr-tool-smoke.spec.ts",
+      "destination": "tool-src/tests/a11y/ocr-tool-smoke.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "62cd62b1f911dea874a2ca49f9696407bcbdfeca1528cc5d8b05e3a7616193ae",
+      "bytes": 1506
+    },
+    {
+      "source": "tests/a11y/markdown-frontmatter-preview.spec.ts",
+      "destination": "tool-src/tests/a11y/markdown-frontmatter-preview.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "944d90f813ff432720b67b925dbafba55da99d35f5f42d20f8cc800ff2ed227a",
+      "bytes": 18814
+    },
+    {
+      "source": "tests/a11y/color-chart-source-extraction.spec.ts",
+      "destination": "tool-src/tests/a11y/color-chart-source-extraction.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "c2895ed6422232ed99b990b2fa3095e0af7de73c3ed2550c0c5916556014afa8",
+      "bytes": 13947
+    },
+    {
+      "source": "tests/a11y/mastodon-integration.spec.ts",
+      "destination": "tool-src/tests/a11y/mastodon-integration.spec.ts",
+      "disposition": "supporting-file",
+      "sha256": "b8212926de67a7cb2e6ea6054fb2eb5fc93415e25a2e89aeee5581fa147793aa",
+      "bytes": 8121
     }
   ],
   "retained": [
