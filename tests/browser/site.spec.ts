@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 const routes=JSON.parse(fs.readFileSync('reports/migration-routes.json','utf8'));
+const origin=new URL(process.env.TOOLS_BASE_URL || 'http://127.0.0.1:4322').origin;
 test('catalog search, filters, sorting, reset, and empty results',async({page})=>{
  await page.goto('/');await expect(page.getByRole('heading',{name:'Ted’s Tools',exact:true})).toBeVisible();
  const visible=page.locator('[data-tool-card]:not([hidden])');await expect(visible).toHaveCount(routes.catalog.length);
+ await page.screenshot({path:'reports/catalog-desktop.png',fullPage:false});
  await page.locator('#search').fill('Morph — Text Transformer');await expect(visible).toHaveCount(1);await expect(visible).toContainText('Morph');
  await page.getByRole('button',{name:'Clear',exact:true}).click();await page.locator('#status').selectOption('prototype');await expect(visible.first()).toBeVisible();expect(await visible.count()).toBeGreaterThan(42);
  await page.getByRole('button',{name:'Reset filters'}).click();await expect(visible).toHaveCount(routes.catalog.length);
@@ -18,10 +20,10 @@ test('themes, keyboard focus, external links, and mobile catalog',async({page})=
  await page.keyboard.press('Tab');await expect(page.locator('.skip-link')).toBeFocused();await page.getByRole('button',{name:'Toggle navigation'}).click();await expect(page.getByRole('button',{name:'System',exact:true})).toBeVisible();
  await page.screenshot({path:'reports/catalog-mobile.png',fullPage:false});
 });
-for(const url of routes.migratedPages){
+for(const url of [...new Set([...routes.migratedPages,...routes.catalog.filter(t=>t.migrated).map(t=>new URL(t.launch).pathname)])]){
  test(`tool loads ${url}`,async({page},info)=>{
   const failures:string[]=[];const errors:string[]=[];
-  page.on('response',r=>{if(r.url().startsWith('http://127.0.0.1:4322/')&&r.status()>=400&&/\.(js|mjs|css|wasm|json|png|webp|svg)(\?|$)/.test(r.url()))failures.push(`${r.status()} ${r.url()}`);});
+  page.on('response',r=>{if(r.url().startsWith(origin+'/')&&r.status()>=400&&/\.(js|mjs|css|wasm|json|png|webp|svg)(\?|$)/.test(r.url()))failures.push(`${r.status()} ${r.url()}`);});
   page.on('pageerror',e=>errors.push(e.message));
   const response=await page.goto(url,{waitUntil:'domcontentloaded'});expect(response?.status()).toBe(200);
   await page.waitForTimeout(250);expect((await page.title()).trim().length).toBeGreaterThan(0);

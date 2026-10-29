@@ -28,7 +28,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/game-theory-playground.md",
+    "sourcePath": "tool-src/game-theory/index.html",
     "html": "<p>Start with <a href=\"https://tools.tedt.org/game-theory/trust-machine/\">The Trust Machine</a>, or explore the\n<a href=\"https://tools.tedt.org/game-theory/\">Game Theory Playground</a> to choose an experiment.</p>\n<p>Each experiment begins with a prediction, gives you a consequential choice,\nand shows the incentives behind the result. Change a setting to restart. Use\n“Share these settings” to copy a scenario link; links do not include play history.</p>\n"
   },
   {
@@ -60,8 +60,8 @@
       "Keyboard controls, numerical tables, and light and dark themes"
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
-    "upstream": "https://github.com/TedTschopp/tedt.org/tree/main/_apps/inside-ai",
-    "sourcePath": "tool-src/_tools/inside-ai.md",
+    "upstream": "https://github.com/TedTschopp/tools.tedt.org/tree/main/tool-src/_apps/inside-ai",
+    "sourcePath": "tool-src/inside-ai/index.html",
     "html": "<p>Open <a href=\"https://tools.tedt.org/inside-ai/\">Inside AI</a> to follow a prompt through a\ntransformer. Start with a prepared example, inspect its token and attention\nvalues, and change the sampling controls. Live mode downloads the model only\nwhen you choose to load it. Your prompts stay in your browser.</p>\n<p>The <a href=\"https://tools.tedt.org/inside-ai/#inside-ai-guide\">guided explanation</a>\nremains readable without JavaScript. Use it alongside the diagram, or begin\nthere before loading the model.</p>\n<p>Inside AI adapts <a href=\"https://poloclub.github.io/transformer-explainer/\">Transformer Explainer</a>\nby the Polo Club of Data Science under its\n<a href=\"https://github.com/poloclub/transformer-explainer/blob/bfe50afba10b9b560b84143ee1107d977defa74f/LICENSE\">MIT license</a>.\nThe adaptation is based on upstream commit\n<a href=\"https://github.com/poloclub/transformer-explainer/tree/bfe50afba10b9b560b84143ee1107d977defa74f\">bfe50afba10b9b560b84143ee1107d977defa74f</a>.</p>\n"
   },
   {
@@ -101,7 +101,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/color-chart.md",
+    "sourcePath": "tool-src/tools/color-chart.html",
     "html": "<h2>What it does</h2>\n<p>Color Chart is a fullscreen palette workbench: it turns one or more base colors\ninto a grid of related shades, then lets you <em>move around the chart</em> (pan and\nzoom) to evaluate the palette as a system. It can also extract a starting\npalette from browser-readable URLs, uploaded images, or pasted screenshots, then\naudit, compare, export, and preview the palette in common UI contexts.\nWhen a browser or browser agent exposes the draft WebMCP <code>document.modelContext</code>\nAPI, the page also registers read-only and state-changing palette tools for\nagent workflows.</p>\n<h2>How to use it</h2>\n<ul>\n<li><strong>Open the tool:</strong> /tools/color-chart.html</li>\n<li><strong>Pan:</strong> drag the background (or use arrow keys / on-screen arrows)</li>\n<li><strong>Zoom:</strong> mouse wheel / trackpad scroll, or <code>+</code> / <code>-</code> (or the on-screen\n<code>+</code> / <code>−</code> buttons)</li>\n<li><strong>Reset:</strong> <code>0</code> (or the reset button)</li>\n<li><strong>Extract from source:</strong> enter a readable URL, upload an image, or paste a\nscreenshot into the tool.</li>\n<li><strong>Use the workbench:</strong> check shade-pair contrast, export tokens, map semantic\nroles, audit the palette, build themes, compare palettes, preview color-vision\nsimulations, test light/dark UI components, or sample image regions.</li>\n<li><strong>Use WebMCP:</strong> in supporting browser agents, call registered Color Chart tools\nfor palette metadata, contrast, shade generation, token export, comparison,\nauditing, share URL creation, palette updates, and role assignment.</li>\n</ul>\n<h2>URL palettes (<code>?c=</code>)</h2>\n<p>You can generate a chart from a specific palette without editing the tool:</p>\n<ul>\n<li>Built-in palette: <code>https://tools.tedt.org/color-chart.html?c=teds</code></li>\n<li>Comma-separated hex: <code>https://tools.tedt.org/color-chart.html?c=%2300a9e0,%23101820,%23fed141</code></li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>Full usage docs live here: <a href=\"https://tools.tedt.org/Color-Chart-Pan-Zoom/\">A Color Chart You Can Move Around</a></li>\n<li>Arbitrary websites may block direct browser analysis. In that case, paste or\nupload a screenshot; no backend proxy is used.</li>\n<li>The tool is intentionally self-contained (single HTML file) so it can be\ncopied/modified easily.</li>\n</ul>\n"
   },
   {
@@ -141,7 +141,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/ai-chat-window.md",
+    "sourcePath": "tool-src/tools/ai-chat-window.html",
     "html": "<h2>What it does</h2>\n<p>AI Chat Window is a browser-based prompt runner for AI models. It supports\nan optional system instruction, streaming response output, markdown rendering,\nand local prompt history for fast iteration.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/tools/ai-chat-window.html\">https://tools.tedt.org/tools/ai-chat-window.html</a></li>\n<li>Enter an optional <strong>System Prompt</strong> and your <strong>Content</strong> prompt.</li>\n<li>Pick or type a model id.</li>\n<li>Click <strong>Submit</strong> (or use <strong>Ctrl/⌘+Enter</strong>).</li>\n<li>Copy the generated response using <strong>Copy to clipboard</strong>.</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>API keys are stored in browser local storage and sent directly to the selected provider.</li>\n<li>No server-side processing is performed by this site for prompt generation.</li>\n<li>Streaming output is incremental; errors appear inline below controls.</li>\n<li>Monitor panel logs request URL, sanitized headers, payload, response status,\nand stream events to debug API behavior (including 429s).</li>\n</ul>\n"
   },
   {
@@ -184,7 +184,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "https://github.com/IvanMathy/Boop",
-    "sourcePath": "tool-src/_tools/morph.md",
+    "sourcePath": "tool-src/tools/morph.html",
     "html": "<h2>What it does</h2>\n<p>Morph is a browser-based text transformation workbench with 93 built-in scripts.\nPaste text, choose an operation, and get immediate output for common developer\nworkflows: formatting, encoding/decoding, hashing, case conversion, and line\noperations.</p>\n<p>Inspired by <a href=\"https://github.com/IvanMathy/Boop\">IvanMathy/Boop</a> (MIT), this\ntool brings the Boop scripting model to a single-page web app.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/tools/morph.html\">https://tools.tedt.org/tools/morph.html</a></li>\n<li>Paste text into the editor.</li>\n<li>Run a script from the <strong>Scripts</strong> panel or open the command palette with\n<strong>⌘+B</strong> (macOS) / <strong>Ctrl+B</strong> (Windows/Linux).</li>\n<li>Re-run the last script with <strong>⌘+Shift+B</strong> / <strong>Ctrl+Shift+B</strong>.</li>\n<li>Use <strong>Undo</strong>, <strong>Copy</strong>, and <strong>Clear</strong> controls for quick iteration.</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>Fully client-side: no server processing and no text upload required.</li>\n<li>Keyboard hints auto-adapt for macOS vs. Windows/Linux.</li>\n<li>Direct <code>file://</code> opening is supported with stylesheet fallback; hosting via\nthe site remains the recommended mode.</li>\n</ul>\n<h2>New in Morph (2026-02-22)</h2>\n<ul>\n<li>Data interop: JSON ↔ YAML, CSV ↔ JSON, JSON Array ↔ JSONL.</li>\n<li>Encoding: Base64 URL Encode / Base64 URL Decode.</li>\n<li>Cleanup: Normalize Whitespace, Remove Zero-Width Chars, Strip HTML Tags,\nRegex Escape.</li>\n<li>Case and text: Swap Case, Slugify.</li>\n<li>Layout and line operations: Tabs to Spaces, Spaces to Tabs,\nWrap Lines (80 chars), Unwrap Lines,\nSort Lines (Case-Insensitive), Unique Lines (Case-Insensitive).</li>\n</ul>\n"
   },
   {
@@ -218,7 +218,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/gradient-card.md",
+    "sourcePath": "tool-src/tools/gradient-card.html",
     "html": "<h2>What it does</h2>\n<p>Gradient Card Generator creates polished, export-ready image backgrounds directly in your browser.\nIt supports linear/radial/conic gradients, two pattern overlay layers, blend modes, film grain, and vignette effects.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/tools/gradient-card.html\">https://tools.tedt.org/tools/gradient-card.html</a></li>\n<li>Tune the controls live in the right panel.</li>\n<li>Click <strong>Randomize</strong> for a fresh blue-forward composition.</li>\n<li>Click <strong>Download PNG</strong> to export at the current canvas resolution.</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>Runs fully client-side (no upload required).</li>\n<li>Settings can be copied and restored via JSON presets for repeatable output.</li>\n</ul>\n"
   },
   {
@@ -253,7 +253,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/sloccount-web-analyzer.md",
+    "sourcePath": "tool-src/tools/sloccount-web-analyzer.html",
     "html": "<h2>What it does</h2>\n<p>SLOCCount Web Analyzer estimates project size from source files and produces rough effort/cost guidance using Basic COCOMO.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/tools/sloccount-web-analyzer.html\">https://tools.tedt.org/tools/sloccount-web-analyzer.html</a></li>\n<li>Choose one input mode: Paste Code, GitHub Repository, or Upload ZIP.</li>\n<li>Run analysis to see totals, language distribution, and estimated person-years/cost.</li>\n<li>Tune assumptions and click recalculate for alternative scenarios.</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>Runs client-side in the browser; no server-side code ingestion by this tool.</li>\n<li>GitHub mode is limited by public API availability/rate limits.</li>\n<li>ZIP mode dynamically loads JSZip when needed.</li>\n<li>Estimates are directional and should not be used as commitments.</li>\n</ul>\n"
   },
   {
@@ -293,7 +293,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/image-tools.md",
+    "sourcePath": "tool-src/tools/image-tools.html",
     "html": "<h2>What it does</h2>\n<p>Image Tools is a <strong>single-page, client-side</strong> toolkit for common image tasks: crop/resize/export, lightweight JPEG optimization, and several SVG utilities.</p>\n<p>It’s designed to be practical for day-to-day web work: quick crops, predictable output sizing, and safe handling of pasted SVG.</p>\n<h2>How to use it</h2>\n<ul>\n<li><strong>Open:</strong> <a href=\"https://tools.tedt.org/image-tools.html\">https://tools.tedt.org/image-tools.html</a></li>\n<li><strong>Load an image:</strong> drag/drop, choose a file, or paste from clipboard</li>\n<li><strong>Switch tools:</strong> use the tabs (Editor, SVG tools, Vector Trace embed)</li>\n</ul>\n<h2>Tool tabs</h2>\n<ul>\n<li><strong>Editor</strong>: crop/zoom + resize + export (PNG/JPEG), optional background flattening, and an experimental background remove.</li>\n<li><strong>Raster → SVG</strong>: wraps a raster image into an SVG that contains an <code>&lt;image href=&quot;data:…&quot;&gt;</code> element.<ul>\n<li>This is <strong>not</strong> vector tracing; it preserves the raster pixels.</li>\n</ul>\n</li>\n<li><strong>SVG → Raster</strong>: paste/upload SVG, sanitize it, render to canvas, then export to PNG/JPEG.</li>\n<li><strong>SVG Sandbox</strong>: paste/upload SVG, sanitize it (scripts and unsafe elements removed), and preview the rendered result.</li>\n<li><strong>SVG Embed</strong>: sanitize SVG and generate a base64 <code>&lt;img&gt;</code> tag + data URI.</li>\n<li><strong>Vector Trace</strong>: embedded iframe of the standalone vector tracing tool.</li>\n</ul>\n<h2>Sharing, persistence, offline</h2>\n<ul>\n<li><strong>Copy link</strong> generates a shareable URL containing the current settings (query params like <code>tab=</code>, size, format, etc.).</li>\n<li><strong>Saved state</strong> is stored locally in <code>localStorage</code> so refreshes restore your last-used settings.</li>\n<li><strong>Offline support</strong> is enabled via a service worker after first load (requires HTTPS or <code>http://localhost</code>). The cache scope is limited to <code>/tools/</code>.</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>Everything runs locally in the browser (no uploads).</li>\n<li>Clipboard buttons and service-worker caching require a secure context (HTTPS or localhost).</li>\n<li>For SVG inputs, the sanitizer intentionally strips scripts, <code>foreignObject</code>, and external URL references to reduce the risk of executing untrusted content.</li>\n</ul>\n"
   },
   {
@@ -361,7 +361,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/quick-study-painter.md",
+    "sourcePath": "tool-src/tools/quick-study-painter.html",
     "html": "<h2>What it does</h2>\n<p>Quick Study Painter recreates a photo with successive layers of brushwork.\nChoose from six rendering styles, then compare the finished study with your\noriginal image and download a PNG.</p>\n<table>\n<thead>\n<tr>\n<th>Style</th>\n<th>Brushwork</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Oil</td>\n<td>Layered bristle strokes on toned linen.</td>\n</tr>\n<tr>\n<td>Watercolor</td>\n<td>Translucent washes on cold-press paper.</td>\n</tr>\n<tr>\n<td>Pointillist</td>\n<td>Overlapping dots with varied color.</td>\n</tr>\n<tr>\n<td>Gouache</td>\n<td>Opaque, matte strokes with broad areas of color.</td>\n</tr>\n<tr>\n<td>Soft pastel</td>\n<td>Broken pigment marks, soft edges, and visible paper grain.</td>\n</tr>\n<tr>\n<td>Palette knife</td>\n<td>Angular patches with a lit facet and a scraped edge.</td>\n</tr>\n</tbody></table>\n<h2>How to use it</h2>\n<ol>\n<li><a href=\"https://tools.tedt.org/quick-study-painter.html\">Open Quick Study Painter</a>.</li>\n<li>Choose <strong>Open photo</strong>, drop an image onto the page, or paste an image from\nyour clipboard. <strong>Load sample</strong> restores the built-in lakeside scene.</li>\n<li>Pick a medium and a detail level. These settings repaint the current image.</li>\n<li>Set the painting time, or choose <strong>Finish now</strong> to skip the timed playback.</li>\n<li>Toggle <strong>Compare photo</strong> to view your original. The button works with a mouse,\ntouch, Enter, or Space.</li>\n<li>Choose whether to include texture, then select <strong>Download PNG</strong> after painting\nfinishes. <strong>Repaint</strong> creates a different arrangement of strokes.</li>\n</ol>\n<h2>How the formulas work</h2>\n<p>The engine builds blurred RGB references at several brush sizes. It measures\nthe color difference between each reference and the current canvas using\nEuclidean RGB distance. Where the error is large, it places another stroke.</p>\n<p>Sobel gradients of the image&#39;s luminance guide each stroke along nearby edges.\nThe engine starts with large brushes and adds finer layers. Oil uses separate\nbristle marks, watercolor uses translucent strokes, and pointillism uses dots.\nGouache uses opaque strokes with a restrained palette. Soft pastel scatters\nshort pigment marks along the stroke direction. Palette knife builds angular\npatches with shaded edges that suggest ridges of paint.</p>\n<h2>Limits and privacy</h2>\n<ul>\n<li>Images fit within 1,000 × 1,000 pixels while preserving their aspect ratio.\nSmaller images keep their original size.</li>\n<li>Transparent images receive a white background before painting.</li>\n<li>Your image is processed locally. It is not uploaded or stored by the tool.</li>\n<li>PNG export includes the selected texture. The playback time is a target;\ndetailed images and slower devices may take longer.</li>\n<li>Your system&#39;s reduced-motion preference skips the timed playback.</li>\n</ul>\n<h2>Source and license</h2>\n<p>The painting engine and procedural sample scene are adapted from\n<a href=\"https://tools.simonwillison.net/quick-study-painter\">Simon Willison&#39;s Quick Study</a>,\nusing <a href=\"https://github.com/simonw/tools/blob/baad46ac0c96191ce24bb08f6fa1eaa9fef67076/quick-study-painter.html\">source revision baad46ac</a>.\nThe adaptation adds Ted&#39;s Tools styling, keyboard comparison, bounded image\nsizing, loading cancellation, reduced-motion playback, and guarded PNG export.\nGouache, soft pastel, and palette knife use renderers added for Ted&#39;s Tools.\nThe <a href=\"https://tools.tedt.org/licenses/quick-study-painter-Apache-2.0.txt\">Apache 2.0 license</a> ships\nwith the tool.</p>\n"
   },
   {
@@ -400,7 +400,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/social-bot-check.md",
+    "sourcePath": "tool-src/tools/social-bot-check.html",
     "html": "<h2>What It Does</h2>\n<p>Social Bot Check reads public account activity and applies transparent checks for\npatterns that can occur in automated posting. It supports <strong>Bluesky</strong> and\n<strong>Mastodon</strong>. The report includes the observed values, the threshold for each\ncheck, other possible explanations, and links to posts that match a check.</p>\n<p>The report counts eligible behavior checks without assigning a probability that\nan account is a bot. Platform metadata is shown separately. Neither activity\npatterns nor client formatting can establish AI authorship.</p>\n<h2>How to Use It</h2>\n<ol>\n<li><a href=\"https://tools.tedt.org/social-bot-check.html\">Open Social Bot Check</a>.</li>\n<li>Choose <strong>Bluesky</strong> or <strong>Mastodon</strong> and enter an account or profile URL.</li>\n<li>Choose a sample of up to 100, 500, or 1,000 original posts and select <strong>Check account</strong>.</li>\n<li>Open each signal to read its threshold and evidence. Use <strong>Show matching posts</strong>\nto filter the report to the relevant examples.</li>\n<li>Open the original posts to review their context. Search or filter the scanned\nactivity, copy a link to run the check again, or download the current JSON report.</li>\n</ol>\n<p>Examples:</p>\n<ul>\n<li>Bluesky: <code>tedt.org</code>, <code>@name.bsky.social</code>, a <code>bsky.app</code> profile or post URL, or a DID.</li>\n<li>Mastodon: <code>@Ted@tschopp.net</code> or <code>https://tschopp.net/@Ted</code>.</li>\n</ul>\n<h2>Data and Limits</h2>\n<p>Requests go directly from your browser to the selected public API without account\ncredentials. This tool does not store reports or request a login.</p>\n<p>Private, blocked, deleted, and unavailable posts are outside the sample. Mastodon\nservers can restrict public API access or block browser requests. Up to 40 recent\nunique Mastodon parent posts are fetched for reply context; missing context is\nreported, and edited replies are excluded from timing checks. Activity charts\nshow UTC because the account’s local time zone is unknown.</p>\n<p>Share links contain the account and scan settings. Opening one runs a fresh check;\nthe JSON download captures the report at the time it was checked.</p>\n<h2>Adding Another Site</h2>\n<p>Each platform has a provider module that parses account addresses and maps its\npublic API data into a shared profile and post format. New providers register in\n<code>tools/social-bot-check/providers/index.js</code>. The analysis and report renderer are\nshared; unsupported checks must retain an explicit unavailable state.</p>\n<p>The checker is inspired by\n<a href=\"https://tools.simonwillison.net/bluesky-bot-check\">Simon Willison’s Bluesky reply bot checker</a>.\nIts implementation and report wording were written for Ted’s Tools.</p>\n"
   },
   {
@@ -430,7 +430,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/math-guide.md",
+    "sourcePath": "tool-src/math-guide/index.html",
     "html": "<p>Open the <a href=\"https://tools.tedt.org/math-guide/\">Math Guide</a> to look up a symbol,\ntranslate a formula into words, or work through a small example.</p>\n"
   },
   {
@@ -477,7 +477,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/markdown-frontmatter-preview.md",
+    "sourcePath": "tool-src/tools/markdown-frontmatter-preview.html",
     "html": "<h2>What it does</h2>\n<p>Markdown Front Matter Workbench is a client-side authoring and conversion tool.\nUse it to edit a complete Markdown document or to turn formatted content copied\nfrom a document, web page, or email into clean Markdown.</p>\n<p>The workspace separates two concerns:</p>\n<ul>\n<li><strong>Document</strong> keeps YAML front matter and Markdown together with a live preview.</li>\n<li><strong>Rich Import</strong> sanitizes formatted clipboard or HTML content, converts it to\nMarkdown, and lets you inspect it before changing the active document.</li>\n</ul>\n<p>Smart paste can insert converted content into the Markdown body, but it will not\noverwrite front matter. If a rich paste targets YAML, the tool moves the\nconversion into Rich Import and leaves the document unchanged.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/markdown-frontmatter-preview.html\">https://tools.tedt.org/markdown-frontmatter-preview.html</a></li>\n<li>Use <strong>Document</strong> for a complete Markdown file with optional YAML front matter.</li>\n<li>Choose <strong>Smart paste</strong> to convert rich clipboard HTML inside the Markdown body,\nor <strong>Plain paste</strong> for normal clipboard behavior.</li>\n<li>Use <strong>Rich Import</strong> to paste formatted content or load one <code>.html</code>, <code>.htm</code>,\n<code>.md</code>, <code>.markdown</code>, or <code>.txt</code> file up to 5 MiB.</li>\n<li>Inspect and edit the converted Markdown, then insert it at the document cursor,\nappend it, replace the body, copy it, or download it.</li>\n<li>Switch to the <strong>Tedt.org</strong> profile for bounded authoring checks based on this\nrepository&#39;s common front matter contracts.</li>\n</ul>\n<h2>Screenshots</h2>\n<p><img src=\"/img/2026-08/markdown-frontmatter-workbench-document.webp\" alt=\"Markdown Front Matter Workbench document editor and rendered preview\"></p>\n<p><img src=\"/img/2026-08/markdown-frontmatter-workbench-rich-import.webp\" alt=\"Rich Import workspace with editable Markdown and rendered output\"></p>\n<p><img src=\"/img/2026-08/markdown-frontmatter-workbench-mobile.webp\" alt=\"Rich Import workspace reflowed for a mobile viewport\"></p>\n<h2>Notes</h2>\n<ul>\n<li>If no front matter fence is detected, the tool renders the whole blob as Markdown.</li>\n<li>If the opening fence exists but the closing fence is missing, the tool stops and shows the fence error clearly.</li>\n<li>Rich HTML is sanitized with DOMPurify before Turndown converts it, and rendered Markdown is sanitized again before preview.</li>\n<li>YAML parsing uses <code>js-yaml</code>; Markdown rendering uses a pinned version of <code>marked</code>.</li>\n<li>The active document and small UI preferences are stored only in localStorage. Legacy document cookies are migrated once and deleted.</li>\n<li>Clipboard actions include source copy, HTML copy, rich text copy, and styled rich text copy where the browser context allows it.</li>\n<li>Direct DOCX/RTF parsing, remote URL loading, Liquid execution, and server-side validation are intentionally out of scope.</li>\n</ul>\n"
   },
   {
@@ -549,7 +549,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/ocr.md",
+    "sourcePath": "tool-src/tools/ocr.html",
     "html": "<h2>What it does</h2>\n<p>Browser OCR Workspace extracts text from PDFs and images without uploading files\nto a server.</p>\n<p>The workflow is intentionally inspectable: each rendered page or image is shown\nnext to the extracted text so you can review OCR quality before copying the\ncombined document.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/tools/ocr.html\">https://tools.tedt.org/tools/ocr.html</a></li>\n<li>Choose an OCR language pack. The first use of a language downloads the traineddata into the browser cache.</li>\n<li>Drop a PDF or image, choose a file, paste an image, or load the bundled example PDF.</li>\n<li>Review each page/image result.</li>\n<li>Copy the full document from the combined output panel.</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>The PDF.js and Tesseract runtime assets are vendored locally.</li>\n<li>Language data is fetched on demand from the public Tesseract.js data packages and cached by the browser.</li>\n<li>Worker-based OCR is most reliable on the deployed site or over <code>http://localhost</code>.</li>\n</ul>\n"
   },
   {
@@ -586,7 +586,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/fractal.md",
+    "sourcePath": "tool-src/tools/fractal.html",
     "html": "<h2>What it does</h2>\n<p>This tool renders the Mandelbrot set in real time with WebGL and keeps the\nnavigation fluid even as you zoom well past the range where ordinary single\nprecision shaders start to fall apart.</p>\n<p>The renderer uses double-float emulation in the fragment shader, splitting each\ncoordinate into high and low float parts to preserve more useful precision.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/tools/fractal.html\">https://tools.tedt.org/tools/fractal.html</a></li>\n<li>Scroll to zoom toward or away from the cursor.</li>\n<li>Drag with the left mouse button to pan.</li>\n<li>Double-click to zoom in faster.</li>\n<li>Double-right-click to zoom out.</li>\n<li>Single-click to recenter on a point.</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>This tool requires WebGL.</li>\n<li>The HUD shows the current center coordinates, scale, depth, and iteration cap.</li>\n<li>Interior points render black; escaping points use a smooth cyclic palette.</li>\n</ul>\n<h2>Precision model</h2>\n<p>Typical WebGL Mandelbrot demos rely on single-precision floats, which limits how\nfar you can zoom before coordinates smear or collapse. This version uploads the\ncenter position as float32 high and low parts and reconstructs arithmetic in the\nshader, pushing usable exploration deeper while remaining fully client-side.</p>\n"
   },
   {
@@ -626,7 +626,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/focus-timer.md",
+    "sourcePath": "tool-src/tools/focus-timer.html",
     "html": "<h2>What it does</h2>\n<p>Focus Timer Studio is a single-page timing tool for people who want more than a\nplain countdown clock.</p>\n<p>It combines three use cases in one browser-only workspace:</p>\n<ul>\n<li>preset focus cycles for productivity methods</li>\n<li>a custom one-off countdown</li>\n<li>a simple stopwatch for open-ended timing</li>\n</ul>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/focus-timer.html\">https://tools.tedt.org/focus-timer.html</a></li>\n<li>Pick a mode: preset queue, custom countdown, or stopwatch.</li>\n<li>Choose a productivity preset or edit the session builder values.</li>\n<li>Change the number style and color theme if you want a different visual feel.</li>\n<li>Press <strong>Start</strong> or use the keyboard shortcuts shown on the page.</li>\n</ul>\n<h2>Included productivity presets</h2>\n<ul>\n<li>Classic Pomodoro</li>\n<li>Deep Work 45/15</li>\n<li>Ultradian 90/20</li>\n<li>52 / 17 Rhythm</li>\n<li>ADHD Sprint 15/3</li>\n<li>Writer 50/10</li>\n<li>Study Drill 30/5</li>\n<li>10 Minute Launch</li>\n</ul>\n<h2>Screenshots</h2>\n<p><img src=\"/img/2026-03/focus-timer-workspace.webp\" alt=\"Focus Timer Studio workspace\"></p>\n<p><img src=\"/img/2026-03/focus-timer-presets-and-styles.webp\" alt=\"Focus Timer Studio presets and styles\"></p>\n<p><img src=\"/img/2026-03/focus-timer-builder-and-queue.webp\" alt=\"Focus Timer Studio builder and queue\"></p>\n<h2>Notes</h2>\n<ul>\n<li>Everything runs locally in the browser. No account, no server round-trip, no sync dependency.</li>\n<li>The tool remembers your most recent preset, theme, style, and builder values in local browser storage.</li>\n<li>Completion tones use the Web Audio API when the browser allows it.</li>\n</ul>\n"
   },
   {
@@ -663,7 +663,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/qr-builder.md",
+    "sourcePath": "tool-src/tools/qr-builder.html",
     "html": "<h2>What it does</h2>\n<p>QR Builder turns text (including URLs) into a QR code you can scan with a phone\ncamera.</p>\n<p>This tool is fully client-side: it does not upload your content.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/tools/qr-builder.html\">https://tools.tedt.org/tools/qr-builder.html</a></li>\n<li>Paste or type your content.</li>\n<li>The QR code updates as you type.</li>\n<li>Press <strong>⌘/Ctrl+Enter</strong> to force a render (helpful if you’re pasting large\ncontent).</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>QR generation uses the <code>qrcodejs</code> library loaded from jsDelivr.</li>\n<li>If scanning fails, shorten the content (long strings force denser codes).</li>\n</ul>\n<h2>Options</h2>\n<ul>\n<li><strong>Size:</strong> Larger sizes are easier to scan at a distance.</li>\n<li><strong>Error correction (ECC):</strong> Higher ECC is more tolerant, but increases density.</li>\n<li><strong>Colors:</strong> For reliability, keep strong contrast (dark foreground, light background).</li>\n</ul>\n"
   },
   {
@@ -931,7 +931,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/ipfs-in-the-browser.md",
+    "sourcePath": "tool-src/tools/ipfs/index.html",
     "html": "<h2>What it does</h2>\n<p>This page creates an <strong>IPFS node in your browser</strong> and exposes it as <code>window.node</code> so you can experiment from DevTools.</p>\n<p>It also includes a small example that <code>cat</code>s a hard-coded CID and renders it into an <code>&lt;img&gt;</code> tag.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/ipfs/index.html\">https://tools.tedt.org/ipfs/index.html</a></li>\n<li>Open DevTools → Console</li>\n<li>Look for <code>window.node</code> and try IPFS methods like <code>node.add()</code> and <code>node.cat()</code></li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>This is a demo / experiment and relies on a third-party CDN script include.</li>\n<li>Running multiple tabs of the page at once can cause conflicts (multiple nodes attempting to use the same config/identity).</li>\n</ul>\n"
   },
   {
@@ -965,7 +965,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/mastodon-embed-timeline.md",
+    "sourcePath": "tool-src/tools/mastodon/index.html",
     "html": "<h2>What it does</h2>\n<p>This is a small collection of <strong>static embed pages</strong> that render a Mastodon timeline inside a container using the <code>MastodonTimeline</code> JavaScript widget.</p>\n<p>It’s useful when you want an embeddable feed UI (e.g., profile posts) without running a server.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/mastodon/index.html\">https://tools.tedt.org/mastodon/index.html</a></li>\n</ul>\n<p>There are multiple entry pages under <code>/tools/mastodon/</code> for different feed types:</p>\n<ul>\n<li>Profile timeline: <a href=\"https://tools.tedt.org/mastodon/profile.html\">https://tools.tedt.org/mastodon/profile.html</a></li>\n<li>Hashtag timeline: <a href=\"https://tools.tedt.org/mastodon/hashtag.html\">https://tools.tedt.org/mastodon/hashtag.html</a></li>\n<li>Local timeline: <a href=\"https://tools.tedt.org/mastodon/local.html\">https://tools.tedt.org/mastodon/local.html</a></li>\n</ul>\n<p>To point the embed at a different instance / account / hashtag, edit the page’s inline initialization block (it passes settings like <code>instanceUrl</code>, <code>timelineType</code>, and <code>userId</code>).</p>\n<h2>Notes</h2>\n<ul>\n<li>The widget fetches public data via the instance’s API endpoints.</li>\n<li>Because this is client-side, the browser is the one making requests to the Mastodon instance.</li>\n</ul>\n"
   },
   {
@@ -1033,7 +1033,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/rpg-world-map-generator.md",
+    "sourcePath": "tool-src/RPG/world-map.html",
     "html": "<h2>What it does</h2>\n<p>Fractal World Generator creates a randomized world map suitable for tabletop\nRPGs. It’s seed-driven and highly tweakable (projection, palette, water/ice\nratios, and more).</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/RPG/world-map.html\">World map generator</a></li>\n<li>Adjust parameters, regenerate, and save/export the maps you like</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>The upstream generator credits and license are referenced in the tool source.</li>\n</ul>\n"
   },
   {
@@ -1067,7 +1067,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/hex-test-direct.md",
+    "sourcePath": "tool-src/tools/hex-test-direct.html",
     "html": "<h2>What it does</h2>\n<p>This page is a <strong>direct / standalone test harness</strong> for the multi-scale hex\noverlay (<code>/js/hex-multi-scale.js</code> + <code>/js/hex.js</code>). It exists so you can quickly\nvalidate pan/zoom behavior, canvas sizing, and legend rendering without the\nsurrounding post layout.</p>\n<h2>How to use it</h2>\n<ul>\n<li><strong>Open the test page:</strong> /tools/hex-test-direct.html</li>\n<li><strong>Pan:</strong> drag on the canvas</li>\n<li><strong>Zoom:</strong> mouse wheel / trackpad scroll, pinch (touch), or <code>+</code> / <code>-</code> buttons</li>\n<li><strong>Reset:</strong> use the <code>⟳</code> button</li>\n</ul>\n<h2>Notes</h2>\n<ul>\n<li>Primary writeup / context: <a href=\"https://tools.tedt.org/Practical-Hexcrawl-Design-and-Procedures/\">Practical Hexcrawl Design and Procedures</a></li>\n<li>There’s also a more formal visual verification page at <code>/tests/hex-multi-scale-test.html</code>.</li>\n</ul>\n"
   },
   {
@@ -1101,7 +1101,7 @@
     ],
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
-    "sourcePath": "tool-src/_tools/rpg-tile-map-viewer.md",
+    "sourcePath": "tool-src/RPG/tile-map-viewer.html",
     "html": "<h2>What it does</h2>\n<p>Tile Map Viewer is a map browser for a generated world: a tile canvas plus a\nsecondary globe/projection view.</p>\n<h2>How to use it</h2>\n<ul>\n<li>Open: <a href=\"https://tools.tedt.org/RPG/tile-map-viewer.html\">Tile Map Viewer</a></li>\n<li>Use the on-screen controls and keyboard navigation to explore</li>\n</ul>\n"
   },
   {
@@ -2499,5 +2499,28 @@
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "sourcePath": "tool-src/tools/osr-tools/osr-zombie-hordes.html",
     "html": "<p>Create random zombie groups for survival-horror play, including Necropalyx and generic modes.</p><p>This previously unlisted tool is preserved as a prototype. Its existing features and limitations are retained.</p>"
+  },
+  {
+    "slug": "name-generator-research",
+    "title": "Name Generator Research",
+    "summary": "An unfinished name-generator project: a preserved reference list and extraction notes. The referenced generators remain on their original websites.",
+    "status": "prototype",
+    "category": "Maps and RPG",
+    "tags": [
+      "names",
+      "reference",
+      "rpg"
+    ],
+    "type": "reference",
+    "updated": "",
+    "featured": false,
+    "launch": "https://tools.tedt.org/name-generator-research/",
+    "migrated": true,
+    "image": "",
+    "screenshots": [],
+    "features": [],
+    "repo": "https://github.com/TedTschopp/tools.tedt.org",
+    "sourcePath": "tool-src/tools/Under-Development-Name-Generator/Name-Generator.html",
+    "html": "<p>This unfinished project contains a reference list and extraction notes. It does not provide a local name generator.</p><p><a href=\"/name-generator-research/\">Browse the references</a>, <a href=\"/Under-Development-Name-Generator/name-generator-js-report.md\">read the extraction notes</a>, or <a href=\"/Under-Development-Name-Generator/Name-Generator.html\">open the preserved source list</a>.</p>"
   }
 ]

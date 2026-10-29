@@ -121,12 +121,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1222,
+                  "duration": 1302,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:14.378Z",
+                  "startTime": "2026-10-29T13:44:25.797Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -136,7 +136,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-db810f6c7ba9cd874abd",
           "file": "site.spec.ts",
-          "line": 4,
+          "line": 5,
           "column": 1
         },
         {
@@ -155,12 +155,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1337,
+                  "duration": 1363,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:14.378Z",
+                  "startTime": "2026-10-29T13:44:25.795Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -170,7 +170,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-7e9ce2c16d085948b45d",
           "file": "site.spec.ts",
-          "line": 13,
+          "line": 15,
           "column": 1
         },
         {
@@ -189,12 +189,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 628,
+                  "duration": 612,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:15.762Z",
+                  "startTime": "2026-10-29T13:44:27.304Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -210,7 +210,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-b93a1acdebdd852c2688",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -229,12 +229,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 622,
+                  "duration": 562,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:15.859Z",
+                  "startTime": "2026-10-29T13:44:27.363Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -250,7 +250,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-05cfd5d7908648316f17",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -269,12 +269,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1003,
+                  "duration": 927,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:16.395Z",
+                  "startTime": "2026-10-29T13:44:27.921Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -290,7 +290,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-3800ad43acc505250ecc",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -309,12 +309,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 321,
+                  "duration": 325,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:16.486Z",
+                  "startTime": "2026-10-29T13:44:27.930Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -330,7 +330,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-5b33af96320f4798f2e7",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -349,12 +349,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 537,
+                  "duration": 557,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:16.811Z",
+                  "startTime": "2026-10-29T13:44:28.260Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -370,7 +370,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-48ecb821499733cfcde6",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -389,12 +389,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 349,
+                  "duration": 359,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:17.361Z",
+                  "startTime": "2026-10-29T13:44:28.826Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -410,7 +410,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-1553ae6142876decca6d",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -429,12 +429,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 497,
+                  "duration": 486,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:17.403Z",
+                  "startTime": "2026-10-29T13:44:28.853Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -450,7 +450,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-ae8bacf5ce9787a7c476",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -469,12 +469,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 337,
+                  "duration": 338,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:17.718Z",
+                  "startTime": "2026-10-29T13:44:29.198Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -490,7 +490,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-ad6dfd6780a74c8b32c4",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -509,12 +509,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 513,
+                  "duration": 512,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:17.904Z",
+                  "startTime": "2026-10-29T13:44:29.345Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -530,7 +530,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-b7888a7a1b4bd429c393",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -549,12 +549,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 637,
+                  "duration": 587,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:18.060Z",
+                  "startTime": "2026-10-29T13:44:29.541Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -570,7 +570,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-dd943238f8a726441680",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -589,12 +589,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 302,
+                  "duration": 301,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:18.422Z",
+                  "startTime": "2026-10-29T13:44:29.862Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -610,7 +610,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-7685a533513476202ccf",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -629,12 +629,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 318,
+                  "duration": 311,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:18.703Z",
+                  "startTime": "2026-10-29T13:44:30.135Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -650,7 +650,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-b419371a41468bcbe115",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -669,12 +669,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 305,
+                  "duration": 304,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:18.729Z",
+                  "startTime": "2026-10-29T13:44:30.168Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -690,7 +690,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-0f740d26adc3327604b3",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -714,7 +714,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.027Z",
+                  "startTime": "2026-10-29T13:44:30.454Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -730,11 +730,331 @@
           ],
           "id": "5c02723ad68c2a0d50c5-5d925a7414e11912843b",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
           "title": "tool loads /mastodon/EmbedToot/embed-post-and-replies-thread.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:30.477Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC1wb3N0LWFuZC1yZXBsaWVzLXRocmVhZC5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-2e75e379a272bb697c98",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/EmbedToot/embed-single-post.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 304,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:30.775Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC1zaW5nbGUtcG9zdC5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-d5b6992a0e9680a187eb",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/EmbedToot/embed-users-recent-posts-mini.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 300,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:30.785Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC11c2Vycy1yZWNlbnQtcG9zdHMtbWluaS5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-45006472ac3edc59ba4e",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/EmbedToot/embed-users-recent-posts-normal.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 308,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:31.084Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC11c2Vycy1yZWNlbnQtcG9zdHMtbm9ybWFsLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-24256232c94561c476e0",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/hashtag.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 307,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:31.091Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL2hhc2h0YWcuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-876cc10ec794b381ea95",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 304,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:31.396Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uLyIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-941dc91f074f5e9b283a",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/local.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 307,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:31.403Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL2xvY2FsLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-adf3d8fc81b290bcdd0c",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/multiple.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 307,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:31.705Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL211bHRpcGxlLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-1a7dc382df72117fdf41",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /mastodon/profile.html",
           "ok": true,
           "tags": [],
           "tests": [
@@ -754,13 +1074,13 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.039Z",
+                  "startTime": "2026-10-29T13:44:31.714Z",
                   "annotations": [],
                   "attachments": [
                     {
                       "name": "runtime-observations",
                       "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC1wb3N0LWFuZC1yZXBsaWVzLXRocmVhZC5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL3Byb2ZpbGUuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
                     }
                   ]
                 }
@@ -768,13 +1088,13 @@
               "status": "expected"
             }
           ],
-          "id": "5c02723ad68c2a0d50c5-2e75e379a272bb697c98",
+          "id": "5c02723ad68c2a0d50c5-1fb2e43cf480358c8794",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
-          "title": "tool loads /mastodon/EmbedToot/embed-single-post.html",
+          "title": "tool loads /mastodon/theme.html",
           "ok": true,
           "tags": [],
           "tests": [
@@ -789,18 +1109,18 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 313,
+                  "duration": 304,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.346Z",
+                  "startTime": "2026-10-29T13:44:32.017Z",
                   "annotations": [],
                   "attachments": [
                     {
                       "name": "runtime-observations",
                       "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC1zaW5nbGUtcG9zdC5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL3RoZW1lLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
                     }
                   ]
                 }
@@ -808,13 +1128,93 @@
               "status": "expected"
             }
           ],
-          "id": "5c02723ad68c2a0d50c5-d5b6992a0e9680a187eb",
+          "id": "5c02723ad68c2a0d50c5-fcb5ca1b9cb71645c131",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
-          "title": "tool loads /mastodon/EmbedToot/embed-users-recent-posts-mini.html",
+          "title": "tool loads /morph.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 403,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:32.021Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL21vcnBoLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-0bca542492ef519379a8",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /ocr.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 338,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:32.326Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29jci5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-b63448165d25a1ff85da",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /onboard-pro.html",
           "ok": true,
           "tags": [],
           "tests": [
@@ -834,407 +1234,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.346Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC11c2Vycy1yZWNlbnQtcG9zdHMtbWluaS5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-45006472ac3edc59ba4e",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /mastodon/EmbedToot/embed-users-recent-posts-normal.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 313,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.667Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL0VtYmVkVG9vdC9lbWJlZC11c2Vycy1yZWNlbnQtcG9zdHMtbm9ybWFsLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-24256232c94561c476e0",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /mastodon/hashtag.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 315,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.668Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL2hhc2h0YWcuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-876cc10ec794b381ea95",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /mastodon/",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 309,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.986Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uLyIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-941dc91f074f5e9b283a",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /mastodon/local.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 306,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:19.988Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL2xvY2FsLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-adf3d8fc81b290bcdd0c",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /mastodon/multiple.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 311,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:20.300Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL211bHRpcGxlLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-1a7dc382df72117fdf41",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /mastodon/profile.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 312,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:20.300Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL3Byb2ZpbGUuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-1fb2e43cf480358c8794",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /mastodon/theme.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 324,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:20.616Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21hc3RvZG9uL3RoZW1lLmh0bWwiLAogICJlcnJvcnMiOiBbCiAgICAiU3RvcHBpbmcgdGhlIHNjcmlwdCBkdWUgdG8gYW4gZXJyb3IgYnVpbGRpbmcgdGhlIHRpbWVsaW5lLiIKICBdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-fcb5ca1b9cb71645c131",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /morph.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 400,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:20.616Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL21vcnBoLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-0bca542492ef519379a8",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /ocr.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 339,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:20.945Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29jci5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-b63448165d25a1ff85da",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /onboard-pro.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 318,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:21.021Z",
+                  "startTime": "2026-10-29T13:44:32.429Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -1250,7 +1250,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-edf5ea610f9210df24a4",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -1269,12 +1269,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 664,
+                  "duration": 546,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:21.290Z",
+                  "startTime": "2026-10-29T13:44:32.669Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -1290,7 +1290,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-652b3d8ad51d81da3b63",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -1314,7 +1314,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:21.343Z",
+                  "startTime": "2026-10-29T13:44:32.749Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -1330,11 +1330,1051 @@
           ],
           "id": "5c02723ad68c2a0d50c5-38c2b831aac96f442ae7",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
           "title": "tool loads /osr-tools/osr-adventurers-guild-osric.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 305,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:33.059Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWR2ZW50dXJlcnMtZ3VpbGQtb3NyaWMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-8cd26515f3e88bb2e65d",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-adventuring-gear.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 301,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:33.220Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWR2ZW50dXJpbmctZ2Vhci5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-d06d17859f1027ce52ad",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-alchemy-recipes.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:33.368Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWxjaGVteS1yZWNpcGVzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-f2015e5076c4311155f4",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-alchemy-shelf.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 306,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:33.526Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWxjaGVteS1zaGVsZi5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-63925e01310f6dc4665a",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-area-builder.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 308,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:33.675Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYXJlYS1idWlsZGVyLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-f1088ad3a02cd6576149",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-basic-adventurers-guild.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 302,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:33.836Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYmFzaWMtYWR2ZW50dXJlcnMtZ3VpbGQuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-a19a71ef1b45c967a1d4",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-basic-spell-books.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 312,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:33.987Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYmFzaWMtc3BlbGwtYm9va3MuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-9cc4723a6aad086b59e8",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-books-and-tomes.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 301,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:34.142Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYm9va3MtYW5kLXRvbWVzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-9a3c674ad1bd9c6ab0d0",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-combat-dice-sheets.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 301,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:34.303Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItY29tYmF0LWRpY2Utc2hlZXRzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-f9c294811dbf5bb63752",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-dungeon-builder.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 305,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:34.447Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZHVuZ2Vvbi1idWlsZGVyLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-1e6641baae81752fc0ad",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-dungeon-delve.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 309,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:34.608Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZHVuZ2Vvbi1kZWx2ZS5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-42a15eff4f854a88f36f",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-dungeon-maps.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:34.756Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZHVuZ2Vvbi1tYXBzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-6a779b8731051fc70e1b",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-encounter-creation.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:34.920Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZW5jb3VudGVyLWNyZWF0aW9uLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-063ed6cb0cc84de0d0bb",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-fantasy-names.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:35.062Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1uYW1lcy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-234110a918d3cb5a642c",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-fantasy-settlements-ttown.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 306,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:35.227Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1zZXR0bGVtZW50cy10dG93bi5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-f3dd4e6852a78faa4c70",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-fantasy-settlements-wtown.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 301,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:35.369Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1zZXR0bGVtZW50cy13dG93bi5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-be2ec1636bffa401b1f8",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-fantasy-settlements.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 302,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:35.540Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1zZXR0bGVtZW50cy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-f3debf1b0c8adfe9dd6a",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-futuristic-maze.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:35.674Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZnV0dXJpc3RpYy1tYXplLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-2cb54c48ea0d35c1e43b",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-index.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 309,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:35.846Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItaW5kZXguaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-383f269700c1f96f3463",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-monster-listing.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 304,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:35.981Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItbW9uc3Rlci1saXN0aW5nLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-af38e9691b370a724b14",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-mutant-adventure.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 320,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:36.160Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItbXV0YW50LWFkdmVudHVyZS5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-b2775df7de0fd8bbad06",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-mutant-settlements.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 306,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:36.290Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItbXV0YW50LXNldHRsZW1lbnRzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-73e712ea212b033e1506",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-piles-of-coins.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 312,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:36.486Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcGlsZXMtb2YtY29pbnMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-55365219ef439806de12",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-potion-appearances.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 304,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:36.600Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcG90aW9uLWFwcGVhcmFuY2VzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-250d84f8e3e5f7d36ccd",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-random-area.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 308,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:36.803Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcmFuZG9tLWFyZWEuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-30384d16c5bbd51a1924",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-random-listings.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 304,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:36.908Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcmFuZG9tLWxpc3RpbmdzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-68cadc8a3b56bc9c911a",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-random-treasure-maps.html",
           "ok": true,
           "tags": [],
           "tests": [
@@ -1354,1047 +2394,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:21.653Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWR2ZW50dXJlcnMtZ3VpbGQtb3NyaWMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-8cd26515f3e88bb2e65d",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-adventuring-gear.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 316,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:21.960Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWR2ZW50dXJpbmctZ2Vhci5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-d06d17859f1027ce52ad",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-alchemy-recipes.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 314,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:21.968Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWxjaGVteS1yZWNpcGVzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-f2015e5076c4311155f4",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-alchemy-shelf.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 322,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:22.281Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYWxjaGVteS1zaGVsZi5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-63925e01310f6dc4665a",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-area-builder.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 316,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:22.287Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYXJlYS1idWlsZGVyLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-f1088ad3a02cd6576149",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-basic-adventurers-guild.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 319,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:22.608Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYmFzaWMtYWR2ZW50dXJlcnMtZ3VpbGQuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-a19a71ef1b45c967a1d4",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-basic-spell-books.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 321,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:22.609Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYmFzaWMtc3BlbGwtYm9va3MuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-9cc4723a6aad086b59e8",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-books-and-tomes.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 324,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:22.930Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItYm9va3MtYW5kLXRvbWVzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-9a3c674ad1bd9c6ab0d0",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-combat-dice-sheets.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 319,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:22.934Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItY29tYmF0LWRpY2Utc2hlZXRzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-f9c294811dbf5bb63752",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-dungeon-builder.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 329,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:23.260Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZHVuZ2Vvbi1idWlsZGVyLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-1e6641baae81752fc0ad",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-dungeon-delve.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 341,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:23.259Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZHVuZ2Vvbi1kZWx2ZS5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-42a15eff4f854a88f36f",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-dungeon-maps.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 324,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:23.594Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZHVuZ2Vvbi1tYXBzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-6a779b8731051fc70e1b",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-encounter-creation.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 309,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:23.606Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZW5jb3VudGVyLWNyZWF0aW9uLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-063ed6cb0cc84de0d0bb",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-fantasy-names.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 317,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:23.919Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1uYW1lcy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-234110a918d3cb5a642c",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-fantasy-settlements-ttown.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 328,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:23.923Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1zZXR0bGVtZW50cy10dG93bi5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-f3dd4e6852a78faa4c70",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-fantasy-settlements-wtown.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 322,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:24.242Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1zZXR0bGVtZW50cy13dG93bi5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-be2ec1636bffa401b1f8",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-fantasy-settlements.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 313,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:24.257Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZmFudGFzeS1zZXR0bGVtZW50cy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-f3debf1b0c8adfe9dd6a",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-futuristic-maze.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 317,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:24.571Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItZnV0dXJpc3RpYy1tYXplLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-2cb54c48ea0d35c1e43b",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-index.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 322,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:24.575Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItaW5kZXguaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-383f269700c1f96f3463",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-monster-listing.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 322,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:24.894Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItbW9uc3Rlci1saXN0aW5nLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-af38e9691b370a724b14",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-mutant-adventure.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 316,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:24.902Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItbXV0YW50LWFkdmVudHVyZS5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-b2775df7de0fd8bbad06",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-mutant-settlements.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 321,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:25.222Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItbXV0YW50LXNldHRsZW1lbnRzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-73e712ea212b033e1506",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-piles-of-coins.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 325,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:25.223Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcGlsZXMtb2YtY29pbnMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-55365219ef439806de12",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-potion-appearances.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 320,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:25.548Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcG90aW9uLWFwcGVhcmFuY2VzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-250d84f8e3e5f7d36ccd",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-random-area.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 323,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:25.554Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcmFuZG9tLWFyZWEuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-30384d16c5bbd51a1924",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-random-listings.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 313,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:25.875Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcmFuZG9tLWxpc3RpbmdzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-68cadc8a3b56bc9c911a",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-random-treasure-maps.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 312,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:25.883Z",
+                  "startTime": "2026-10-29T13:44:37.115Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2410,7 +2410,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-395e998c6e7586148bb9",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2426,15 +2426,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 317,
+                  "duration": 303,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:26.193Z",
+                  "startTime": "2026-10-29T13:44:37.216Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2450,211 +2450,11 @@
           ],
           "id": "5c02723ad68c2a0d50c5-f23926bebcdef2ed990b",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
           "title": "tool loads /osr-tools/osr-ruined-city-maps.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 313,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:26.199Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcnVpbmVkLWNpdHktbWFwcy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-098d0253f3cf83d8c620",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-scavenging-lists.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 330,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:26.516Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2NhdmVuZ2luZy1saXN0cy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-cb9bd6f503f32e34c4d9",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-sci-fi-enemies.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 327,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:26.517Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2NpLWZpLWVuZW1pZXMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-b7589056dc351ea70095",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-sci-fi-maps.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 320,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:26.851Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2NpLWZpLW1hcHMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-ea7c22f794c357d1c37f",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-settlement-maps.html",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 319,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:26.851Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2V0dGxlbWVudC1tYXBzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-764fec82332581bb319c",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /osr-tools/osr-sewer-maps.html",
           "ok": true,
           "tags": [],
           "tests": [
@@ -2674,7 +2474,207 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:27.178Z",
+                  "startTime": "2026-10-29T13:44:37.430Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3ItcnVpbmVkLWNpdHktbWFwcy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-098d0253f3cf83d8c620",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-scavenging-lists.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 302,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:37.523Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2NhdmVuZ2luZy1saXN0cy5odG1sIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-cb9bd6f503f32e34c4d9",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-sci-fi-enemies.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 316,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:37.753Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2NpLWZpLWVuZW1pZXMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-b7589056dc351ea70095",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-sci-fi-maps.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 299,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:37.829Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2NpLWZpLW1hcHMuaHRtbCIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-ea7c22f794c357d1c37f",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-settlement-maps.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 325,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:38.076Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL29zci10b29scy9vc3Itc2V0dGxlbWVudC1tYXBzLmh0bWwiLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-764fec82332581bb319c",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /osr-tools/osr-sewer-maps.html",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 304,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:38.131Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2690,7 +2690,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-a287aad21e8d16eba1d2",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2706,15 +2706,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
                   "duration": 342,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:27.178Z",
+                  "startTime": "2026-10-29T13:44:38.408Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2730,7 +2730,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-f217418db27ee5b3e6be",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2746,15 +2746,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 326,
+                  "duration": 306,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:27.501Z",
+                  "startTime": "2026-10-29T13:44:38.440Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2770,7 +2770,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-9a41df6c225dfad65f9f",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2789,12 +2789,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 309,
+                  "duration": 316,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:27.526Z",
+                  "startTime": "2026-10-29T13:44:38.752Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2810,7 +2810,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-d392c3472f5acfe787c6",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2834,7 +2834,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:27.835Z",
+                  "startTime": "2026-10-29T13:44:38.755Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2850,7 +2850,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-1821676f97de3b50bf02",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2866,15 +2866,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 309,
+                  "duration": 324,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:27.840Z",
+                  "startTime": "2026-10-29T13:44:39.073Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2890,7 +2890,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-6dea9179bb54fe98d82f",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2909,12 +2909,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 319,
+                  "duration": 328,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:28.155Z",
+                  "startTime": "2026-10-29T13:44:39.073Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2930,7 +2930,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-d3b2e01783aee0205694",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2949,12 +2949,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 367,
+                  "duration": 373,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:28.156Z",
+                  "startTime": "2026-10-29T13:44:39.402Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -2970,7 +2970,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-bf05b6c8b794fce932ac",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -2989,12 +2989,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 305,
+                  "duration": 330,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:28.480Z",
+                  "startTime": "2026-10-29T13:44:39.406Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3010,7 +3010,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-817f82c4ac3a67aa2dda",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3026,15 +3026,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 457,
+                  "duration": 717,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:28.528Z",
+                  "startTime": "2026-10-29T13:44:39.743Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3050,7 +3050,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-d1c448cf60986ac5493a",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3066,15 +3066,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 592,
+                  "duration": 1152,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:28.789Z",
+                  "startTime": "2026-10-29T13:44:39.781Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3090,7 +3090,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-8ca47f5fb62a0194d4e7",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3106,15 +3106,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 321,
+                  "duration": 332,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:28.990Z",
+                  "startTime": "2026-10-29T13:44:40.466Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3130,7 +3130,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-39abb4419684a180ecfc",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3146,15 +3146,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 561,
+                  "duration": 737,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:29.316Z",
+                  "startTime": "2026-10-29T13:44:40.804Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3170,211 +3170,11 @@
           ],
           "id": "5c02723ad68c2a0d50c5-d160366fe89139449643",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
           "title": "tool loads /start-page/",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 547,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:29.385Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL3N0YXJ0LXBhZ2UvIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-fe75916134a1eeef3afb",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /vector-trace/",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 330,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:29.881Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL3ZlY3Rvci10cmFjZS8iLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-14dcd66dacd805cc0ca2",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /game-theory/auction-lab/",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 671,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:29.936Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL2dhbWUtdGhlb3J5L2F1Y3Rpb24tbGFiLyIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-117e129e47fab8df0b9e",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /game-theory/bargaining-room/",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 635,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:30.214Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL2dhbWUtdGhlb3J5L2JhcmdhaW5pbmctcm9vbS8iLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-d59a9259f65441226926",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /game-theory/coalition-calculator/",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 45000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 702,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-29T12:29:30.612Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "runtime-observations",
-                      "contentType": "application/json",
-                      "body": "ewogICJ1cmwiOiAiL2dhbWUtdGhlb3J5L2NvYWxpdGlvbi1jYWxjdWxhdG9yLyIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5c02723ad68c2a0d50c5-bd4e0f69614c0f77f003",
-          "file": "site.spec.ts",
-          "line": 22,
-          "column": 2
-        },
-        {
-          "title": "tool loads /game-theory/common-knowledge/",
           "ok": true,
           "tags": [],
           "tests": [
@@ -3394,7 +3194,207 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:30.854Z",
+                  "startTime": "2026-10-29T13:44:40.937Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL3N0YXJ0LXBhZ2UvIiwKICAiZXJyb3JzIjogW10sCiAgIm1pc3NpbmdSZXNvdXJjZXMiOiBbXQp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-fe75916134a1eeef3afb",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /vector-trace/",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 337,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:41.545Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL3ZlY3Rvci10cmFjZS8iLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-14dcd66dacd805cc0ca2",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /game-theory/auction-lab/",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1035,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:41.550Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL2dhbWUtdGhlb3J5L2F1Y3Rpb24tbGFiLyIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-117e129e47fab8df0b9e",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /game-theory/bargaining-room/",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 961,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:41.888Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL2dhbWUtdGhlb3J5L2JhcmdhaW5pbmctcm9vbS8iLAogICJlcnJvcnMiOiBbXSwKICAibWlzc2luZ1Jlc291cmNlcyI6IFtdCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-d59a9259f65441226926",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /game-theory/coalition-calculator/",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1009,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:42.589Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL2dhbWUtdGhlb3J5L2NvYWxpdGlvbi1jYWxjdWxhdG9yLyIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-bd4e0f69614c0f77f003",
+          "file": "site.spec.ts",
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /game-theory/common-knowledge/",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 903,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:42.854Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3410,7 +3410,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-705cb840e9d9b287a5f5",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3426,15 +3426,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 637,
+                  "duration": 915,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:31.318Z",
+                  "startTime": "2026-10-29T13:44:43.602Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3450,7 +3450,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-46036e23d85e0b117770",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3466,15 +3466,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 730,
+                  "duration": 902,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:31.469Z",
+                  "startTime": "2026-10-29T13:44:43.762Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3490,7 +3490,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-dd7b4e930a1419a68dd3",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3506,15 +3506,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 662,
+                  "duration": 957,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:31.959Z",
+                  "startTime": "2026-10-29T13:44:44.520Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3530,7 +3530,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-0fdd9cbe1991da8403d9",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3546,15 +3546,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 713,
+                  "duration": 882,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:32.203Z",
+                  "startTime": "2026-10-29T13:44:44.668Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3570,7 +3570,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-4e01e03b580a23813847",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3586,15 +3586,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 710,
+                  "duration": 866,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:32.625Z",
+                  "startTime": "2026-10-29T13:44:45.482Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3610,7 +3610,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-b87e4f2d54dfdfc3b2b1",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3626,15 +3626,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 609,
+                  "duration": 962,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:32.921Z",
+                  "startTime": "2026-10-29T13:44:45.554Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3650,7 +3650,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-e7a4172f842efd9b2153",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3666,15 +3666,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 656,
+                  "duration": 901,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:33.339Z",
+                  "startTime": "2026-10-29T13:44:46.352Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3690,7 +3690,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-be1e1df968951fd88668",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3706,15 +3706,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 725,
+                  "duration": 702,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:33.535Z",
+                  "startTime": "2026-10-29T13:44:46.519Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3730,7 +3730,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-03622e4a2c784b9c6165",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3749,12 +3749,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 615,
+                  "duration": 861,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:33.999Z",
+                  "startTime": "2026-10-29T13:44:47.225Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3770,7 +3770,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-028a0e702dc1dea30ddb",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3789,12 +3789,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 649,
+                  "duration": 884,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:34.264Z",
+                  "startTime": "2026-10-29T13:44:47.257Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3810,7 +3810,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-3d748a0c21e0f0b6657f",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3829,12 +3829,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 726,
+                  "duration": 891,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:34.618Z",
+                  "startTime": "2026-10-29T13:44:48.090Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3850,7 +3850,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-13750627ba864f644112",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3869,12 +3869,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 671,
+                  "duration": 814,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:34.918Z",
+                  "startTime": "2026-10-29T13:44:48.145Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3890,7 +3890,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-c362dcfe1accc2799c9e",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3906,15 +3906,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 695,
+                  "duration": 939,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:35.348Z",
+                  "startTime": "2026-10-29T13:44:48.963Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3930,7 +3930,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-e2adf63987d4755b7bf8",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3946,15 +3946,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 601,
+                  "duration": 914,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:35.593Z",
+                  "startTime": "2026-10-29T13:44:48.986Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -3970,7 +3970,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-0445f54f27bafc9697ff",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -3989,12 +3989,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 656,
+                  "duration": 917,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:36.048Z",
+                  "startTime": "2026-10-29T13:44:49.904Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -4010,7 +4010,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-83cd45de5ac8e939c9c4",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -4029,12 +4029,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 633,
+                  "duration": 898,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:36.199Z",
+                  "startTime": "2026-10-29T13:44:49.908Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -4050,7 +4050,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-de16ec108455a8f2cdeb",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -4066,15 +4066,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 606,
+                  "duration": 818,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:36.709Z",
+                  "startTime": "2026-10-29T13:44:50.813Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -4090,7 +4090,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-df04bdcd52ae713893c0",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -4106,15 +4106,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 937,
+                  "duration": 976,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:36.836Z",
+                  "startTime": "2026-10-29T13:44:50.828Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -4130,7 +4130,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-5aa69d0f3ebb6866f838",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -4146,15 +4146,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 662,
+                  "duration": 875,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:37.321Z",
+                  "startTime": "2026-10-29T13:44:51.637Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -4170,7 +4170,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-079e1741782f2134fe67",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -4186,15 +4186,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 5645,
+                  "duration": 6691,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:37.777Z",
+                  "startTime": "2026-10-29T13:44:51.810Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -4210,7 +4210,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-635a97d19a5f00c3b6da",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
           "column": 2
         },
         {
@@ -4226,15 +4226,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 657,
+                  "duration": 631,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:37.987Z",
+                  "startTime": "2026-10-29T13:44:52.516Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -4250,7 +4250,47 @@
           ],
           "id": "5c02723ad68c2a0d50c5-f317bd8357d2a3e1d05c",
           "file": "site.spec.ts",
-          "line": 22,
+          "line": 24,
+          "column": 2
+        },
+        {
+          "title": "tool loads /name-generator-research/",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 573,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T13:44:53.151Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJ1cmwiOiAiL25hbWUtZ2VuZXJhdG9yLXJlc2VhcmNoLyIsCiAgImVycm9ycyI6IFtdLAogICJtaXNzaW5nUmVzb3VyY2VzIjogW10KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-6c738bf497d923b5e754",
+          "file": "site.spec.ts",
+          "line": 24,
           "column": 2
         },
         {
@@ -4266,15 +4306,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 347,
+                  "duration": 381,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:38.648Z",
+                  "startTime": "2026-10-29T13:44:53.728Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -4284,7 +4324,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-dfcd13137328b8210265",
           "file": "site.spec.ts",
-          "line": 32,
+          "line": 34,
           "column": 1
         },
         {
@@ -4300,15 +4340,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1025,
+                  "duration": 1043,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:38.999Z",
+                  "startTime": "2026-10-29T13:44:54.112Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -4318,7 +4358,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-19c147ab7cbbb49d341c",
           "file": "site.spec.ts",
-          "line": 35,
+          "line": 37,
           "column": 1
         },
         {
@@ -4334,15 +4374,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 151,
+                  "duration": 145,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:40.028Z",
+                  "startTime": "2026-10-29T13:44:55.159Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -4352,7 +4392,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-0dc3a1ea710564e9b9d6",
           "file": "site.spec.ts",
-          "line": 40,
+          "line": 42,
           "column": 1
         },
         {
@@ -4368,15 +4408,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 802,
+                  "duration": 783,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:40.183Z",
+                  "startTime": "2026-10-29T13:44:55.308Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -4386,7 +4426,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-2458d0234118bcb472c3",
           "file": "site.spec.ts",
-          "line": 43,
+          "line": 45,
           "column": 1
         },
         {
@@ -4402,15 +4442,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 816,
+                  "duration": 970,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:40.989Z",
+                  "startTime": "2026-10-29T13:44:56.095Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -4420,7 +4460,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-559b1bb1fdd9d6b6ce17",
           "file": "site.spec.ts",
-          "line": 46,
+          "line": 48,
           "column": 1
         },
         {
@@ -4436,15 +4476,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1220,
+                  "duration": 1253,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:29:41.809Z",
+                  "startTime": "2026-10-29T13:44:57.069Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -4454,7 +4494,7 @@
           ],
           "id": "5c02723ad68c2a0d50c5-9a8562abd8e8e576e13a",
           "file": "site.spec.ts",
-          "line": 49,
+          "line": 51,
           "column": 1
         }
       ]
@@ -4462,9 +4502,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-29T12:29:14.191Z",
-    "duration": 29298.339,
-    "expected": 110,
+    "startTime": "2026-10-29T13:44:25.575Z",
+    "duration": 32992.256,
+    "expected": 111,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

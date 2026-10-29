@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import '../styles/tools.css';
 import UniversalHeader from '../components/UniversalHeader.astro';
-const {title = 'Ted’s Tools', description = 'Browser tools for text, code, images, maps, and small experiments.', image = '/img/2026-02/morph-tool-screenshot.png'} = Astro.props;
+const {title = 'Ted’s Tools', description = 'Browser tools for text, code, images, maps, and small experiments.', image = '/img/Site-Logo.webp'} = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 <!doctype html>
@@ -12,8 +12,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <title>{title === 'Ted’s Tools' ? title : `${title} · Ted’s Tools`}</title>
     <meta name="description" content={description} /><meta name="color-scheme" content="light dark" />
     <link rel="canonical" href={canonical} /><link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml" />
-    <meta property="og:type" content="website" /><meta property="og:site_name" content="Ted’s Tools" /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={new URL(image || '/img/2026-02/morph-tool-screenshot.png', Astro.site).href} />
-    <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={new URL(image || '/img/2026-02/morph-tool-screenshot.png', Astro.site).href} />
+    <meta property="og:type" content="website" /><meta property="og:site_name" content="Ted’s Tools" /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={new URL(image || '/img/Site-Logo.webp', Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={new URL(image || '/img/Site-Logo.webp', Astro.site).href} />
     <script is:inline>try{const p=localStorage.getItem('tools-theme')||'system';const t=p==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;document.documentElement.dataset.theme=t;document.documentElement.dataset.bsTheme=t;document.documentElement.dataset.themePreference=p;}catch{}</script>
     <script type="application/ld+json" set:html={JSON.stringify({'@context':'https://schema.org','@type':'WebSite',name:'Ted’s Tools',url:'https://tools.tedt.org/',author:{'@type':'Person',name:'Ted Tschopp',url:'https://tedt.org/'}})} />
   </head>

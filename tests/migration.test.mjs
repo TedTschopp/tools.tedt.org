@@ -12,6 +12,8 @@ test('Traveller and external launch addresses remain at their original hosts',()
  assert.ok(routes.retainedLaunchUrls.includes('https://islands.tedt.org/'));
  assert.ok(routes.retainedLaunchUrls.includes('https://randomtables.tedt.org/'));
  assert.equal(routes.catalog.filter(t=>t.migrated&&t.launch.includes('/RPG/Traveller/')).length,0);
+ assert.ok(routes.retainedOriginalUrlPrefixes.includes('/RPG/Traveller/'));
+ assert.ok(!routes.catalogRedirects.some(r=>r.from.includes('traveller')));
 });
 test('short URLs, descriptions, and related applications have complete destinations',()=>{
  assert.equal(routes.catalog.find(t=>t.slug==='morph').launch,'https://tools.tedt.org/morph.html');

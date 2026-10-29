@@ -1,0 +1,7 @@
+---
+import Layout from '../layouts/Layout.astro';
+import references from '../data/name-generator-references.json';
+---
+<Layout title="Name Generator Research" description="A preserved name-generator reference list and extraction notes from an unfinished project.">
+<article class="content reading prose"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">All tools</a><span aria-hidden="true">/</span><span>Name Generator Research</span></nav><p class="eyebrow">Prototype · Reference collection</p><h1>Name Generator Research</h1><p class="lead">A reference list and extraction notes from an unfinished project.</p><p>This collection preserves the work in progress. The generators remain on their original websites; a local name generator is not implemented.</p><p><a href="/Under-Development-Name-Generator/Name-Generator.html">Preserved source list</a> · <a href="/Under-Development-Name-Generator/name-generator-js-report.md">Extraction notes</a> · <a href="https://github.com/TedTschopp/tools.tedt.org/tree/main/tool-src/tools/Under-Development-Name-Generator">Project files</a></p><h2>References ({references.length})</h2><ul>{references.map(url=><li><a href={url}>{decodeURIComponent(new URL(url).pathname.slice(1)).replace(/\.php$/,'').replaceAll('-',' ').replaceAll('_',' ')}</a></li>)}</ul></article>
+</Layout>

@@ -63,10 +63,16 @@ for (const file of (await fs.readdir(path.join(source, '_tools'))).sort()) {
   const migrated = launch.startsWith(site + '/');
   const body = content.replace(/{{\s*site.url\s*}}{%\s*link\s+([^%]+)\s*%}/g, (_, p) => relocate('/' + p.trim()));
   const record = {slug, title: data.title, summary: data.summary || data.subtitle || '', status: data.status || 'prototype', category: category(data.tags || [], slug), tags: data.tags || [], type: data.tool_type || 'webapp', updated: String(data.last_modified instanceof Date ? data.last_modified.toISOString().slice(0,10) : data.last_modified || ''), featured: Boolean(data.featured), launch, migrated, image: data.image || data.hero_image || '', imageAlt: data['image-alt'] || data.title, screenshots: data.screenshots || [], features: data.features || [], repo: migrated ? 'https://github.com/TedTschopp/tools.tedt.org' : data.links?.repo || '', upstream: data.links?.repo || '', sourcePath: 'tool-src/_tools/' + file, html: marked.parse(await render(body, {page: data}))};
+  if (migrated) {
+    const originalPath = new URL(data.links.live, 'https://tedt.org').pathname;
+    const appSource = 'tool-src' + originalPath + (originalPath.endsWith('/') ? 'index.html' : '');
+    try { await fs.access(appSource); record.sourcePath = appSource; } catch {}
+    record.upstream = record.upstream.replace('https://github.com/TedTschopp/tedt.org/tree/main/_apps/inside-ai', 'https://github.com/TedTschopp/tools.tedt.org/tree/main/tool-src/_apps/inside-ai');
+  }
   // Relative live links in imported prose must point to the intended site.
   record.html = record.html.replace(/(href|src)="(\/[^"#]*)/g, (_, a, p) => `${a}="${p.startsWith('/img/') ? p : relocate(p)}`);
   catalog.push(record);
-  docRedirects.push({from: '/tools/' + slug + '/', to: '/about/' + slug + '/'});
+  if (!launch.startsWith('https://tedt.org/RPG/Traveller/')) docRedirects.push({from: '/tools/' + slug + '/', to: '/about/' + slug + '/'});
 }
 const existing = new Set(catalog.map(t => canonicalPath(new URL(t.launch).pathname)));
 const htmlFiles = inventory.importedFiles.filter(f => f.source.startsWith('tools/') && f.source.endsWith('.html'));
@@ -85,6 +91,11 @@ for (const f of htmlFiles) {
   existing.add(next);
 }
 catalog.sort((a,b) => Number(b.featured)-Number(a.featured) || b.updated.localeCompare(a.updated) || a.title.localeCompare(b.title));
+const researchPath='tools/Under-Development-Name-Generator/Name-Generator.html';
+const research=await read(researchPath);
+const references=[...new Set(research.split(/\r?\n/).map(s=>s.trim()).filter(s=>/^https:\/\/www\.fantasynamegenerators\.com\/[^\s<>]+$/.test(s)))];
+await json('src/data/name-generator-references.json',references);
+catalog.push({slug:'name-generator-research',title:'Name Generator Research',summary:'An unfinished name-generator project: a preserved reference list and extraction notes. The referenced generators remain on their original websites.',status:'prototype',category:'Maps and RPG',tags:['names','reference','rpg'],type:'reference',updated:'',featured:false,launch:site+'/name-generator-research/',migrated:true,image:'',screenshots:[],features:[],repo:'https://github.com/TedTschopp/tools.tedt.org',sourcePath:'tool-src/'+researchPath,html:'<p>This unfinished project contains a reference list and extraction notes. It does not provide a local name generator.</p><p><a href="/name-generator-research/">Browse the references</a>, <a href="/Under-Development-Name-Generator/name-generator-js-report.md">read the extraction notes</a>, or <a href="/Under-Development-Name-Generator/Name-Generator.html">open the preserved source list</a>.</p>'});
 await json('src/data/catalog.json', catalog);
 
 const returnLink = '<a class="tt-catalog-return" href="/" aria-label="Return to Ted’s Tools catalog">← Tools</a><style>.tt-catalog-return{position:fixed;bottom:.6rem;left:.6rem;z-index:2147480000;padding:.3rem .65rem;border:1px solid #c8c7c3;border-radius:6px;background:#f8f6f0;color:#00446f;font:600 13px/1.5 system-ui;text-decoration:none}.tt-catalog-return:focus-visible{outline:3px solid #00a9e0;outline-offset:3px}</style>';
@@ -145,7 +156,7 @@ await json('src/data/lessons.json', {lessons, gameData});
 const excludedPaths = new Set(excludedPages.map(p=>p.path));
 const pageUrls = htmlFiles.filter(f => f.source !== 'tools/index.html' && !excludedPaths.has('/'+f.source)).map(f => canonicalPath('/'+f.source.slice(6)));
 pageUrls.push(...lessons.map(p=>'/'+p.path+'/'),'/RPG/world-map.html','/RPG/tile-map-viewer.html');
-await json('reports/migration-routes.json', {site, sourceCommit:inventory.commit, catalog: catalog.map(t=>({slug:t.slug, launch:t.launch, migrated:t.migrated, status:t.status})), catalogRedirects:docRedirects, migratedPages:[...new Set(pageUrls)], staticFiles, excludedPages, retainedLaunchUrls: catalog.filter(t=>!t.migrated).map(t=>t.launch)});
+await json('reports/migration-routes.json', {site, sourceCommit:inventory.commit, catalog: catalog.map(t=>({slug:t.slug, launch:t.launch, migrated:t.migrated, status:t.status})), catalogRedirects:docRedirects, migratedPages:[...new Set(pageUrls)], staticFiles, excludedPages, retainedLaunchUrls: catalog.filter(t=>!t.migrated).map(t=>t.launch), retainedOriginalUrlPrefixes:['/RPG/Traveller/', '/tools/traveller-character-sheet', '/tools/traveller-ship-sheet']});
 await json(path.join(out, 'catalog.json'), catalog.map(({html, ...t})=>t));
 await fs.writeFile(path.join(out,'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
 await fs.writeFile(path.join(out,'CNAME'), 'tools.tedt.org\n');

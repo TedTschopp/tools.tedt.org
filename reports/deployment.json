@@ -1,0 +1,26 @@
+{
+  "site": "https://tools.tedt.org/",
+  "repository": "https://github.com/TedTschopp/tools.tedt.org",
+  "sourceCommit": "90896ed4c97670a3844ff877f5f8c794791cff76",
+  "githubPages": {
+    "customDomain": "tools.tedt.org",
+    "httpsEnforced": true
+  },
+  "dns": {
+    "type": "CNAME",
+    "name": "tools.tedt.org",
+    "content": "tedtschopp.github.io",
+    "ttl": 1,
+    "proxied": true,
+    "recordId": "844630acc12f78f862c39a39e94dbd68"
+  },
+  "previewWorker": {
+    "name": "tools-social-bot-check-preview",
+    "version": "06ce62e3-6d00-4649-ba02-11ad03b16440",
+    "route": "https://tools.tedt.org/social-bot-check.html*",
+    "routeId": "5580bc22693b41a7a15d65d8bfd95af1",
+    "previousWorker": "retained unchanged for rollback"
+  },
+  "redirectRuleset": "2087d71c5be749d097a13a869aef0485",
+  "cutoverPullRequest": "https://github.com/TedTschopp/tedt.org/pull/261"
+}

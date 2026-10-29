@@ -3,6 +3,8 @@
 The maintained source for **https://tools.tedt.org/**. An Astro catalog surrounds
 standalone browser tools imported from TedT.org. Traveller tools and projects on
 their own domains remain linked at their original addresses.
+Traveller's original description pages also remain on TedT.org. Every migration
+redirect explicitly excludes Traveller paths.
 
 ## Develop and verify
 
