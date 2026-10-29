@@ -1,14 +1,42 @@
 {
   "site": "https://tools.tedt.org/",
   "version": {
-    "commit": "8d3b0e1d07669323349dfbc870f2e1871ea843a5",
+    "commit": "e9b259359c1c81d90adfe84639e2aed058dfba2c",
     "sourceCommit": "90896ed4c97670a3844ff877f5f8c794791cff76",
-    "tools": 92
+    "tools": 93
   },
   "redirectsChecked": 198,
   "retainedUrlsChecked": 5,
   "resourceTypesChecked": 6,
   "results": [
+    {
+      "from": "/tools/index.html",
+      "to": "/",
+      "status": 301,
+      "location": "https://tools.tedt.org/",
+      "ok": true
+    },
+    {
+      "from": "/tools/ai-chat-window/",
+      "to": "/about/ai-chat-window/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/ai-chat-window/",
+      "ok": true
+    },
+    {
+      "from": "/tools",
+      "to": "/",
+      "status": 301,
+      "location": "https://tools.tedt.org/",
+      "ok": true
+    },
+    {
+      "from": "/tools/color-chart/",
+      "to": "/about/color-chart/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/color-chart/",
+      "ok": true
+    },
     {
       "from": "/tools/color-chart",
       "to": "/about/color-chart/",
@@ -24,38 +52,10 @@
       "ok": true
     },
     {
-      "from": "/tools/index.html",
-      "to": "/",
-      "status": 301,
-      "location": "https://tools.tedt.org/",
-      "ok": true
-    },
-    {
-      "from": "/tools/focus-timer/",
-      "to": "/about/focus-timer/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/focus-timer/",
-      "ok": true
-    },
-    {
-      "from": "/tools/ai-chat-window/",
-      "to": "/about/ai-chat-window/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/ai-chat-window/",
-      "ok": true
-    },
-    {
       "from": "/tools/ai-chat-window",
       "to": "/about/ai-chat-window/",
       "status": 301,
       "location": "https://tools.tedt.org/about/ai-chat-window/",
-      "ok": true
-    },
-    {
-      "from": "/tools",
-      "to": "/",
-      "status": 301,
-      "location": "https://tools.tedt.org/",
       "ok": true
     },
     {
@@ -66,10 +66,10 @@
       "ok": true
     },
     {
-      "from": "/tools/color-chart/",
-      "to": "/about/color-chart/",
+      "from": "/tools/focus-timer/index.html",
+      "to": "/about/focus-timer/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/color-chart/",
+      "location": "https://tools.tedt.org/about/focus-timer/",
       "ok": true
     },
     {
@@ -80,6 +80,13 @@
       "ok": true
     },
     {
+      "from": "/tools/fractal/",
+      "to": "/about/fractal/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/fractal/",
+      "ok": true
+    },
+    {
       "from": "/tools/focus-timer",
       "to": "/about/focus-timer/",
       "status": 301,
@@ -87,14 +94,14 @@
       "ok": true
     },
     {
-      "from": "/tools/focus-timer/index.html",
+      "from": "/tools/focus-timer/",
       "to": "/about/focus-timer/",
       "status": 301,
       "location": "https://tools.tedt.org/about/focus-timer/",
       "ok": true
     },
     {
-      "from": "/tools/fractal/",
+      "from": "/tools/fractal/index.html",
       "to": "/about/fractal/",
       "status": 301,
       "location": "https://tools.tedt.org/about/fractal/",
@@ -108,17 +115,10 @@
       "ok": true
     },
     {
-      "from": "/tools/game-theory-playground/index.html",
+      "from": "/tools/game-theory-playground",
       "to": "/about/game-theory-playground/",
       "status": 301,
       "location": "https://tools.tedt.org/about/game-theory-playground/",
-      "ok": true
-    },
-    {
-      "from": "/tools/fractal/index.html",
-      "to": "/about/fractal/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/fractal/",
       "ok": true
     },
     {
@@ -129,42 +129,7 @@
       "ok": true
     },
     {
-      "from": "/tools/gamma-world-map-275feet/",
-      "to": "/about/gamma-world-map-275feet/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/gamma-world-map-275feet/",
-      "ok": true
-    },
-    {
-      "from": "/tools/gamma-world-map-275feet/index.html",
-      "to": "/about/gamma-world-map-275feet/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/gamma-world-map-275feet/",
-      "ok": true
-    },
-    {
-      "from": "/tools/hex-test-direct/",
-      "to": "/about/hex-test-direct/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/hex-test-direct/",
-      "ok": true
-    },
-    {
-      "from": "/tools/gradient-card",
-      "to": "/about/gradient-card/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/gradient-card/",
-      "ok": true
-    },
-    {
-      "from": "/tools/gradient-card/",
-      "to": "/about/gradient-card/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/gradient-card/",
-      "ok": true
-    },
-    {
-      "from": "/tools/game-theory-playground",
+      "from": "/tools/game-theory-playground/index.html",
       "to": "/about/game-theory-playground/",
       "status": 301,
       "location": "https://tools.tedt.org/about/game-theory-playground/",
@@ -178,6 +143,62 @@
       "ok": true
     },
     {
+      "from": "/tools/gamma-world-map-275feet/",
+      "to": "/about/gamma-world-map-275feet/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/gamma-world-map-275feet/",
+      "ok": true
+    },
+    {
+      "from": "/tools/gradient-card/",
+      "to": "/about/gradient-card/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/gradient-card/",
+      "ok": true
+    },
+    {
+      "from": "/tools/gradient-card",
+      "to": "/about/gradient-card/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/gradient-card/",
+      "ok": true
+    },
+    {
+      "from": "/tools/gamma-world-map-275feet/index.html",
+      "to": "/about/gamma-world-map-275feet/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/gamma-world-map-275feet/",
+      "ok": true
+    },
+    {
+      "from": "/tools/hex-test-direct/index.html",
+      "to": "/about/hex-test-direct/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/hex-test-direct/",
+      "ok": true
+    },
+    {
+      "from": "/tools/image-tools/index.html",
+      "to": "/about/image-tools/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/image-tools/",
+      "ok": true
+    },
+    {
+      "from": "/tools/hex-test-direct",
+      "to": "/about/hex-test-direct/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/hex-test-direct/",
+      "ok": true
+    },
+    {
+      "from": "/tools/image-tools",
+      "to": "/about/image-tools/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/image-tools/",
+      "ok": true
+    },
+    {
       "from": "/tools/gradient-card/index.html",
       "to": "/about/gradient-card/",
       "status": 301,
@@ -185,7 +206,7 @@
       "ok": true
     },
     {
-      "from": "/tools/hex-test-direct",
+      "from": "/tools/hex-test-direct/",
       "to": "/about/hex-test-direct/",
       "status": 301,
       "location": "https://tools.tedt.org/about/hex-test-direct/",
@@ -206,34 +227,6 @@
       "ok": true
     },
     {
-      "from": "/tools/inside-ai/",
-      "to": "/about/inside-ai/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/inside-ai/",
-      "ok": true
-    },
-    {
-      "from": "/tools/image-tools/index.html",
-      "to": "/about/image-tools/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/image-tools/",
-      "ok": true
-    },
-    {
-      "from": "/tools/image-tools",
-      "to": "/about/image-tools/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/image-tools/",
-      "ok": true
-    },
-    {
-      "from": "/tools/hex-test-direct/index.html",
-      "to": "/about/hex-test-direct/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/hex-test-direct/",
-      "ok": true
-    },
-    {
       "from": "/tools/ipfs-in-the-browser/",
       "to": "/about/ipfs-in-the-browser/",
       "status": 301,
@@ -241,21 +234,7 @@
       "ok": true
     },
     {
-      "from": "/tools/inside-ai/index.html",
-      "to": "/about/inside-ai/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/inside-ai/",
-      "ok": true
-    },
-    {
-      "from": "/tools/islands/",
-      "to": "/about/islands/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/islands/",
-      "ok": true
-    },
-    {
-      "from": "/tools/ipfs-in-the-browser",
+      "from": "/tools/ipfs-in-the-browser/index.html",
       "to": "/about/ipfs-in-the-browser/",
       "status": 301,
       "location": "https://tools.tedt.org/about/ipfs-in-the-browser/",
@@ -269,17 +248,24 @@
       "ok": true
     },
     {
-      "from": "/tools/ipfs-in-the-browser/index.html",
-      "to": "/about/ipfs-in-the-browser/",
+      "from": "/tools/inside-ai/index.html",
+      "to": "/about/inside-ai/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/ipfs-in-the-browser/",
+      "location": "https://tools.tedt.org/about/inside-ai/",
       "ok": true
     },
     {
-      "from": "/tools/islands/index.html",
-      "to": "/about/islands/",
+      "from": "/tools/markdown-frontmatter-preview/",
+      "to": "/about/markdown-frontmatter-preview/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/islands/",
+      "location": "https://tools.tedt.org/about/markdown-frontmatter-preview/",
+      "ok": true
+    },
+    {
+      "from": "/tools/ipfs-in-the-browser",
+      "to": "/about/ipfs-in-the-browser/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/ipfs-in-the-browser/",
       "ok": true
     },
     {
@@ -290,14 +276,21 @@
       "ok": true
     },
     {
-      "from": "/tools/markdown-frontmatter-preview/index.html",
-      "to": "/about/markdown-frontmatter-preview/",
+      "from": "/tools/islands/",
+      "to": "/about/islands/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/markdown-frontmatter-preview/",
+      "location": "https://tools.tedt.org/about/islands/",
       "ok": true
     },
     {
-      "from": "/tools/markdown-frontmatter-preview/",
+      "from": "/tools/islands/index.html",
+      "to": "/about/islands/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/islands/",
+      "ok": true
+    },
+    {
+      "from": "/tools/markdown-frontmatter-preview/index.html",
       "to": "/about/markdown-frontmatter-preview/",
       "status": 301,
       "location": "https://tools.tedt.org/about/markdown-frontmatter-preview/",
@@ -311,10 +304,31 @@
       "ok": true
     },
     {
+      "from": "/tools/inside-ai/",
+      "to": "/about/inside-ai/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/inside-ai/",
+      "ok": true
+    },
+    {
       "from": "/tools/mastodon-bot-map-generator/",
       "to": "/about/mastodon-bot-map-generator/",
       "status": 301,
       "location": "https://tools.tedt.org/about/mastodon-bot-map-generator/",
+      "ok": true
+    },
+    {
+      "from": "/tools/mastodon-embed-timeline/",
+      "to": "/about/mastodon-embed-timeline/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/mastodon-embed-timeline/",
+      "ok": true
+    },
+    {
+      "from": "/tools/mastodon-bot-random-board-game-night/index.html",
+      "to": "/about/mastodon-bot-random-board-game-night/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/mastodon-bot-random-board-game-night/",
       "ok": true
     },
     {
@@ -339,24 +353,10 @@
       "ok": true
     },
     {
-      "from": "/tools/mastodon-bot-random-board-game-night/index.html",
-      "to": "/about/mastodon-bot-random-board-game-night/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/mastodon-bot-random-board-game-night/",
-      "ok": true
-    },
-    {
-      "from": "/tools/mastodon-embed-timeline/",
+      "from": "/tools/mastodon-embed-timeline",
       "to": "/about/mastodon-embed-timeline/",
       "status": 301,
       "location": "https://tools.tedt.org/about/mastodon-embed-timeline/",
-      "ok": true
-    },
-    {
-      "from": "/tools/math-guide/index.html",
-      "to": "/about/math-guide/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/math-guide/",
       "ok": true
     },
     {
@@ -367,10 +367,10 @@
       "ok": true
     },
     {
-      "from": "/tools/mastodon-embed-timeline",
-      "to": "/about/mastodon-embed-timeline/",
+      "from": "/tools/math-guide/index.html",
+      "to": "/about/math-guide/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/mastodon-embed-timeline/",
+      "location": "https://tools.tedt.org/about/math-guide/",
       "ok": true
     },
     {
@@ -381,17 +381,17 @@
       "ok": true
     },
     {
-      "from": "/tools/morph/",
+      "from": "/tools/morph",
       "to": "/about/morph/",
       "status": 301,
       "location": "https://tools.tedt.org/about/morph/",
       "ok": true
     },
     {
-      "from": "/tools/ocr/",
-      "to": "/about/ocr/",
+      "from": "/tools/morph/",
+      "to": "/about/morph/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/ocr/",
+      "location": "https://tools.tedt.org/about/morph/",
       "ok": true
     },
     {
@@ -402,10 +402,10 @@
       "ok": true
     },
     {
-      "from": "/tools/morph",
-      "to": "/about/morph/",
+      "from": "/tools/ocr/",
+      "to": "/about/ocr/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/morph/",
+      "location": "https://tools.tedt.org/about/ocr/",
       "ok": true
     },
     {
@@ -413,6 +413,27 @@
       "to": "/about/morph/",
       "status": 301,
       "location": "https://tools.tedt.org/about/morph/",
+      "ok": true
+    },
+    {
+      "from": "/tools/ocr/index.html",
+      "to": "/about/ocr/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/ocr/",
+      "ok": true
+    },
+    {
+      "from": "/tools/password-challenge",
+      "to": "/about/password-challenge/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/password-challenge/",
+      "ok": true
+    },
+    {
+      "from": "/tools/outage-map/index.html",
+      "to": "/about/outage-map/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/outage-map/",
       "ok": true
     },
     {
@@ -424,20 +445,6 @@
     },
     {
       "from": "/tools/outage-map",
-      "to": "/about/outage-map/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/outage-map/",
-      "ok": true
-    },
-    {
-      "from": "/tools/ocr/index.html",
-      "to": "/about/ocr/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/ocr/",
-      "ok": true
-    },
-    {
-      "from": "/tools/outage-map/index.html",
       "to": "/about/outage-map/",
       "status": 301,
       "location": "https://tools.tedt.org/about/outage-map/",
@@ -458,10 +465,17 @@
       "ok": true
     },
     {
-      "from": "/tools/password-challenge",
-      "to": "/about/password-challenge/",
+      "from": "/tools/procedural-text-generation/index.html",
+      "to": "/about/procedural-text-generation/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/password-challenge/",
+      "location": "https://tools.tedt.org/about/procedural-text-generation/",
+      "ok": true
+    },
+    {
+      "from": "/tools/procedural-text-generation/",
+      "to": "/about/procedural-text-generation/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/procedural-text-generation/",
       "ok": true
     },
     {
@@ -486,10 +500,10 @@
       "ok": true
     },
     {
-      "from": "/tools/procedural-text-generation/",
-      "to": "/about/procedural-text-generation/",
+      "from": "/tools/qr-builder",
+      "to": "/about/qr-builder/",
       "status": 301,
-      "location": "https://tools.tedt.org/about/procedural-text-generation/",
+      "location": "https://tools.tedt.org/about/qr-builder/",
       "ok": true
     },
     {
@@ -500,31 +514,17 @@
       "ok": true
     },
     {
-      "from": "/tools/qr-builder/index.html",
-      "to": "/about/qr-builder/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/qr-builder/",
-      "ok": true
-    },
-    {
-      "from": "/tools/procedural-text-generation/index.html",
-      "to": "/about/procedural-text-generation/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/procedural-text-generation/",
-      "ok": true
-    },
-    {
-      "from": "/tools/qr-builder",
-      "to": "/about/qr-builder/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/qr-builder/",
-      "ok": true
-    },
-    {
-      "from": "/tools/quick-study-painter/index.html",
+      "from": "/tools/quick-study-painter",
       "to": "/about/quick-study-painter/",
       "status": 301,
       "location": "https://tools.tedt.org/about/quick-study-painter/",
+      "ok": true
+    },
+    {
+      "from": "/tools/random-star-constellations/index.html",
+      "to": "/about/random-star-constellations/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/random-star-constellations/",
       "ok": true
     },
     {
@@ -535,17 +535,17 @@
       "ok": true
     },
     {
-      "from": "/tools/quick-study-painter",
-      "to": "/about/quick-study-painter/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/quick-study-painter/",
-      "ok": true
-    },
-    {
       "from": "/tools/rpg-tile-map-viewer/",
       "to": "/about/rpg-tile-map-viewer/",
       "status": 301,
       "location": "https://tools.tedt.org/about/rpg-tile-map-viewer/",
+      "ok": true
+    },
+    {
+      "from": "/tools/qr-builder/index.html",
+      "to": "/about/qr-builder/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/qr-builder/",
       "ok": true
     },
     {
@@ -556,7 +556,14 @@
       "ok": true
     },
     {
-      "from": "/tools/random-star-constellations/index.html",
+      "from": "/tools/quick-study-painter/index.html",
+      "to": "/about/quick-study-painter/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/quick-study-painter/",
+      "ok": true
+    },
+    {
+      "from": "/tools/random-star-constellations",
       "to": "/about/random-star-constellations/",
       "status": 301,
       "location": "https://tools.tedt.org/about/random-star-constellations/",
@@ -570,17 +577,10 @@
       "ok": true
     },
     {
-      "from": "/tools/rpg-world-map-generator",
+      "from": "/tools/rpg-world-map-generator/index.html",
       "to": "/about/rpg-world-map-generator/",
       "status": 301,
       "location": "https://tools.tedt.org/about/rpg-world-map-generator/",
-      "ok": true
-    },
-    {
-      "from": "/tools/random-star-constellations",
-      "to": "/about/random-star-constellations/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/random-star-constellations/",
       "ok": true
     },
     {
@@ -605,20 +605,6 @@
       "ok": true
     },
     {
-      "from": "/tools/social-bot-check",
-      "to": "/about/social-bot-check/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/social-bot-check/",
-      "ok": true
-    },
-    {
-      "from": "/tools/social-bot-check/index.html",
-      "to": "/about/social-bot-check/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/social-bot-check/",
-      "ok": true
-    },
-    {
       "from": "/tools/sloccount-web-analyzer",
       "to": "/about/sloccount-web-analyzer/",
       "status": 301,
@@ -626,24 +612,10 @@
       "ok": true
     },
     {
-      "from": "/tools/rpg-world-map-generator/index.html",
+      "from": "/tools/rpg-world-map-generator",
       "to": "/about/rpg-world-map-generator/",
       "status": 301,
       "location": "https://tools.tedt.org/about/rpg-world-map-generator/",
-      "ok": true
-    },
-    {
-      "from": "/tools/algorithmic-art/kintsugi-currents/",
-      "to": "/algorithmic-art/kintsugi-currents/",
-      "status": 301,
-      "location": "https://tools.tedt.org/algorithmic-art/kintsugi-currents/",
-      "ok": true
-    },
-    {
-      "from": "/tools/social-bot-check/",
-      "to": "/about/social-bot-check/",
-      "status": 301,
-      "location": "https://tools.tedt.org/about/social-bot-check/",
       "ok": true
     },
     {
@@ -654,20 +626,6 @@
       "ok": true
     },
     {
-      "from": "/tools/hex-test-direct.html",
-      "to": "/hex-test-direct.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/hex-test-direct.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/fractal.html",
-      "to": "/fractal.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/fractal.html",
-      "ok": true
-    },
-    {
       "from": "/tools/ai-chat-window.html",
       "to": "/ai-chat-window.html",
       "status": 301,
@@ -675,10 +633,17 @@
       "ok": true
     },
     {
-      "from": "/tools/gradient-card.html",
-      "to": "/gradient-card.html",
+      "from": "/tools/social-bot-check/",
+      "to": "/about/social-bot-check/",
       "status": 301,
-      "location": "https://tools.tedt.org/gradient-card.html",
+      "location": "https://tools.tedt.org/about/social-bot-check/",
+      "ok": true
+    },
+    {
+      "from": "/tools/social-bot-check",
+      "to": "/about/social-bot-check/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/social-bot-check/",
       "ok": true
     },
     {
@@ -689,10 +654,66 @@
       "ok": true
     },
     {
+      "from": "/tools/social-bot-check/index.html",
+      "to": "/about/social-bot-check/",
+      "status": 301,
+      "location": "https://tools.tedt.org/about/social-bot-check/",
+      "ok": true
+    },
+    {
+      "from": "/tools/fractal.html",
+      "to": "/fractal.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/fractal.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/gradient-card.html",
+      "to": "/gradient-card.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/gradient-card.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/hex-test-direct.html",
+      "to": "/hex-test-direct.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/hex-test-direct.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/ipfs/",
+      "to": "/ipfs/",
+      "status": 301,
+      "location": "https://tools.tedt.org/ipfs/",
+      "ok": true
+    },
+    {
       "from": "/tools/image-tools.html",
       "to": "/image-tools.html",
       "status": 301,
       "location": "https://tools.tedt.org/image-tools.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/mastodon/EmbedToot/embed-article-view.html",
+      "to": "/mastodon/EmbedToot/embed-article-view.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-article-view.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/algorithmic-art/kintsugi-currents/",
+      "to": "/algorithmic-art/kintsugi-currents/",
+      "status": 301,
+      "location": "https://tools.tedt.org/algorithmic-art/kintsugi-currents/",
+      "ok": true
+    },
+    {
+      "from": "/tools/mastodon/EmbedToot/embed-post-and-comments-normal.html",
+      "to": "/mastodon/EmbedToot/embed-post-and-comments-normal.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-post-and-comments-normal.html",
       "ok": true
     },
     {
@@ -710,45 +731,10 @@
       "ok": true
     },
     {
-      "from": "/tools/mastodon/EmbedToot/embed-post-and-comments-normal.html",
-      "to": "/mastodon/EmbedToot/embed-post-and-comments-normal.html",
+      "from": "/tools/mastodon/EmbedToot/embed-users-recent-posts-normal.html",
+      "to": "/mastodon/EmbedToot/embed-users-recent-posts-normal.html",
       "status": 301,
-      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-post-and-comments-normal.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/mastodon/EmbedToot/embed-post-and-comments-tree-view.html",
-      "to": "/mastodon/EmbedToot/embed-post-and-comments-tree-view.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-post-and-comments-tree-view.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/ipfs/",
-      "to": "/ipfs/",
-      "status": 301,
-      "location": "https://tools.tedt.org/ipfs/",
-      "ok": true
-    },
-    {
-      "from": "/tools/mastodon/EmbedToot/embed-article-view.html",
-      "to": "/mastodon/EmbedToot/embed-article-view.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-article-view.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/mastodon/EmbedToot/embed-post-and-replies-thread.html",
-      "to": "/mastodon/EmbedToot/embed-post-and-replies-thread.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-post-and-replies-thread.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/mastodon/hashtag.html",
-      "to": "/mastodon/hashtag.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/mastodon/hashtag.html",
+      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-users-recent-posts-normal.html",
       "ok": true
     },
     {
@@ -759,13 +745,6 @@
       "ok": true
     },
     {
-      "from": "/tools/mastodon/",
-      "to": "/mastodon/",
-      "status": 301,
-      "location": "https://tools.tedt.org/mastodon/",
-      "ok": true
-    },
-    {
       "from": "/tools/mastodon/EmbedToot/embed-single-post.html",
       "to": "/mastodon/EmbedToot/embed-single-post.html",
       "status": 301,
@@ -773,17 +752,31 @@
       "ok": true
     },
     {
-      "from": "/tools/mastodon/local.html",
-      "to": "/mastodon/local.html",
+      "from": "/tools/mastodon/hashtag.html",
+      "to": "/mastodon/hashtag.html",
       "status": 301,
-      "location": "https://tools.tedt.org/mastodon/local.html",
+      "location": "https://tools.tedt.org/mastodon/hashtag.html",
       "ok": true
     },
     {
-      "from": "/tools/mastodon/theme.html",
-      "to": "/mastodon/theme.html",
+      "from": "/tools/mastodon/EmbedToot/embed-post-and-replies-thread.html",
+      "to": "/mastodon/EmbedToot/embed-post-and-replies-thread.html",
       "status": 301,
-      "location": "https://tools.tedt.org/mastodon/theme.html",
+      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-post-and-replies-thread.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/mastodon/",
+      "to": "/mastodon/",
+      "status": 301,
+      "location": "https://tools.tedt.org/mastodon/",
+      "ok": true
+    },
+    {
+      "from": "/tools/mastodon/EmbedToot/embed-post-and-comments-tree-view.html",
+      "to": "/mastodon/EmbedToot/embed-post-and-comments-tree-view.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-post-and-comments-tree-view.html",
       "ok": true
     },
     {
@@ -801,24 +794,10 @@
       "ok": true
     },
     {
-      "from": "/tools/morph.html",
-      "to": "/morph.html",
+      "from": "/tools/mastodon/theme.html",
+      "to": "/mastodon/theme.html",
       "status": 301,
-      "location": "https://tools.tedt.org/morph.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/mastodon/EmbedToot/embed-users-recent-posts-normal.html",
-      "to": "/mastodon/EmbedToot/embed-users-recent-posts-normal.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/mastodon/EmbedToot/embed-users-recent-posts-normal.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/onboard-pro.html",
-      "to": "/onboard-pro.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/onboard-pro.html",
+      "location": "https://tools.tedt.org/mastodon/theme.html",
       "ok": true
     },
     {
@@ -826,6 +805,13 @@
       "to": "/ocr.html",
       "status": 301,
       "location": "https://tools.tedt.org/ocr.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/morph.html",
+      "to": "/morph.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/morph.html",
       "ok": true
     },
     {
@@ -850,6 +836,20 @@
       "ok": true
     },
     {
+      "from": "/tools/mastodon/local.html",
+      "to": "/mastodon/local.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/mastodon/local.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-adventuring-gear.html",
+      "to": "/osr-tools/osr-adventuring-gear.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-adventuring-gear.html",
+      "ok": true
+    },
+    {
       "from": "/tools/osr-tools/osr-alchemy-recipes.html",
       "to": "/osr-tools/osr-alchemy-recipes.html",
       "status": 301,
@@ -871,24 +871,10 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-basic-adventurers-guild.html",
-      "to": "/osr-tools/osr-basic-adventurers-guild.html",
+      "from": "/tools/onboard-pro.html",
+      "to": "/onboard-pro.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-basic-adventurers-guild.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-books-and-tomes.html",
-      "to": "/osr-tools/osr-books-and-tomes.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-books-and-tomes.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-adventuring-gear.html",
-      "to": "/osr-tools/osr-adventuring-gear.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-adventuring-gear.html",
+      "location": "https://tools.tedt.org/onboard-pro.html",
       "ok": true
     },
     {
@@ -899,17 +885,31 @@
       "ok": true
     },
     {
+      "from": "/tools/osr-tools/osr-books-and-tomes.html",
+      "to": "/osr-tools/osr-books-and-tomes.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-books-and-tomes.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-basic-adventurers-guild.html",
+      "to": "/osr-tools/osr-basic-adventurers-guild.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-basic-adventurers-guild.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-fantasy-settlements-ttown.html",
+      "to": "/osr-tools/osr-fantasy-settlements-ttown.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-fantasy-settlements-ttown.html",
+      "ok": true
+    },
+    {
       "from": "/tools/osr-tools/osr-combat-dice-sheets.html",
       "to": "/osr-tools/osr-combat-dice-sheets.html",
       "status": 301,
       "location": "https://tools.tedt.org/osr-tools/osr-combat-dice-sheets.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-dungeon-builder.html",
-      "to": "/osr-tools/osr-dungeon-builder.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-dungeon-builder.html",
       "ok": true
     },
     {
@@ -927,20 +927,6 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-fantasy-settlements-ttown.html",
-      "to": "/osr-tools/osr-fantasy-settlements-ttown.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-fantasy-settlements-ttown.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-encounter-creation.html",
-      "to": "/osr-tools/osr-encounter-creation.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-encounter-creation.html",
-      "ok": true
-    },
-    {
       "from": "/tools/osr-tools/osr-fantasy-settlements-wtown.html",
       "to": "/osr-tools/osr-fantasy-settlements-wtown.html",
       "status": 301,
@@ -955,31 +941,10 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-futuristic-maze.html",
-      "to": "/osr-tools/osr-futuristic-maze.html",
+      "from": "/tools/osr-tools/osr-dungeon-builder.html",
+      "to": "/osr-tools/osr-dungeon-builder.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-futuristic-maze.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-fantasy-settlements.html",
-      "to": "/osr-tools/osr-fantasy-settlements.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-fantasy-settlements.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-monster-listing.html",
-      "to": "/osr-tools/osr-monster-listing.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-monster-listing.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-piles-of-coins.html",
-      "to": "/osr-tools/osr-piles-of-coins.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-piles-of-coins.html",
+      "location": "https://tools.tedt.org/osr-tools/osr-dungeon-builder.html",
       "ok": true
     },
     {
@@ -990,17 +955,24 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-mutant-settlements.html",
-      "to": "/osr-tools/osr-mutant-settlements.html",
+      "from": "/tools/osr-tools/osr-fantasy-settlements.html",
+      "to": "/osr-tools/osr-fantasy-settlements.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-mutant-settlements.html",
+      "location": "https://tools.tedt.org/osr-tools/osr-fantasy-settlements.html",
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-random-area.html",
-      "to": "/osr-tools/osr-random-area.html",
+      "from": "/tools/osr-tools/osr-futuristic-maze.html",
+      "to": "/osr-tools/osr-futuristic-maze.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-random-area.html",
+      "location": "https://tools.tedt.org/osr-tools/osr-futuristic-maze.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-encounter-creation.html",
+      "to": "/osr-tools/osr-encounter-creation.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-encounter-creation.html",
       "ok": true
     },
     {
@@ -1011,6 +983,27 @@
       "ok": true
     },
     {
+      "from": "/tools/osr-tools/osr-mutant-settlements.html",
+      "to": "/osr-tools/osr-mutant-settlements.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-mutant-settlements.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-monster-listing.html",
+      "to": "/osr-tools/osr-monster-listing.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-monster-listing.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-random-area.html",
+      "to": "/osr-tools/osr-random-area.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-random-area.html",
+      "ok": true
+    },
+    {
       "from": "/tools/osr-tools/osr-random-listings.html",
       "to": "/osr-tools/osr-random-listings.html",
       "status": 301,
@@ -1018,10 +1011,10 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-random-treasure-maps.html",
-      "to": "/osr-tools/osr-random-treasure-maps.html",
+      "from": "/tools/osr-tools/osr-random-treasure.html",
+      "to": "/osr-tools/osr-random-treasure.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-random-treasure-maps.html",
+      "location": "https://tools.tedt.org/osr-tools/osr-random-treasure.html",
       "ok": true
     },
     {
@@ -1032,10 +1025,17 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-ruined-city-maps.html",
-      "to": "/osr-tools/osr-ruined-city-maps.html",
+      "from": "/tools/osr-tools/osr-piles-of-coins.html",
+      "to": "/osr-tools/osr-piles-of-coins.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-ruined-city-maps.html",
+      "location": "https://tools.tedt.org/osr-tools/osr-piles-of-coins.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-random-treasure-maps.html",
+      "to": "/osr-tools/osr-random-treasure-maps.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-random-treasure-maps.html",
       "ok": true
     },
     {
@@ -1060,24 +1060,17 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-random-treasure.html",
-      "to": "/osr-tools/osr-random-treasure.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-random-treasure.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-sewer-maps.html",
-      "to": "/osr-tools/osr-sewer-maps.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-sewer-maps.html",
-      "ok": true
-    },
-    {
       "from": "/tools/osr-tools/osr-settlement-maps.html",
       "to": "/osr-tools/osr-settlement-maps.html",
       "status": 301,
       "location": "https://tools.tedt.org/osr-tools/osr-settlement-maps.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-ruined-city-maps.html",
+      "to": "/osr-tools/osr-ruined-city-maps.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-ruined-city-maps.html",
       "ok": true
     },
     {
@@ -1088,17 +1081,10 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-suburb-maps.html",
-      "to": "/osr-tools/osr-suburb-maps.html",
+      "from": "/tools/osr-tools/osr-sewer-maps.html",
+      "to": "/osr-tools/osr-sewer-maps.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-suburb-maps.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-the-apocalypse.html",
-      "to": "/osr-tools/osr-the-apocalypse.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-the-apocalypse.html",
+      "location": "https://tools.tedt.org/osr-tools/osr-sewer-maps.html",
       "ok": true
     },
     {
@@ -1116,45 +1102,10 @@
       "ok": true
     },
     {
-      "from": "/tools/osr-tools/osr-world-maps.html",
-      "to": "/osr-tools/osr-world-maps.html",
+      "from": "/tools/osr-tools/osr-the-apocalypse.html",
+      "to": "/osr-tools/osr-the-apocalypse.html",
       "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-world-maps.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/osr-tools/osr-world-adventure.html",
-      "to": "/osr-tools/osr-world-adventure.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/osr-tools/osr-world-adventure.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/quick-study-painter.html",
-      "to": "/quick-study-painter.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/quick-study-painter.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/qr-builder.html",
-      "to": "/qr-builder.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/qr-builder.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/sloccount-web-analyzer.html",
-      "to": "/sloccount-web-analyzer.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/sloccount-web-analyzer.html",
-      "ok": true
-    },
-    {
-      "from": "/tools/start-page/",
-      "to": "/start-page/",
-      "status": 301,
-      "location": "https://tools.tedt.org/start-page/",
+      "location": "https://tools.tedt.org/osr-tools/osr-the-apocalypse.html",
       "ok": true
     },
     {
@@ -1165,6 +1116,41 @@
       "ok": true
     },
     {
+      "from": "/tools/osr-tools/osr-world-maps.html",
+      "to": "/osr-tools/osr-world-maps.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-world-maps.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/qr-builder.html",
+      "to": "/qr-builder.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/qr-builder.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/osr-tools/osr-world-adventure.html",
+      "to": "/osr-tools/osr-world-adventure.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/osr-tools/osr-world-adventure.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/sloccount-web-analyzer.html",
+      "to": "/sloccount-web-analyzer.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/sloccount-web-analyzer.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/quick-study-painter.html",
+      "to": "/quick-study-painter.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/quick-study-painter.html",
+      "ok": true
+    },
+    {
       "from": "/tools/social-bot-check.html",
       "to": "/social-bot-check.html",
       "status": 301,
@@ -1172,31 +1158,10 @@
       "ok": true
     },
     {
-      "from": "/game-theory/common-knowledge/",
-      "to": "/game-theory/common-knowledge/",
+      "from": "/tools/osr-tools/osr-suburb-maps.html",
+      "to": "/osr-tools/osr-suburb-maps.html",
       "status": 301,
-      "location": "https://tools.tedt.org/game-theory/common-knowledge/",
-      "ok": true
-    },
-    {
-      "from": "/game-theory/correlation-experiment/",
-      "to": "/game-theory/correlation-experiment/",
-      "status": 301,
-      "location": "https://tools.tedt.org/game-theory/correlation-experiment/",
-      "ok": true
-    },
-    {
-      "from": "/game-theory/bargaining-room/",
-      "to": "/game-theory/bargaining-room/",
-      "status": 301,
-      "location": "https://tools.tedt.org/game-theory/bargaining-room/",
-      "ok": true
-    },
-    {
-      "from": "/game-theory/auction-lab/",
-      "to": "/game-theory/auction-lab/",
-      "status": 301,
-      "location": "https://tools.tedt.org/game-theory/auction-lab/",
+      "location": "https://tools.tedt.org/osr-tools/osr-suburb-maps.html",
       "ok": true
     },
     {
@@ -1214,10 +1179,38 @@
       "ok": true
     },
     {
+      "from": "/game-theory/bargaining-room/",
+      "to": "/game-theory/bargaining-room/",
+      "status": 301,
+      "location": "https://tools.tedt.org/game-theory/bargaining-room/",
+      "ok": true
+    },
+    {
+      "from": "/game-theory/auction-lab/",
+      "to": "/game-theory/auction-lab/",
+      "status": 301,
+      "location": "https://tools.tedt.org/game-theory/auction-lab/",
+      "ok": true
+    },
+    {
       "from": "/game-theory/coordination-trap/",
       "to": "/game-theory/coordination-trap/",
       "status": 301,
       "location": "https://tools.tedt.org/game-theory/coordination-trap/",
+      "ok": true
+    },
+    {
+      "from": "/tools/start-page/",
+      "to": "/start-page/",
+      "status": 301,
+      "location": "https://tools.tedt.org/start-page/",
+      "ok": true
+    },
+    {
+      "from": "/game-theory/correlation-experiment/",
+      "to": "/game-theory/correlation-experiment/",
+      "status": 301,
+      "location": "https://tools.tedt.org/game-theory/correlation-experiment/",
       "ok": true
     },
     {
@@ -1228,10 +1221,38 @@
       "ok": true
     },
     {
+      "from": "/game-theory/common-knowledge/",
+      "to": "/game-theory/common-knowledge/",
+      "status": 301,
+      "location": "https://tools.tedt.org/game-theory/common-knowledge/",
+      "ok": true
+    },
+    {
+      "from": "/game-theory/equilibrium-explorer/",
+      "to": "/game-theory/equilibrium-explorer/",
+      "status": 301,
+      "location": "https://tools.tedt.org/game-theory/equilibrium-explorer/",
+      "ok": true
+    },
+    {
       "from": "/game-theory/evolution-arena/",
       "to": "/game-theory/evolution-arena/",
       "status": 301,
       "location": "https://tools.tedt.org/game-theory/evolution-arena/",
+      "ok": true
+    },
+    {
+      "from": "/game-theory/expectations-game/",
+      "to": "/game-theory/expectations-game/",
+      "status": 301,
+      "location": "https://tools.tedt.org/game-theory/expectations-game/",
+      "ok": true
+    },
+    {
+      "from": "/game-theory/incentive-designer/",
+      "to": "/game-theory/incentive-designer/",
+      "status": 301,
+      "location": "https://tools.tedt.org/game-theory/incentive-designer/",
       "ok": true
     },
     {
@@ -1249,27 +1270,6 @@
       "ok": true
     },
     {
-      "from": "/game-theory/expectations-game/",
-      "to": "/game-theory/expectations-game/",
-      "status": 301,
-      "location": "https://tools.tedt.org/game-theory/expectations-game/",
-      "ok": true
-    },
-    {
-      "from": "/game-theory/mixed-strategy/",
-      "to": "/game-theory/mixed-strategy/",
-      "status": 301,
-      "location": "https://tools.tedt.org/game-theory/mixed-strategy/",
-      "ok": true
-    },
-    {
-      "from": "/game-theory/equilibrium-explorer/",
-      "to": "/game-theory/equilibrium-explorer/",
-      "status": 301,
-      "location": "https://tools.tedt.org/game-theory/equilibrium-explorer/",
-      "ok": true
-    },
-    {
       "from": "/game-theory/mechanism-design/",
       "to": "/game-theory/mechanism-design/",
       "status": 301,
@@ -1277,10 +1277,10 @@
       "ok": true
     },
     {
-      "from": "/game-theory/incentive-designer/",
-      "to": "/game-theory/incentive-designer/",
+      "from": "/game-theory/mixed-strategy/",
+      "to": "/game-theory/mixed-strategy/",
       "status": 301,
-      "location": "https://tools.tedt.org/game-theory/incentive-designer/",
+      "location": "https://tools.tedt.org/game-theory/mixed-strategy/",
       "ok": true
     },
     {
@@ -1305,13 +1305,6 @@
       "ok": true
     },
     {
-      "from": "/game-theory/trust-machine/",
-      "to": "/game-theory/trust-machine/",
-      "status": 301,
-      "location": "https://tools.tedt.org/game-theory/trust-machine/",
-      "ok": true
-    },
-    {
       "from": "/game-theory/traffic-paradox/",
       "to": "/game-theory/traffic-paradox/",
       "status": 301,
@@ -1319,31 +1312,10 @@
       "ok": true
     },
     {
-      "from": "/game-theory/voting-lab/",
-      "to": "/game-theory/voting-lab/",
+      "from": "/game-theory/trust-machine/",
+      "to": "/game-theory/trust-machine/",
       "status": 301,
-      "location": "https://tools.tedt.org/game-theory/voting-lab/",
-      "ok": true
-    },
-    {
-      "from": "/inside-ai/",
-      "to": "/inside-ai/",
-      "status": 301,
-      "location": "https://tools.tedt.org/inside-ai/",
-      "ok": true
-    },
-    {
-      "from": "/RPG/world-map.html",
-      "to": "/RPG/world-map.html",
-      "status": 301,
-      "location": "https://tools.tedt.org/RPG/world-map.html",
-      "ok": true
-    },
-    {
-      "from": "/math-guide/",
-      "to": "/math-guide/",
-      "status": 301,
-      "location": "https://tools.tedt.org/math-guide/",
+      "location": "https://tools.tedt.org/game-theory/trust-machine/",
       "ok": true
     },
     {
@@ -1354,31 +1326,24 @@
       "ok": true
     },
     {
-      "from": "/js/game-theory/playground.mjs",
-      "to": "/js/game-theory/playground.mjs",
+      "from": "/inside-ai/",
+      "to": "/inside-ai/",
       "status": 301,
-      "location": "https://tools.tedt.org/js/game-theory/playground.mjs",
+      "location": "https://tools.tedt.org/inside-ai/",
       "ok": true
     },
     {
-      "from": "/tools/morph.html?migration_check=1&value=two%20words",
-      "to": "/morph.html?migration_check=1&value=two%20words",
+      "from": "/math-guide/",
+      "to": "/math-guide/",
       "status": 301,
-      "location": "https://tools.tedt.org/morph.html?migration_check=1&value=two%20words",
+      "location": "https://tools.tedt.org/math-guide/",
       "ok": true
     },
     {
-      "from": "/tools/social-bot-check.html?migration_check=1&value=two%20words",
-      "to": "/social-bot-check.html?migration_check=1&value=two%20words",
+      "from": "/game-theory/voting-lab/",
+      "to": "/game-theory/voting-lab/",
       "status": 301,
-      "location": "https://tools.tedt.org/social-bot-check.html?migration_check=1&value=two%20words",
-      "ok": true
-    },
-    {
-      "from": "/css/inside-ai.css",
-      "to": "/css/inside-ai.css",
-      "status": 301,
-      "location": "https://tools.tedt.org/css/inside-ai.css",
+      "location": "https://tools.tedt.org/game-theory/voting-lab/",
       "ok": true
     },
     {
@@ -1389,10 +1354,45 @@
       "ok": true
     },
     {
+      "from": "/js/game-theory/playground.mjs",
+      "to": "/js/game-theory/playground.mjs",
+      "status": 301,
+      "location": "https://tools.tedt.org/js/game-theory/playground.mjs",
+      "ok": true
+    },
+    {
+      "from": "/css/inside-ai.css",
+      "to": "/css/inside-ai.css",
+      "status": 301,
+      "location": "https://tools.tedt.org/css/inside-ai.css",
+      "ok": true
+    },
+    {
+      "from": "/RPG/world-map.html",
+      "to": "/RPG/world-map.html",
+      "status": 301,
+      "location": "https://tools.tedt.org/RPG/world-map.html",
+      "ok": true
+    },
+    {
+      "from": "/tools/morph.html?migration_check=1&value=two%20words",
+      "to": "/morph.html?migration_check=1&value=two%20words",
+      "status": 301,
+      "location": "https://tools.tedt.org/morph.html?migration_check=1&value=two%20words",
+      "ok": true
+    },
+    {
       "from": "/tools/color-chart/?migration_check=1&value=two%20words",
       "to": "/about/color-chart/?migration_check=1&value=two%20words",
       "status": 301,
       "location": "https://tools.tedt.org/about/color-chart/?migration_check=1&value=two%20words",
+      "ok": true
+    },
+    {
+      "from": "/tools/social-bot-check.html?migration_check=1&value=two%20words",
+      "to": "/social-bot-check.html?migration_check=1&value=two%20words",
+      "status": 301,
+      "location": "https://tools.tedt.org/social-bot-check.html?migration_check=1&value=two%20words",
       "ok": true
     },
     {

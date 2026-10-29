@@ -1,0 +1,57 @@
+{
+  "validatedApplicationCommit": "e9b259359c1c81d90adfe84639e2aed058dfba2c",
+  "githubActions": "https://github.com/TedTschopp/tools.tedt.org/actions/runs/40885398431",
+  "browserAcceptance": {
+    "startTime": "2026-10-29T14:15:34.763Z",
+    "duration": 56906.933,
+    "expected": 111,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "unitChecks": {
+    "passed": 166,
+    "failed": 0
+  },
+  "previewWorkerChecks": {
+    "javascriptPassed": 19,
+    "pythonPassed": 6,
+    "liveVariantsPassed": 6
+  },
+  "liveRedirects": {
+    "checked": 198,
+    "retained": 5,
+    "contentTypes": 6,
+    "failures": []
+  },
+  "interactiveWorkflows": [
+    {
+      "workflow": "world map regeneration and PNG export",
+      "status": "passed",
+      "filename": "world-map-6099370.png",
+      "bytes": 30979
+    },
+    {
+      "workflow": "social account analysis and JSON export",
+      "status": "passed",
+      "message": "JSON report downloaded with the current sample, thresholds, and linked evidence.",
+      "profile": "tedt.org",
+      "filename": "social-bot-check-bluesky-tedt.org.json"
+    }
+  ],
+  "browserFragment": {
+    "from": "https://tedt.org/tools/morph.html?migration_check=fragment#editor",
+    "to": "https://tools.tedt.org/morph.html?migration_check=fragment#editor",
+    "observation": "Browser retained query and fragment and focused the editor."
+  },
+  "originalSite": {
+    "pullRequest": "https://github.com/TedTschopp/tedt.org/pull/261",
+    "mergeCommit": "ae368a1f9c1f59a7f85309e6b42d0cc613a5a137",
+    "deploymentRun": "https://github.com/TedTschopp/tedt.org/actions/runs/40889674055"
+  },
+  "knownLimitations": [
+    "The original Mastodon multi-timeline and theme demos retain a pre-existing remote HTTP 422 limitation.",
+    "GitHub reports 31 inherited dependency alerts: 9 high, 18 moderate, and 4 low."
+  ],
+  "rollback": "The original source commits, previous Worker configuration, and old Worker remain available."
+}
