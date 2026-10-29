@@ -11,7 +11,7 @@ root = Path(sys.argv[1]).resolve()
 if not (root/'.git').exists(): raise SystemExit('Expected an isolated Git worktree.')
 status = subprocess.check_output(['git','-C',str(root),'status','--porcelain'],text=True)
 if status: raise SystemExit('Cutover worktree must start clean.')
-deleted = ['tools','_tools','_apps/inside-ai','inside-ai','game-theory','math-guide','js/game-theory','_includes/game-theory','_layouts/game-theory.html','_layouts/inside-ai.html','_layouts/tool.html','_data/game_theory.yml','RPG/world-map.html','RPG/tile-map-viewer.html','tests/game-theory','tests/social-bot-check','tests/quick-study-painter','tests/inside-ai','tests/check_tools_css_sync.rb','_code/cloudflare/social-bot-check-preview','.github/workflows/social-bot-check-preview.yml','scripts/check-inside-ai-build.mjs','scripts/prepare-inside-ai-model.mjs','playwright.inside-ai.config.ts']
+deleted = ['tools','_tools','_apps/inside-ai','inside-ai','game-theory','math-guide','js/game-theory','_includes/game-theory','_layouts/game-theory.html','_layouts/inside-ai.html','_layouts/tool.html','_data/game_theory.yml','RPG/world-map.html','RPG/tile-map-viewer.html','tests/game-theory','tests/social-bot-check','tests/quick-study-painter','tests/inside-ai','tests/check_tools_css_sync.rb','_code/cloudflare/social-bot-check-preview','.github/workflows/social-bot-check-preview.yml','scripts/check-inside-ai-build.mjs','scripts/prepare-inside-ai-model.mjs','playwright.inside-ai.config.ts','css/game-theory.scss','css/inside-ai.scss','_sass/components/_game-theory.scss','_sass/components/_inside-ai.scss']
 for name in deleted:
  p=root/name
  if p.is_dir(): shutil.rmtree(p)
