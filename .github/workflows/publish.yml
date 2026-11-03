@@ -36,6 +36,10 @@ jobs:
             reports/build-verification.json
             reports/browser-smoke.json
             playwright-report/
+      - name: Verify shared analytics coverage
+        run: |
+          python3 scripts/site_analytics.py dist --mode masked
+          python3 scripts/site_analytics.py dist --mode masked --check
       - uses: actions/upload-pages-artifact@v4
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:
