@@ -1,0 +1,7 @@
+{
+  "checkedOn": "2026-10-29",
+  "originalUrl": "https://tedt.org/tools/mastodon/multiple.html",
+  "finding": "The original multi-timeline demo displays Mastodon HTTP 422 and throws Stopping the script due to an error building the timeline. The migrated prototype retains this existing remote API limitation.",
+  "migrationBrowserObservation": "No missing local resources; the same timeline exception was observed in the migrated multi-timeline and theme demos.",
+  "status": "pre-existing prototype limitation; no remote API behavior changed"
+}

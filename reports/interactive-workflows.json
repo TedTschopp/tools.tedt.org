@@ -1,0 +1,18 @@
+{
+  "site": "https://tools.tedt.org/",
+  "checks": [
+    {
+      "workflow": "world map regeneration and PNG export",
+      "status": "passed",
+      "filename": "world-map-6099370.png",
+      "bytes": 30979
+    },
+    {
+      "workflow": "social account analysis and JSON export",
+      "status": "passed",
+      "message": "JSON report downloaded with the current sample, thresholds, and linked evidence.",
+      "profile": "tedt.org",
+      "filename": "social-bot-check-bluesky-tedt.org.json"
+    }
+  ]
+}
