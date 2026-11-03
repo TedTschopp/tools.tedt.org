@@ -553,6 +553,12 @@
       "launch": "https://tools.tedt.org/osr-tools/osr-zombie-hordes.html",
       "migrated": true,
       "status": "prototype"
+    },
+    {
+      "slug": "name-generator-research",
+      "launch": "https://tools.tedt.org/name-generator-research/",
+      "migrated": true,
+      "status": "prototype"
     }
   ],
   "catalogRedirects": [
@@ -671,14 +677,6 @@
     {
       "from": "/tools/social-bot-check/",
       "to": "/about/social-bot-check/"
-    },
-    {
-      "from": "/tools/traveller-character-sheet/",
-      "to": "/about/traveller-character-sheet/"
-    },
-    {
-      "from": "/tools/traveller-ship-sheet/",
-      "to": "/about/traveller-ship-sheet/"
     }
   ],
   "migratedPages": [
@@ -6564,5 +6562,10 @@
     "https://randomtables.tedt.org/",
     "https://random-constellations.tedt.org/",
     "https://tedt.org/RPG/Traveller/Ship-Sheet.html"
+  ],
+  "retainedOriginalUrlPrefixes": [
+    "/RPG/Traveller/",
+    "/tools/traveller-character-sheet",
+    "/tools/traveller-ship-sheet"
   ]
 }

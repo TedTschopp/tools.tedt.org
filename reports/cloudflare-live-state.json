@@ -1,0 +1,134 @@
+{
+  "rulesetId": "2087d71c5be749d097a13a869aef0485",
+  "version": "8",
+  "rules": [
+    {
+      "id": "19bdf4fb4323434f9620a613c08f5107",
+      "ref": "yesterdai_legacy_newsletter",
+      "description": "Move the legacy AI newsletter to Yesterday in AI",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and http.request.uri.path in {\"/Daily-Report/AI\" \"/Daily-Report/AI/\" \"/Daily-Report/AI/index.html\"})",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "value": "https://yesterdai.tedt.org/"
+          }
+        }
+      }
+    },
+    {
+      "id": "35238bddc7cb4669af462e54560eda83",
+      "ref": "tools_migration_catalog",
+      "description": "Tools migration: catalog home",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and not (lower(http.request.uri.path) contains \"traveller\") and (http.request.uri.path in {\"/tools\" \"/tools/\" \"/tools/index.html\"}))",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "value": "https://tools.tedt.org/"
+          }
+        }
+      }
+    },
+    {
+      "id": "c481057f469d46bc857ee58a002b504e",
+      "ref": "tools_migration_details_slash",
+      "description": "Tools migration: tool descriptions",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and not (lower(http.request.uri.path) contains \"traveller\") and (http.request.uri.path in {\"/tools/ai-chat-window/\" \"/tools/color-chart/\" \"/tools/focus-timer/\" \"/tools/fractal/\" \"/tools/game-theory-playground/\" \"/tools/gamma-world-map-275feet/\" \"/tools/gradient-card/\" \"/tools/hex-test-direct/\" \"/tools/image-tools/\" \"/tools/inside-ai/\" \"/tools/ipfs-in-the-browser/\" \"/tools/islands/\" \"/tools/markdown-frontmatter-preview/\" \"/tools/mastodon-bot-map-generator/\" \"/tools/mastodon-bot-random-board-game-night/\" \"/tools/mastodon-embed-timeline/\" \"/tools/math-guide/\" \"/tools/morph/\" \"/tools/ocr/\" \"/tools/outage-map/\" \"/tools/password-challenge/\" \"/tools/procedural-text-generation/\" \"/tools/qr-builder/\" \"/tools/quick-study-painter/\" \"/tools/random-star-constellations/\" \"/tools/rpg-tile-map-viewer/\" \"/tools/rpg-world-map-generator/\" \"/tools/sloccount-web-analyzer/\" \"/tools/social-bot-check/\"}))",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "expression": "concat(\"https://tools.tedt.org/about\", substring(http.request.uri.path, 6))"
+          }
+        }
+      }
+    },
+    {
+      "id": "4ad964ae315b472080ce459a36229524",
+      "ref": "tools_migration_details_bare",
+      "description": "Tools migration: tool descriptions without slash",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and not (lower(http.request.uri.path) contains \"traveller\") and (http.request.uri.path in {\"/tools/ai-chat-window\" \"/tools/color-chart\" \"/tools/focus-timer\" \"/tools/fractal\" \"/tools/game-theory-playground\" \"/tools/gamma-world-map-275feet\" \"/tools/gradient-card\" \"/tools/hex-test-direct\" \"/tools/image-tools\" \"/tools/inside-ai\" \"/tools/ipfs-in-the-browser\" \"/tools/islands\" \"/tools/markdown-frontmatter-preview\" \"/tools/mastodon-bot-map-generator\" \"/tools/mastodon-bot-random-board-game-night\" \"/tools/mastodon-embed-timeline\" \"/tools/math-guide\" \"/tools/morph\" \"/tools/ocr\" \"/tools/outage-map\" \"/tools/password-challenge\" \"/tools/procedural-text-generation\" \"/tools/qr-builder\" \"/tools/quick-study-painter\" \"/tools/random-star-constellations\" \"/tools/rpg-tile-map-viewer\" \"/tools/rpg-world-map-generator\" \"/tools/sloccount-web-analyzer\" \"/tools/social-bot-check\"}))",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "expression": "concat(\"https://tools.tedt.org/about\", substring(http.request.uri.path, 6), \"/\")"
+          }
+        }
+      }
+    },
+    {
+      "id": "a088678a7a4247c8a2c5ec5da7cedfb1",
+      "ref": "tools_migration_details_index",
+      "description": "Tools migration: tool description index files",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and not (lower(http.request.uri.path) contains \"traveller\") and (http.request.uri.path in {\"/tools/ai-chat-window/index.html\" \"/tools/color-chart/index.html\" \"/tools/focus-timer/index.html\" \"/tools/fractal/index.html\" \"/tools/game-theory-playground/index.html\" \"/tools/gamma-world-map-275feet/index.html\" \"/tools/gradient-card/index.html\" \"/tools/hex-test-direct/index.html\" \"/tools/image-tools/index.html\" \"/tools/inside-ai/index.html\" \"/tools/ipfs-in-the-browser/index.html\" \"/tools/islands/index.html\" \"/tools/markdown-frontmatter-preview/index.html\" \"/tools/mastodon-bot-map-generator/index.html\" \"/tools/mastodon-bot-random-board-game-night/index.html\" \"/tools/mastodon-embed-timeline/index.html\" \"/tools/math-guide/index.html\" \"/tools/morph/index.html\" \"/tools/ocr/index.html\" \"/tools/outage-map/index.html\" \"/tools/password-challenge/index.html\" \"/tools/procedural-text-generation/index.html\" \"/tools/qr-builder/index.html\" \"/tools/quick-study-painter/index.html\" \"/tools/random-star-constellations/index.html\" \"/tools/rpg-tile-map-viewer/index.html\" \"/tools/rpg-world-map-generator/index.html\" \"/tools/sloccount-web-analyzer/index.html\" \"/tools/social-bot-check/index.html\"}))",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "expression": "concat(\"https://tools.tedt.org/about\", substring(http.request.uri.path, 6, -10))"
+          }
+        }
+      }
+    },
+    {
+      "id": "c842828c930a45ef98d2411b78ac39f8",
+      "ref": "tools_migration_payloads",
+      "description": "Tools migration: standalone tools and supporting files",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and not (lower(http.request.uri.path) contains \"traveller\") and (starts_with(http.request.uri.path, \"/tools/\")))",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "expression": "concat(\"https://tools.tedt.org\", substring(http.request.uri.path, 6))"
+          }
+        }
+      }
+    },
+    {
+      "id": "d5f55a59ba6f4722bbfa4381c1af804d",
+      "ref": "tools_migration_related_roots",
+      "description": "Tools migration: learning application roots",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and not (lower(http.request.uri.path) contains \"traveller\") and (http.request.uri.path in {\"/inside-ai\" \"/game-theory\" \"/math-guide\"}))",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "expression": "concat(\"https://tools.tedt.org\", http.request.uri.path, \"/\")"
+          }
+        }
+      }
+    },
+    {
+      "id": "526cc5e194104d78a599d3357178597e",
+      "ref": "tools_migration_related_pages",
+      "description": "Tools migration: learning applications and map pages",
+      "enabled": true,
+      "expression": "(http.host in {\"tedt.org\" \"www.tedt.org\"} and not (lower(http.request.uri.path) contains \"traveller\") and (starts_with(http.request.uri.path, \"/inside-ai/\") or starts_with(http.request.uri.path, \"/game-theory/\") or starts_with(http.request.uri.path, \"/math-guide/\") or starts_with(http.request.uri.path, \"/js/game-theory/\") or http.request.uri.path in {\"/RPG/world-map.html\" \"/RPG/tile-map-viewer.html\" \"/css/game-theory.css\" \"/css/inside-ai.css\"}))",
+      "action_parameters": {
+        "from_value": {
+          "preserve_query_string": true,
+          "status_code": 301,
+          "target_url": {
+            "expression": "concat(\"https://tools.tedt.org\", http.request.uri.path)"
+          }
+        }
+      }
+    }
+  ]
+}

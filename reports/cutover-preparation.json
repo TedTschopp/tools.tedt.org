@@ -1,5 +1,19 @@
 {
-  "deletedPaths": [
+  "updatedReferences": [
+    "_includes/layout/top-nav-bar.html",
+    "_includes/content/inside-ai-callout.html",
+    "_posts/Blog Posts/2026-01-12-Color-Chart-Pan-Zoom.md"
+  ],
+  "retained": [
+    "RPG/Traveller/",
+    "_tools/traveller-character-sheet.md",
+    "_tools/traveller-ship-sheet.md",
+    "_layouts/tool.html",
+    "tools collection configuration",
+    "shared CSS, fonts, images, and RPG support dependencies"
+  ],
+  "destination": "https://tools.tedt.org/",
+  "removedRootsBeforeTravellerRestoration": [
     "tools",
     "_tools",
     "_apps/inside-ai",
@@ -23,16 +37,24 @@
     ".github/workflows/social-bot-check-preview.yml",
     "scripts/check-inside-ai-build.mjs",
     "scripts/prepare-inside-ai-model.mjs",
-    "playwright.inside-ai.config.ts"
+    "playwright.inside-ai.config.ts",
+    "css/game-theory.scss",
+    "css/inside-ai.scss",
+    "_sass/components/_game-theory.scss",
+    "_sass/components/_inside-ai.scss"
   ],
-  "updatedReferences": [
-    "_includes/layout/top-nav-bar.html",
-    "_includes/content/inside-ai-callout.html",
-    "_posts/Blog Posts/2026-01-12-Color-Chart-Pan-Zoom.md"
+  "pullRequest": "https://github.com/TedTschopp/tedt.org/pull/261",
+  "reviewedHead": "fb50d9776da39d3dc92ebd486a0e926f7561784b",
+  "additionalChanges": [
+    "Move README TOC hook to _code/git-hooks/pre-commit-toc-check.sh",
+    "Use native anchors for static global navigation destinations",
+    "Update remaining navigation and article tests; preserve the migrated tests in tool-src/tests/",
+    "Update maintenance documentation and remove build commands owned by the new repository"
   ],
-  "retained": [
-    "RPG/Traveller/",
-    "shared CSS, fonts, images, and RPG support dependencies"
-  ],
-  "destination": "https://tools.tedt.org/"
+  "validation": {
+    "jekyllBuild": "passed with Ruby 3.2.9",
+    "pullRequestBuild": "passed",
+    "codeql": "all six language analyses passed",
+    "travellerSource": "application and description bytes unchanged from origin/main"
+  }
 }

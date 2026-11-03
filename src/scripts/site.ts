@@ -1,15 +1,3 @@
-const root = document.documentElement;
-const media = matchMedia('(prefers-color-scheme: dark)');
-let preference = root.dataset.themePreference || 'system';
-function applyTheme(value: string) {
-  preference = ['light','dark','system'].includes(value) ? value : 'system';
-  const theme = preference === 'system' ? media.matches ? 'dark' : 'light' : preference;
-  root.dataset.theme = theme; root.dataset.bsTheme = theme; root.dataset.themePreference = preference;
-  document.querySelectorAll<HTMLElement>('[data-theme-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.themeChoice === preference)));
-}
-applyTheme(preference);
-document.querySelectorAll<HTMLElement>('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>{applyTheme(button.dataset.themeChoice || 'system');try{localStorage.setItem('tools-theme',preference);}catch{}}));
-media.addEventListener('change',()=>applyTheme(preference));
 const form = document.querySelector<HTMLFormElement>('[data-filters]');
 if(form){
   const search = document.querySelector<HTMLInputElement>('#search')!;

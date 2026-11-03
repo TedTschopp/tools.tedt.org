@@ -1,0 +1,29 @@
+{
+  "additionalPublicSourceFiles": [
+    "tool-src/_apps/inside-ai/public/licenses/bignumber-MIT.txt",
+    "tool-src/_apps/inside-ai/public/licenses/classnames-LICENSE.txt",
+    "tool-src/_apps/inside-ai/public/licenses/d3-LICENSE.txt",
+    "tool-src/_apps/inside-ai/public/licenses/d3-sankey-LICENSE.txt",
+    "tool-src/_apps/inside-ai/public/licenses/flowbite-svelte-LICENSE.txt",
+    "tool-src/_apps/inside-ai/public/licenses/flowbite-svelte-icons-LICENSE.txt",
+    "tool-src/_apps/inside-ai/public/licenses/gsap-NOTICE.txt",
+    "tool-src/_apps/inside-ai/public/licenses/katex-LICENSE.txt",
+    "tool-src/_apps/inside-ai/public/licenses/onnxruntime-MIT.txt",
+    "tool-src/_apps/inside-ai/public/licenses/svelte-LICENSE.md.txt",
+    "tool-src/_apps/inside-ai/public/licenses/transformer-explainer-MIT.txt",
+    "tool-src/_apps/inside-ai/public/tokenizer/tokenizer.json",
+    "tool-src/tests/a11y/color-chart-source-extraction.spec.ts",
+    "tool-src/tests/a11y/game-theory-beliefs.spec.ts",
+    "tool-src/tests/a11y/game-theory-cooperation.spec.ts",
+    "tool-src/tests/a11y/game-theory-rules.spec.ts",
+    "tool-src/tests/a11y/game-theory.spec.ts",
+    "tool-src/tests/a11y/markdown-frontmatter-preview.spec.ts",
+    "tool-src/tests/a11y/mastodon-integration.spec.ts",
+    "tool-src/tests/a11y/ocr-tool-recognition.spec.ts",
+    "tool-src/tests/a11y/ocr-tool-smoke.spec.ts",
+    "tool-src/tests/a11y/quick-study-painter.spec.ts",
+    "tool-src/tests/a11y/social-bot-check.spec.ts"
+  ],
+  "additionalTaskFiles": [],
+  "credentialPatternFindings": []
+}

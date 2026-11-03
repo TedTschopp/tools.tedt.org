@@ -1,12 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import tools from '../data/catalog.json';
+import '../styles/landing-artwork.css';
 const categories = [...new Set(tools.map(t=>t.category))].sort();
 const statuses = [...new Set(tools.map(t=>t.status))].sort();
 const tags = [...new Set(tools.flatMap(t=>t.tags))].sort();
 ---
-<Layout>
-  <header class="catalog-heading content"><p class="eyebrow">The Public Workbench</p><h1>Ted’s Tools</h1><p class="lead">Tools for text, code, images, maps, and small experiments.<br />Find a tool. Open it. Work in your browser.</p><div class="accent-rule"></div></header>
+<Layout image="https://tedt.org/img/landing/swiss-v1/tools-hero.webp">
+  <header class="catalog-heading catalog-heading-illustrated content">
+    <div><p class="eyebrow">The Public Workbench</p><h1>Ted’s Tools</h1><p class="lead">Tools for text, code, images, maps, and small experiments.<br />Find a tool. Open it. Work in your browser.</p></div>
+    <figure class="catalog-artwork"><picture data-tedt-artwork>
+      <source data-tedt-dark type="image/webp" media="(prefers-color-scheme: dark)" srcset="https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero-dark--480w.webp 480w, https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero-dark--768w.webp 768w, https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero-dark--1200w.webp 1200w, https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero-dark--1456w.webp 1456w, https://tedt.org/img/landing/swiss-v1/tools-hero-dark.webp 2171w" sizes="(min-width: 1640px) 826px, (min-width: 1100px) 52vw, calc(100vw - 32px)" />
+      <img src="https://tedt.org/img/landing/swiss-v1/tools-hero.webp" srcset="https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero--480w.webp 480w, https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero--768w.webp 768w, https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero--1200w.webp 1200w, https://tedt.org/img/generated/responsive/landing/swiss-v1/tools-hero--1456w.webp 1456w, https://tedt.org/img/landing/swiss-v1/tools-hero.webp 2172w" sizes="(min-width: 1640px) 826px, (min-width: 1100px) 52vw, calc(100vw - 32px)" width="2172" height="724" alt="An open tool case holds a caliper, transforming blocks, and a adjustment dial." fetchpriority="high" decoding="async" />
+    </picture></figure>
+    <div class="accent-rule"></div>
+  </header>
+  <script is:inline defer src="https://tedt.org/assets/global-header/v1/artwork.js"></script>
   <section class="content" aria-label="Browse tools">
     <p class="migration-note"><strong>A new home for the collection.</strong> Saved drafts, settings, and API keys from tedt.org do not transfer to this domain. Traveller and separately hosted tools open at their existing addresses.</p>
     <form class="filters" data-filters role="search" aria-label="Find a tool">
