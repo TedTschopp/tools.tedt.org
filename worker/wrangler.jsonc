@@ -12,5 +12,11 @@
       "zone_name": "tedt.org"
     }
   ],
-  "observability": { "enabled": false }
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "redact_query_string": true,
+    "logs": { "enabled": true, "invocation_logs": true, "persist": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": false, "persist": false, "head_sampling_rate": 0 }
+  }
 }
