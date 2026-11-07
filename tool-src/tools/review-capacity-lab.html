@@ -34,8 +34,10 @@
     .tt-field { margin-bottom: var(--s-5); }
     .tt-field label { display: block; margin-bottom: var(--s-2); font-weight: var(--fw-semibold); }
     .tt-hint { margin: var(--s-2) 0 0; font-size: var(--fs-small); color: var(--fg-2); }
-    input, button { font: inherit; border-radius: var(--r-2); }
-    input[type="number"] { width: 100%; min-height: calc(var(--s-7) + var(--s-3)); padding: var(--s-3); background: var(--bg-inset); color: var(--fg); border: var(--border); font-family: var(--font-mono); }
+    input, select, button { font: inherit; border-radius: var(--r-2); }
+    input[type="number"], select { width: 100%; min-height: calc(var(--s-7) + var(--s-3)); padding: var(--s-3); background: var(--bg-inset); color: var(--fg); border: var(--border); }
+    input[type="number"] { font-family: var(--font-mono); }
+    .tt-unit-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--s-2); }
     input[aria-invalid="true"] { border-color: var(--error); }
     button, .tt-download { min-height: calc(var(--s-7) + var(--s-3)); padding: var(--s-3) var(--s-4); border: var(--bw-1) solid var(--copper); color: var(--copper); background: transparent; cursor: pointer; }
     button:hover { background: var(--copper-tint); }
@@ -43,7 +45,7 @@
     button.primary { color: var(--fg-on-accent); border-color: var(--accent); background: var(--accent); }
     button.primary:hover { background: var(--accent-active); }
     button:disabled { opacity: .5; cursor: not-allowed; }
-    :is(a, button, input, summary):focus-visible { outline: var(--bw-2) solid var(--link); outline-offset: var(--s-1); }
+    :is(a, button, input, select, summary):focus-visible { outline: var(--bw-2) solid var(--link); outline-offset: var(--s-1); }
     .tt-section { padding-top: var(--s-5); margin-top: var(--s-5); border-top: var(--border-soft); }
     .tt-section h3 { margin-top: 0; }
     .tt-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); margin: 0; }
@@ -106,26 +108,35 @@
       <button type="button" data-preset="exact">No slack</button>
       <button type="button" data-preset="headroom">Clear a backlog</button>
       <button type="button" data-preset="rework">Add re-review</button>
+      <button type="button" data-preset="long">Long activities</button>
     </div>
   </section>
   <div class="tt-workspace">
     <section class="tt-panel" aria-labelledby="assumptions-title">
       <div class="tt-panel-head"><h2 id="assumptions-title">Your assumptions</h2><small>One work class.</small></div>
       <form id="scenario" class="tt-panel-body" novalidate>
-        <div class="tt-field"><label for="requests">Requests per workday</label><input id="requests" name="requests" type="number" min="0" max="1000000" step="1" value="960" aria-describedby="requests-hint"><p id="requests-hint" class="tt-hint">Include overnight or weekend arrivals this workday must absorb.</p></div>
+        <p class="tt-hint">Changing a unit keeps the entered number and recalculates.</p>
+        <div class="tt-field"><label for="requests">Incoming requests</label><div class="tt-unit-row"><input id="requests" name="requests" type="number" min="0" max="1000000" step="any" value="960" aria-describedby="requests-hint normalized-intake"><select id="requestPeriod" name="requestPeriod" aria-label="Request rate period"><option value="workday" selected>Per workday</option><option value="hour">Per intake hour</option><option value="workweek">Per workweek</option><option value="month">Per average work month</option></select></div><p id="requests-hint" class="tt-hint">Include all arrivals. For continuous intake, use a complete week or month total.</p><p id="normalized-intake" class="tt-hint"></p></div>
         <div class="tt-field"><label for="reviewPercent">Requests needing review (%)</label><input id="reviewPercent" name="reviewPercent" type="number" min="0" max="100" step="0.1" value="20" aria-describedby="review-hint"><p id="review-hint" class="tt-hint">A workload assumption, not permission to skip required review.</p></div>
-        <div class="tt-field"><label for="minutes">First review (minutes per case)</label><input id="minutes" name="minutes" type="number" min="0.1" max="240" step="0.1" value="5"></div>
+        <div class="tt-field"><label for="reviewTime">First review effort per case</label><div class="tt-unit-row"><input id="reviewTime" name="reviewTime" type="number" min="0.001" max="1000000" step="any" value="5" aria-describedby="effort-hint"><select id="reviewUnit" name="reviewUnit" aria-label="First review effort unit"><option value="minute" selected>Minutes</option><option value="hour">Hours</option><option value="workday">Workdays</option><option value="workweek">Workweeks</option></select></div><p id="effort-hint" class="tt-hint">Enter active effort, including long activities. Exclude time simply waiting.</p></div>
         <div class="tt-field"><label for="reviewers">Qualified reviewers</label><input id="reviewers" name="reviewers" type="number" min="0" max="10000" step="1" value="2"></div>
         <div class="tt-field"><label for="hours">Protected hours per reviewer per workday</label><input id="hours" name="hours" type="number" min="0" max="24" step="0.25" value="4" aria-describedby="hours-hint"><p id="hours-hint" class="tt-hint">Count time reserved for this queue, after other duties.</p></div>
         <div class="tt-section"><h3>Returned work</h3>
           <div class="tt-field"><label for="reReviewPercent">Reviewed cases needing one extra pass (%)</label><input id="reReviewPercent" name="reReviewPercent" type="number" min="0" max="100" step="0.1" value="0"></div>
-          <div class="tt-field"><label for="reReviewMinutes">Extra pass (minutes per returned case)</label><input id="reReviewMinutes" name="reReviewMinutes" type="number" min="0" max="240" step="0.1" value="4" aria-describedby="rework-hint"><p id="rework-hint" class="tt-hint">Exactly one extra pass. Repeated returns are not modeled.</p></div>
+          <div class="tt-field"><label for="reReviewTime">Extra effort per returned case</label><div class="tt-unit-row"><input id="reReviewTime" name="reReviewTime" type="number" min="0" max="1000000" step="any" value="4" aria-describedby="rework-hint"><select id="reReviewUnit" name="reReviewUnit" aria-label="Extra review effort unit"><option value="minute" selected>Minutes</option><option value="hour">Hours</option><option value="workday">Workdays</option><option value="workweek">Workweeks</option></select></div><p id="rework-hint" class="tt-hint">Exactly one extra pass. Repeated returns are not modeled.</p></div>
         </div>
         <div class="tt-section"><h3>Planning window</h3>
           <div class="tt-field"><label for="backlog">Starting queue (review cases)</label><input id="backlog" name="backlog" type="number" min="0" max="1000000" step="1" value="0" aria-describedby="backlog-hint"><p id="backlog-hint" class="tt-hint">Each queued case carries the same average review workload.</p></div>
-          <div class="tt-field"><label for="days">Workdays to model</label><input id="days" name="days" type="number" min="1" max="30" step="1" value="10"></div>
+          <div class="tt-field"><label for="days">Workdays to model</label><input id="days" name="days" type="number" min="1" max="365" step="1" value="10"></div>
           <div class="tt-field"><label for="targetPercent">Chosen capacity target (%)</label><input id="targetPercent" name="targetPercent" type="number" min="1" max="100" step="0.1" value="80" aria-describedby="target-hint"><p id="target-hint" class="tt-hint">80% is an example you can change. It is not a safety standard.</p></div>
         </div>
+        <details id="calendar"><summary>Work calendar and unit assumptions</summary>
+          <p id="calendar-summary" class="tt-hint"></p>
+          <div class="tt-field"><label for="intakeHours">Intake hours per workday</label><input id="intakeHours" name="intakeHours" type="number" min="0.1" max="24" step="any" value="8" aria-describedby="intake-hint"><p id="intake-hint" class="tt-hint">Used only to convert requests per intake hour.</p></div>
+          <div class="tt-field"><label for="effortHours">Active hours in one effort workday</label><input id="effortHours" name="effortHours" type="number" min="0.1" max="24" step="any" value="8" aria-describedby="effort-day-hint"><p id="effort-day-hint" class="tt-hint">A workday of effort has this many hours, regardless of protected review time.</p></div>
+          <div class="tt-field"><label for="workdaysPerWeek">Workdays per workweek</label><input id="workdaysPerWeek" name="workdaysPerWeek" type="number" min="1" max="7" step="1" value="5"></div>
+          <div class="tt-field"><label for="workdaysPerMonth">Average workdays per month</label><input id="workdaysPerMonth" name="workdaysPerMonth" type="number" min="1" max="31" step="any" value="20" aria-describedby="month-hint"><p id="month-hint" class="tt-hint">An assumed average working month, not a dated calendar forecast.</p></div>
+        </details>
         <p class="tt-hint">Results update as you edit. Invalid inputs hide the results.</p>
         <div class="tt-actions tt-section"><button type="button" id="import">Import scenario</button><input id="import-file" class="tt-sr-only" type="file" accept="application/json,.json" tabindex="-1"></div>
       </form>
@@ -145,6 +156,7 @@
             <div class="tt-bar-row"><div class="tt-bar-label"><span>Capacity</span><span id="capacity-bar-label"></span></div><div class="tt-track"><div class="tt-fill capacity" id="capacity-bar"></div></div></div>
           </div>
           <p class="tt-note" id="interpretation"></p>
+          <p class="tt-note" id="long-review-note" hidden>This review needs more than one reviewer's protected workday. Pooled capacity does not schedule indivisible cases.</p>
         </div>
       </section>
       <section class="tt-panel" aria-labelledby="planning-title">
@@ -154,7 +166,7 @@
             <div><dt>Maximum new intake</dt><dd id="max-intake"></dd></div>
             <div><dt>Reviewers for new intake</dt><dd id="needed-reviewers"></dd></div>
             <div><dt>Reviewers to clear starting backlog too</dt><dd id="clear-reviewers"></dd></div>
-            <div><dt>Average minutes per reviewed case</dt><dd id="effective-minutes"></dd></div>
+            <div><dt>Average effort per reviewed case</dt><dd id="effective-minutes"></dd></div>
           </dl>
           <p class="tt-note">New-intake figures exclude existing backlog. Backlog staffing spreads its workload across your selected window.</p>
         </div>
@@ -171,8 +183,9 @@
     </div>
   </div>
   <details open><summary>How the model works</summary>
-    <p>Use one work class whose reviewers can substitute for one another. All calculations use averaged daily work.</p>
+    <p>Use one work class whose reviewers can substitute for one another. Rates and effort are converted using the work calendar above.</p>
     <ul>
+      <li>Convert request rates to requests per workday, and active review effort to minutes.</li>
       <li>Minutes per reviewed case = first-review minutes + extra-pass fraction × extra-pass minutes.</li>
       <li>Review demand = requests × review fraction × minutes per reviewed case.</li>
       <li>Team capacity = qualified reviewers × protected hours × 60 minutes.</li>
@@ -182,7 +195,8 @@
     </ul>
     <p>Case equivalents divide remaining work by average review time. They can be fractional; real approvals remain whole decisions.</p>
     <p>At exact capacity, an empty queue stays empty in this model. Any starting backlog remains, with no room for interruptions.</p>
-    <p>This model omits within-day bursts, reviewer scheduling, fatigue, skill differences, and repeated returns. It estimates workload, not actual waiting times or decision quality. A target below 100% is an assumption to investigate, not evidence that a workflow is safe.</p>
+    <p>This model pools effort. It does not schedule individual cases. A long review assigned to one person cannot finish sooner merely because other people have spare hours.</p>
+    <p>This model omits within-day bursts, reviewer scheduling, fatigue, skill differences, and repeated returns. It estimates remaining workload, not actual waiting times, case completion dates, or decision quality. Staffing figures describe pooled capacity. A target below 100% is an assumption to investigate, not evidence that a workflow is safe.</p>
   </details>
   <aside class="tt-about"><p><strong>About Review Capacity Lab.</strong> Calculations and scenario files stay in your browser. No AI model, account, or API key is needed. This site uses standard masked visitor analytics.</p><p>Use observed review times and queue data to replace the examples. <a href="https://tedt.org/The-Cost-of-a-Finished-Job/">Read The Cost of a Finished Job</a> for the wider operating-model argument.</p></aside>
 </main>
@@ -190,22 +204,38 @@
 (function (root) {
   'use strict';
   const limits = Object.freeze({
-    requests: [0, 1000000], reviewPercent: [0, 100], minutes: [0.1, 240], reviewers: [0, 10000], hours: [0, 24],
-    reReviewPercent: [0, 100], reReviewMinutes: [0, 240], backlog: [0, 1000000], days: [1, 30], targetPercent: [1, 100]
+    requests: [0, 1000000], reviewPercent: [0, 100], reviewTime: [0.001, 1000000], reviewers: [0, 10000], hours: [0, 24],
+    reReviewPercent: [0, 100], reReviewTime: [0, 1000000], backlog: [0, 1000000], days: [1, 365], targetPercent: [1, 100],
+    intakeHours: [0.1, 24], effortHours: [0.1, 24], workdaysPerWeek: [1, 7], workdaysPerMonth: [1, 31]
   });
-  const integers = new Set(['reviewers', 'days']);
-  const defaults = Object.freeze({requests: 960, reviewPercent: 20, minutes: 5, reviewers: 2, hours: 4, reReviewPercent: 0, reReviewMinutes: 4, backlog: 0, days: 10, targetPercent: 80});
-  const presets = Object.freeze({overloaded: defaults, exact: Object.freeze({...defaults, hours: 8, backlog: 24}), headroom: Object.freeze({...defaults, reviewers: 3, hours: 8, backlog: 48}), rework: Object.freeze({...defaults, hours: 8, reReviewPercent: 25})});
+  const durationUnits = Object.freeze(['minute', 'hour', 'workday', 'workweek']);
+  const choices = Object.freeze({requestPeriod: Object.freeze(['hour', 'workday', 'workweek', 'month']), reviewUnit: durationUnits, reReviewUnit: durationUnits});
+  const integers = new Set(['reviewers', 'days', 'workdaysPerWeek']);
+  const defaults = Object.freeze({requests: 960, requestPeriod: 'workday', reviewPercent: 20, reviewTime: 5, reviewUnit: 'minute', reviewers: 2, hours: 4, reReviewPercent: 0, reReviewTime: 4, reReviewUnit: 'minute', backlog: 0, days: 10, targetPercent: 80, intakeHours: 8, effortHours: 8, workdaysPerWeek: 5, workdaysPerMonth: 20});
+  const presets = Object.freeze({overloaded: defaults, exact: Object.freeze({...defaults, hours: 8, backlog: 24}), headroom: Object.freeze({...defaults, reviewers: 3, hours: 8, backlog: 48}), rework: Object.freeze({...defaults, hours: 8, reReviewPercent: 25}), long: Object.freeze({...defaults, requests: 8, requestPeriod: 'workweek', reviewPercent: 50, reviewTime: 2, reviewUnit: 'workday', reviewers: 3, reReviewPercent: 25, reReviewTime: 1, reReviewUnit: 'workday', backlog: 3})});
   function validate(input) {
-    return Object.entries(limits).filter(([key, [min, max]]) => typeof input[key] !== 'number' || !Number.isFinite(input[key]) || input[key] < min || input[key] > max || (integers.has(key) && !Number.isInteger(input[key]))).map(([key]) => key);
+    return [...Object.entries(limits).filter(([key, [min, max]]) => typeof input[key] !== 'number' || !Number.isFinite(input[key]) || input[key] < min || input[key] > max || (integers.has(key) && !Number.isInteger(input[key]))).map(([key]) => key), ...Object.entries(choices).filter(([key, values]) => !values.includes(input[key])).map(([key]) => key)];
   }
-  function ceiling(value) { return Math.ceil(value - Number.EPSILON * Math.max(1, Math.abs(value)) * 4); }
+  function ceiling(value) { return Math.max(1, Math.ceil(value - Number.EPSILON * Math.max(1, Math.abs(value)) * 4)); }
+  function durationMinutes(unit, s) { return {minute: 1, hour: 60, workday: s.effortHours * 60, workweek: s.effortHours * s.workdaysPerWeek * 60}[unit]; }
+  function parseScenario(data) {
+    if (!data || data.model !== 'review-capacity-lab' || !data.assumptions || ![1, 2].includes(data.version)) throw new RangeError('Choose a Review Capacity Lab version 1 or 2 scenario.');
+    let input;
+    if (data.version === 1) {
+      const a = data.assumptions;
+      input = {...defaults, ...Object.fromEntries(['requests','reviewPercent','reviewers','hours','reReviewPercent','backlog','days','targetPercent'].map(k => [k, a[k]])), reviewTime: a.minutes, reReviewTime: a.reReviewMinutes};
+    } else input = Object.fromEntries(Object.keys(defaults).map(k => [k, data.assumptions[k]]));
+    if (validate(input).length) throw new RangeError('The scenario contains invalid or missing assumptions.');
+    return input;
+  }
   function calculate(input) {
     const errors = validate(input);
     if (errors.length) throw new RangeError('Invalid fields: ' + errors.join(', '));
     const s = {...input}, reviewFraction = s.reviewPercent / 100, target = s.targetPercent / 100;
-    const effectiveMinutes = s.minutes + s.reReviewPercent / 100 * s.reReviewMinutes;
-    const reviewedCases = s.requests * reviewFraction, demand = reviewedCases * effectiveMinutes;
+    const requestFactor = {hour: s.intakeHours, workday: 1, workweek: 1 / s.workdaysPerWeek, month: 1 / s.workdaysPerMonth}[s.requestPeriod];
+    const dailyRequests = s.requests * requestFactor;
+    const effectiveMinutes = s.reviewTime * durationMinutes(s.reviewUnit, s) + s.reReviewPercent / 100 * s.reReviewTime * durationMinutes(s.reReviewUnit, s);
+    const reviewedCases = dailyRequests * reviewFraction, demand = reviewedCases * effectiveMinutes;
     const capacity = s.reviewers * s.hours * 60, startingWork = s.backlog * effectiveMinutes;
     const tolerance = Number.EPSILON * Math.max(1, demand, capacity) * 8;
     const state = capacity === 0 ? (demand > 0 || startingWork > 0 ? 'unserved' : 'idle') : demand - capacity > tolerance ? 'growing' : Math.abs(demand - capacity) <= tolerance && demand > 0 ? 'no-slack' : demand === 0 && startingWork === 0 ? 'idle' : 'headroom';
@@ -218,26 +248,26 @@
     }
     const staffing = workload => workload === 0 ? 0 : s.hours === 0 ? null : ceiling(workload / (s.hours * 60 * target));
     const workloadPerRequest = reviewFraction * effectiveMinutes;
-    return {input: s, state, effectiveMinutes, reviewedCases, demand, capacity, startingWork,
+    return {input: s, state, dailyRequests, requestFactor, effectiveMinutes, reviewedCases, demand, capacity, startingWork,
       loadRatio: capacity === 0 ? null : demand / capacity,
       maxIntake: workloadPerRequest === 0 ? null : target * capacity / workloadPerRequest,
       neededReviewers: staffing(demand), clearReviewers: staffing(demand + startingWork / s.days),
       endBacklog: work, endCases: work / effectiveMinutes, timeline};
   }
-  root.ReviewCapacity = Object.freeze({version: 1, limits, defaults, presets, validate, calculate});
+  root.ReviewCapacity = Object.freeze({version: 2, limits, choices, defaults, presets, validate, calculate, durationMinutes, parseScenario});
 })(globalThis);
 </script>
 <script>
 (function () {
   'use strict';
   const model = globalThis.ReviewCapacity, form = document.getElementById('scenario');
-  const fields = Object.keys(model.limits), status = document.getElementById('status'), results = document.getElementById('results');
+  const fields = Object.keys(model.defaults), status = document.getElementById('status'), results = document.getElementById('results');
   const byId = id => document.getElementById(id), fmt = (n, digits = 2) => new Intl.NumberFormat('en-US', {maximumFractionDigits: digits}).format(n);
   const set = (id, value) => { byId(id).textContent = value; };
-  const labels = {requests:'Requests per workday', reviewPercent:'Requests needing review', minutes:'First review', reviewers:'Qualified reviewers', hours:'Protected hours', reReviewPercent:'Extra-pass fraction', reReviewMinutes:'Extra-pass minutes', backlog:'Starting queue', days:'Workdays', targetPercent:'Capacity target'};
+  const labels = {requests:'Incoming requests', requestPeriod:'Request rate period', reviewPercent:'Requests needing review', reviewTime:'First review effort', reviewUnit:'First review unit', reviewers:'Qualified reviewers', hours:'Protected hours', reReviewPercent:'Extra-pass fraction', reReviewTime:'Extra-pass effort', reReviewUnit:'Extra-pass unit', backlog:'Starting queue', days:'Workdays', targetPercent:'Capacity target', intakeHours:'Intake hours', effortHours:'Hours in an effort workday', workdaysPerWeek:'Workdays per workweek', workdaysPerMonth:'Workdays per month'};
   let current, renderedWidth = 0;
-  function read() { return Object.fromEntries(fields.map(key => [key, form.elements[key].value.trim() === '' ? NaN : Number(form.elements[key].value)])); }
-  function load(values) { for (const key of fields) form.elements[key].value = values[key]; update(); }
+  function read() { return Object.fromEntries(fields.map(key => [key, model.choices[key] ? form.elements[key].value : form.elements[key].value.trim() === '' ? NaN : Number(form.elements[key].value)])); }
+  function load(values) { for (const key of fields) form.elements[key].value = values[key]; if (values.requestPeriod!=='workday' || ['workday','workweek'].includes(values.reviewUnit) || ['workday','workweek'].includes(values.reReviewUnit)) byId('calendar').open=true; update(); }
   function chart(rows) {
     const svg = byId('chart'), ns = 'http://www.w3.org/2000/svg', width = Math.max(260, Math.min(740, svg.clientWidth || 740)), height = 280, left = 62, right = 24, top = 32, bottom = 40;
     renderedWidth = svg.clientWidth;
@@ -259,10 +289,12 @@
     for (const key of fields) form.elements[key].setAttribute('aria-invalid', String(errors.includes(key)));
     if (errors.length) {
       current = undefined; results.hidden = true; status.dataset.state = 'error';
-      status.textContent = 'Check ' + errors.map(k=>labels[k]).join(', ') + '. Use values within the stated range; reviewer and workday counts must be whole numbers.';
+      status.textContent = 'Check ' + errors.map(k=>labels[k]).join(', ') + '. Use the stated ranges and units. Reviewer, workday, and workweek-day counts must be whole numbers.';
       return;
     }
     current = model.calculate(input); const r = current;
+    set('normalized-intake',`Equivalent to ${fmt(r.dailyRequests)} requests per workday under your calendar.`);
+    set('calendar-summary',`${fmt(input.intakeHours)} intake hours per workday. One effort workday = ${fmt(input.effortHours)} active hours. One workweek = ${input.workdaysPerWeek} workdays. One average work month = ${fmt(input.workdaysPerMonth)} workdays.`);
     results.hidden = false; status.dataset.state = r.state;
     const messages = {
       growing: `Backlog grows. New review demand exceeds protected capacity by ${fmt((r.demand-r.capacity)/60)} hours per workday.`,
@@ -289,9 +321,16 @@
       idle: 'Zero review demand describes your assumption. Required approvals and operating authority remain separate decisions.'
     };
     set('interpretation',cautions[r.state]); set('target-label',fmt(input.targetPercent)+'% of protected capacity.');
-    set('max-intake',r.maxIntake === null ? 'No review-derived limit' : fmt(Math.floor(r.maxIntake + Number.EPSILON*Math.max(1,r.maxIntake)*4),0)+' requests / workday');
+    byId('long-review-note').hidden=!(input.hours>0 && r.effectiveMinutes>input.hours*60);
+    const periodNames = {hour: 'intake hour', workday: 'workday', workweek: 'workweek', month: 'average work month'};
+    const inputPeriodLimit = r.maxIntake === null ? null : r.maxIntake / r.requestFactor;
+    const displayedLimit = inputPeriodLimit !== null && inputPeriodLimit > 0 && inputPeriodLimit < 0.01 ? '<0.01' : inputPeriodLimit === null ? '' : fmt(Math.floor((inputPeriodLimit + Number.EPSILON*Math.max(1,inputPeriodLimit)*4)*100)/100);
+    set('max-intake',inputPeriodLimit === null ? 'No review-derived limit' : displayedLimit+' requests / '+periodNames[input.requestPeriod]);
     const staffing = value => value === null ? 'Allocate review hours first' : fmt(value,0)+' reviewers';
-    set('needed-reviewers',staffing(r.neededReviewers)); set('clear-reviewers',staffing(r.clearReviewers)); set('effective-minutes',fmt(r.effectiveMinutes)+' minutes');
+    set('needed-reviewers',staffing(r.neededReviewers)); set('clear-reviewers',staffing(r.clearReviewers));
+    const effortNames = {minute:'minutes',hour:'hours',workday:'workdays',workweek:'workweeks'};
+    set('effective-minutes',fmt(r.effectiveMinutes / model.durationMinutes(input.reviewUnit,input))+' '+effortNames[input.reviewUnit]);
+    if (input.reviewUnit !== 'minute') { const normalized = document.createElement('small'); normalized.textContent=fmt(r.effectiveMinutes / 60)+' active hours.'; byId('effective-minutes').append(normalized); }
     const body = byId('timeline'); body.replaceChildren();
     for (const row of r.timeline) { const tr = document.createElement('tr'); for (const v of [row.day,row.demand/60,row.completed/60,row.backlog/60,row.cases]) { const td = document.createElement('td'); td.textContent=fmt(v); tr.append(td); } body.append(tr); }
     chart(r.timeline);
@@ -301,6 +340,7 @@
     set('file-status','Downloaded '+name+'.');
   }
   form.addEventListener('input',update); form.addEventListener('submit',e=>{e.preventDefault();update();});
+  form.addEventListener('change',event=>{ if (['requestPeriod','reviewUnit','reReviewUnit'].includes(event.target.name) && (['hour','workweek','month'].includes(form.elements.requestPeriod.value) || ['workday','workweek'].includes(form.elements.reviewUnit.value) || ['workday','workweek'].includes(form.elements.reReviewUnit.value))) byId('calendar').open=true; });
   for (const button of document.querySelectorAll('[data-preset]')) button.addEventListener('click',()=>{set('file-status','');load(model.presets[button.dataset.preset]);});
   byId('export').addEventListener('click',()=>{ if(current) download('review-capacity-scenario.json',JSON.stringify({model:'review-capacity-lab',version:model.version,assumptions:current.input,units:'Workload values are minutes; timeline cases are average-work equivalents.',results:current},null,2)+'\n','application/json'); });
   byId('csv').addEventListener('click',()=>{ if(current) download('review-capacity-timeline.csv','workday,new_demand_hours,completed_work_hours,backlog_hours,review_case_equivalents\n'+current.timeline.map(r=>[r.day,r.demand/60,r.completed/60,r.backlog/60,r.cases].join(',')).join('\n')+'\n','text/csv'); });
@@ -308,10 +348,9 @@
   byId('import-file').addEventListener('change',async event=>{
     const file=event.target.files[0]; if(!file)return;
     try {
-      if(file.size>65536)throw new Error('Choose a scenario file smaller than 64 KB.');
+      if(file.size>524288)throw new Error('Choose a scenario file smaller than 512 KB.');
       const data=JSON.parse(await file.text());
-      if(data.model!=='review-capacity-lab'||data.version!==model.version||!data.assumptions||model.validate(data.assumptions).length)throw new Error('Choose a valid Review Capacity Lab version 1 scenario.');
-      load(data.assumptions);set('file-status','Imported scenario. Results were recalculated from its assumptions.');
+      load(model.parseScenario(data));set('file-status','Imported scenario. Results were recalculated from its assumptions.');
     } catch(error) {set('file-status',error instanceof SyntaxError?'The file is not valid JSON. The current scenario is unchanged.':error.message+' The current scenario is unchanged.');}
     event.target.value='';
   });

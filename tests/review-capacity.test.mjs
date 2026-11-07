@@ -80,7 +80,7 @@ test('backlog-clearing staffing includes starting work and the chosen horizon', 
 });
 
 test('invalid, missing, fractional count, and nonfinite values fail explicitly', () => {
-  for (const [key, value] of [['requests', -1], ['hours', 25], ['minutes', 0], ['reviewPercent', 101], ['reReviewPercent', -1], ['reviewers', 1.5], ['days', 1.5], ['days', 31], ['targetPercent', 0], ['requests', NaN], ['requests', Infinity], ['requests', '960'], ['backlog', undefined]]) {
+  for (const [key, value] of [['requests', -1], ['hours', 25], ['reviewTime', 0], ['reviewPercent', 101], ['reReviewPercent', -1], ['reviewers', 1.5], ['days', 1.5], ['days', 366], ['targetPercent', 0], ['requests', NaN], ['requests', Infinity], ['requests', '960'], ['backlog', undefined], ['requestPeriod', 'year'], ['reviewUnit', 'calendar-day'], ['reReviewUnit', null], ['effortHours', 0], ['intakeHours', 25], ['workdaysPerWeek', 2.5], ['workdaysPerMonth', 0]]) {
     const input = {...defaults, [key]: value};
     assert.ok(validate(input).includes(key));
     assert.throws(() => calculate(input), /Invalid fields/);
@@ -89,11 +89,54 @@ test('invalid, missing, fractional count, and nonfinite values fail explicitly',
 
 test('review work is conserved and adding capacity never increases backlog', () => {
   for (let i = 0; i < 120; i++) {
-    const s = {...defaults, requests: i * 37, reviewPercent: i % 101, reviewers: i % 6, hours: (i % 20) / 2, backlog: i * 3, reReviewPercent: i % 80, reReviewMinutes: i % 17, days: 1 + i % 30};
+    const s = {...defaults, requests: i * 37, reviewPercent: i % 101, reviewers: i % 6, hours: (i % 20) / 2, backlog: i * 3, reReviewPercent: i % 80, reReviewTime: i % 17, days: 1 + i % 30};
     const r = calculate(s);
     close(r.startingWork + s.days * r.demand, r.endBacklog + r.timeline.reduce((sum, d) => sum + d.completed, 0));
     assert.ok(r.timeline.every(d => d.backlog >= 0 && d.completed >= 0 && d.completed <= r.capacity));
     const more = calculate({...s, reviewers: s.reviewers + 1});
     assert.ok(more.endBacklog <= r.endBacklog + 1e-8);
   }
+});
+
+test('hourly, workday, workweek, and monthly requests have equivalent workload', () => {
+  for (const [requestPeriod, requests] of [['hour',120],['workday',960],['workweek',4800],['month',19200]]) {
+    const r=calculate({...defaults,requestPeriod,requests});
+    close(r.dailyRequests,960); close(r.demand,960); close(r.endCases,960);
+  }
+  const alternate=calculate({...defaults,requests:120,requestPeriod:'hour',intakeHours:6});
+  close(alternate.dailyRequests,720);close(alternate.demand,720);
+  close(calculate({...defaults,requests:2100,requestPeriod:'month',workdaysPerMonth:21}).dailyRequests,100);
+});
+
+test('review effort units normalize independently of protected hours', () => {
+  for (const [reviewUnit,reviewTime] of [['minute',120],['hour',2],['workday',0.25],['workweek',0.05]]) {
+    const r=calculate({...defaults,reviewUnit,reviewTime});
+    close(r.effectiveMinutes,120);close(r.demand,23040);
+  }
+  const r=calculate({...defaults,reviewUnit:'workday',reviewTime:2,hours:2});
+  assert.equal(r.effectiveMinutes,960);
+  assert.equal(r.capacity,240);
+});
+
+test('long activities and mixed extra-pass units match a hand-calculated workload', () => {
+  const r=calculate(presets.long);
+  close(r.dailyRequests,1.6);close(r.effectiveMinutes/60,18);
+  close(r.demand/60,14.4);close(r.capacity/60,12);close(r.loadRatio,1.2);
+  close(r.startingWork/60,54);close(r.endBacklog/60,78);
+  close(r.maxIntake,1.0666666666666667);assert.equal(r.neededReviewers,5);
+  const mixed=calculate({...presets.long,reReviewTime:8,reReviewUnit:'hour'});
+  close(mixed.endBacklog,r.endBacklog);
+  close(calculate({...presets.long,days:365}).endBacklog/60,930);
+  close(calculate({...presets.long,days:1}).endBacklog/60,56.4);
+});
+
+test('version 1 imports retain the daily and minute interpretation and export round trips', () => {
+  const legacy={model:'review-capacity-lab',version:1,assumptions:{requests:960,reviewPercent:20,minutes:5,reviewers:2,hours:4,reReviewPercent:25,reReviewMinutes:4,backlog:48,days:10,targetPercent:80}};
+  const input=context.ReviewCapacity.parseScenario(legacy);
+  assert.equal(input.requestPeriod,'workday');assert.equal(input.reviewUnit,'minute');assert.equal(input.reviewTime,5);
+  const first=calculate(input);
+  const second=calculate(context.ReviewCapacity.parseScenario({model:legacy.model,version:2,assumptions:JSON.parse(JSON.stringify(input))}));
+  close(first.demand,1152);close(first.endBacklog,7008);
+  assert.equal(JSON.stringify(first),JSON.stringify(second));
+  assert.throws(()=>context.ReviewCapacity.parseScenario({model:legacy.model,version:2,assumptions:{...input,reviewUnit:'fortnight'}}),/invalid/);
 });

@@ -82,3 +82,38 @@ test('catalog discovery and mobile controls work without horizontal overflow', a
   await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:'reports/review-capacity-desktop.png',fullPage:true});
 });
+
+test('request periods and long review effort use explicit calendar conversions', async ({page}) => {
+  await page.goto('/review-capacity-lab.html');
+  await page.getByRole('combobox',{name:'Request rate period'}).selectOption('hour');
+  await page.locator('#requests').fill('120');
+  await expect(page.locator('#normalized-intake')).toContainText('960 requests per workday');
+  await expect(page.locator('#demand-hours')).toHaveText('16');
+  await expect(page.locator('#max-intake')).toHaveText('48 requests / intake hour');
+  await page.getByRole('button',{name:'Long activities',exact:true}).click();
+  await expect(page.locator('#calendar')).toHaveAttribute('open','');
+  await expect(page.locator('#normalized-intake')).toContainText('1.6 requests per workday');
+  await expect(page.locator('#demand-hours')).toHaveText('14.4');
+  await expect(page.locator('#capacity-hours')).toHaveText('12');
+  await expect(page.locator('#end-hours')).toHaveText('78');
+  await expect(page.locator('#effective-minutes')).toContainText('2.25 workdays');
+  await expect(page.locator('#effective-minutes')).toContainText('18 active hours');
+  await expect(page.locator('#long-review-note')).toBeVisible();
+  await expect(page.locator('#max-intake')).toHaveText('5.33 requests / workweek');
+  await page.getByRole('combobox',{name:'Request rate period'}).selectOption('month');
+  await page.locator('#requests').fill('32');
+  await expect(page.locator('#demand-hours')).toHaveText('14.4');
+  await page.locator('#days').fill('365');
+  await expect(page.locator('#end-hours')).toHaveText('930');
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+});
+
+test('a legacy daily/minute scenario imports into the unit-aware model', async ({page}) => {
+  await page.goto('/review-capacity-lab.html');
+  const data={model:'review-capacity-lab',version:1,assumptions:{requests:960,reviewPercent:20,minutes:5,reviewers:2,hours:4,reReviewPercent:0,reReviewMinutes:4,backlog:0,days:10,targetPercent:80}};
+  await page.locator('#import-file').setInputFiles({name:'legacy.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(data))});
+  await expect(page.locator('#reviewUnit')).toHaveValue('minute');
+  await expect(page.locator('#requestPeriod')).toHaveValue('workday');
+  await expect(page.locator('#end-cases')).toHaveText('960 review-case equivalents.');
+});
