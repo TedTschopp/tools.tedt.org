@@ -143,6 +143,15 @@ for (const f of inventory.importedFiles) {
   await writeStatic(p, dest);
   staticFiles.push('/' + dest);
 }
+// The migration inventory is historical. Explicitly registered new standalone
+// tools belong to maintained source without rewriting that original snapshot.
+for (const tool of catalog) {
+  if (!tool.migrated || !tool.sourcePath.startsWith('tool-src/tools/') || !tool.sourcePath.endsWith('.html')) continue;
+  const original = tool.sourcePath.slice('tool-src/'.length), dest = original.slice('tools/'.length);
+  if (staticFiles.includes('/' + dest)) continue;
+  await writeStatic(original, dest);
+  staticFiles.push('/' + dest);
+}
 await fs.writeFile(path.join(out, 'lib/tedt-org-tools-loader.js'), `(function(){if(document.querySelector('link[data-tedt-org-tools-css="true"]'))return;var link=document.createElement('link');link.rel='stylesheet';link.dataset.tedtOrgToolsCss='true';link.href=new URL(location.protocol==='file:'?'tedt-org-tools-local.css':'tedt-org-tools.css',document.currentScript.src).href;document.head.appendChild(link);}());\n`);
 for (const entry of ['bootstrap-build', 'game-theory', 'inside-ai']) {
   const input = matter(await read('css/' + entry + '.scss')).content;
@@ -158,6 +167,7 @@ for (const f of inventory.importedFiles.filter(f => /^(game-theory|math-guide|in
 await json('src/data/lessons.json', {lessons, gameData});
 const excludedPaths = new Set(excludedPages.map(p=>p.path));
 const pageUrls = htmlFiles.filter(f => f.source !== 'tools/index.html' && !excludedPaths.has('/'+f.source)).map(f => canonicalPath('/'+f.source.slice(6)));
+pageUrls.push(...catalog.filter(t => t.migrated && t.sourcePath.startsWith('tool-src/tools/') && t.sourcePath.endsWith('.html')).map(t => canonicalPath(new URL(t.launch).pathname)));
 pageUrls.push(...lessons.map(p=>'/'+p.path+'/'),'/RPG/world-map.html','/RPG/tile-map-viewer.html');
 await json('reports/migration-routes.json', {site, sourceCommit:inventory.commit, catalog: catalog.map(t=>({slug:t.slug, launch:t.launch, migrated:t.migrated, status:t.status})), catalogRedirects:docRedirects, migratedPages:[...new Set(pageUrls)], staticFiles, excludedPages, retainedLaunchUrls: catalog.filter(t=>!t.migrated).map(t=>t.launch), retainedOriginalUrlPrefixes:['/RPG/Traveller/', '/tools/traveller-character-sheet', '/tools/traveller-ship-sheet']});
 await json(path.join(out, 'catalog.json'), catalog.map(({html, ...t})=>t));

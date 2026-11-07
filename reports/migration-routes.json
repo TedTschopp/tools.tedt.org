@@ -57,6 +57,12 @@
       "status": "archived"
     },
     {
+      "slug": "review-capacity-lab",
+      "launch": "https://tools.tedt.org/review-capacity-lab.html",
+      "migrated": true,
+      "status": "active"
+    },
+    {
       "slug": "quick-study-painter",
       "launch": "https://tools.tedt.org/quick-study-painter.html",
       "migrated": true,
@@ -663,6 +669,10 @@
       "to": "/about/random-star-constellations/"
     },
     {
+      "from": "/tools/review-capacity-lab/",
+      "to": "/about/review-capacity-lab/"
+    },
+    {
       "from": "/tools/rpg-tile-map-viewer/",
       "to": "/about/rpg-tile-map-viewer/"
     },
@@ -757,6 +767,8 @@
     "/social-bot-check.html",
     "/start-page/",
     "/vector-trace/",
+    "/review-capacity-lab.html",
+    "/name-generator-research/",
     "/game-theory/auction-lab/",
     "/game-theory/bargaining-room/",
     "/game-theory/coalition-calculator/",
@@ -6537,6 +6549,7 @@
     "/RPG/MCC-GW/media/paper-dark.webp",
     "/RPG/MCC-GW/media/paper-margin-dark.webp",
     "/media/files/Three_computer-based_models_of_storytelling_BRUTUS.pdf",
+    "/review-capacity-lab.html",
     "/css/bootstrap-build.css",
     "/css/game-theory.css",
     "/css/inside-ai.css"

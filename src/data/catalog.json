@@ -326,6 +326,44 @@
     "html": "<h2>What it does</h2>\n<p>Explain what the tool is and why you made it.</p>\n<h2>How it works</h2>\n<p>Add notes, screenshots, architectural details, etc.</p>\n<h2>Notes</h2>\n<p>Any caveats, future ideas, or context.</p>\n"
   },
   {
+    "slug": "review-capacity-lab",
+    "title": "Review Capacity Lab",
+    "summary": "Compare AI-generated review demand with protected human capacity. Explore backlog growth, re-review, staffing, and intake limits with a transparent browser model.",
+    "status": "active",
+    "category": "AI and learning",
+    "tags": [
+      "ai",
+      "learning",
+      "simulation",
+      "review",
+      "capacity",
+      "productivity",
+      "planning"
+    ],
+    "type": "webapp",
+    "updated": "2026-11-06",
+    "featured": false,
+    "launch": "https://tools.tedt.org/review-capacity-lab.html",
+    "migrated": true,
+    "image": "",
+    "imageAlt": "Review Capacity Lab",
+    "screenshots": [],
+    "features": [
+      "Five hand-checkable examples, including long work activities",
+      "Request rates per intake hour, workday, workweek, or average work month",
+      "Review effort in minutes, hours, workdays, or workweeks with an explicit work calendar",
+      "Daily review demand, protected capacity, and demand-to-capacity ratio",
+      "Backlog chart and accessible daily table over 1–365 workdays",
+      "Intake and staffing calculations at a chosen capacity target",
+      "One additional review pass, starting backlog, and zero-capacity cases",
+      "JSON scenario import and export plus a CSV workload timeline"
+    ],
+    "repo": "https://github.com/TedTschopp/tools.tedt.org",
+    "upstream": "",
+    "sourcePath": "tool-src/tools/review-capacity-lab.html",
+    "html": "<h2>What it does</h2>\n<p>Review Capacity Lab helps you estimate whether a defined review queue can absorb\nthe work arriving from an AI-assisted process. Enter requests per intake hour,\nworkday, workweek, or average work month. Choose review effort in minutes,\nhours, workdays, or workweeks, then enter the share needing human review and\nprotected reviewer hours. Changing a unit keeps the entered number.</p>\n<p>The tool separates growing queues, exact capacity with no slack, and arithmetic\nheadroom. It also shows staffing and intake at a capacity target you choose.</p>\n<h2>How to use it</h2>\n<ol>\n<li>Open an example or enter your own workload.</li>\n<li>Set the calendar conversions, then count hours protected for this kind of review.</li>\n<li>Add one additional review pass if returned work commonly needs another look.</li>\n<li>Inspect the backlog chart and daily table.</li>\n<li>Export the assumptions and results for a team discussion.</li>\n</ol>\n<h2>Model and limits</h2>\n<p>This is a deterministic planning model. Rates and active effort are normalized\nusing explicit calendar assumptions. An effort workday is separate from each\nreviewer&#39;s protected hours. Monthly rates use an assumed average work month.\nDaily totals are averaged and reviewer hours are pooled. The results do not\nschedule indivisible long cases or predict actual completion dates, waiting\ntimes, decision quality, or whether an action may be delegated. Reviewers must\nbe qualified for the same work class. The chosen capacity target is a planning\nassumption.</p>\n<p>Calculations and scenario files are processed in your browser. The site uses its\nstandard masked visitor analytics. No account or API key is needed.</p>\n"
+  },
+  {
     "slug": "quick-study-painter",
     "title": "Quick Study Painter",
     "summary": "Paint a photo in oil, watercolor, pointillist, gouache, soft pastel, or palette knife style, then download a textured PNG. All image processing stays in your browser.",
