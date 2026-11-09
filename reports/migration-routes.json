@@ -57,6 +57,12 @@
       "status": "archived"
     },
     {
+      "slug": "agent-business-case-lab",
+      "launch": "https://tools.tedt.org/agent-business-case-lab.html",
+      "migrated": true,
+      "status": "active"
+    },
+    {
       "slug": "review-capacity-lab",
       "launch": "https://tools.tedt.org/review-capacity-lab.html",
       "migrated": true,
@@ -569,6 +575,10 @@
   ],
   "catalogRedirects": [
     {
+      "from": "/tools/agent-business-case-lab/",
+      "to": "/about/agent-business-case-lab/"
+    },
+    {
       "from": "/tools/ai-chat-window/",
       "to": "/about/ai-chat-window/"
     },
@@ -767,6 +777,7 @@
     "/social-bot-check.html",
     "/start-page/",
     "/vector-trace/",
+    "/agent-business-case-lab.html",
     "/review-capacity-lab.html",
     "/name-generator-research/",
     "/game-theory/auction-lab/",
@@ -6549,6 +6560,7 @@
     "/RPG/MCC-GW/media/paper-dark.webp",
     "/RPG/MCC-GW/media/paper-margin-dark.webp",
     "/media/files/Three_computer-based_models_of_storytelling_BRUTUS.pdf",
+    "/agent-business-case-lab.html",
     "/review-capacity-lab.html",
     "/css/bootstrap-build.css",
     "/css/game-theory.css",

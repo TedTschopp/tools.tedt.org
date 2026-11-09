@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Business Case Lab — Ted’s Tools</title>
+  <meta name="description" content="Compare a paid AI service, operating cost savings, and a model upgrade with or without a legacy workaround. Check your case against value, quality, and speed targets.">
+  <link rel="canonical" href="https://tools.tedt.org/agent-business-case-lab.html">
+  <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="colors_and_type.css">
+  <style>
+    [hidden] { display: none !important; }
+    .tt-shell { max-width: var(--tool-max); margin: auto; padding: var(--s-7) var(--safe-padding) var(--s-8); }
+    .tt-topbar, .tt-toolbar, .tt-panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
+    .tt-topbar { margin-bottom: var(--s-6); font-size: var(--fs-small); color: var(--fg-2); }
+    .t-tool-title { display: block; }
+    .t-tool-title mark { margin-inline: .06em; }
+    .tt-intro { color: var(--fg-2); max-width: var(--content-max); }
+    .tt-banner, .tt-about { padding: var(--s-4) var(--s-5); border: var(--bw-1) solid var(--ready-border); border-radius: var(--r-3); background: var(--ready-bg); color: var(--ready); }
+    .tt-banner { margin: var(--s-5) 0; }
+    .tt-toolbar { margin: 0 0 var(--s-4); }
+    .tt-actions { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; }
+    .tt-modes { display: inline-flex; flex-wrap: wrap; gap: var(--s-1); background: var(--bg-card); border: var(--border); border-radius: var(--r-3); padding: var(--s-1); }
+    .tt-workspace { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: var(--s-5); align-items: start; }
+    .tt-panel { min-width: 0; background: var(--bg-card); border: var(--border); border-radius: var(--r-3); }
+    .tt-panel-head { padding: var(--s-4) var(--s-5); border-bottom: var(--border); }
+    .tt-panel-head h2, .tt-panel-body h3 { margin: 0; font-size: var(--fs-h3); }
+    .tt-panel-body { padding: var(--s-5); }
+    .tt-panel-body > :first-child { margin-top: 0; }
+    .tt-panel-body > :last-child { margin-bottom: 0; }
+    .tt-section { border-top: var(--border-soft); margin-top: var(--s-5); padding-top: var(--s-5); }
+    .tt-hint { color: var(--fg-2); font-size: var(--fs-small); }
+    .tt-fields { display: grid; gap: var(--s-4); margin-top: var(--s-4); }
+    .tt-field label { display: block; font-size: var(--fs-small); font-weight: var(--fw-semibold); margin-bottom: var(--s-1); }
+    .tt-field p { margin: var(--s-1) 0 0; }
+    .tt-checkbox { display: flex; align-items: start; gap: var(--s-2); font-size: var(--fs-small); }
+    .tt-checkbox input { margin-top: .2em; width: 1.25em; height: 1.25em; accent-color: var(--accent); flex: none; }
+    button, select, input { font: inherit; }
+    button, select, input[type="number"] { min-height: calc(var(--s-7) + var(--s-3)); border-radius: var(--r-2); }
+    select, input[type="number"] { width: 100%; padding: var(--s-2) var(--s-3); color: var(--fg); background: var(--bg-inset); border: var(--border); }
+    input[type="number"] { font-family: var(--font-mono); }
+    input[aria-invalid="true"] { border-color: var(--error); }
+    button { border: var(--border); background: transparent; color: var(--fg); padding: var(--s-2) var(--s-4); cursor: pointer; }
+    button:hover { background: var(--bg-hover); }
+    button[aria-pressed="true"] { background: var(--accent); color: var(--fg-on-accent); border-color: var(--accent); }
+    :is(a, button, input, select, summary, [tabindex="0"]):focus-visible { outline: var(--bw-2) solid var(--link); outline-offset: var(--s-1); }
+    .tt-result { border: var(--border); border-radius: var(--r-3); background: var(--bg-inset); padding: var(--s-4); margin-bottom: var(--s-4); }
+    .tt-result strong { display: block; margin-bottom: var(--s-1); }
+    .tt-result p { margin: 0; }
+    .tt-result[data-state="pass"] { border-color: var(--success-border); background: var(--success-bg); color: var(--success); }
+    .tt-result[data-state="hold"] { border-color: var(--warn-border); background: var(--warn-bg); color: var(--warn); }
+    .tt-scroll { overflow-x: auto; max-width: 100%; border: var(--border); border-radius: var(--r-2); }
+    table { border-collapse: collapse; width: 100%; font-size: var(--fs-small); }
+    th, td { border-bottom: var(--border-soft); padding: var(--s-3); vertical-align: top; text-align: right; }
+    th:first-child { text-align: left; position: sticky; left: 0; background: var(--bg-card); }
+    thead th { background: var(--bg-inset); min-width: 6.5rem; }
+    thead th:first-child { min-width: 8rem; }
+    tbody tr:last-child :is(th, td) { border-bottom: 0; }
+    td { font-variant-numeric: tabular-nums; }
+    tr.tt-value-row :is(th, td) { background: var(--bg-inset); font-weight: var(--fw-semibold); }
+    .tt-gate-notes { margin: var(--s-4) 0 0; padding-inline-start: var(--s-5); font-size: var(--fs-small); }
+    .tt-gate-notes li + li { margin-top: var(--s-2); }
+    .tt-method { border-top: var(--border-soft); margin-top: var(--s-5); padding-top: var(--s-4); }
+    summary { cursor: pointer; font-weight: var(--fw-semibold); }
+    .tt-about { margin-top: var(--s-5); }
+    .tt-about p { margin: 0; font-size: var(--fs-small); color: inherit; }
+    .tt-about p + p { margin-top: var(--s-2); }
+    .tt-about a { color: inherit; text-decoration: underline; }
+    .tt-mobile-link, .tt-mobile-hint { display: none; }
+    @media (max-width: 58rem) {
+      .tt-shell { padding: var(--s-5) var(--s-4) var(--s-7); }
+      .tt-workspace { grid-template-columns: minmax(0, 1fr); }
+      .tt-mobile-link { display: inline-block; margin-bottom: var(--s-4); }
+      .tt-mobile-hint { display: block; }
+    }
+  </style>
+</head>
+<body>
+<main class="tt-shell" data-clarity-mask="true">
+  <nav class="tt-topbar" aria-label="Tool navigation"><a href="./">← Ted’s Tools</a><span>Planning calculator · USD</span></nav>
+  <header>
+    <h1 class="t-tool-title">Agent Business <mark>Case</mark> Lab</h1>
+    <p class="t-tagline">Decide what an agent has to prove before you invest.</p>
+    <p class="tt-intro">Compare a new paid service or a lower cost operation. Set targets for value, quality, and speed, then see what changes when a model upgrade can take over a workaround.</p>
+  </header>
+  <div class="tt-banner" id="status" role="status">Illustrative distributor example. The figures are fictional.</div>
+  <noscript><p>Enable JavaScript to enter figures and calculate results.</p></noscript>
+
+  <div class="tt-toolbar">
+    <div class="tt-modes" role="group" aria-label="Business case">
+      <button type="button" data-mode="growth" aria-pressed="true">Growth</button>
+      <button type="button" data-mode="cost" aria-pressed="false">Operating cost</button>
+    </div>
+    <div class="tt-actions">
+      <button type="button" id="load-example">Load distributor example</button>
+      <button type="button" id="start-blank">Start blank</button>
+    </div>
+  </div>
+  <p id="scenario-description" class="tt-hint"></p>
+  <a class="tt-mobile-link" href="#results">Jump to comparison ↓</a>
+
+  <div class="tt-workspace">
+    <section class="tt-panel" aria-labelledby="inputs-title">
+      <div class="tt-panel-head"><h2 id="inputs-title">Inputs and targets</h2></div>
+      <form class="tt-panel-body" id="assumptions" novalidate>
+        <div class="tt-field">
+          <label for="evidence">Where your figures come from</label>
+          <select id="evidence">
+            <option value="example">Illustrative example</option>
+            <option value="estimate">Planning estimates</option>
+            <option value="measured">Measured inputs</option>
+          </select>
+        </div>
+        <div class="tt-fields" id="settings"></div>
+        <div class="tt-section">
+          <div class="tt-field">
+            <label for="configuration">Configuration to edit</label>
+            <select id="configuration"></select>
+          </div>
+          <div class="tt-fields" id="configuration-fields"></div>
+        </div>
+        <p class="tt-hint">Choose a configuration to edit its figures. Your entries carry over as you switch between configurations and cases.</p>
+      </form>
+    </section>
+
+    <section class="tt-panel" id="results" aria-labelledby="results-title">
+      <div class="tt-panel-head"><h2 id="results-title">Comparison</h2></div>
+      <div class="tt-panel-body">
+        <div id="retirement" class="tt-result" aria-live="polite" hidden></div>
+        <p class="tt-hint tt-mobile-hint">Scroll the table to compare every configuration.</p>
+        <div class="tt-scroll" role="region" aria-label="Configuration results" tabindex="0">
+          <table aria-label="Value, quality, and speed by configuration">
+            <thead id="comparison-head"></thead>
+            <tbody id="comparison-body"></tbody>
+          </table>
+        </div>
+        <ul id="gate-notes" class="tt-gate-notes" aria-label="Target details"></ul>
+        <details class="tt-method">
+          <summary>How the figures are calculated</summary>
+          <div id="method" class="tt-hint"></div>
+        </details>
+      </div>
+    </section>
+  </div>
+
+  <footer class="tt-about">
+    <p><strong>Agent Business Case Lab.</strong> Use one work stream and the same case mix for each comparison. Enter pilot results or assumptions. This calculator processes the figures in your browser and projects a steady month over a year.</p>
+    <p>Read the distributor’s story. <a href="https://tedt.org/The-Two-Business-Cases-for-AI-Agents/">The Two Business Cases for AI Agents</a></p>
+  </footer>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  const dollarLimit = 1_000_000_000;
+  const monthlyLimit = 1_000_000;
+  const moneyField = (key, label, hint, max = dollarLimit) => ({key, label, hint, min: 0, max, step: 0.01});
+  const countField = (key, label, min = 0) => ({key, label, min, max: monthlyLimit, step: 1});
+  const rateField = (key, label, hint) => ({key, label, hint, min: 0, max: 100, step: 0.01});
+  const hoursField = (key, label, hint) => ({key, label, hint, min: 0, max: 8760, step: 0.01});
+  const valueFloor = moneyField('minValue', 'Minimum first-year improvement ($)', 'The required gain after one-time costs, compared with the baseline.');
+  const targets = [
+    rateField('minQuality', 'Minimum correct outcomes (%)'),
+    hoursField('maxHours', 'Maximum turnaround for 95% of cases (hours)', 'Use the same working hours or elapsed hours for every configuration.')
+  ];
+  const deliveryFields = [
+    rateField('quality', 'Correct outcomes (%)', 'Use comparable cases. Include unresolved or incorrect cases in the denominator.'),
+    hoursField('hours', 'Turnaround for 95% of cases (hours)', 'Enter the 95th percentile from request to completed work, including review and waiting.'),
+    {key: 'checks', label: 'Required control and exception tests', hint: 'For example, near matches go to a person and only authorized staff can release a quote.', choices: [['', 'Evidence pending'], ['pass', 'Passed'], ['fail', 'Failed']]}
+  ];
+
+  const profiles = {
+    growth: {
+      description: 'Distributor example. Customers pay for a verified source and lead time for hard-to-find parts.',
+      options: [['baseline', 'Manual pilot'], ['current', 'Current model'], ['upgrade', 'Candidate upgrade']],
+      settings: [
+        countField('volume', 'Eligible requests per month', 1),
+        rateField('minConversion', 'Minimum paid conversion (%)', 'Paid orders fulfilled divided by eligible requests.'),
+        valueFloor,
+        ...targets
+      ],
+      fields: [
+        countField('orders', 'Paid orders fulfilled per month'),
+        moneyField('price', 'Net fee per order ($)', 'Use revenue after discounts and refunds.', 100_000),
+        moneyField('delivery', 'Variable delivery cost per order ($)', 'Include the model, tools, review, and rework charged per order.', 100_000),
+        moneyField('monthly', 'Additional fixed cost per month ($)', 'Enter recurring costs outside the per-order figure.'),
+        moneyField('setup', 'One-time cost from baseline ($)', 'Include the setup and rollout needed to reach this configuration.')
+      ],
+      method: [
+        'Monthly revenue is paid orders fulfilled × net fee. Monthly contribution subtracts variable delivery costs and additional fixed costs.',
+        'First-year improvement is 12 × the monthly contribution gain over the baseline, less one-time cost. Account for displaced sales and costs when estimating your inputs.'
+      ]
+    },
+    cost: {
+      description: 'Distributor example. The existing quote desk pays for a routine that recognizes old vendor aliases. Compare the upgrade on the same cases with and without it.',
+      options: [['baseline', 'Quote desk'], ['current', 'Current model'], ['kept', 'Upgrade with routine'], ['removed', 'Upgrade without routine']],
+      settings: [
+        countField('volume', 'Quote requests per month', 1),
+        moneyField('legacy', 'Legacy support per month ($)', 'Enter support separately from the other monthly spending.'),
+        {key: 'cancel', label: 'Cancel legacy support if the workaround is retired', checkbox: true},
+        valueFloor,
+        ...targets
+      ],
+      fields: [
+        moneyField('monthly', 'Monthly cash spend before legacy support ($)', 'Include tools, model usage, paid review, rework, and other operating costs. Use the same monthly volume.'),
+        moneyField('setup', 'One-time cost from baseline ($)', 'Include migration and any cost of retiring the routine.')
+      ],
+      method: [
+        'Monthly cash spend includes legacy support unless the configuration removes the routine and you can cancel support. First-year savings are 12 × monthly cash savings less one-time cost.',
+        'Cost per correct quote divides cash spend by the estimated number of correct outcomes. Freed staff time can increase capacity. Use actual changes in spend for the cash comparison.',
+        'The removal check compares the upgrade both ways. It looks for results on the same cases, passing thresholds with the routine removed, and lower monthly and first-year costs. Confirm the results in a controlled rollout before canceling support.'
+      ]
+    }
+  };
+
+  const examples = {
+    growth: {
+      evidence: 'example',
+      settings: {volume: 200, minConversion: 15, minValue: 0, minQuality: 98, maxHours: 8},
+      values: {
+        baseline: {orders: 30, price: 100, delivery: 60, monthly: 0, quality: 99, hours: 7.5, checks: 'pass'},
+        current: {orders: 45, price: 100, delivery: 40, monthly: 200, setup: 2000, quality: 98.5, hours: 7, checks: 'pass'},
+        upgrade: {orders: 45, price: 100, delivery: 38, monthly: 150, setup: 2500, quality: 98.8, hours: 6.5, checks: 'pass'}
+      }
+    },
+    cost: {
+      evidence: 'example',
+      settings: {volume: 1000, legacy: 1000, cancel: true, minValue: 0, minQuality: 98, maxHours: 2},
+      values: {
+        baseline: {monthly: 4000, quality: 98.8, hours: 2.3, checks: 'pass'},
+        current: {monthly: 3650, setup: 2000, quality: 99.1, hours: 1.8, checks: 'pass'},
+        kept: {monthly: 3800, setup: 3000, quality: 99.2, hours: 1.4, checks: 'pass'},
+        removed: {monthly: 3800, setup: 3000, quality: 98.9, hours: 1.5, checks: 'pass'}
+      }
+    }
+  };
+
+  const cases = structuredClone(examples);
+  const edited = {growth: 'current', cost: 'removed'};
+  const byId = id => document.getElementById(id);
+  const element = (tag, content) => {
+    const node = document.createElement(tag);
+    if (content !== undefined) node.textContent = content;
+    return node;
+  };
+  const selectOption = ([value, label]) => {
+    const option = element('option', label);
+    option.value = value;
+    return option;
+  };
+  const currency = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 2});
+  const number = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2});
+  const dollars = value => currency.format(value === 0 ? 0 : value / 100);
+  const cents = value => Math.round(value * 100);
+  const shown = (value, format) => value == null ? '—' : format(value);
+  const rounded = value => number.format(value);
+  const percent = value => rounded(value) + '%';
+  const hours = value => rounded(value) + ' h';
+  const all = (...values) => values.every(value => value != null);
+  const present = (value, min, max) => Number.isFinite(value) && value >= min && value <= max;
+  const validCount = (value, min, max) => present(value, min, max) && Number.isInteger(value);
+  const validDecimal = (value, max) => present(value, 0, max) && Math.abs(cents(value) - value * 100) < 0.001;
+  const validMoney = (value, max = dollarLimit) => validDecimal(value, max);
+  const evidenceText = {
+    example: 'Illustrative distributor example. The figures are fictional.',
+    estimate: 'Planning estimates. The comparison uses your assumptions.',
+    measured: 'Measured inputs as entered. First-year results project a steady month.'
+  };
+  let mode = 'growth';
+
+  function makeField(field, value, scope) {
+    const wrapper = element('div');
+    wrapper.className = field.checkbox ? 'tt-checkbox' : 'tt-field';
+    const id = scope + '-' + field.key;
+    const label = element('label', field.label);
+    label.htmlFor = id;
+    const input = element(field.choices ? 'select' : 'input');
+    input.id = id;
+    input.dataset.key = field.key;
+    input.dataset.scope = scope;
+    if (field.choices) {
+      input.replaceChildren(...field.choices.map(selectOption));
+      input.value = value ?? '';
+    } else if (field.checkbox) {
+      input.type = 'checkbox';
+      input.checked = Boolean(value);
+    } else {
+      input.type = 'number';
+      input.min = field.min;
+      input.max = field.max;
+      input.step = field.step;
+      input.value = Number.isFinite(value) ? value : '';
+      input.inputMode = field.step === 1 ? 'numeric' : 'decimal';
+    }
+    if (field.checkbox) wrapper.append(input, label);
+    else wrapper.append(label, input);
+    if (field.hint) {
+      const hint = element('p', field.hint);
+      hint.className = 'tt-hint';
+      hint.id = id + '-hint';
+      input.setAttribute('aria-describedby', hint.id);
+      wrapper.append(hint);
+    }
+    return wrapper;
+  }
+
+  function showConfiguration() {
+    const {fields} = profiles[mode];
+    const id = edited[mode];
+    const values = cases[mode].values[id] || {};
+    byId('configuration-fields').replaceChildren(
+      ...[...fields.filter(field => id !== 'baseline' || field.key !== 'setup'), ...deliveryFields].map(field => makeField(field, values[field.key], 'option'))
+    );
+    renderResults();
+  }
+
+  function showMode() {
+    const profile = profiles[mode];
+    const state = cases[mode];
+    for (const button of document.querySelectorAll('[data-mode]')) {
+      button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
+    }
+    byId('evidence').value = state.evidence;
+    byId('scenario-description').textContent = state.evidence === 'example'
+      ? profile.description
+      : 'Use a single workflow and the same demand and case mix across the comparison.';
+    byId('settings').replaceChildren(...profile.settings.map(field => makeField(field, state.settings[field.key], 'setting')));
+    byId('configuration').replaceChildren(...profile.options.map(selectOption));
+    byId('configuration').value = edited[mode];
+    byId('method').replaceChildren(...profile.method.map(line => element('p', line)));
+    showConfiguration();
+  }
+
+  function operatingNumbers(id, values, settings) {
+    const needsSupport = id !== 'removed' || !settings.cancel;
+    const monthly = validMoney(values.monthly) && (!needsSupport || validMoney(settings.legacy))
+      ? cents(values.monthly) + (needsSupport ? cents(settings.legacy) : 0) : null;
+    return {monthly};
+  }
+
+  function growthNumbers(values, settings) {
+    const ordersValid = validCount(settings.volume, 1, monthlyLimit) && validCount(values.orders, 0, settings.volume);
+    const revenue = ordersValid && validMoney(values.price, 100_000) ? values.orders * cents(values.price) : null;
+    const monthly = revenue != null && validMoney(values.delivery, 100_000) && validMoney(values.monthly)
+      ? revenue - values.orders * cents(values.delivery) - cents(values.monthly) : null;
+    return {monthly, revenue, conversion: ordersValid ? values.orders * 100 / settings.volume : null};
+  }
+
+  function compare() {
+    const profile = profiles[mode];
+    const {settings, values} = cases[mode];
+    const isGrowth = mode === 'growth';
+    const baseline = isGrowth ? growthNumbers(values.baseline || {}, settings) : operatingNumbers('baseline', values.baseline || {}, settings);
+    return profile.options.map(([id, label]) => {
+      const option = values[id] || {};
+      const economics = isGrowth ? growthNumbers(option, settings) : operatingNumbers(id, option, settings);
+      const setup = id === 'baseline' ? 0 : validMoney(option.setup) ? cents(option.setup) : null;
+      const monthlyGain = all(economics.monthly, baseline.monthly)
+        ? (economics.monthly - baseline.monthly) * (isGrowth ? 1 : -1) : null;
+      const year = all(monthlyGain, setup) ? monthlyGain * 12 - setup : null;
+      const quality = validDecimal(option.quality, 100) ? option.quality : null;
+      const duration = validDecimal(option.hours, 8760) ? option.hours : null;
+      const checks = option.checks === 'pass' || option.checks === 'fail' ? option.checks : null;
+      const volumeValid = validCount(settings.volume, 1, monthlyLimit);
+      const outcomes = volumeValid && quality > 0 ? settings.volume * quality / 100 : 0;
+      const flags = {
+        'first-year value': all(year) && validMoney(settings.minValue) ? year >= cents(settings.minValue) : null,
+        'quality': all(quality) && validDecimal(settings.minQuality, 100) ? quality >= settings.minQuality : null,
+        'turnaround': all(duration) && validDecimal(settings.maxHours, 8760) ? duration <= settings.maxHours : null,
+        'required tests': checks == null ? null : checks === 'pass'
+      };
+      if (isGrowth) {
+        flags['paid conversion'] = all(economics.conversion) && validDecimal(settings.minConversion, 100)
+          ? economics.conversion >= settings.minConversion : null;
+      } else if (!volumeValid) {
+        flags['quote volume'] = null;
+      }
+      const failed = Object.keys(flags).filter(key => flags[key] === false);
+      const missing = Object.keys(flags).filter(key => flags[key] == null);
+      const costPerCorrect = all(economics.monthly) && outcomes > 0 ? economics.monthly / outcomes : null;
+      return {id, label, ...economics, monthlyGain, year, quality, duration, checks, failed, missing, costPerCorrect};
+    });
+  }
+
+  function showRetirement(rows) {
+    const callout = byId('retirement');
+    callout.hidden = mode !== 'cost';
+    if (callout.hidden) return;
+    const kept = rows.find(row => row.id === 'kept');
+    const removed = rows.find(row => row.id === 'removed');
+    const deliveryFailures = removed.failed.filter(key => key !== 'first-year value');
+    let title;
+    let detail;
+    let state = 'hold';
+    if (deliveryFailures.length) {
+      title = 'Keep the workaround for now.';
+      detail = 'The upgrade without it misses ' + deliveryFailures.join(', ') + '.';
+    } else if (removed.missing.length || kept.missing.length) {
+      title = 'Enter results for both upgrade configurations.';
+      detail = 'Use the same cases and include the costs, quality, turnaround, and required tests.';
+    } else if (removed.failed.length || removed.monthly >= kept.monthly || removed.year <= kept.year) {
+      title = 'The simpler upgrade lacks a cost case at these inputs.';
+      detail = 'Its delivery checks pass. Review the first-year target, the savings from removal, and whether you can cancel support.';
+    } else {
+      title = 'The simpler upgrade clears the targets.';
+      detail = 'The upgrade without the routine saves ' + dollars(removed.year) + ' in year one against the baseline, ' + dollars(removed.year - kept.year) + ' more than the same upgrade with it. Confirm on a controlled rollout.';
+      state = 'pass';
+    }
+    callout.dataset.state = state;
+    if (callout.textContent !== title + detail) {
+      callout.replaceChildren(element('strong', title), element('p', detail));
+    }
+  }
+
+  function renderResults() {
+    const {settings, values, evidence} = cases[mode];
+    const isGrowth = mode === 'growth';
+    const configuration = values[edited[mode]] || {};
+    const orderInput = byId('option-orders');
+    if (orderInput) orderInput.max = validCount(settings.volume, 1, monthlyLimit) ? settings.volume : monthlyLimit;
+    for (const input of byId('assumptions').querySelectorAll('input[type="number"]')) {
+      input.setAttribute('aria-invalid', String(!input.validity.valid));
+    }
+    const orderProblem = isGrowth && validCount(settings.volume, 1, monthlyLimit) && configuration.orders > settings.volume;
+    byId('status').textContent = evidenceText[evidence] + (orderProblem ? ' Paid orders cannot exceed eligible requests.' : '');
+    const rows = compare();
+    showRetirement(rows);
+    const head = element('tr');
+    const measure = element('th', 'Measure');
+    measure.scope = 'col';
+    head.append(measure);
+    for (const {label} of rows) {
+      const header = element('th', label);
+      header.scope = 'col';
+      head.append(header);
+    }
+    byId('comparison-head').replaceChildren(head);
+
+    const checksLabel = checks => checks == null ? 'Pending' : checks === 'pass' ? 'Passed' : 'Failed';
+    const financialRows = isGrowth
+      ? [['Paid conversion', 'conversion', percent], ['Revenue / month', 'revenue', dollars], ['Contribution / month', 'monthly', dollars]]
+      : [['Cash spend / month', 'monthly', dollars], ['Cash savings / month', 'monthlyGain', dollars], ['Cost per correct quote', 'costPerCorrect', dollars]];
+    const specs = [
+      [isGrowth ? 'First-year contribution gain' : 'First-year net savings', 'year', dollars],
+      ...financialRows,
+      ['Correct outcomes', 'quality', percent],
+      ['Turnaround for 95%', 'duration', hours],
+      ['Required tests', 'checks', checksLabel]
+    ];
+    const body = specs.map(([label, field, format]) => {
+      const tr = element('tr');
+      if (field === 'year') tr.className = 'tt-value-row';
+      const header = element('th', label);
+      header.scope = 'row';
+      tr.append(header);
+      for (const row of rows) tr.append(element('td', field === 'checks' ? format(row[field]) : shown(row[field], format)));
+      return tr;
+    });
+    byId('comparison-body').replaceChildren(...body);
+    byId('gate-notes').replaceChildren(...rows.filter(row => row.id !== 'baseline').map(row => {
+      const note = element('li');
+      const label = element('strong', row.label + '. ');
+      const messages = [];
+      if (row.failed.length) messages.push('Below target for ' + row.failed.join(', ') + '.');
+      if (row.missing.length) messages.push('Needs evidence for ' + row.missing.join(', ') + '.');
+      note.append(label, messages.join(' ') || 'Meets the entered targets.');
+      return note;
+    }));
+  }
+
+  for (const button of document.querySelectorAll('[data-mode]')) {
+    button.addEventListener('click', () => { mode = button.dataset.mode; showMode(); });
+  }
+  byId('load-example').addEventListener('click', () => {
+    cases[mode] = structuredClone(examples[mode]);
+    edited[mode] = mode === 'growth' ? 'current' : 'removed';
+    showMode();
+  });
+  byId('start-blank').addEventListener('click', () => {
+    cases[mode] = {evidence: 'estimate', settings: {}, values: {}};
+    edited[mode] = 'baseline';
+    showMode();
+  });
+  byId('configuration').addEventListener('change', event => { edited[mode] = event.target.value; showConfiguration(); });
+  byId('evidence').addEventListener('change', event => { cases[mode].evidence = event.target.value; showMode(); });
+  byId('assumptions').addEventListener('submit', event => event.preventDefault());
+  byId('assumptions').addEventListener('input', event => {
+    const input = event.target;
+    const {key, scope} = input.dataset;
+    if (!key) return;
+    const state = cases[mode];
+    const values = scope === 'setting' ? state.settings : (state.values[edited[mode]] ??= {});
+    values[key] = input.type === 'checkbox' ? input.checked : input.type === 'number' ? input.valueAsNumber : input.value;
+    renderResults();
+  });
+  showMode();
+})();
+</script>
+</body>
+</html>
