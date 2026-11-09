@@ -47,6 +47,7 @@
     .tt-result { border: var(--border); border-radius: var(--r-3); background: var(--bg-inset); padding: var(--s-4); margin-bottom: var(--s-4); }
     .tt-result strong { display: block; margin-bottom: var(--s-1); }
     .tt-result p { margin: 0; }
+    .tt-result p + p { margin-top: var(--s-2); }
     .tt-result[data-state="pass"] { border-color: var(--success-border); background: var(--success-bg); color: var(--success); }
     .tt-result[data-state="hold"] { border-color: var(--warn-border); background: var(--warn-bg); color: var(--warn); }
     .tt-scroll { overflow-x: auto; max-width: 100%; border: var(--border); border-radius: var(--r-2); }
@@ -81,7 +82,7 @@
   <header>
     <h1 class="t-tool-title">Agent Business <mark>Case</mark> Lab</h1>
     <p class="t-tagline">Decide what an agent has to prove before you invest.</p>
-    <p class="tt-intro">Compare a new paid service or a lower cost operation. Set targets for value, quality, and speed, then see what changes when a model upgrade can take over a workaround.</p>
+    <p class="tt-intro">Compare paid demand with delivery capacity. Check whether a model upgrade can work without a legacy routine and whether switching would save money.</p>
   </header>
   <div class="tt-banner" id="status" role="status">Illustrative distributor example. The figures are fictional.</div>
   <noscript><p>Enable JavaScript to enter figures and calculate results.</p></noscript>
@@ -105,16 +106,18 @@
       <form class="tt-panel-body" id="assumptions" novalidate>
         <div class="tt-field">
           <label for="evidence">Where your figures come from</label>
-          <select id="evidence">
+          <select id="evidence" aria-describedby="evidence-hint">
             <option value="example">Illustrative example</option>
             <option value="estimate">Planning estimates</option>
             <option value="measured">Measured inputs</option>
+            <option value="mixed">Measurements and estimates</option>
           </select>
+          <p id="evidence-hint" class="tt-hint"></p>
         </div>
         <div class="tt-fields" id="settings"></div>
         <div class="tt-section">
           <div class="tt-field">
-            <label for="configuration">Configuration to edit</label>
+            <label for="configuration">Edit the numbers for</label>
             <select id="configuration"></select>
           </div>
           <div class="tt-fields" id="configuration-fields"></div>
@@ -126,7 +129,10 @@
     <section class="tt-panel" id="results" aria-labelledby="results-title">
       <div class="tt-panel-head"><h2 id="results-title">Comparison</h2></div>
       <div class="tt-panel-body">
+        <div id="growth-case" class="tt-result" aria-live="polite" hidden></div>
+        <div id="upgrade-case" class="tt-result" aria-live="polite" hidden></div>
         <div id="retirement" class="tt-result" aria-live="polite" hidden></div>
+        <p class="tt-hint">First-year figures assume twelve months at the entered volume and costs.</p>
         <p class="tt-hint tt-mobile-hint">Scroll the table to compare every configuration.</p>
         <div class="tt-scroll" role="region" aria-label="Configuration results" tabindex="0">
           <table aria-label="Value, quality, and speed by configuration">
@@ -164,74 +170,86 @@
     rateField('minQuality', 'Minimum correct outcomes (%)'),
     hoursField('maxHours', 'Maximum turnaround for 95% of cases (hours)', 'Use the same working hours or elapsed hours for every configuration.')
   ];
-  const deliveryFields = [
-    rateField('quality', 'Correct outcomes (%)', 'Use comparable cases. Include unresolved or incorrect cases in the denominator.'),
-    hoursField('hours', 'Turnaround for 95% of cases (hours)', 'Enter the 95th percentile from request to completed work, including review and waiting.'),
-    {key: 'checks', label: 'Required control and exception tests', hint: 'For example, near matches go to a person and only authorized staff can release a quote.', choices: [['', 'Evidence pending'], ['pass', 'Passed'], ['fail', 'Failed']]}
+  const outcomeFields = [
+    rateField('quality', 'Correct outcomes (%)', 'Count correct results after any review. Include unresolved and incorrect cases in the denominator.'),
+    hoursField('hours', 'Turnaround for 95% of cases (hours)', 'Enter the 95th percentile from request to completed work, including review and waiting.')
   ];
+  const testField = (key, label, reason, hint) => ({
+    key, label, reason, hint, choices: [['', 'Evidence pending'], ['pass', 'Passed'], ['fail', 'Failed']]
+  });
+  const switchCost = moneyField('switchCost', 'Remaining cost to switch from today’s model ($)', 'Enter only costs you still need to pay to switch. Enter zero if there are none.');
 
   const profiles = {
     growth: {
       description: 'Distributor example. Customers pay for a verified source and lead time for hard-to-find parts.',
-      options: [['baseline', 'Manual pilot'], ['current', 'Current model'], ['upgrade', 'Candidate upgrade']],
+      options: [['baseline', 'Manual pilot'], ['current', 'Model workflow'], ['upgrade', 'Candidate upgrade']],
       settings: [
         countField('volume', 'Eligible requests per month', 1),
-        rateField('minConversion', 'Minimum paid conversion (%)', 'Paid orders fulfilled divided by eligible requests.'),
+        rateField('minFulfillment', 'Minimum share fulfilled as paid orders (%)', 'Divide fulfilled paid orders by eligible requests.'),
         valueFloor,
         ...targets
       ],
       fields: [
-        countField('orders', 'Paid orders fulfilled per month'),
+        {...countField('demand', 'Paid orders placed per month'), hint: 'Enter paid demand separately from what the workflow can deliver.'},
+        {...countField('capacity', 'Fulfillment capacity per month'), hint: 'Enter how many orders the workflow can complete in a month.'},
         moneyField('price', 'Net fee per order ($)', 'Use revenue after discounts and refunds.', 100_000),
         moneyField('delivery', 'Variable delivery cost per order ($)', 'Include the model, tools, review, and rework charged per order.', 100_000),
         moneyField('monthly', 'Additional fixed cost per month ($)', 'Enter recurring costs outside the per-order figure.'),
         moneyField('setup', 'One-time cost from baseline ($)', 'Include the setup and rollout needed to reach this configuration.')
       ],
+      tests: [testField('checks', 'Required control and exception tests', 'required tests', 'For example, verify the source and route uncertain matches to a person.')],
       method: [
+        'The lab fulfills the smaller of paid orders placed and fulfillment capacity. The fulfilled share divides that count by eligible requests.',
         'Monthly revenue is paid orders fulfilled × net fee. Monthly contribution subtracts variable delivery costs and additional fixed costs.',
         'First-year improvement is 12 × the monthly contribution gain over the baseline, less one-time cost. Account for displaced sales and costs when estimating your inputs.'
       ]
     },
     cost: {
       description: 'Distributor example. The existing quote desk pays for a routine that recognizes old vendor aliases. Compare the upgrade on the same cases with and without it.',
-      options: [['baseline', 'Quote desk'], ['current', 'Current model'], ['kept', 'Upgrade with routine'], ['removed', 'Upgrade without routine']],
+      options: [['baseline', 'Original quote desk'], ['current', 'Today’s model'], ['kept', 'Upgrade with routine'], ['removed', 'Upgrade without routine']],
       settings: [
         countField('volume', 'Quote requests per month', 1),
         moneyField('legacy', 'Legacy support per month ($)', 'Enter support separately from the other monthly spending.'),
         {key: 'cancel', label: 'Cancel legacy support if the workaround is retired', checkbox: true},
-        valueFloor,
+        {...valueFloor, hint: 'Applies against the original desk in the table and against today’s model for the upgrade decision.'},
         ...targets
       ],
       fields: [
         moneyField('monthly', 'Monthly cash spend before legacy support ($)', 'Include tools, model usage, paid review, rework, and other operating costs. Use the same monthly volume.'),
         moneyField('setup', 'One-time cost from baseline ($)', 'Include migration and any cost of retiring the routine.')
       ],
+      tests: [
+        testField('reusedParts', 'Reused part number tests', 'reused part numbers', 'Verify the manufacturer and compatible part when a vendor has reused a number.'),
+        testField('nearMatches', 'Unsafe near-match tests', 'unsafe near matches', 'Send ambiguous matches to a person before releasing a quote.'),
+        testField('checks', 'Other required control tests', 'other required tests', 'Verify pricing and require the appropriate quote approval.')
+      ],
       method: [
-        'Monthly cash spend includes legacy support unless the configuration removes the routine and you can cancel support. First-year savings are 12 × monthly cash savings less one-time cost.',
+        'Monthly cash spend includes legacy support unless the configuration removes the routine and you can cancel support. The table compares 12 months of savings against the original desk and subtracts the total cost from that baseline.',
         'Cost per correct quote divides cash spend by the estimated number of correct outcomes. Freed staff time can increase capacity. Use actual changes in spend for the cash comparison.',
-        'The removal check compares the upgrade both ways. It looks for results on the same cases, passing thresholds with the routine removed, and lower monthly and first-year costs. Confirm the results in a controlled rollout before canceling support.'
+        'The removal check compares delivery with and without the routine. The upgrade decision compares the qualifying upgrades against today’s model and subtracts only the costs still needed to switch. Confirm delivery results in a controlled rollout.'
       ]
     }
   };
 
+  const passedCostTests = {reusedParts: 'pass', nearMatches: 'pass', checks: 'pass'};
   const examples = {
     growth: {
       evidence: 'example',
-      settings: {volume: 200, minConversion: 15, minValue: 0, minQuality: 98, maxHours: 8},
+      settings: {volume: 200, minFulfillment: 15, minValue: 0, minQuality: 98, maxHours: 8},
       values: {
-        baseline: {orders: 30, price: 100, delivery: 60, monthly: 0, quality: 99, hours: 7.5, checks: 'pass'},
-        current: {orders: 45, price: 100, delivery: 40, monthly: 200, setup: 2000, quality: 98.5, hours: 7, checks: 'pass'},
-        upgrade: {orders: 45, price: 100, delivery: 38, monthly: 150, setup: 2500, quality: 98.8, hours: 6.5, checks: 'pass'}
+        baseline: {demand: 30, capacity: 30, price: 100, delivery: 60, monthly: 0, quality: 99, hours: 7.5, checks: 'pass'},
+        current: {demand: 45, capacity: 45, price: 100, delivery: 40, monthly: 200, setup: 2000, quality: 98.5, hours: 7, checks: 'pass'},
+        upgrade: {demand: 45, capacity: 45, price: 100, delivery: 38, monthly: 150, setup: 2500, quality: 98.8, hours: 6.5, checks: 'pass'}
       }
     },
     cost: {
       evidence: 'example',
       settings: {volume: 1000, legacy: 1000, cancel: true, minValue: 0, minQuality: 98, maxHours: 2},
       values: {
-        baseline: {monthly: 4000, quality: 98.8, hours: 2.3, checks: 'pass'},
-        current: {monthly: 3650, setup: 2000, quality: 99.1, hours: 1.8, checks: 'pass'},
-        kept: {monthly: 3800, setup: 3000, quality: 99.2, hours: 1.4, checks: 'pass'},
-        removed: {monthly: 3800, setup: 3000, quality: 98.9, hours: 1.5, checks: 'pass'}
+        baseline: {monthly: 4000, quality: 98.8, hours: 2.3, ...passedCostTests},
+        current: {monthly: 3650, setup: 2000, quality: 99.1, hours: 1.8, ...passedCostTests},
+        kept: {monthly: 3800, setup: 3000, switchCost: 1000, quality: 99.2, hours: 1.4, ...passedCostTests},
+        removed: {monthly: 3800, setup: 3000, switchCost: 1000, quality: 98.9, hours: 1.5, ...passedCostTests}
       }
     }
   };
@@ -265,7 +283,8 @@
   const evidenceText = {
     example: 'Illustrative distributor example. The figures are fictional.',
     estimate: 'Planning estimates. The comparison uses your assumptions.',
-    measured: 'Measured inputs as entered. First-year results project a steady month.'
+    measured: 'Measurements you entered. First-year results project a steady month.',
+    mixed: 'Measurements and estimates you entered. First-year results project a steady month.'
   };
   let mode = 'growth';
 
@@ -306,11 +325,13 @@
   }
 
   function showConfiguration() {
-    const {fields} = profiles[mode];
+    const profile = profiles[mode];
     const id = edited[mode];
     const values = cases[mode].values[id] || {};
+    const fields = profile.fields.filter(field => id !== 'baseline' || field.key !== 'setup');
+    if (mode === 'cost' && (id === 'kept' || id === 'removed')) fields.push(switchCost);
     byId('configuration-fields').replaceChildren(
-      ...[...fields.filter(field => id !== 'baseline' || field.key !== 'setup'), ...deliveryFields].map(field => makeField(field, values[field.key], 'option'))
+      ...[...fields, ...outcomeFields, ...profile.tests].map(field => makeField(field, values[field.key], 'option'))
     );
     renderResults();
   }
@@ -321,8 +342,15 @@
     for (const button of document.querySelectorAll('[data-mode]')) {
       button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
     }
-    byId('evidence').value = state.evidence;
-    byId('scenario-description').textContent = state.evidence === 'example'
+    const evidence = byId('evidence');
+    const isExample = state.evidence === 'example';
+    evidence.value = state.evidence;
+    evidence.disabled = isExample;
+    evidence.querySelector('option[value="example"]').hidden = !isExample;
+    byId('evidence-hint').textContent = isExample
+      ? 'Choose Start blank to enter and label your own figures.'
+      : 'Identify the source of the figures you enter for this case.';
+    byId('scenario-description').textContent = isExample
       ? profile.description
       : 'Use a single workflow and the same demand and case mix across the comparison.';
     byId('settings').replaceChildren(...profile.settings.map(field => makeField(field, state.settings[field.key], 'setting')));
@@ -339,93 +367,172 @@
     return {monthly};
   }
 
-  function growthNumbers(values, settings) {
-    const ordersValid = validCount(settings.volume, 1, monthlyLimit) && validCount(values.orders, 0, settings.volume);
-    const revenue = ordersValid && validMoney(values.price, 100_000) ? values.orders * cents(values.price) : null;
+  function growthNumbers(values, settings, demand = values.demand) {
+    const placed = validCount(settings.volume, 1, monthlyLimit) && validCount(demand, 0, settings.volume) ? demand : null;
+    const capacity = validCount(values.capacity, 0, monthlyLimit) ? values.capacity : null;
+    const orders = all(placed, capacity) ? Math.min(placed, capacity) : null;
+    const revenue = orders != null && validMoney(values.price, 100_000) ? orders * cents(values.price) : null;
     const monthly = revenue != null && validMoney(values.delivery, 100_000) && validMoney(values.monthly)
-      ? revenue - values.orders * cents(values.delivery) - cents(values.monthly) : null;
-    return {monthly, revenue, conversion: ordersValid ? values.orders * 100 / settings.volume : null};
+      ? revenue - orders * cents(values.delivery) - cents(values.monthly) : null;
+    return {monthly, revenue, placed, capacity, orders, fulfillment: orders == null ? null : orders * 100 / settings.volume};
   }
+
+  const netYear = (monthlyGain, cost) => all(monthlyGain, cost) ? monthlyGain * 12 - cost : null;
 
   function compare() {
     const profile = profiles[mode];
     const {settings, values} = cases[mode];
     const isGrowth = mode === 'growth';
     const baseline = isGrowth ? growthNumbers(values.baseline || {}, settings) : operatingNumbers('baseline', values.baseline || {}, settings);
+    const currentSpend = isGrowth ? null : operatingNumbers('current', values.current || {}, settings).monthly;
     return profile.options.map(([id, label]) => {
       const option = values[id] || {};
       const economics = isGrowth ? growthNumbers(option, settings) : operatingNumbers(id, option, settings);
       const setup = id === 'baseline' ? 0 : validMoney(option.setup) ? cents(option.setup) : null;
       const monthlyGain = all(economics.monthly, baseline.monthly)
         ? (economics.monthly - baseline.monthly) * (isGrowth ? 1 : -1) : null;
-      const year = all(monthlyGain, setup) ? monthlyGain * 12 - setup : null;
+      const year = netYear(monthlyGain, setup);
+      const upgrade = id === 'kept' || id === 'removed';
+      const remainingCost = upgrade && validMoney(option.switchCost) ? cents(option.switchCost) : null;
+      const vsToday = all(currentSpend, economics.monthly) ? currentSpend - economics.monthly : null;
+      const switchGain = netYear(vsToday, remainingCost);
       const quality = validDecimal(option.quality, 100) ? option.quality : null;
       const duration = validDecimal(option.hours, 8760) ? option.hours : null;
-      const checks = option.checks === 'pass' || option.checks === 'fail' ? option.checks : null;
+      const testResults = Object.fromEntries(profile.tests.map(({key}) => [key, option[key] || null]));
+      const deliveryFlags = {
+        quality: all(quality) && validDecimal(settings.minQuality, 100) ? quality >= settings.minQuality : null,
+        turnaround: all(duration) && validDecimal(settings.maxHours, 8760) ? duration <= settings.maxHours : null
+      };
+      for (const {key, reason} of profile.tests) {
+        const result = testResults[key];
+        deliveryFlags[reason] = result === 'pass' ? true : result === 'fail' ? false : null;
+      }
+      const deliveryFailed = Object.keys(deliveryFlags).filter(key => deliveryFlags[key] === false);
+      const deliveryMissing = Object.keys(deliveryFlags).filter(key => deliveryFlags[key] == null);
       const volumeValid = validCount(settings.volume, 1, monthlyLimit);
       const outcomes = volumeValid && quality > 0 ? settings.volume * quality / 100 : 0;
       const flags = {
         'first-year value': all(year) && validMoney(settings.minValue) ? year >= cents(settings.minValue) : null,
-        'quality': all(quality) && validDecimal(settings.minQuality, 100) ? quality >= settings.minQuality : null,
-        'turnaround': all(duration) && validDecimal(settings.maxHours, 8760) ? duration <= settings.maxHours : null,
-        'required tests': checks == null ? null : checks === 'pass'
+        ...deliveryFlags
       };
       if (isGrowth) {
-        flags['paid conversion'] = all(economics.conversion) && validDecimal(settings.minConversion, 100)
-          ? economics.conversion >= settings.minConversion : null;
+        flags['share fulfilled as paid orders'] = all(economics.fulfillment) && validDecimal(settings.minFulfillment, 100)
+          ? economics.fulfillment >= settings.minFulfillment : null;
       } else if (!volumeValid) {
         flags['quote volume'] = null;
       }
       const failed = Object.keys(flags).filter(key => flags[key] === false);
       const missing = Object.keys(flags).filter(key => flags[key] == null);
       const costPerCorrect = all(economics.monthly) && outcomes > 0 ? economics.monthly / outcomes : null;
-      return {id, label, ...economics, monthlyGain, year, quality, duration, checks, failed, missing, costPerCorrect};
+      return {id, label, ...economics, ...testResults, monthlyGain, year, remainingCost, switchGain,
+        quality, duration, deliveryFailed, deliveryMissing, failed, missing, costPerCorrect};
     });
   }
 
+  function showCallout(id, state, title, ...details) {
+    const callout = byId(id);
+    callout.dataset.state = state;
+    if (callout.textContent !== title + details.join('')) {
+      callout.replaceChildren(element('strong', title), ...details.map(detail => element('p', detail)));
+    }
+  }
+
+  function showGrowth([pilot, current]) {
+    const {settings, values} = cases.growth;
+    const title = 'Compare with the pilot’s paid volume.';
+    if (pilot.orders == null || current.capacity == null) {
+      return showCallout('growth-case', 'neutral', title, 'Enter the pilot’s paid demand and capacity, then enter capacity for the model workflow.');
+    }
+    if (current.capacity < pilot.orders) {
+      return showCallout('growth-case', 'hold', title, 'The model workflow has capacity for ' + rounded(current.capacity) + ' orders. The pilot fulfills ' + rounded(pilot.orders) + '.');
+    }
+    const option = values.current || {};
+    const sameVolume = growthNumbers(option, settings, pilot.orders);
+    const gain = all(sameVolume.monthly, pilot.monthly) && validMoney(option.setup)
+      ? netYear(sameVolume.monthly - pilot.monthly, cents(option.setup)) : null;
+    if (gain == null) {
+      return showCallout('growth-case', 'neutral', title, 'Enter the pilot and model workflow costs to compare the same paid volume.');
+    }
+    const details = [
+      'At the pilot’s ' + rounded(pilot.orders) + ' fulfilled orders per month, the model workflow shows ' + dollars(sameVolume.revenue) + ' in monthly revenue and ' + dollars(gain) + ' in first-year contribution gain.'
+    ];
+    if (current.year != null && current.orders !== pilot.orders) {
+      details.push('With the entered demand and capacity, it fulfills ' + rounded(current.orders) + ' orders per month and shows ' + dollars(current.year) + ' in first-year contribution gain.');
+    }
+    showCallout('growth-case', 'neutral', title, ...details);
+  }
+
   function showRetirement(rows) {
-    const callout = byId('retirement');
-    callout.hidden = mode !== 'cost';
-    if (callout.hidden) return;
     const kept = rows.find(row => row.id === 'kept');
     const removed = rows.find(row => row.id === 'removed');
-    const deliveryFailures = removed.failed.filter(key => key !== 'first-year value');
-    let title;
-    let detail;
-    let state = 'hold';
-    if (deliveryFailures.length) {
-      title = 'Keep the workaround for now.';
-      detail = 'The upgrade without it misses ' + deliveryFailures.join(', ') + '.';
-    } else if (removed.missing.length || kept.missing.length) {
-      title = 'Enter results for both upgrade configurations.';
-      detail = 'Use the same cases and include the costs, quality, turnaround, and required tests.';
-    } else if (removed.failed.length || removed.monthly >= kept.monthly || removed.year <= kept.year) {
-      title = 'The simpler upgrade lacks a cost case at these inputs.';
-      detail = 'Its delivery checks pass. Review the first-year target, the savings from removal, and whether you can cancel support.';
-    } else {
-      title = 'The simpler upgrade clears the targets.';
-      detail = 'The upgrade without the routine saves ' + dollars(removed.year) + ' in year one against the baseline, ' + dollars(removed.year - kept.year) + ' more than the same upgrade with it. Confirm on a controlled rollout.';
-      state = 'pass';
+    if (removed.deliveryFailed.length) {
+      return showCallout('retirement', 'hold', 'Keep the routine for now.',
+        'The upgrade without the routine fails the checks for ' + removed.deliveryFailed.join(', ') + '.');
     }
-    callout.dataset.state = state;
-    if (callout.textContent !== title + detail) {
-      callout.replaceChildren(element('strong', title), element('p', detail));
+    if (removed.deliveryMissing.length || kept.deliveryMissing.length) {
+      return showCallout('retirement', 'neutral', 'Enter delivery results for both upgrades.',
+        'Use the same cases. Record quality, turnaround, and the required tests with and without the routine.');
     }
+    const detail = 'The upgrade without the routine passes the entered delivery checks. Confirm with a controlled trial before retirement.';
+    const monthlyDifference = all(removed.monthly, kept.monthly) ? kept.monthly - removed.monthly : null;
+    const comparison = monthlyDifference == null ? [] : [
+      monthlyDifference === 0
+        ? 'Both upgrade configurations have the same monthly cost.'
+        : 'The upgrade without the routine costs ' + dollars(Math.abs(monthlyDifference)) + (monthlyDifference > 0 ? ' less' : ' more') + ' per month than the upgrade with it.'
+    ];
+    showCallout('retirement', 'pass', 'The upgrade can be tested without the routine.', detail, ...comparison);
+  }
+
+  function showUpgrade(rows) {
+    const settings = cases.cost.settings;
+    const current = rows.find(row => row.id === 'current');
+    const kept = rows.find(row => row.id === 'kept');
+    const candidates = rows.filter(row => (row.id === 'kept' || row.id === 'removed') && !row.deliveryFailed.length);
+    const keepTitle = 'Keep today’s model at these inputs.';
+    if (!candidates.length) {
+      return showCallout('upgrade-case', 'hold', keepTitle, 'Both upgrades miss at least one required delivery target.');
+    }
+    const needsDeliveryComparison = candidates.some(row => row.id === 'removed') && kept.deliveryMissing.length > 0;
+    if (!validCount(settings.volume, 1, monthlyLimit) || !validMoney(settings.minValue) || needsDeliveryComparison
+      || candidates.some(row => row.deliveryMissing.length || row.switchGain == null)) {
+      return showCallout('upgrade-case', 'neutral', 'Compare the upgrades with today’s model.',
+        'Enter monthly volume, costs, remaining switch costs, targets, and delivery results to complete the comparison.');
+    }
+    candidates.sort((a, b) => b.switchGain - a.switchGain);
+    const [best, second] = candidates;
+    const gain = best.switchGain;
+    const impact = gain < 0 ? 'costs ' + dollars(-gain) + ' more' : 'saves ' + dollars(gain);
+    const detail = 'Today’s model costs ' + dollars(current.monthly) + ' per month. ' + best.label + ' costs '
+      + dollars(best.monthly) + ' per month and ' + impact + ' over twelve months after '
+      + dollars(best.remainingCost) + ' in remaining switch costs.';
+    if (gain <= 0 || gain < cents(settings.minValue)) {
+      return showCallout('upgrade-case', 'hold', keepTitle, detail, 'The best upgrade with passing delivery checks falls short of the savings needed to switch.');
+    }
+    const title = second?.switchGain === gain ? 'Both upgrades meet the savings target.' : 'Switching beats today’s model.';
+    showCallout('upgrade-case', 'pass', title, detail);
   }
 
   function renderResults() {
     const {settings, values, evidence} = cases[mode];
     const isGrowth = mode === 'growth';
     const configuration = values[edited[mode]] || {};
-    const orderInput = byId('option-orders');
+    const orderInput = byId('option-demand');
     if (orderInput) orderInput.max = validCount(settings.volume, 1, monthlyLimit) ? settings.volume : monthlyLimit;
     for (const input of byId('assumptions').querySelectorAll('input[type="number"]')) {
       input.setAttribute('aria-invalid', String(!input.validity.valid));
     }
-    const orderProblem = isGrowth && validCount(settings.volume, 1, monthlyLimit) && configuration.orders > settings.volume;
+    const orderProblem = isGrowth && validCount(settings.volume, 1, monthlyLimit) && configuration.demand > settings.volume;
     byId('status').textContent = evidenceText[evidence] + (orderProblem ? ' Paid orders cannot exceed eligible requests.' : '');
     const rows = compare();
-    showRetirement(rows);
+    byId('growth-case').hidden = !isGrowth;
+    byId('upgrade-case').hidden = isGrowth;
+    byId('retirement').hidden = isGrowth;
+    if (isGrowth) {
+      showGrowth(rows);
+    } else {
+      showUpgrade(rows);
+      showRetirement(rows);
+    }
     const head = element('tr');
     const measure = element('th', 'Measure');
     measure.scope = 'col';
@@ -439,22 +546,25 @@
 
     const checksLabel = checks => checks == null ? 'Pending' : checks === 'pass' ? 'Passed' : 'Failed';
     const financialRows = isGrowth
-      ? [['Paid conversion', 'conversion', percent], ['Revenue / month', 'revenue', dollars], ['Contribution / month', 'monthly', dollars]]
-      : [['Cash spend / month', 'monthly', dollars], ['Cash savings / month', 'monthlyGain', dollars], ['Cost per correct quote', 'costPerCorrect', dollars]];
+      ? [['Paid orders placed / month', 'placed', rounded], ['Fulfillment capacity / month', 'capacity', rounded],
+        ['Paid orders fulfilled / month', 'orders', rounded], ['Eligible requests fulfilled as paid orders (%)', 'fulfillment', percent],
+        ['Revenue / month', 'revenue', dollars], ['Contribution / month', 'monthly', dollars]]
+      : [['First-year net savings from today’s model', 'switchGain', dollars], ['Cash spend / month', 'monthly', dollars],
+        ['Cash savings / month from original desk', 'monthlyGain', dollars], ['Cost per correct quote', 'costPerCorrect', dollars]];
     const specs = [
-      [isGrowth ? 'First-year contribution gain' : 'First-year net savings', 'year', dollars],
+      [isGrowth ? 'First-year contribution gain from pilot' : 'First-year net savings from original desk', 'year', dollars],
       ...financialRows,
       ['Correct outcomes', 'quality', percent],
       ['Turnaround for 95%', 'duration', hours],
-      ['Required tests', 'checks', checksLabel]
+      ...profiles[mode].tests.map(({label, key}) => [label, key, checksLabel])
     ];
     const body = specs.map(([label, field, format]) => {
       const tr = element('tr');
-      if (field === 'year') tr.className = 'tt-value-row';
+      if (field === 'year' || field === 'switchGain') tr.className = 'tt-value-row';
       const header = element('th', label);
       header.scope = 'row';
       tr.append(header);
-      for (const row of rows) tr.append(element('td', field === 'checks' ? format(row[field]) : shown(row[field], format)));
+      for (const row of rows) tr.append(element('td', format === checksLabel ? checksLabel(row[field]) : shown(row[field], format)));
       return tr;
     });
     byId('comparison-body').replaceChildren(...body);
@@ -483,7 +593,11 @@
     showMode();
   });
   byId('configuration').addEventListener('change', event => { edited[mode] = event.target.value; showConfiguration(); });
-  byId('evidence').addEventListener('change', event => { cases[mode].evidence = event.target.value; showMode(); });
+  byId('evidence').addEventListener('change', event => {
+    const sources = ['estimate', 'measured', 'mixed'];
+    if (cases[mode].evidence !== 'example' && sources.includes(event.target.value)) cases[mode].evidence = event.target.value;
+    showMode();
+  });
   byId('assumptions').addEventListener('submit', event => event.preventDefault());
   byId('assumptions').addEventListener('input', event => {
     const input = event.target;
