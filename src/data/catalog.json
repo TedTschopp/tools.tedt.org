@@ -328,7 +328,7 @@
   {
     "slug": "agent-business-case-lab",
     "title": "Agent Business Case Lab",
-    "summary": "Test paid demand and delivery capacity separately. Compare an AI upgrade with today’s model and see whether a legacy routine can go.",
+    "summary": "Try two choices at a parts distributor. See what happens when fewer paid orders come in or the support bill stays.",
     "status": "active",
     "category": "AI and learning",
     "tags": [
@@ -348,7 +348,7 @@
     "imageAlt": "Agent Business Case Lab",
     "screenshots": [],
     "features": [
-      "Growth and operating cost examples from the same parts distributor",
+      "Tap through the growth and operating cost examples before editing assumptions",
       "Paid demand, fulfillment capacity, and contribution at the same paid volume",
       "Delivery checks with and without the legacy routine",
       "Upgrade costs and savings against today’s model, including remaining switch costs"
@@ -356,7 +356,7 @@
     "repo": "https://github.com/TedTschopp/tools.tedt.org",
     "upstream": "",
     "sourcePath": "tool-src/tools/agent-business-case-lab.html",
-    "html": "<h2>What it does</h2>\n<p>Use the growth case to compare paid orders placed with how many orders the workflow can fulfill. See the economics at the pilot’s volume and at the volume you enter.</p>\n<p>Use the operating cost case to compare delivery with and without the legacy routine. Then compare each qualifying upgrade against today’s model. Change whether you can cancel the support contract to see what leaves the budget.</p>\n<h2>How to use it</h2>\n<ol>\n<li>Choose <strong>Growth</strong> or <strong>Operating cost</strong> and open the distributor example, or start blank.</li>\n<li>Enter a common monthly volume and the quality, turnaround, and financial targets.</li>\n<li>Select each configuration and enter its costs and results. In the operating cost case, record the reused part number and unsafe near-match tests separately.</li>\n<li>Compare the first-year economics and delivery checks. For your own figures, choose <strong>Start blank</strong> and select their source.</li>\n</ol>\n<p>The examples are fictional. The lab calculates in your browser using the numbers you enter and projects a steady month over a year. See the <a href=\"https://tedt.org/The-Two-Business-Cases-for-AI-Agents/\">companion article</a> for the worked example.</p>\n"
+    "html": "<h2>What it does</h2>\n<p>Use the growth case to compare paid orders placed with how many orders the workflow can fulfill. See the economics at the pilot’s volume and at the volume you enter.</p>\n<p>Use the operating cost case to compare delivery with and without the legacy routine. Then compare each qualifying upgrade against today’s model. Change whether you can cancel the support contract to see what leaves the budget.</p>\n<h2>How to use it</h2>\n<ol>\n<li>Choose <strong>Growth</strong> and tap <strong>Only 30 paid orders come in</strong>. Read what changes in sales and the money left in year one.</li>\n<li>Choose <strong>Operating cost</strong> and tap <strong>Keep paying for support</strong>. Compare the cost of switching with the result of the delivery checks.</li>\n<li>Open <strong>Edit assumptions</strong> to change the example or choose <strong>Start blank</strong> for your own figures.</li>\n<li>Use the full comparison to see the costs, targets, and checks for each option.</li>\n</ol>\n<p>The examples are fictional. The lab calculates in your browser using the numbers you enter and projects a steady month over a year. See the <a href=\"https://tedt.org/The-Two-Business-Cases-for-AI-Agents/\">companion article</a> for the worked example.</p>\n"
   },
   {
     "slug": "review-capacity-lab",
