@@ -11,23 +11,29 @@
   <style>
     [hidden] { display: none !important; }
     .tt-shell { max-width: var(--tool-max); margin: auto; padding: var(--s-7) var(--safe-padding) var(--s-8); }
-    .tt-topbar, .tt-toolbar, .tt-panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
+    .tt-topbar, .tt-panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
     .tt-topbar { margin-bottom: var(--s-6); font-size: var(--fs-small); color: var(--fg-2); }
     .t-tool-title { display: block; }
     .t-tool-title mark { margin-inline: .06em; }
-    .tt-intro { color: var(--fg-2); max-width: var(--content-max); }
     .tt-banner, .tt-about { padding: var(--s-4) var(--s-5); border: var(--bw-1) solid var(--ready-border); border-radius: var(--r-3); background: var(--ready-bg); color: var(--ready); }
     .tt-banner { margin: var(--s-5) 0; }
-    .tt-toolbar { margin: 0 0 var(--s-4); }
     .tt-actions { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; }
     .tt-modes { display: inline-flex; flex-wrap: wrap; gap: var(--s-1); background: var(--bg-card); border: var(--border); border-radius: var(--r-3); padding: var(--s-1); }
-    .tt-workspace { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: var(--s-5); align-items: start; }
+    .tt-workspace { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: var(--s-5); align-items: start; margin-top: var(--s-5); }
     .tt-panel { min-width: 0; background: var(--bg-card); border: var(--border); border-radius: var(--r-3); }
     .tt-panel-head { padding: var(--s-4) var(--s-5); border-bottom: var(--border); }
     .tt-panel-head h2, .tt-panel-body h3 { margin: 0; font-size: var(--fs-h3); }
     .tt-panel-body { padding: var(--s-5); }
     .tt-panel-body > :first-child { margin-top: 0; }
     .tt-panel-body > :last-child { margin-bottom: 0; }
+    #try-example { scroll-margin-top: 5.5rem; }
+    .tt-lesson { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.65fr); gap: var(--s-4); }
+    .tt-lesson-controls > :first-child { margin-top: 0; }
+    .tt-lesson-results { display: grid; gap: var(--s-3); align-content: start; }
+    .tt-lesson-results > p { margin: 0; }
+    .tt-assumptions > summary { display: list-item; min-height: 44px; font-size: var(--fs-h3); border-bottom: 0; }
+    .tt-assumptions[open] > summary { border-bottom: var(--border); }
+    .tt-assumption-actions { margin-bottom: var(--s-5); }
     .tt-section { border-top: var(--border-soft); margin-top: var(--s-5); padding-top: var(--s-5); }
     .tt-hint { color: var(--fg-2); font-size: var(--fs-small); }
     .tt-fields { display: grid; gap: var(--s-4); margin-top: var(--s-4); }
@@ -42,9 +48,10 @@
     input[aria-invalid="true"] { border-color: var(--error); }
     button { border: var(--border); background: transparent; color: var(--fg); padding: var(--s-2) var(--s-4); cursor: pointer; }
     button:hover { background: var(--bg-hover); }
+    button:disabled { opacity: .55; cursor: default; }
     button[aria-pressed="true"] { background: var(--accent); color: var(--fg-on-accent); border-color: var(--accent); }
     :is(a, button, input, select, summary, [tabindex="0"]):focus-visible { outline: var(--bw-2) solid var(--link); outline-offset: var(--s-1); }
-    .tt-result { border: var(--border); border-radius: var(--r-3); background: var(--bg-inset); padding: var(--s-4); margin-bottom: var(--s-4); }
+    .tt-result { border: var(--border); border-radius: var(--r-3); background: var(--bg-inset); padding: var(--s-4); }
     .tt-result strong { display: block; margin-bottom: var(--s-1); }
     .tt-result p { margin: 0; }
     .tt-result p + p { margin-top: var(--s-2); }
@@ -67,11 +74,10 @@
     .tt-about p { margin: 0; font-size: var(--fs-small); color: inherit; }
     .tt-about p + p { margin-top: var(--s-2); }
     .tt-about a { color: inherit; text-decoration: underline; }
-    .tt-mobile-link, .tt-mobile-hint { display: none; }
+    .tt-mobile-hint { display: none; }
     @media (max-width: 58rem) {
       .tt-shell { padding: var(--s-5) var(--s-4) var(--s-7); }
-      .tt-workspace { grid-template-columns: minmax(0, 1fr); }
-      .tt-mobile-link { display: inline-block; margin-bottom: var(--s-4); }
+      .tt-workspace, .tt-lesson { grid-template-columns: minmax(0, 1fr); }
       .tt-mobile-hint { display: block; }
     }
   </style>
@@ -81,29 +87,48 @@
   <nav class="tt-topbar" aria-label="Tool navigation"><a href="./">← Ted’s Tools</a><span>Planning calculator · USD</span></nav>
   <header>
     <h1 class="t-tool-title">Agent Business <mark>Case</mark> Lab</h1>
-    <p class="t-tagline">Decide what an agent has to prove before you invest.</p>
-    <p class="tt-intro">Compare paid demand with delivery capacity. Check whether a model upgrade can work without a legacy routine and whether switching would save money.</p>
+    <p class="t-tagline">Help a parts distributor decide when AI is worth paying for.</p>
   </header>
   <div class="tt-banner" id="status" role="status">Illustrative distributor example. The figures are fictional.</div>
   <noscript><p>Enable JavaScript to enter figures and calculate results.</p></noscript>
 
-  <div class="tt-toolbar">
-    <div class="tt-modes" role="group" aria-label="Business case">
-      <button type="button" data-mode="growth" aria-pressed="true">Growth</button>
-      <button type="button" data-mode="cost" aria-pressed="false">Operating cost</button>
+  <section class="tt-panel" id="try-example" aria-labelledby="example-title" tabindex="-1">
+    <div class="tt-panel-head">
+      <h2 id="example-title">Try the distributor’s example</h2>
+      <div class="tt-modes" role="group" aria-label="Business case">
+        <button type="button" data-mode="growth" aria-pressed="true">Growth</button>
+        <button type="button" data-mode="cost" aria-pressed="false">Operating cost</button>
+      </div>
     </div>
-    <div class="tt-actions">
-      <button type="button" id="load-example">Load distributor example</button>
-      <button type="button" id="start-blank">Start blank</button>
+    <div class="tt-panel-body tt-lesson">
+      <div class="tt-lesson-controls">
+        <p id="scenario-description"></p>
+        <div id="growth-choices" class="tt-actions" role="group" aria-label="Paid orders in the example" hidden>
+          <button type="button" data-example-orders="30" aria-pressed="false">Only 30 paid orders come in</button>
+          <button type="button" data-example-orders="45" aria-pressed="true">45 paid orders come in</button>
+        </div>
+        <div id="cost-choices" class="tt-actions" role="group" aria-label="Support bill in the example" hidden>
+          <button type="button" data-example-support="keep" aria-pressed="false">Keep paying for support</button>
+          <button type="button" data-example-support="end" aria-pressed="true">End the support contract</button>
+        </div>
+      </div>
+      <div class="tt-lesson-results">
+        <div id="growth-case" class="tt-result" aria-live="polite" hidden></div>
+        <p id="growth-terms" class="tt-hint" hidden>Sales, or revenue, is what customers pay. Contribution is the money left after delivering the orders and running the service.</p>
+        <div id="upgrade-case" class="tt-result" aria-live="polite" hidden></div>
+        <div id="retirement" class="tt-result" aria-live="polite" hidden></div>
+      </div>
     </div>
-  </div>
-  <p id="scenario-description" class="tt-hint"></p>
-  <a class="tt-mobile-link" href="#results">Jump to comparison ↓</a>
+  </section>
 
   <div class="tt-workspace">
-    <section class="tt-panel" aria-labelledby="inputs-title">
-      <div class="tt-panel-head"><h2 id="inputs-title">Inputs and targets</h2></div>
+    <details class="tt-panel tt-assumptions" id="assumptions-panel">
+      <summary class="tt-panel-head">Edit assumptions</summary>
       <form class="tt-panel-body" id="assumptions" novalidate>
+        <div class="tt-actions tt-assumption-actions">
+          <button type="button" id="load-example">Load distributor example</button>
+          <button type="button" id="start-blank">Start blank</button>
+        </div>
         <div class="tt-field">
           <label for="evidence">Where your figures come from</label>
           <select id="evidence" aria-describedby="evidence-hint">
@@ -124,14 +149,11 @@
         </div>
         <p class="tt-hint">Choose a configuration to edit its figures. Your entries carry over as you switch between configurations and cases.</p>
       </form>
-    </section>
+    </details>
 
     <section class="tt-panel" id="results" aria-labelledby="results-title">
-      <div class="tt-panel-head"><h2 id="results-title">Comparison</h2></div>
+      <div class="tt-panel-head"><h2 id="results-title">Full comparison</h2></div>
       <div class="tt-panel-body">
-        <div id="growth-case" class="tt-result" aria-live="polite" hidden></div>
-        <div id="upgrade-case" class="tt-result" aria-live="polite" hidden></div>
-        <div id="retirement" class="tt-result" aria-live="polite" hidden></div>
         <p class="tt-hint">First-year figures assume twelve months at the entered volume and costs.</p>
         <p class="tt-hint tt-mobile-hint">Scroll the table to compare every configuration.</p>
         <div class="tt-scroll" role="region" aria-label="Configuration results" tabindex="0">
@@ -181,7 +203,7 @@
 
   const profiles = {
     growth: {
-      description: 'Distributor example. Customers pay for a verified source and lead time for hard-to-find parts.',
+      description: 'The distributor charges for finding hard-to-find parts. What changes when customers place only 30 paid orders?',
       options: [['baseline', 'Manual pilot'], ['current', 'Model workflow'], ['upgrade', 'Candidate upgrade']],
       settings: [
         countField('volume', 'Eligible requests per month', 1),
@@ -205,7 +227,7 @@
       ]
     },
     cost: {
-      description: 'Distributor example. The existing quote desk pays for a routine that recognizes old vendor aliases. Compare the upgrade on the same cases with and without it.',
+      description: 'A newer model may be able to work without the old part-number script. What if the support bill is still due?',
       options: [['baseline', 'Original quote desk'], ['current', 'Today’s model'], ['kept', 'Upgrade with routine'], ['removed', 'Upgrade without routine']],
       settings: [
         countField('volume', 'Quote requests per month', 1),
@@ -257,6 +279,8 @@
   const cases = structuredClone(examples);
   const edited = {growth: 'current', cost: 'removed'};
   const byId = id => document.getElementById(id);
+  const orderChoices = document.querySelectorAll('[data-example-orders]');
+  const supportChoices = document.querySelectorAll('[data-example-support]');
   const element = (tag, content) => {
     const node = document.createElement(tag);
     if (content !== undefined) node.textContent = content;
@@ -344,6 +368,9 @@
     }
     const evidence = byId('evidence');
     const isExample = state.evidence === 'example';
+    byId('example-title').textContent = isExample ? 'Try the distributor’s example' : 'See what your numbers say';
+    byId('growth-choices').hidden = !isExample || mode !== 'growth';
+    byId('cost-choices').hidden = !isExample || mode !== 'cost';
     evidence.value = state.evidence;
     evidence.disabled = isExample;
     evidence.querySelector('option[value="example"]').hidden = !isExample;
@@ -439,25 +466,30 @@
 
   function showGrowth([pilot, current]) {
     const {settings, values} = cases.growth;
-    const title = 'Compare with the pilot’s paid volume.';
-    if (pilot.orders == null || current.capacity == null) {
-      return showCallout('growth-case', 'neutral', title, 'Enter the pilot’s paid demand and capacity, then enter capacity for the model workflow.');
+    if (!all(current.year, current.revenue)) {
+      return showCallout('growth-case', 'neutral', 'Compare with the manual pilot.',
+        'Open Edit assumptions to enter orders, capacity, and costs for the manual pilot and the model workflow.');
     }
-    if (current.capacity < pilot.orders) {
-      return showCallout('growth-case', 'hold', title, 'The model workflow has capacity for ' + rounded(current.capacity) + ' orders. The pilot fulfills ' + rounded(pilot.orders) + '.');
-    }
-    const option = values.current || {};
-    const sameVolume = growthNumbers(option, settings, pilot.orders);
-    const gain = all(sameVolume.monthly, pilot.monthly) && validMoney(option.setup)
-      ? netYear(sameVolume.monthly - pilot.monthly, cents(option.setup)) : null;
-    if (gain == null) {
-      return showCallout('growth-case', 'neutral', title, 'Enter the pilot and model workflow costs to compare the same paid volume.');
-    }
+    const title = current.year > 0
+      ? 'Extra money left in year one compared with the manual pilot.'
+      : 'Money left in year one compared with the manual pilot.';
+    const sameSales = current.orders === pilot.orders && current.revenue === pilot.revenue;
+    const yearChange = current.year === 0
+      ? 'the same amount'
+      : dollars(Math.abs(current.year)) + (current.year > 0 ? ' more' : ' less');
     const details = [
-      'At the pilot’s ' + rounded(pilot.orders) + ' fulfilled orders per month, the model workflow shows ' + dollars(sameVolume.revenue) + ' in monthly revenue and ' + dollars(gain) + ' in first-year contribution gain.'
+      'At ' + rounded(current.orders) + ' paid orders filled per month, sales are ' + dollars(current.revenue)
+        + ' a month' + (sameSales ? ' for either workflow' : '') + '. The model workflow leaves ' + yearChange + ' in year one after setup.'
     ];
-    if (current.year != null && current.orders !== pilot.orders) {
-      details.push('With the entered demand and capacity, it fulfills ' + rounded(current.orders) + ' orders per month and shows ' + dollars(current.year) + ' in first-year contribution gain.');
+    if (current.capacity > current.orders) {
+      const unused = current.capacity - current.orders;
+      details.push('The team has room for ' + rounded(unused) + ' more ' + (unused === 1 ? 'order' : 'orders') + ' each month.');
+    }
+    if (current.orders !== pilot.orders && current.capacity >= pilot.orders) {
+      const sameVolume = growthNumbers(values.current, settings, pilot.orders);
+      const gain = netYear(sameVolume.monthly - pilot.monthly, cents(values.current.setup));
+      const change = gain === 0 ? 'the same amount' : dollars(Math.abs(gain)) + (gain > 0 ? ' more' : ' less');
+      details.push('At the pilot’s ' + rounded(pilot.orders) + ' paid orders per month, the model workflow would leave ' + change + ' in year one.');
     }
     showCallout('growth-case', 'neutral', title, ...details);
   }
@@ -466,21 +498,21 @@
     const kept = rows.find(row => row.id === 'kept');
     const removed = rows.find(row => row.id === 'removed');
     if (removed.deliveryFailed.length) {
-      return showCallout('retirement', 'hold', 'Keep the routine for now.',
-        'The upgrade without the routine fails the checks for ' + removed.deliveryFailed.join(', ') + '.');
+      return showCallout('retirement', 'hold', 'Keep the script for now.',
+        'The upgrade without the script fails the checks for ' + removed.deliveryFailed.join(', ') + '.');
     }
     if (removed.deliveryMissing.length || kept.deliveryMissing.length) {
       return showCallout('retirement', 'neutral', 'Enter delivery results for both upgrades.',
         'Use the same cases. Record quality, turnaround, and the required tests with and without the routine.');
     }
-    const detail = 'The upgrade without the routine passes the entered delivery checks. Confirm with a controlled trial before retirement.';
+    const detail = 'Have a person check the quotes in a trial before retiring the script.';
     const monthlyDifference = all(removed.monthly, kept.monthly) ? kept.monthly - removed.monthly : null;
     const comparison = monthlyDifference == null ? [] : [
       monthlyDifference === 0
-        ? 'Both upgrade configurations have the same monthly cost.'
-        : 'The upgrade without the routine costs ' + dollars(Math.abs(monthlyDifference)) + (monthlyDifference > 0 ? ' less' : ' more') + ' per month than the upgrade with it.'
+        ? 'Both upgrades have the same monthly cost.'
+        : 'The upgrade without the script costs ' + dollars(Math.abs(monthlyDifference)) + (monthlyDifference > 0 ? ' less' : ' more') + ' per month than the upgrade with it.'
     ];
-    showCallout('retirement', 'pass', 'The upgrade can be tested without the routine.', detail, ...comparison);
+    showCallout('retirement', 'pass', 'The upgrade passes the delivery checks without the script.', detail, ...comparison);
   }
 
   function showUpgrade(rows) {
@@ -488,7 +520,7 @@
     const current = rows.find(row => row.id === 'current');
     const kept = rows.find(row => row.id === 'kept');
     const candidates = rows.filter(row => (row.id === 'kept' || row.id === 'removed') && !row.deliveryFailed.length);
-    const keepTitle = 'Keep today’s model at these inputs.';
+    const keepTitle = 'Keep today’s model.';
     if (!candidates.length) {
       return showCallout('upgrade-case', 'hold', keepTitle, 'Both upgrades miss at least one required delivery target.');
     }
@@ -501,14 +533,22 @@
     candidates.sort((a, b) => b.switchGain - a.switchGain);
     const [best, second] = candidates;
     const gain = best.switchGain;
-    const impact = gain < 0 ? 'costs ' + dollars(-gain) + ' more' : 'saves ' + dollars(gain);
-    const detail = 'Today’s model costs ' + dollars(current.monthly) + ' per month. ' + best.label + ' costs '
-      + dollars(best.monthly) + ' per month and ' + impact + ' over twelve months after '
-      + dollars(best.remainingCost) + ' in remaining switch costs.';
-    if (gain <= 0 || gain < cents(settings.minValue)) {
-      return showCallout('upgrade-case', 'hold', keepTitle, detail, 'The best upgrade with passing delivery checks falls short of the savings needed to switch.');
+    const tied = second?.switchGain === gain;
+    let detail;
+    if (tied) {
+      const difference = gain === 0 ? 'the same as' : dollars(Math.abs(gain)) + (gain < 0 ? ' more than' : ' less than');
+      detail = 'Either upgrade costs ' + difference + ' keeping today’s model over twelve months, including the cost of switching.';
+    } else {
+      const impact = gain < 0 ? 'costs ' + dollars(-gain) + ' more' : 'saves ' + dollars(gain);
+      detail = 'Today’s model costs ' + dollars(current.monthly) + ' per month. ' + best.label + ' costs '
+        + dollars(best.monthly) + ' per month and ' + impact + ' over twelve months after '
+        + dollars(best.remainingCost) + ' in remaining switch costs.';
     }
-    const title = second?.switchGain === gain ? 'Both upgrades meet the savings target.' : 'Switching beats today’s model.';
+    if (gain <= 0) return showCallout('upgrade-case', 'hold', keepTitle, detail);
+    if (gain < cents(settings.minValue)) {
+      return showCallout('upgrade-case', 'hold', keepTitle, detail, 'The savings fall short of the target you entered.');
+    }
+    const title = tied ? 'Both upgrades meet the savings target.' : 'Switching beats today’s model.';
     showCallout('upgrade-case', 'pass', title, detail);
   }
 
@@ -522,9 +562,22 @@
       input.setAttribute('aria-invalid', String(!input.validity.valid));
     }
     const orderProblem = isGrowth && validCount(settings.volume, 1, monthlyLimit) && configuration.demand > settings.volume;
-    byId('status').textContent = evidenceText[evidence] + (orderProblem ? ' Paid orders cannot exceed eligible requests.' : '');
+    const status = evidenceText[evidence] + (orderProblem ? ' Paid orders cannot exceed eligible requests.' : '');
+    if (byId('status').textContent !== status) byId('status').textContent = status;
+    if (isGrowth) {
+      for (const button of orderChoices) {
+        const orders = Number(button.dataset.exampleOrders);
+        button.disabled = !validCount(settings.volume, orders, monthlyLimit);
+        button.setAttribute('aria-pressed', String(values.current?.demand === orders));
+      }
+    } else {
+      for (const button of supportChoices) {
+        button.setAttribute('aria-pressed', String(settings.cancel === (button.dataset.exampleSupport === 'end')));
+      }
+    }
     const rows = compare();
     byId('growth-case').hidden = !isGrowth;
+    byId('growth-terms').hidden = !isGrowth;
     byId('upgrade-case').hidden = isGrowth;
     byId('retirement').hidden = isGrowth;
     if (isGrowth) {
@@ -581,6 +634,25 @@
 
   for (const button of document.querySelectorAll('[data-mode]')) {
     button.addEventListener('click', () => { mode = button.dataset.mode; showMode(); });
+  }
+  for (const button of orderChoices) {
+    button.addEventListener('click', () => {
+      const state = cases.growth;
+      if (mode !== 'growth' || state.evidence !== 'example') return;
+      const orders = Number(button.dataset.exampleOrders);
+      state.values.current.demand = orders;
+      if (edited.growth === 'current') byId('option-demand').value = orders;
+      renderResults();
+    });
+  }
+  for (const button of supportChoices) {
+    button.addEventListener('click', () => {
+      const state = cases.cost;
+      if (mode !== 'cost' || state.evidence !== 'example') return;
+      state.settings.cancel = button.dataset.exampleSupport === 'end';
+      byId('setting-cancel').checked = state.settings.cancel;
+      renderResults();
+    });
   }
   byId('load-example').addEventListener('click', () => {
     cases[mode] = structuredClone(examples[mode]);

@@ -1,6 +1,6 @@
 ---
 title: "Agent Business Case Lab"
-summary: "Test paid demand and delivery capacity separately. Compare an AI upgrade with today’s model and see whether a legacy routine can go."
+summary: "Try two choices at a parts distributor. See what happens when fewer paid orders come in or the support bill stays."
 subtitle: "Two business cases for AI agents"
 status: active
 tool_type: webapp
@@ -13,7 +13,7 @@ links:
   live: "/tools/agent-business-case-lab.html"
   repo: null
 features:
-  - "Growth and operating cost examples from the same parts distributor"
+  - "Tap through the growth and operating cost examples before editing assumptions"
   - "Paid demand, fulfillment capacity, and contribution at the same paid volume"
   - "Delivery checks with and without the legacy routine"
   - "Upgrade costs and savings against today’s model, including remaining switch costs"
@@ -27,9 +27,9 @@ Use the operating cost case to compare delivery with and without the legacy rout
 
 ## How to use it
 
-1. Choose **Growth** or **Operating cost** and open the distributor example, or start blank.
-2. Enter a common monthly volume and the quality, turnaround, and financial targets.
-3. Select each configuration and enter its costs and results. In the operating cost case, record the reused part number and unsafe near-match tests separately.
-4. Compare the first-year economics and delivery checks. For your own figures, choose **Start blank** and select their source.
+1. Choose **Growth** and tap **Only 30 paid orders come in**. Read what changes in sales and the money left in year one.
+2. Choose **Operating cost** and tap **Keep paying for support**. Compare the cost of switching with the result of the delivery checks.
+3. Open **Edit assumptions** to change the example or choose **Start blank** for your own figures.
+4. Use the full comparison to see the costs, targets, and checks for each option.
 
 The examples are fictional. The lab calculates in your browser using the numbers you enter and projects a steady month over a year. See the [companion article](https://tedt.org/The-Two-Business-Cases-for-AI-Agents/) for the worked example.
