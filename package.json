@@ -16,7 +16,7 @@
     "test:worker": "npm --prefix worker test"
   },
   "dependencies": {
-    "astro": "7.2.8",
+    "astro": "7.4.7",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.3.2",
     "liquidjs": "^10.21.1",
