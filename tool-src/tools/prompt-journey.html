@@ -57,6 +57,7 @@ progress { width:100%; accent-color:var(--accent); height:var(--s-2); margin:var
 .transport svg { width:1.25rem; height:1.25rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; pointer-events:none; }
 .playback-options { display:flex; flex-wrap:wrap; align-items:center; gap:var(--s-2) var(--s-4); margin-top:var(--s-4); font-size:var(--fs-small); }
 .playback-options label { font-weight:var(--fw-regular); display:flex; align-items:center; gap:var(--s-2); min-height:2.75rem; }
+.journey-position { margin-top:var(--s-4); }
 .playback-options select { width:auto; margin:0; font-size:var(--fs-small); }
 .payload { margin-top:var(--s-5); padding:var(--s-4); background:var(--bg-inset); border:var(--border-soft); border-radius:var(--r-2); }
 .payload h3 { margin:0 0 var(--s-2); font-size:var(--fs-small); }
@@ -128,9 +129,10 @@ details li { margin-bottom:var(--s-3); }
 <div class="workspace extras">
 <aside class="guide" aria-label="Journey guide">
 <section class="tt-panel" aria-labelledby="step-title"><div class="tt-panel-body">
-<div id="phase" class="phase">Request</div><h2 id="step-title">Your request starts here</h2><p id="step-text"></p><span id="step-count"></span><progress id="progress" aria-label="Journey progress" max="1" value="0"></progress>
 <div class="transport" role="group" aria-label="Journey playback"><button id="restart" type="button" aria-label="Restart" title="Restart"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button><button id="back" type="button" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg></button><button id="play" type="button" class="primary" aria-label="Play" title="Play"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g id="play-icon"><polygon points="6 3 20 12 6 21 6 3"/></g><g id="pause-icon" hidden><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></g></svg></button><button id="next" type="button" aria-label="Next step" title="Next step"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button><button id="jump-return" type="button" aria-label="Jump to answer" title="Jump to answer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button></div>
 <div class="playback-options"><label><input type="checkbox" id="autoplay"> Autoplay steps</label><label for="step-delay">Every <select id="step-delay" aria-label="Time per step"><option value="2000">2 seconds</option><option value="4000" selected>4 seconds</option><option value="6000">6 seconds</option><option value="10000">10 seconds</option></select></label></div>
+<div class="journey-position"><span id="step-count"></span><progress id="progress" aria-label="Journey progress" max="1" value="0"></progress></div>
+<div id="phase" class="phase">Request</div><h2 id="step-title">Your request starts here</h2><p id="step-text"></p>
 <div class="payload"><h3>What travels at this step</h3><p id="payload"></p></div>
 <p id="announce" class="hint" role="status" aria-live="polite" aria-atomic="true"></p>
 </div></section>
