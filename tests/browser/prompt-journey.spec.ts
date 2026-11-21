@@ -2,6 +2,16 @@ import { test, expect, type Page } from '@playwright/test';
 import { routeHeaderAssets } from '../shared-header.mjs';
 
 const node = (page: Page, name: string) => page.locator(`#diagram button[data-node="${name}"]`);
+const transportControls = [
+  ['back', 'Back'], ['next', 'Next step'], ['play', 'Play'],
+  ['restart', 'Restart'], ['jump-return', 'Jump to answer'],
+] as const;
+
+async function pauseJourneyClock(page: Page) {
+  await page.clock.install({ time: new Date('2026-11-21T12:00:00Z') });
+  await page.clock.pauseAt(new Date('2026-11-21T12:00:01Z'));
+  await page.reload();
+}
 
 async function finishJourney(page: Page) {
   let advances = 0;
@@ -197,6 +207,100 @@ test('automatic playback advances and stops when the reader pauses or restarts',
   await expect(page.locator('#back')).toBeDisabled();
 });
 
+test('media icons have accessible names and keyboard playback keeps its label in sync', async ({ page }) => {
+  await pauseJourneyClock(page);
+  for (const [id, name] of transportControls) {
+    const control = page.locator(`#${id}`);
+    await expect(control).toHaveAccessibleName(name);
+    await expect(control).toHaveAttribute('title', name);
+    await expect(control.locator('svg')).toHaveAttribute('aria-hidden', 'true');
+  }
+  await expect(page.getByRole('checkbox', { name: 'Autoplay steps', exact: true })).not.toBeChecked();
+  await page.getByRole('button', { name: 'Play', exact: true }).focus();
+  await page.keyboard.press('Space');
+  await expect(page.locator('#play')).toHaveAccessibleName('Pause');
+  await expect(page.locator('#play')).toHaveAttribute('title', 'Pause');
+  await expect(page.locator('#autoplay')).toBeChecked();
+  await page.keyboard.press('Space');
+  await expect(page.locator('#play')).toHaveAccessibleName('Play');
+  await expect(page.locator('#autoplay')).not.toBeChecked();
+});
+
+test('autoplay respects the selected delay and restarts that interval when it changes', async ({ page }) => {
+  await pauseJourneyClock(page);
+  const progress = page.locator('#progress');
+  const autoplay = page.getByRole('checkbox', { name: 'Autoplay steps', exact: true });
+  await expect(page.locator('#step-delay')).toHaveValue('4000');
+  expect(await page.locator('#step-delay option').evaluateAll(options => options.map(option => (option as HTMLOptionElement).value)))
+    .toEqual(['2000', '4000', '6000', '10000']);
+  await autoplay.check();
+  await expect(page.locator('#play')).toHaveAccessibleName('Pause');
+  await page.clock.runFor(3999);
+  await expect(progress).toHaveJSProperty('value', 0);
+  await page.clock.runFor(1);
+  await expect(progress).toHaveJSProperty('value', 1);
+
+  await page.clock.runFor(1000);
+  await page.locator('#step-delay').selectOption('6000');
+  await expect(progress).toHaveJSProperty('value', 1);
+  await expect(autoplay).toBeChecked();
+  await page.clock.runFor(5999);
+  await expect(progress).toHaveJSProperty('value', 1);
+  await page.clock.runFor(1);
+  await expect(progress).toHaveJSProperty('value', 2);
+
+  await autoplay.uncheck();
+  await expect(page.locator('#play')).toHaveAccessibleName('Play');
+  await page.clock.runFor(60_000);
+  await expect(progress).toHaveJSProperty('value', 2);
+});
+
+test('manual navigation and setup changes stop autoplay and clear its checkbox', async ({ page }) => {
+  await pauseJourneyClock(page);
+  const autoplay = page.locator('#autoplay');
+  for (const id of ['next', 'back', 'jump-return', 'restart']) {
+    await autoplay.check();
+    await page.locator(`#${id}`).click();
+    await expect(autoplay).not.toBeChecked();
+    await expect(page.locator('#play')).toHaveAccessibleName('Play');
+    const pausedStep = await page.locator('#step-count').innerText();
+    await page.clock.runFor(20_000);
+    await expect(page.locator('#step-count')).toHaveText(pausedStep);
+  }
+  await autoplay.check();
+  await page.locator('#scenario').selectOption('local');
+  await expect(autoplay).not.toBeChecked();
+  await expect(page.locator('#play')).toHaveAccessibleName('Play');
+  await page.clock.runFor(20_000);
+  await expect(page.locator('#progress')).toHaveJSProperty('value', 0);
+});
+
+test('autoplay stops at the final answer and can resume only after leaving the end', async ({ page }) => {
+  await pauseJourneyClock(page);
+  await page.locator('#scenario').selectOption('local');
+  await page.locator('#step-delay').selectOption('2000');
+  const autoplay = page.locator('#autoplay');
+  const lastStep = (await page.locator('#journey-list li').count()) - 1;
+  await autoplay.check();
+  await page.clock.runFor(lastStep * 2000);
+  await expect(page.locator('#step-title')).toHaveText('The answer reaches you');
+  await expect(page.locator('#progress')).toHaveJSProperty('value', lastStep);
+  await expect(autoplay).not.toBeChecked();
+  await expect(autoplay).toBeDisabled();
+  await expect(page.locator('#play')).toHaveAccessibleName('Play');
+  await expect(page.locator('#play')).toBeDisabled();
+  await page.clock.runFor(20_000);
+  await expect(page.locator('#progress')).toHaveJSProperty('value', lastStep);
+
+  await page.locator('#back').click();
+  await expect(autoplay).toBeEnabled();
+  await expect(page.locator('#play')).toBeEnabled();
+  await expect(autoplay).not.toBeChecked();
+  await page.locator('#restart').click();
+  await expect(page.locator('#progress')).toHaveJSProperty('value', 0);
+  await expect(autoplay).toBeEnabled();
+});
+
 test('diagram explanations work by keyboard on a narrow screen without document overflow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const stepBeforeInspection = await page.locator('#step-count').innerText();
@@ -230,6 +334,12 @@ test('diagram explanations work by keyboard on a narrow screen without document 
 for (const width of [320, 375]) {
   test(`all diagram labels fit inside their cards at ${width}px, including possible copies`, async ({ page }) => {
     await page.setViewportSize({ width, height: 812 });
+    for (const [id] of transportControls) {
+      const bounds = await page.locator(`#${id}`).boundingBox();
+      expect(bounds, `${id} should be rendered`).not.toBeNull();
+      expect(bounds!.width, `${id} needs a 44px-wide touch target`).toBeGreaterThanOrEqual(44);
+      expect(bounds!.height, `${id} needs a 44px-high touch target`).toBeGreaterThanOrEqual(44);
+    }
     await page.locator('#fallback').check();
     await page.locator('#show-copies').check();
     await expect(node(page, 'training').locator('b')).toHaveText('Later evaluation / training');

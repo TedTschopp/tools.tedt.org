@@ -52,8 +52,12 @@ input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); 
 #step-text { margin:0 0 var(--s-4); }
 #step-count { font-family:var(--font-mono); color:var(--fg-2); font-size:var(--fs-small); }
 progress { width:100%; accent-color:var(--accent); height:var(--s-2); margin:var(--s-3) 0 var(--s-4); }
-.small-actions { display:flex; flex-wrap:wrap; gap:var(--s-2); margin-top:var(--s-3); }
-.small-actions button { font-size:var(--fs-small); }
+.transport { display:flex; gap:var(--s-2); align-items:center; }
+.transport button { display:grid; place-items:center; width:2.75rem; height:2.75rem; flex:0 0 2.75rem; padding:var(--s-2); }
+.transport svg { width:1.25rem; height:1.25rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; pointer-events:none; }
+.playback-options { display:flex; flex-wrap:wrap; align-items:center; gap:var(--s-2) var(--s-4); margin-top:var(--s-4); font-size:var(--fs-small); }
+.playback-options label { font-weight:var(--fw-regular); display:flex; align-items:center; gap:var(--s-2); min-height:2.75rem; }
+.playback-options select { width:auto; margin:0; font-size:var(--fs-small); }
 .payload { margin-top:var(--s-5); padding:var(--s-4); background:var(--bg-inset); border:var(--border-soft); border-radius:var(--r-2); }
 .payload h3 { margin:0 0 var(--s-2); font-size:var(--fs-small); }
 .payload p { font-size:var(--fs-small); margin:0; overflow-wrap:anywhere; }
@@ -101,7 +105,7 @@ details li { margin-bottom:var(--s-3); }
 #download-status { font-size:var(--fs-small); margin:var(--s-2) 0 0; }
 @media (max-width:70rem) { .workspace { grid-template-columns:1fr; } .guide { grid-column:1; grid-row:1; position:static; display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4); } .guide .tt-panel+.tt-panel { margin:0; } .map-panel { grid-column:1; grid-row:2; } .map { max-width:52rem; margin:auto; } }
 @media (max-width:40rem) { .tt-shell { padding:var(--s-5) var(--s-3) var(--s-8); } .controls,.guide { grid-template-columns:1fr; } .tt-panel-body { padding:var(--s-4); } .scroll-hint { display:block; } .tt-title { font-size:2.3rem; } .tt-topbar { margin-bottom:var(--s-5); } }
-@media print { .tt-topbar,.controls,.small-actions,.tt-actions,.tt-catalog-return,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; } .map { min-width:0; } .map-panel { break-before:page; } .tt-shell { padding:0; } }
+@media print { .tt-topbar,.controls,.transport,.playback-options,.tt-actions,.tt-catalog-return,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; } .map { min-width:0; } .map-panel { break-before:page; } .tt-shell { padding:0; } }
 </style>
 </head>
 <body>
@@ -125,8 +129,8 @@ details li { margin-bottom:var(--s-3); }
 <aside class="guide" aria-label="Journey guide">
 <section class="tt-panel" aria-labelledby="step-title"><div class="tt-panel-body">
 <div id="phase" class="phase">Request</div><h2 id="step-title">Your request starts here</h2><p id="step-text"></p><span id="step-count"></span><progress id="progress" aria-label="Journey progress" max="1" value="0"></progress>
-<div class="tt-actions"><button id="back" type="button">Back</button><button id="next" type="button" class="primary">Next step</button><button id="play" type="button">Play</button></div>
-<div class="small-actions"><button id="restart" type="button">Restart</button><button id="jump-return" type="button">Jump to answer</button></div>
+<div class="transport" role="group" aria-label="Journey playback"><button id="restart" type="button" aria-label="Restart" title="Restart"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button><button id="back" type="button" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg></button><button id="play" type="button" class="primary" aria-label="Play" title="Play"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g id="play-icon"><polygon points="6 3 20 12 6 21 6 3"/></g><g id="pause-icon" hidden><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></g></svg></button><button id="next" type="button" aria-label="Next step" title="Next step"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button><button id="jump-return" type="button" aria-label="Jump to answer" title="Jump to answer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button></div>
+<div class="playback-options"><label><input type="checkbox" id="autoplay"> Autoplay steps</label><label for="step-delay">Every <select id="step-delay" aria-label="Time per step"><option value="2000">2 seconds</option><option value="4000" selected>4 seconds</option><option value="6000">6 seconds</option><option value="10000">10 seconds</option></select></label></div>
 <div class="payload"><h3>What travels at this step</h3><p id="payload"></p></div>
 <p id="announce" class="hint" role="status" aria-live="polite" aria-atomic="true"></p>
 </div></section>
@@ -189,7 +193,21 @@ const definitions = {
 let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[];
 function readConfig() { return {scenario:$('scenario').value,retrieval:$('retrieval').checked,tools:$('tools').checked,routing:$('routing').checked,fallback:$('fallback').checked,showCopies:$('show-copies').checked}; }
 function nodeTitle(id) { if(config.scenario==='local'&&id==='app') return 'Local AI application'; return definitions[id].title; }
-function stop() { if(timer) clearInterval(timer); timer=null; $('play').textContent='Play'; }
+function updatePlayback() {
+ const playing=timer!==null;
+ $('play').setAttribute('aria-label',playing?'Pause':'Play');
+ $('play').title=playing?'Pause':'Play';
+ $('play-icon').toggleAttribute('hidden',playing);
+ $('pause-icon').toggleAttribute('hidden',!playing);
+ $('autoplay').checked=playing;
+}
+function stop() { if(timer!==null) clearInterval(timer); timer=null; updatePlayback(); }
+function play() {
+ stop();
+ if(position>=steps.length-1)return;
+ timer=setInterval(()=>{position=Math.min(steps.length-1,position+1);renderStep();},Number($('step-delay').value));
+ updatePlayback();
+}
 function createJourney() {
  const enterprise=config.scenario==='enterprise', local=config.scenario==='local';
  const retrieval=enterprise&&config.retrieval, tool=enterprise&&config.tools, routing=enterprise&&config.routing, fallback=routing&&config.fallback;
@@ -304,7 +322,7 @@ function selectNode(id) {
 }
 function renderStep(announce=true) {
  const s=steps[position];$('phase').textContent=s.phase==='request'?'Request ↓':s.phase==='tool'?'Tool loop ↔':'Answer ↑';$('phase').dataset.phase=s.phase;$('step-title').textContent=s.title;$('step-text').textContent=s.text;$('payload').textContent=s.payload;$('step-count').textContent=`Step ${position+1} of ${steps.length}`;$('progress').max=steps.length-1;$('progress').value=position;$('back').disabled=position===0;$('next').disabled=position===steps.length-1;
- $('play').disabled=position===steps.length-1;
+ $('play').disabled=position===steps.length-1;$('autoplay').disabled=position===steps.length-1;
  for(const el of document.querySelectorAll('[data-node]')) {el.classList.toggle('current',el.dataset.node===s.to);el.dataset.phase=s.phase;}
  for(const el of activeEdges)el.classList.toggle('active',el.dataset.key===s.from+'-'+s.to+'-'+s.phase);
  document.querySelectorAll('#journey-list button').forEach((el,i)=>{if(i===position)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
@@ -328,7 +346,9 @@ $('next').addEventListener('click',()=>{stop();position=Math.min(steps.length-1,
 $('back').addEventListener('click',()=>{stop();position=Math.max(0,position-1);renderStep();});
 $('restart').addEventListener('click',()=>{stop();position=0;renderStep();});
 $('jump-return').addEventListener('click',()=>{stop();position=steps.findIndex(s=>s.phase==='return');renderStep();});
-$('play').addEventListener('click',()=>{if(timer){stop();return;}if(position===steps.length-1)return;$('play').textContent='Pause';timer=setInterval(()=>{position++;renderStep();},4200);});
+$('play').addEventListener('click',()=>{if(timer!==null)stop();else play();});
+$('autoplay').addEventListener('change',()=>{if($('autoplay').checked)play();else stop();});
+$('step-delay').addEventListener('change',()=>{if(timer!==null)play();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
 $('download').addEventListener('click',()=>{
  const data={tool:'Prompt Journey',version:1,kind:'illustrative-simulation',scenario:config.scenario,options:{...config},sample:{request:sample,policy,forecast},journey:steps,limits:'Written example, not live tracing, measured timing or real inference. Storage policies are unspecified.'};
