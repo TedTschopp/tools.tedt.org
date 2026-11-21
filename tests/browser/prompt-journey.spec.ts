@@ -549,7 +549,6 @@ for (const setup of [
     const initial = await expectCurrentStopVisible(page);
     const visited = new Set([initial.current]);
     const paneTops = [initial.paneTop];
-    const paneLefts = [initial.paneLeft];
 
     for (let step = 1; step <= lastStep; step += 1) {
       await page.clock.runFor(2000);
@@ -558,7 +557,7 @@ for (const setup of [
       const state = await expectCurrentStopVisible(page);
       visited.add(state.current);
       paneTops.push(state.paneTop);
-      paneLefts.push(state.paneLeft);
+      expect(state.paneLeft, `diagram horizontal position at step ${step}`).toBe(0);
       expect(Math.abs(state.pageX - initial.pageX), `page x at step ${step}`).toBeLessThanOrEqual(1);
       expect(Math.abs(state.pageY - initial.pageY), `page y at step ${step}`).toBeLessThanOrEqual(1);
       expect(Math.abs(state.playbackTop - initial.playbackTop), `control position at step ${step}`).toBeLessThanOrEqual(1);
@@ -569,9 +568,6 @@ for (const setup of [
     if (setup.scenario === 'enterprise') {
       for (const stop of ['retrieval', 'router', 'host', 'backup', 'tool', 'checks', 'model']) {
         expect(visited, `the full walkthrough includes ${stop}`).toContain(stop);
-      }
-      if (setup.width === 375) {
-        expect(Math.max(...paneLefts) - Math.min(...paneLefts), 'mobile branches require horizontal panning').toBeGreaterThan(100);
       }
     }
     expect((await followState(page)).current).toBe('user');
@@ -622,14 +618,14 @@ test('reduced-motion following is immediate and a paused map stays where the rea
   await openSetup(page);
   await page.locator('#step-delay').selectOption('2000');
   const map = page.locator('.map-scroll');
-  await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, left: element.scrollWidth, behavior: 'instant' }));
+  await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, behavior: 'instant' }));
   await page.locator('#play').click();
   await page.clock.runFor(32);
   await expectCurrentStopVisible(page);
   await page.clock.runFor(4032);
   await expectCurrentStopVisible(page);
   await page.locator('#play').click();
-  await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, left: element.scrollWidth, behavior: 'instant' }));
+  await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, behavior: 'instant' }));
   const paused = await followState(page);
   const pausedStep = await page.locator('#step-count').innerText();
   await page.clock.runFor(20_000);
@@ -668,7 +664,8 @@ test('normal-motion playback smoothly reaches a distant node and pause freezes t
       state.node.left >= state.visible.left - 1 && state.node.right <= state.visible.right + 1;
   }, { timeout: 1500, intervals: [50, 100, 150] }).toBe(true);
   const afterPan = await expectCurrentStopVisible(page);
-  expect(Math.abs(afterPan.paneLeft - start.paneLeft)).toBeGreaterThan(100);
+  expect(Math.abs(afterPan.paneTop - start.paneTop)).toBeGreaterThan(100);
+  expect(afterPan.paneLeft).toBe(0);
   expect(Math.abs(afterPan.pageY - start.pageY)).toBeLessThanOrEqual(1);
   expect(Math.abs(afterPan.playbackTop - start.playbackTop)).toBeLessThanOrEqual(1);
   await expect(page.locator('#play')).toBeFocused();
@@ -733,8 +730,8 @@ test('diagram explanations work by keyboard on a narrow screen without document 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
-for (const width of [320, 375]) {
-  test(`all diagram labels fit inside their cards at ${width}px, including possible copies`, async ({ page }) => {
+for (const width of [320, 375, 600, 1035, 1440]) {
+  test(`the whole diagram width fits at ${width}px, including optional stops`, async ({ page }) => {
     await page.setViewportSize({ width, height: 812 });
     for (const [id] of transportControls) {
       const bounds = await page.locator(`#${id}`).boundingBox();
@@ -750,8 +747,14 @@ for (const width of [320, 375]) {
 
     const clippedText = await page.locator('#diagram button[data-node]').evaluateAll(elements => {
       const clipped: { node: string | undefined; text: string | null }[] = [];
+      const pane = document.querySelector('.map-scroll') as HTMLElement;
+      const paneLeft = pane.getBoundingClientRect().left + pane.clientLeft;
+      const paneRight = paneLeft + pane.clientWidth;
       for (const element of elements) {
         const card = element.getBoundingClientRect();
+        if (card.left < paneLeft || card.right > paneRight) {
+          clipped.push({ node: (element as HTMLElement).dataset.node, text: 'Card is outside the diagram pane' });
+        }
         for (const label of element.querySelectorAll('b, span')) {
           const range = document.createRange();
           range.selectNodeContents(label);
@@ -763,8 +766,8 @@ for (const width of [320, 375]) {
       }
       return clipped;
     });
-    expect(clippedText, 'title and subtitle text must stay inside every card').toEqual([]);
-    expect(await page.locator('.map-scroll').evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+    expect(clippedText, 'cards must fit the pane and their text must fit the cards').toEqual([]);
+    expect(await page.locator('.map-scroll').evaluate(element => element.scrollWidth === element.clientWidth)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
     await node(page, 'training').click();
@@ -776,6 +779,26 @@ for (const width of [320, 375]) {
     await expectCurrentStopVisible(page, 'training');
   });
 }
+
+test('the operator note stays above the diagram when the viewer narrows and scrolls', async ({ page }) => {
+  await page.locator('#jump-model').click();
+  for (const width of [1200, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    const diagram = page.locator('#diagram');
+    const caption = page.locator('#map-context');
+    const map = page.getByRole('region', { name: 'Scrollable route diagram', exact: true });
+    await expect(diagram).toHaveAttribute('data-layout', width===1200?'columns':'stacked');
+    await expect(caption).toHaveText('Stops can have different operators.');
+    await expect(map).toHaveAccessibleDescription(/Stops can have different operators/);
+    const captionBounds = await caption.boundingBox();
+    const mapBounds = await map.boundingBox();
+    expect(captionBounds!.y + captionBounds!.height).toBeLessThan(mapBounds!.y);
+    await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, left: element.scrollWidth }));
+    expect(await caption.boundingBox()).toEqual(captionBounds);
+    expect(await map.evaluate(element => element.scrollLeft)).toBe(0);
+    await expect(page.locator('#step-title')).toHaveText('The model receives the context');
+  }
+});
 
 test('the tool is discoverable and launches from its catalog description', async ({ page }) => {
   await page.goto('/');

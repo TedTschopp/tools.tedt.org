@@ -63,6 +63,8 @@ input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); 
 .map-panel { grid-column:2; grid-row:1; height:var(--viewer-height); display:flex; flex-direction:column; }
 .map-panel > :not(.map-scroll) { flex:none; }
 .map-panel .tt-panel-head { gap:var(--s-2); }
+.map-key { padding:var(--s-3) var(--s-5); border-bottom:var(--border-soft); }
+#map-caption { margin:0; color:var(--fg-2); font-size:var(--fs-small); line-height:var(--lh-normal); }
 #find-stop { padding-inline:var(--s-2); font-size:var(--fs-small); }
 .inspector-panel { margin-top:var(--viewer-gap); }
 .step-meta { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--s-1) var(--s-3); }
@@ -91,18 +93,16 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 #detail-body p { margin-bottom:var(--s-3); font-size:var(--fs-small); }
 #detail-body p:last-child { margin-bottom:0; }
 #detail-body strong { display:block; color:var(--fg); }
-.legend { font-size:var(--fs-small); padding:var(--s-3) var(--s-5); color:var(--fg-2); border-bottom:var(--border-soft); }
+.legend { font-size:var(--fs-small); margin-top:var(--s-2); gap:var(--s-1) var(--s-3); color:var(--fg-2); }
 .key { display:inline-block; width:1.7rem; vertical-align:middle; border-top:.18rem solid var(--link); margin-right:var(--s-1); }
 .key.return { border-color:var(--copper); }
 .key.later { border-color:var(--warn); }
 .key.copy { border-color:var(--warn); border-top-style:dashed; }
-.map-scroll { overflow:auto; flex:1; min-height:0; overscroll-behavior:contain; overflow-anchor:none; scrollbar-gutter:stable; }
-.map { position:relative; width:100%; min-width:48rem; aspect-ratio:760/1230; isolation:isolate; }
-.map svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
-.map .zone { position:absolute; left:1.8%; width:96.4%; border:var(--bw-1) solid var(--rule-soft); border-radius:var(--r-3); background:var(--bg-inset); z-index:-1; }
-.zone-label { position:absolute; left:50%; top:var(--s-2); transform:translateX(-50%); width:max-content; color:var(--fg-2); font-size:var(--fs-small); }
-.node { scroll-margin-top:6rem; position:absolute; width:27.1%; height:6.8%; transform:translate(-50%,-50%); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:var(--s-2) var(--s-3); text-align:left; color:var(--fg); background:var(--bg-card); border:var(--border); font-size:var(--fs-small); line-height:1.25; }
-.node.side { width:24%; }
+.map-scroll { overflow:hidden auto; flex:1; min-height:0; background:var(--bg-inset); overscroll-behavior-y:contain; overflow-anchor:none; scrollbar-width:thin; scrollbar-gutter:stable; }
+.map { position:relative; width:100%; max-width:56rem; margin-inline:auto; isolation:isolate; }
+.map svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.node { position:absolute; min-height:5.25rem; transform:translate(-50%,-50%); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:var(--s-2) var(--s-3); text-align:left; color:var(--fg); background:var(--bg-card); border:var(--border); font-size:var(--fs-small); line-height:1.25; overflow-wrap:anywhere; }
+.node b,.node span { max-width:100%; }
 .node b { font-size:var(--fs-small); font-weight:var(--fw-semibold); }
 .node span { color:var(--fg-2); margin-top:var(--s-1); font-size:.8rem; }
 .node:hover { border-color:var(--link); background:var(--bg-hover); }
@@ -116,8 +116,6 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .edge.later { stroke:var(--warn); }
 .edge.copy { stroke:var(--warn); stroke-dasharray:5 5; opacity:.7; }
 .edge.active { opacity:1; stroke-width:4; }
-.edge-label { fill:var(--fg-2); font:13px var(--font-body); }
-.map-note { padding:var(--s-3) var(--s-4); border-top:var(--border-soft); font-size:var(--fs-small); color:var(--fg-2); margin:0; }
 .extras { margin-top:var(--s-5); }
 .extras details { margin-top:var(--s-4); padding:var(--s-5); border:var(--border); border-radius:var(--r-3); background:var(--bg-card); }
 summary { cursor:pointer; font-weight:var(--fw-semibold); }
@@ -139,13 +137,14 @@ details li { margin-bottom:var(--s-3); }
  .step-panel { grid-row:2; height:var(--step-height); overflow:auto; overscroll-behavior:contain; }
  .map-panel { grid-column:1; grid-row:3; height:max(9rem, calc(var(--viewer-height) - var(--controls-height) - var(--step-height) - 2 * var(--viewer-gap))); }
  .inspector-panel { grid-row:4; margin:0; }
- .map { max-width:52rem; margin:auto; }
  #detail-title { scroll-margin-top:calc(var(--viewer-top) + var(--controls-height) + var(--viewer-gap)); }
 }
 @media (max-width:40rem) {
  .tt-shell { padding:var(--s-4) var(--s-3) var(--s-8); }
  .controls { grid-template-columns:1fr; }
- .tt-panel-body,.tt-panel-head,.legend { padding:var(--s-3) var(--s-4); }
+ .tt-panel-body,.tt-panel-head,.map-key { padding:var(--s-3) var(--s-4); }
+ .map-panel .tt-panel-head,.map-key { padding-block:var(--s-2); }
+ .map-tip { display:none; }
  .tt-title { font-size:2.3rem; }
  .milestones .hint { display:none; }
 }
@@ -155,11 +154,13 @@ details li { margin-bottom:var(--s-3); }
  #step-title { font-size:var(--fs-h3); }
  .map-panel .tt-panel-head { padding:0 var(--s-3); }
  .map-panel .tt-panel-head h2 { font-size:var(--fs-body); }
+ .map-key { padding:var(--s-1) var(--s-3); }
+ .map-tip { display:none; }
  .map-panel .legend { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); }
 }
 @media (max-width:43.99rem) and (max-height:36rem) {
- .workspace { --step-height:7rem; }
- .map-panel { height:calc(max(6.5rem, var(--viewer-height) - var(--controls-height) - var(--step-height) - 2 * var(--viewer-gap)) + 2.75rem + 2 * var(--bw-1)); }
+ .workspace { --step-height:6rem; }
+ .map-panel { height:calc(max(8rem, var(--viewer-height) - var(--controls-height) - var(--step-height) - 2 * var(--viewer-gap)) + 2.75rem + 2 * var(--bw-1)); }
  .map-panel .tt-panel-head { order:1; border-top:var(--border); border-bottom:0; }
 }
 @media print { .setup-panel,.transport,.milestones,.tt-actions,.tt-catalog-return,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; height:auto; } .guide-content,.step-panel,.map-scroll { display:block; height:auto; overflow:visible; } .playback-panel { position:static; } .map-panel { height:auto; display:block; } .map { min-width:0; } .map-panel { break-before:page; } .tt-shell { padding:0; } }
@@ -264,19 +265,31 @@ details li { margin-bottom:var(--s-3); }
 </aside>
 <section class="tt-panel map-panel" aria-labelledby="map-title">
   <div class="tt-panel-head"><h2 id="map-title">Route diagram</h2><button type="button" id="find-stop">Find current stop</button></div>
-  <div class="legend">
-    <span><i class="key"></i>Request</span>
-    <span><i class="key return"></i>Answer or tool call</span>
-    <span id="copy-legend" hidden><i class="key copy"></i>Possible saved copy</span>
-    <span id="later-legend" hidden><i class="key later"></i>Later alert</span>
+  <div class="map-key">
+    <p id="map-caption"><span id="map-context">Stops can have different operators.</span> <span class="map-tip">Select a stop to see who runs it.</span></p>
+    <div class="legend">
+      <span><i class="key"></i>Request</span>
+      <span><i class="key return"></i>Answer or tool call</span>
+      <span id="copy-legend" hidden><i class="key copy"></i>Possible saved copy</span>
+      <span id="later-legend" hidden><i class="key later"></i>Later alert</span>
+    </div>
   </div>
-  <p class="visually-hidden" id="map-help">Scroll in any direction. Select a box to learn what it receives and who runs it.</p>
-  <div class="map-scroll" tabindex="0" role="region" aria-label="Scrollable route diagram" aria-describedby="map-help">
-    <div class="map" id="diagram"><svg id="paths" viewBox="0 0 760 1230" aria-hidden="true"></svg><div id="nodes"></div></div>
+  <p class="visually-hidden" id="map-help">Scroll up or down. Select a stop to inspect what it receives and may save.</p>
+  <div class="map-scroll" tabindex="0" role="region" aria-label="Scrollable route diagram" aria-describedby="map-caption map-help">
+    <div class="map" id="diagram">
+      <svg id="paths" aria-hidden="true">
+        <defs>
+          <marker id="arrow-request" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--link)"/></marker>
+          <marker id="arrow-return" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker>
+          <marker id="arrow-copy" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker>
+        </defs>
+        <g id="map-edges"></g>
+      </svg>
+      <div id="nodes"></div>
+    </div>
   </div>
 </section>
 </div>
-<p class="map-note" id="map-note"></p>
 <section class="extras" aria-label="More ways to explore">
 <details id="all-steps"><summary>All steps</summary><p>Select a step to return to the walkthrough at that point.</p><ol id="journey-list"></ol></details>
 <div class="tt-actions extras"><button id="download" type="button">Download journey JSON</button></div><p id="download-status" role="status"></p>
@@ -331,7 +344,9 @@ const definitions = {
  logs:{title:'Logs & caches',sub:'Each service, separately',x:380,y:1100,owner:'Each participating service may have its own records.',does:'Can record usage, errors, security events or content. Caches can store answers or reuse prompt processing.',sees:'Metadata, selected content or both, depending on configuration.',keeps:'Unknown in this example. This is a summary box for separate stores, not one shared database.',ask:'Which stores contain content, and how are logs, caches and backups deleted?'},
  training:{title:'Later evaluation / training',sub:'A separate policy choice',x:645,y:1100,owner:'Whoever has permission and access for that later use.',does:'Stored material might later be used to evaluate a system or improve a model if the applicable policy permits it. This is not part of the inference round trip.',sees:'Only material made available for the later process. The diagram makes no claim that this occurs.',keeps:'Separate datasets and records can have their own lifecycle.',ask:'Are training and evaluation allowed? Does that promise cover every supplier?'}
 };
-let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[];
+let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[], diagramWidth=0;
+let mapAnimation=null;
+const copyStops = ['history','logs','training'];
 const milestones = {
  restart: () => 0,
  'jump-model': () => steps.findIndex(step => step.to === 'model'),
@@ -344,9 +359,13 @@ function nodeTitle(id) { if(config.scenario==='local'&&id==='app') return 'Local
 function updatePlayback() {
  $('play').textContent=timer===null?'Play':'Pause';
 }
+function cancelMapPan() {
+ if(mapAnimation!==null)cancelAnimationFrame(mapAnimation);
+ mapAnimation=null;
+}
 function stop({cancelPan=true}={}) {
  if(timer!==null) clearInterval(timer); timer=null; updatePlayback();
- if(cancelPan){const frame=document.querySelector('.map-scroll');frame.scrollTo({left:frame.scrollLeft,top:frame.scrollTop,behavior:'instant'});}
+ if(cancelPan)cancelMapPan();
 }
 function syncViewerLayout() {
  const workspace=document.querySelector('.workspace');
@@ -359,11 +378,22 @@ function syncViewerLayout() {
 function panToNode(id,{smooth=false}={}) {
  const frame=document.querySelector('.map-scroll'),node=document.querySelector(`[data-node="${id}"]`);
  if(!node)return;
+ cancelMapPan();
  const box=frame.getBoundingClientRect(),target=node.getBoundingClientRect();
- const left=frame.scrollLeft+target.left-box.left+target.width/2-frame.clientWidth/2;
- const top=frame.scrollTop+target.top-box.top+target.height/2-frame.clientHeight/2;
- const behavior=smooth&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches?'smooth':'instant';
- frame.scrollTo({left,top,behavior});
+ const start=frame.scrollTop;
+ const centered=start+target.top-box.top+target.height/2-frame.clientHeight/2;
+ const end=Math.max(0,Math.min(centered,frame.scrollHeight-frame.clientHeight));
+ if(!smooth||start===end||window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  frame.scrollTop=end;
+  return;
+ }
+ const startTime=performance.now();
+ function follow(now) {
+  const progress=Math.min((now-startTime)/240,1);
+  frame.scrollTop=start+(end-start)*(1-(1-progress)**3);
+  mapAnimation=progress<1?requestAnimationFrame(follow):null;
+ }
+ mapAnimation=requestAnimationFrame(follow);
 }
 function alignPlaybackView() {
  syncViewerLayout();
@@ -458,51 +488,133 @@ function createJourney() {
   add(null,'security','later','Investigate before assigning blame',local?'Preserve the request and event record. Check device and application records, other copies of the link and the rules in force. Decide what work can continue while the path remains unexplained.':'Preserve the request and event record. Check other copies of the link and the rules in force. Ask which records explain the visit. Decide what information can keep flowing while the answer is incomplete.','Questions: What happened? Who did it? What was kept? Was it allowed? What should change while the facts are missing?');
  }
 }
-function pathFor(from,to,phase) {
- const a=definitions[from],b=definitions[to],shift=phase==='return'||phase==='tool'?34:-34;
- if(a.x===b.x) { const sign=b.y>a.y?1:-1; return `M ${a.x+shift} ${a.y+sign*42} L ${b.x+shift} ${b.y-sign*42}`; }
- const sign=b.x>a.x?1:-1,aw=from==='user'||a.x===380?103:91,bw=b.x===380?103:91;
- const x1=a.x+sign*aw,x2=b.x-sign*bw,mid=(x1+x2)/2;
- return `M ${x1} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${x2} ${b.y}`;
-}
 function drawMap() {
- const diagramHeight=config.example==='factory'?1400:1230;
- $('diagram').style.aspectRatio='760 / '+diagramHeight;
- $('paths').setAttribute('viewBox','0 0 760 '+diagramHeight);
+ $('map-context').textContent=config.scenario==='local'?'The app and model run on your device.':'Stops can have different operators.';
  $('later-legend').hidden=config.example!=='factory';
  $('copy-legend').hidden=!config.showCopies;
  $('nodes').replaceChildren();
- for(const id of visible) {
-  const n=definitions[id],el=document.createElement('button'); el.type='button'; el.className='node'+(n.x!==380?' side':'')+(['history','logs','training'].includes(id)?' copy-node':''); el.dataset.node=id; el.style.left=(n.x/760*100)+'%'; el.style.top=(n.y/diagramHeight*100)+'%'; el.style.height=(83.64/diagramHeight*100)+'%';
-  const title=document.createElement('b'); title.textContent=nodeTitle(id); const sub=document.createElement('span'); sub.textContent=n.sub; el.append(title,sub); el.setAttribute('aria-pressed',String(selected===id)); el.setAttribute('aria-controls','detail-body'); el.addEventListener('click',()=>{stop();selectNode(id);$('map-return').hidden=false;$('detail-title').focus({preventScroll:true});$('detail-title').scrollIntoView({block:'center'});}); $('nodes').append(el);
+ const orderedStops = new Set([
+  ...steps.filter(step=>step.phase!=='later').map(step=>step.to),
+  ...copyStops.filter(id=>visible.has(id)),
+  ...steps.filter(step=>step.phase==='later').map(step=>step.to),
+ ]);
+ for(const id of orderedStops) {
+  const button=document.createElement('button');
+  button.type='button';
+  button.className=copyStops.includes(id)?'node copy-node':'node';
+  button.dataset.node=id;
+  const title=document.createElement('b'), subtitle=document.createElement('span');
+  title.textContent=nodeTitle(id);
+  subtitle.textContent=definitions[id].sub;
+  button.append(title,subtitle);
+  button.setAttribute('aria-pressed',String(selected===id));
+  button.setAttribute('aria-controls','detail-body');
+  button.addEventListener('click',()=>{
+   stop();
+   selectNode(id);
+   $('map-return').hidden=false;
+   $('detail-title').focus({preventScroll:true});
+   $('detail-title').scrollIntoView({block:'center'});
+  });
+  $('nodes').append(button);
  }
- const local=config.scenario==='local';
- const zones=local?[{y:20,h:1005,text:'Your device · no remote model call in this example'}]:[{y:20,h:110,text:'Your device'},{y:210,h:335,text:'Application and connected services · may have different operators'},{y:540,h:485,text:'Model serving · first or second host, as selected'}];
- if(config.example==='factory')zones.push({y:1190,h:140,text:'Later observation · three simulated days later · source unknown'});
- document.querySelectorAll('.map .zone').forEach(e=>e.remove());
- for(const z of zones) {const el=document.createElement('div');el.className='zone';el.style.top=z.y/diagramHeight*100+'%';el.style.height=z.h/diagramHeight*100+'%';const label=document.createElement('span');label.className='zone-label';label.textContent=z.text;el.append(label);$('diagram').prepend(el);}
- const svg=$('paths'),ns='http://www.w3.org/2000/svg';
- svg.innerHTML='<defs><marker id="arrow-request" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--link)"/></marker><marker id="arrow-return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker><marker id="arrow-copy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker></defs>';
- const edgeKeys=new Set();activeEdges=[];
- for(const s of steps) {
-  if(!s.from) continue; const key=s.from+'-'+s.to+'-'+s.phase; if(edgeKeys.has(key))continue;edgeKeys.add(key);
-  const el=document.createElementNS(ns,'path');el.setAttribute('d',pathFor(s.from,s.to,s.phase));el.setAttribute('class','edge '+s.phase);el.setAttribute('marker-end','url(#arrow-'+(s.phase==='request'?'request':s.phase==='later'?'copy':'return')+')');el.dataset.key=key;svg.append(el);activeEdges.push(el);
+ layoutDiagram();
+}
+function pathFor(a,b,phase,width,compact) {
+ const returning=phase==='return'||phase==='tool';
+ const verticalDirection=Math.sign(b.y-a.y);
+ const sideConnect=compact&&(phase==='copy'||Math.abs(a.index-b.index)!==1);
+ if(sideConnect) {
+  // Long connections run beside the cards so they stay visible between rows.
+  const side=returning||phase==='copy' ? 1 : -1;
+  const trackInset=phase==='copy' ? 6 : 13;
+  const rail=side===1 ? width-trackInset : trackInset;
+  const startY=a.y+verticalDirection*8, endY=b.y-verticalDirection*8;
+  return `M ${a.x+side*a.width/2} ${startY} H ${rail} V ${endY} H ${b.x+side*b.width/2}`;
  }
- if(config.showCopies) {
-  const copyPaths=[['app','history','M 277 410 L 15 410 L 15 1100 L 24 1100'],['logs','training','M 483 1100 L 554 1100']];
-  // Each dashed path represents that recipient's separate store, not a shared database.
-  for(const id of ['edge','app','identity','retrieval','router','host','backup','tool','checks']) {
-   if(!visible.has(id))continue;
-   const n=definitions[id];let d;
-   if(n.x===115)d=`M 24 ${n.y+20} L 8 ${n.y+20} L 8 1045 L 345 1045 L 345 1058`;
-   else if(n.x===645)d=`M 736 ${n.y+20} L 752 ${n.y+20} L 752 1045 L 415 1045 L 415 1058`;
-   else d=`M 483 ${n.y+22} L 520 ${n.y+22} L 520 1035 L 380 1035 L 380 1058`;
-   copyPaths.push([id,'logs',d]);
+ if(phase==='copy'&&verticalDirection!==0) {
+  const side=Math.sign(b.x-a.x)||1, rail=side===1?width-8:8;
+  const startX=a.x+side*a.width/3, startY=a.y+a.height/2;
+  const endX=b.x+side*b.width/5, endY=b.y-b.height/2;
+  return `M ${startX} ${startY} V ${startY+8} H ${rail} V ${endY-12} H ${endX} V ${endY}`;
+ }
+ if(compact||a.x===b.x) {
+  const shift=(returning?1:-1)*Math.min(24,width/22);
+  const x=(compact?width/2:a.x)+shift;
+  return `M ${x} ${a.y+verticalDirection*a.height/2} V ${b.y-verticalDirection*b.height/2}`;
+ }
+ const direction=Math.sign(b.x-a.x);
+ const x1=a.x+direction*a.width/2, x2=b.x-direction*b.width/2, mid=(x1+x2)/2;
+ return `M ${x1} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${x2} ${b.y}`;
+}
+function layoutDiagram() {
+ const diagram=$('diagram'), buttons=[...$('nodes').children];
+ diagramWidth=diagram.clientWidth;
+ const compact=diagramWidth<540;
+ diagram.dataset.layout=compact?'stacked':'columns';
+ for(const button of buttons) {
+  const {x}=definitions[button.dataset.node];
+  const columnWidth=x===380 ? .271 : .24;
+  button.style.width=diagramWidth*(compact ? .77 : columnWidth)+'px';
+  button.style.height='auto';
+ }
+ const cardHeight=Math.ceil(Math.max(...buttons.map(button=>button.getBoundingClientRect().height)));
+ const rowScale=Math.max(1,(cardHeight+16)/100);
+ const positions=new Map();
+ for(const [index,button] of buttons.entries()) {
+  const id=button.dataset.node, definition=definitions[id];
+  const fraction=definition.x/760;
+  const center=compact ? .5+(fraction-.5)*.19 : fraction;
+  const x=diagramWidth*center;
+  const y=compact ? 16+cardHeight/2+index*(cardHeight+28) : definition.y*rowScale;
+  const width=parseFloat(button.style.width);
+  button.style.left=x+'px';
+  button.style.top=y+'px';
+  button.style.height=cardHeight+'px';
+  positions.set(id,{x,y,width,height:cardHeight,index});
+ }
+ const mapHeight=Math.ceil(Math.max(...Array.from(positions.values(),stop=>stop.y))+cardHeight/2+16);
+ diagram.style.height=mapHeight+'px';
+ $('paths').setAttribute('viewBox',`0 0 ${diagramWidth} ${mapHeight}`);
+ $('map-edges').replaceChildren();
+ activeEdges=[];
+ const edgeKeys=new Set();
+ function addEdge(from,to,phase) {
+  const key=from+'-'+to+'-'+phase;
+  if(edgeKeys.has(key))return;
+  edgeKeys.add(key);
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',pathFor(positions.get(from),positions.get(to),phase,diagramWidth,compact));
+  path.setAttribute('class','edge '+phase);
+  const arrow=phase==='request'?'request':phase==='later'||phase==='copy'?'copy':'return';
+  path.setAttribute('marker-end','url(#arrow-'+arrow+')');
+  if(phase==='copy') {
+   path.dataset.copyFrom=from;
+   path.dataset.copyTo=to;
+  } else {
+   path.dataset.key=key;
+   activeEdges.push(path);
   }
-  for(const [from,to,d] of copyPaths){const p=document.createElementNS(ns,'path');p.setAttribute('d',d);p.setAttribute('class','edge copy');p.setAttribute('marker-end','url(#arrow-copy)');p.dataset.copyFrom=from;p.dataset.copyTo=to;svg.append(p);}
-
+  $('map-edges').append(path);
  }
- $('map-note').textContent=local?'Select a box to inspect it. The app and model run on your device in this example. Updates, sync or remote tools can add routes.':'Select a box to inspect it. One organization may operate several stops. When shown, dashed lines point to possible records at each service.';
+ for(const step of steps)if(step.from)addEdge(step.from,step.to,step.phase);
+ if(config.showCopies) {
+  // Dashed lines represent possible separate records at each recipient.
+  addEdge('app','history','copy');
+  addEdge('logs','training','copy');
+  for(const id of ['edge','app','identity','retrieval','router','host','backup','tool','checks']) {
+   if(visible.has(id))addEdge(id,'logs','copy');
+  }
+ }
+ highlightMapEdge(steps[position]);
+}
+function highlightMapEdge(step) {
+ const key=step.from+'-'+step.to+'-'+step.phase;
+ for(const path of activeEdges) {
+  const active=path.dataset.key===key;
+  path.classList.toggle('active',active);
+  if(active)$('map-edges').append(path);
+ }
 }
 function selectNode(id) {
  selected=id;$('map-return').hidden=true;document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
@@ -542,7 +654,7 @@ function renderStep(announce=true) {
   if(current)el.setAttribute('aria-current','step');
   else el.removeAttribute('aria-current');
  }
- for(const el of activeEdges)el.classList.toggle('active',el.dataset.key===s.from+'-'+s.to+'-'+s.phase);
+ highlightMapEdge(s);
  document.querySelectorAll('#journey-list button').forEach((el,i)=>{if(i===position)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
  panToNode(s.to,{smooth:timer!==null});
  selectNode(s.to);
@@ -643,6 +755,16 @@ viewerResize.observe(document.querySelector('.playback-panel'));
 const siteHeader=document.querySelector('tedt-global-header');if(siteHeader)viewerResize.observe(siteHeader);
 window.addEventListener('resize',()=>{syncViewerLayout();panToNode(steps[position].to);});
 if(new URLSearchParams(window.location.search).get('example')==='factory'){$('example').value='factory';chooseExample(false);}else reset(false);
+const mapResize=new ResizeObserver(()=>{
+ if($('diagram').clientWidth===diagramWidth)return;
+ layoutDiagram();
+ panToNode(selected);
+});
+mapResize.observe(document.querySelector('.map-scroll'));
+document.fonts.ready.then(()=>{
+ layoutDiagram();
+ if(timer!==null)panToNode(steps[position].to);
+});
 })();
 </script>
 </body>
