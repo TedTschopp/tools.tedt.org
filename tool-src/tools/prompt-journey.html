@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Journey — Ted's Tools</title>
+<meta name="description" content="Follow an AI request through an app, document search, routers, model hosting, tool calls and back. Explore possible copies with a plain-language interactive diagram.">
+<link rel="canonical" href="https://tools.tedt.org/prompt-journey.html">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+:root { --fs-body: 1rem; --fs-small: .875rem; --fg-muted: var(--fg-2); }
+:root[data-theme="light"] { --copper: color-mix(in srgb, var(--plt-copper-600) 55%, var(--fg) 45%); --ready: var(--copper); --rule: var(--plt-fg-300); }
+[hidden] { display:none !important; }
+body { line-height:1.55; }
+.tt-shell { max-width:var(--tool-max); margin:auto; padding:var(--s-7) var(--s-6) var(--s-9); }
+.tt-topbar,.tt-actions,.tt-panel-head,.legend { display:flex; align-items:center; flex-wrap:wrap; gap:var(--s-3); }
+.tt-topbar { justify-content:space-between; margin-bottom:var(--s-7); font-size:var(--fs-small); color:var(--fg-2); }
+.tt-title { display:block; margin-bottom:var(--s-3); }
+.intro { font-size:1.125rem; color:var(--fg-2); max-width:52rem; }
+.tt-banner,.tt-about { border:var(--bw-1) solid var(--ready-border); border-radius:var(--r-3); padding:var(--s-4) var(--s-5); background:var(--ready-bg); color:var(--ready); }
+.tt-banner { margin:var(--s-6) 0; }
+.tt-panel { background:var(--bg-card); border:var(--border); border-radius:var(--r-3); min-width:0; }
+.tt-panel-head { justify-content:space-between; border-bottom:var(--border); padding:var(--s-4) var(--s-5); }
+.tt-panel-head h2 { font-size:var(--fs-h3); margin:0; }
+.tt-panel-body { padding:var(--s-5); }
+.controls { display:grid; grid-template-columns:1fr 1fr; gap:var(--s-6); margin-bottom:var(--s-5); }
+label { display:block; font-weight:var(--fw-semibold); }
+select,button { font:inherit; min-height:2.75rem; padding:var(--s-2) var(--s-3); border-radius:var(--r-2); }
+select { width:100%; margin-top:var(--s-2); color:var(--fg); background:var(--bg-inset); border:var(--border); }
+button { color:var(--copper); background:transparent; border:var(--bw-1) solid var(--copper); cursor:pointer; }
+button:hover { background:var(--copper-tint); }
+button:disabled { opacity:.5; cursor:not-allowed; }
+button.primary { background:var(--accent); color:var(--fg-on-accent); border-color:var(--accent); }
+button.primary:hover { background:var(--accent-active); }
+:is(button,a,select,input,summary):focus-visible { outline:var(--bw-2) solid var(--link); outline-offset:var(--s-1); }
+fieldset { border:0; padding:0; margin:0; min-width:0; }
+legend { font-weight:var(--fw-semibold); margin-bottom:var(--s-2); }
+.options { display:flex; gap:var(--s-3) var(--s-5); flex-wrap:wrap; }
+.options label { font-weight:var(--fw-regular); display:flex; gap:var(--s-2); align-items:center; min-height:2.5rem; }
+input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); }
+.hint { margin:var(--s-2) 0 0; color:var(--fg-2); font-size:var(--fs-small); }
+.sample { padding-top:var(--s-4); margin-top:var(--s-4); border-top:var(--border-soft); }
+.sample p { margin:var(--s-2) 0 0; }
+.workspace { display:grid; grid-template-columns:minmax(0,1fr) 21rem; gap:var(--s-5); align-items:start; }
+.guide { grid-column:2; grid-row:1; position:sticky; top:var(--s-4); }
+.map-panel { grid-column:1; grid-row:1; }
+.guide .tt-panel + .tt-panel { margin-top:var(--s-4); }
+.phase { color:var(--link); text-transform:uppercase; letter-spacing:var(--tracking-wide); font-size:var(--fs-small); font-weight:var(--fw-semibold); }
+.phase[data-phase=return],.phase[data-phase=tool] { color:var(--copper); }
+#step-title { margin:var(--s-2) 0 var(--s-3); font-size:var(--fs-h2); }
+#step-text { margin:0 0 var(--s-4); }
+#step-count { font-family:var(--font-mono); color:var(--fg-2); font-size:var(--fs-small); }
+progress { width:100%; accent-color:var(--accent); height:var(--s-2); margin:var(--s-3) 0 var(--s-4); }
+.small-actions { display:flex; flex-wrap:wrap; gap:var(--s-2); margin-top:var(--s-3); }
+.small-actions button { font-size:var(--fs-small); }
+.payload { margin-top:var(--s-5); padding:var(--s-4); background:var(--bg-inset); border:var(--border-soft); border-radius:var(--r-2); }
+.payload h3 { margin:0 0 var(--s-2); font-size:var(--fs-small); }
+.payload p { font-size:var(--fs-small); margin:0; overflow-wrap:anywhere; }
+#detail-title { scroll-margin-top:6rem; margin:0; font-size:var(--fs-h3); }
+#detail-body p { margin-bottom:var(--s-3); font-size:var(--fs-small); }
+#detail-body p:last-child { margin-bottom:0; }
+#detail-body strong { display:block; color:var(--fg); }
+.legend { font-size:var(--fs-small); padding:var(--s-3) var(--s-5); color:var(--fg-2); border-bottom:var(--border-soft); }
+.key { display:inline-block; width:1.7rem; vertical-align:middle; border-top:.18rem solid var(--link); margin-right:var(--s-1); }
+.key.return { border-color:var(--copper); }
+.key.copy { border-color:var(--warn); border-top-style:dashed; }
+.map-scroll { overflow:auto; }
+.map { position:relative; width:100%; min-width:48rem; aspect-ratio:760/1230; isolation:isolate; }
+.map svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+.map .zone { position:absolute; left:1.8%; width:96.4%; border:var(--bw-1) solid var(--rule-soft); border-radius:var(--r-3); background:var(--bg-inset); z-index:-1; }
+.zone-label { position:absolute; left:var(--s-3); top:var(--s-2); color:var(--fg-2); font-size:var(--fs-small); }
+.node { scroll-margin-top:6rem; position:absolute; width:27.1%; height:6.8%; transform:translate(-50%,-50%); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:var(--s-2) var(--s-3); text-align:left; color:var(--fg); background:var(--bg-card); border:var(--border); font-size:var(--fs-small); line-height:1.25; }
+.node.side { width:24%; }
+.node b { font-size:var(--fs-small); font-weight:var(--fw-semibold); }
+.node span { color:var(--fg-2); margin-top:var(--s-1); font-size:.8rem; }
+.node:hover { border-color:var(--link); background:var(--bg-hover); }
+.node[aria-pressed=true] { border-color:var(--link); box-shadow:0 0 0 var(--bw-1) var(--link); }
+.node.current { background:var(--accent-tint); border-color:var(--link); }
+.node.current[data-phase=return],.node.current[data-phase=tool] { border-color:var(--copper); background:var(--copper-tint); }
+.node.copy-node { border-style:dashed; border-color:var(--warn-border); }
+.edge { fill:none; stroke:var(--link); stroke-width:1.5; opacity:.7; }
+.edge.return,.edge.tool { stroke:var(--copper); }
+.edge.copy { stroke:var(--warn); stroke-dasharray:5 5; opacity:.7; }
+.edge.active { opacity:1; stroke-width:4; }
+.edge-label { fill:var(--fg-2); font:13px var(--font-body); }
+.map-note { padding:var(--s-4) var(--s-5); border-top:var(--border-soft); font-size:var(--fs-small); color:var(--fg-2); margin:0; }
+.scroll-hint { display:none; }
+.extras { margin-top:var(--s-5); }
+details { margin-top:var(--s-4); padding:var(--s-5); border:var(--border); border-radius:var(--r-3); background:var(--bg-card); }
+summary { cursor:pointer; font-weight:var(--fw-semibold); }
+details p:first-of-type { margin-top:var(--s-4); }
+details li { margin-bottom:var(--s-3); }
+#journey-list { padding-left:var(--s-6); }
+#journey-list button { text-align:left; padding:var(--s-2); border-color:var(--rule); color:var(--fg); width:100%; }
+#journey-list button[aria-current=step] { border-color:var(--link); background:var(--accent-tint); }
+#journey-list small { display:block; margin-top:var(--s-1); }
+.tt-about { margin-top:var(--s-6); }
+.tt-about p { color:inherit; max-width:none; font-size:var(--fs-small); margin:0; }
+.tt-about p+p { margin-top:var(--s-2); }
+#download-status { font-size:var(--fs-small); margin:var(--s-2) 0 0; }
+@media (max-width:70rem) { .workspace { grid-template-columns:1fr; } .guide { grid-column:1; grid-row:1; position:static; display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4); } .guide .tt-panel+.tt-panel { margin:0; } .map-panel { grid-column:1; grid-row:2; } .map { max-width:52rem; margin:auto; } }
+@media (max-width:40rem) { .tt-shell { padding:var(--s-5) var(--s-3) var(--s-8); } .controls,.guide { grid-template-columns:1fr; } .tt-panel-body { padding:var(--s-4); } .scroll-hint { display:block; } .tt-title { font-size:2.3rem; } .tt-topbar { margin-bottom:var(--s-5); } }
+@media print { .tt-topbar,.controls,.small-actions,.tt-actions,.tt-catalog-return,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; } .map { min-width:0; } .map-panel { break-before:page; } .tt-shell { padding:0; } }
+</style>
+</head>
+<body>
+<main class="tt-shell" data-clarity-mask="true">
+<nav class="tt-topbar" aria-label="Tool navigation"><a href="./">← Ted's Tools</a><span>AI and learning · Interactive diagram.</span></nav>
+<header><h1 class="tt-title t-tool-title">Prompt <mark>Journey</mark></h1><p class="intro">Where can your AI request go? Follow it down to the model and back to your screen.</p></header>
+<div class="tt-banner">Illustrative journey. No prompt is sent to an AI service. These routes are examples, not a trace of your company’s systems.</div>
+<noscript><p>This interactive diagram needs JavaScript. A typical route is your device → app → model host → model → host → app → your device. Searches, tools and stored copies can add branches.</p></noscript>
+<section class="tt-panel" aria-labelledby="setup-title">
+<div class="tt-panel-head"><h2 id="setup-title">Choose a journey</h2><span class="hint">Start with the sample. No private information needed.</span></div>
+<div class="tt-panel-body">
+<div class="controls">
+<div><label for="scenario">Example setup</label><select id="scenario"><option value="enterprise">Company assistant with documents and tools</option><option value="direct">Direct hosted AI service</option><option value="local">Model running on your device</option></select><p id="scenario-note" class="hint"></p></div>
+<fieldset><legend>Company assistant options</legend><div class="options"><label><input type="checkbox" id="retrieval" checked> Search documents</label><label><input type="checkbox" id="tools" checked> Call a tool</label><label><input type="checkbox" id="routing" checked> Use a router</label><label><input type="checkbox" id="fallback"> Try a second host</label></div><p class="hint">Changing the setup restarts the journey.</p></fieldset>
+</div>
+<div class="options"><label><input type="checkbox" id="show-copies"> Show possible stored copies and later use</label></div>
+<div class="sample"><strong>Fictional request</strong><p>“Can I book a $180 hotel in Madrid? Check the sample forecast too.”</p><p class="hint">Sample policy: hotels up to $200 per night. Sample forecast: rain. All messages and answers are written examples.</p></div>
+</div>
+</section>
+<div class="workspace extras">
+<aside class="guide" aria-label="Journey guide">
+<section class="tt-panel" aria-labelledby="step-title"><div class="tt-panel-body">
+<div id="phase" class="phase">Request</div><h2 id="step-title">Your request starts here</h2><p id="step-text"></p><span id="step-count"></span><progress id="progress" aria-label="Journey progress" max="1" value="0"></progress>
+<div class="tt-actions"><button id="back" type="button">Back</button><button id="next" type="button" class="primary">Next step</button><button id="play" type="button">Play</button></div>
+<div class="small-actions"><button id="restart" type="button">Restart</button><button id="jump-return" type="button">Jump to answer</button></div>
+<div class="payload"><h3>What travels at this step</h3><p id="payload"></p></div>
+<p id="announce" class="hint" role="status" aria-live="polite" aria-atomic="true"></p>
+</div></section>
+<section class="tt-panel" aria-labelledby="detail-title"><div class="tt-panel-head"><h2 id="detail-title" tabindex="-1">Your device</h2></div><div id="detail-body" class="tt-panel-body"></div><div class="tt-panel-body" id="map-return" hidden><button type="button" id="back-map">Return to selected stop</button></div></section>
+</aside>
+<section class="tt-panel map-panel" aria-labelledby="map-title"><div class="tt-panel-head"><h2 id="map-title">The round trip</h2><span class="hint">Select any stop to inspect it.</span></div>
+<div class="legend"><span><i class="key"></i>Request ↓</span><span><i class="key return"></i>Answer / tool loop ↑</span><span><i class="key copy"></i>Possible copy</span><button type="button" id="center-map">Center route</button></div>
+<p class="hint scroll-hint" style="padding:0 var(--s-4)">Scroll the map sideways to see every branch. The guide above and step list below work without the map.</p>
+<div class="map-scroll" tabindex="0" role="region" aria-label="Scrollable request and response diagram"><div class="map" id="diagram"><svg id="paths" viewBox="0 0 760 1230" aria-hidden="true"></svg><div id="nodes"></div></div></div>
+<p class="map-note" id="map-note"></p>
+</section>
+</div>
+<section class="extras" aria-label="More ways to explore">
+<div class="tt-actions"><button id="download" type="button">Download this journey</button></div><p id="download-status" role="status"></p>
+<details><summary>Read or jump through every step</summary><ol id="journey-list"></ol></details>
+<details><summary>What can remain after the answer?</summary>
+<p>Turn on “Show possible stored copies and later use” to add the dashed branches. A branch shows something to investigate, not proof that a copy exists.</p>
+<ul><li><strong>Conversation history:</strong> the app may save your messages, attachments and answers. Saved memory may add information to a later request.</li><li><strong>Logs and monitoring:</strong> the app, router, host and tools can each keep their own records. Those records might contain usage totals, content, or both. Backups and support access need their own checks.</li><li><strong>Caches:</strong> a saved answer can avoid a model call. A prompt-processing cache reuses earlier computation while a model still generates an answer. Neither is shown as a cache hit in this walkthrough.</li><li><strong>Training or evaluation:</strong> using information to improve or test a model is a separate policy decision. It is not an automatic step after every answer. “No training” and “no storage” promise different things.</li></ul>
+<p>This diagram does not assign storage periods or legal guarantees. Ask each operator what is stored, who can access it, where it is processed and when it is deleted.</p>
+</details>
+<details><summary>Terms, scope and sources</summary>
+<p><strong>Prompt:</strong> the instructions and context sent to a model. Your typed message may become one part of a larger package.</p>
+<p><strong>API:</strong> a way for one program to ask another program to do something. <strong>Inference:</strong> running a trained model to produce an output. <strong>Tokens:</strong> small pieces of text represented as numbers. Images and audio have other preparation steps.</p>
+<p><strong>Router:</strong> a service that chooses an eligible model host. <strong>Retrieval:</strong> finding information to include in a request. <strong>Agent:</strong> an application that can use model outputs to choose and carry out further steps, within the permissions it has been given.</p>
+<p>The model developer created the model. The model host operates the computers running it. They may be the same company. A model name alone does not identify the host or processing region.</p>
+<p>These are common logical components, not an inventory of every network device. One organization may operate several boxes. Real systems can combine or reorder checks, use several models, stream partial answers, or repeat the tool loop. Document indexing happens before retrieval; it is not drawn as part of every request. A tool that fetches a URL adds that destination to the route.</p>
+<p>Encrypted internet links normally hide message content from routers carrying the traffic. A service that ends that encryption to process the message can read the content it receives. Company inspection proxies and device extensions can add access paths not pictured here.</p>
+<ul><li><a href="https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview">Microsoft: retrieval and document indexing</a>.</li><li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Anthropic: application-run and provider-run tools</a>.</li><li><a href="https://openrouter.ai/docs/guides/routing/provider-selection">OpenRouter: provider selection and fallback</a>.</li><li><a href="https://openrouter.ai/docs/guides/features/zdr">OpenRouter: retention, training and tool scope</a>.</li><li><a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI: API data controls and application state</a>.</li></ul>
+<p>These sources explain particular implementations. Their policies are not promises made by every AI service. Content reviewed November 21, 2026.</p>
+</details>
+</section>
+<footer class="tt-about"><p><strong>About Prompt Journey.</strong> Compare possible routes, inspect what each component receives, and download the steps for a team discussion. This is a browser simulation, not real model inference or a security test.</p><p>The diagram runs in your browser. The published site also loads shared navigation, fonts and its standard masked visitor analytics. No account or API key is required.</p></footer>
+</main>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const sample = 'Can I book a $180 hotel in Madrid? Check the sample forecast too.';
+const policy = 'Fictional policy: hotels up to $200 per night.';
+const forecast = 'Fictional forecast for Madrid: rain.';
+const definitions = {
+ user:{title:'Your device',sub:'Message in. Answer out.',x:380,y:85,owner:'You or your organization.',does:'The browser or app collects your message and displays the answer. Attachments can travel too.',sees:'Your message, files and the displayed answer.',keeps:'Local history, downloads or browser state may remain. Device extensions and backups need their own review.',ask:'What runs on this device, and what does it save?'},
+ network:{title:'Network connection',sub:'Encrypted transport',x:380,y:185,owner:'Network and internet operators.',does:'Carries traffic between your device and the service. This box represents the network, not a separate AI company.',sees:'With normal encrypted transport, network carriers see connection metadata but not the readable prompt. Inspection proxies are a separate case.',keeps:'Connection records can remain without message content.',ask:'Where does encryption end? Is a company proxy inspecting traffic?'},
+ edge:{title:'Service entrance',sub:'Traffic and security checks',x:380,y:285,owner:'The app operator or its infrastructure supplier.',does:'Accepts the connection and forwards allowed traffic. It may end transport encryption and check for attacks or excessive traffic.',sees:'Message content if this component terminates encryption; otherwise encrypted traffic only.',keeps:'Access logs or security samples may be retained, depending on configuration.',ask:'Does this service inspect or record request bodies?'},
+ app:{title:'AI application',sub:'Builds the full request',x:380,y:385,owner:'Your company or the app supplier.',does:'Combines your message with instructions, permitted conversation history and optional search results. It controls the workflow.',sees:'Your message and whatever context, credentials and results the application uses.',keeps:'History, files, saved preferences, logs or traces may remain. Those are separate settings.',ask:'What gets added to my message, and which services receive the combined request?'},
+ identity:{title:'Sign-in & permissions',sub:'Who can do what?',x:115,y:285,owner:'An identity service or the app operator.',does:'Checks a sign-in token and permissions. In this example it receives an identity check, not the full conversation.',sees:'Account identifiers, sign-in token or access claims. Tokens should not be put in the model prompt.',keeps:'Sign-in and access records may remain.',ask:'Does document and tool access follow the user’s permissions?'},
+ retrieval:{title:'Document search',sub:'Finds relevant passages',x:115,y:485,owner:'Your organization or a search supplier.',does:'Searches documents the user can access. Relevant passages return to the app and become model context. The index was prepared earlier.',sees:'A search query and access filters; not necessarily the full conversation. Separate embedding services can add another processing hop.',keeps:'The source documents and index already exist. Search queries may also be logged.',ask:'Which documents are searchable, and who receives the query?'},
+ router:{title:'AI router',sub:'Chooses a model host',x:380,y:485,owner:'Your company or a routing supplier.',does:'Chooses an eligible provider based on rules such as availability, price or permitted locations.',sees:'The request it forwards, often including the assembled context.',keeps:'Routing records or request content may be retained, depending on settings.',ask:'Which hosts are allowed? Can fallback change the recipient or region?'},
+ host:{title:'Model host',sub:'Runs the AI service',x:380,y:615,owner:'The model developer or a separate hosting company.',does:'Receives the request, applies service rules and schedules computation on its infrastructure.',sees:'The model input, any included documents, and the generated output.',keeps:'Abuse logs, application state or prompt-processing caches may remain under feature-specific policies.',ask:'Who actually hosts this model, and what data controls apply to this endpoint?'},
+ backup:{title:'Second model host',sub:'Only on a chosen retry',x:645,y:615,owner:'Another permitted inference provider.',does:'Receives a retry when the first attempt fails in this example. The first host may already have received the request.',sees:'The retried request and included context.',keeps:'Its own storage and data-use policies apply.',ask:'Can this host receive the same data under the same restrictions?'},
+ tokenize:{title:'Input & output handling',sub:'Text ↔ tokens',x:380,y:745,owner:'The model host; your device in the local example.',does:'Turns input into the representation the model uses, then converts generated tokens back to output. Images and audio need different preparation.',sees:'The supplied context and generated tokens.',keeps:'Temporary state and caches may exist. This box does not imply a separate supplier.',ask:'What caching or state does the serving system keep?'},
+ compute:{title:'Compute hardware',sub:'CPUs, GPUs & memory',x:380,y:965,owner:'The model host and its infrastructure suppliers, or your own device.',does:'Processors perform the model’s calculations. Model weights and working data occupy memory. Large models may spread work across several machines.',sees:'Numerical representations of the supplied context and intermediate working state. This is computation inside the host, not an automatic new external recipient.',keeps:'Working memory and cached state can last beyond an individual calculation. Persistence depends on the serving system.',ask:'Whose hardware runs the work, in which locations, and how is working data isolated?'},
+ model:{title:'Model computation',sub:'Produces the next tokens',x:380,y:855,owner:'Runs on the host’s computers, or locally in the local example.',does:'Processes the available context and generates output. That output can ask the application to use a tool. Ordinary inference does not update the model’s learned weights.',sees:'The context supplied for this call. It does not automatically see every company file or the whole internet.',keeps:'Working state exists during computation. Longer retention is a property of the surrounding system.',ask:'What context reaches this call, and is the result checked before action?'},
+ tool:{title:'External tool / API',sub:'Search, read or act',x:645,y:385,owner:'Your company or another service provider.',does:'Runs an operation authorized by the application. This example reads fictional weather. Other tools could fetch a web page, read a database or change a record.',sees:'Selected arguments: Madrid in this example. A tool need not receive the entire conversation.',keeps:'Its own logs, results and side effects can remain. The model host’s data policy does not automatically cover it.',ask:'What is sent, who authorizes the operation, and can it change something?'},
+ checks:{title:'Answer checks',sub:'Review before display',x:115,y:385,owner:'The app operator or an additional checking service.',does:'Can check permissions, filter output, add citations or require a person’s approval. Checks may also happen earlier.',sees:'The draft answer and whatever context the checks require.',keeps:'Review records or flagged content may remain.',ask:'What does the check actually verify? Can output still be wrong?'},
+ history:{title:'Saved conversation',sub:'Optional app storage',x:115,y:1100,owner:'The app operator; local storage for the local example.',does:'Can save messages and answers for later sessions. Saved memory can feed future requests.',sees:'Whatever history or memory the app chooses to retain.',keeps:'Potentially messages, attachments, summaries and answers. Deletion and backups require separate checks.',ask:'What is saved, for how long, and does deleting the chat delete all copies?'},
+ logs:{title:'Logs & caches',sub:'Each service, separately',x:380,y:1100,owner:'Each participating service may have its own records.',does:'Can record usage, errors, security events or content. Caches can store answers or reuse prompt processing.',sees:'Metadata, selected content or both, depending on configuration.',keeps:'Unknown in this example. This is a summary box for separate stores, not one shared database.',ask:'Which stores contain content, and how are logs, caches and backups deleted?'},
+ training:{title:'Later evaluation / training',sub:'A separate policy choice',x:645,y:1100,owner:'Whoever has permission and access for that later use.',does:'Stored material might later be used to evaluate a system or improve a model if the applicable policy permits it. This is not part of the inference round trip.',sees:'Only material made available for the later process. The diagram makes no claim that this occurs.',keeps:'Separate datasets and records can have their own lifecycle.',ask:'Are training and evaluation allowed? Does that promise cover every supplier?'}
+};
+let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[];
+function readConfig() { return {scenario:$('scenario').value,retrieval:$('retrieval').checked,tools:$('tools').checked,routing:$('routing').checked,fallback:$('fallback').checked,showCopies:$('show-copies').checked}; }
+function nodeTitle(id) { if(config.scenario==='local'&&id==='app') return 'Local AI application'; return definitions[id].title; }
+function stop() { if(timer) clearInterval(timer); timer=null; $('play').textContent='Play'; }
+function createJourney() {
+ const enterprise=config.scenario==='enterprise', local=config.scenario==='local';
+ const retrieval=enterprise&&config.retrieval, tool=enterprise&&config.tools, routing=enterprise&&config.routing, fallback=routing&&config.fallback;
+ visible=new Set(['user','app','tokenize','model','compute']);
+ if(!local) ['network','edge','identity','host','checks'].forEach(n=>visible.add(n));
+ if(retrieval) visible.add('retrieval'); if(tool) visible.add('tool'); if(routing) visible.add('router'); if(fallback) visible.add('backup');
+ if(config.showCopies) ['history','logs','training'].forEach(n=>visible.add(n));
+ steps=[];
+ const add=(from,to,phase,title,text,payload)=>steps.push({from,to,phase,title,text,payload});
+ add(null,'user','request','Your request starts here','You type a message. The words below are fictional sample data, ready to explore.',sample);
+ if(local) add('user','app','request','The local app receives your message','In this example the model and app run on your device. There is no remote model call.',sample);
+ else {
+ add('user','network','request','Across an encrypted connection','The request leaves your device. Ordinary network carriers transport encrypted traffic, not readable prompt text.','Encrypted message plus connection metadata.');
+ add('network','edge','request','Through the service entrance','The service accepts the connection. A component that ends encryption can inspect the content it processes.',sample);
+ add('edge','app','request','The app receives your request','The app starts a workflow. It can add instructions and conversation history before any model call.',sample+' + app instructions.');
+ add('app','identity','request','Check who is asking','The app checks your identity and permissions. The full prompt does not need to go to the sign-in service.','Sample user ID and access claims; no weather question.');
+ add('identity','app','request','Permissions return','The app learns which documents and operations this user may access.','Sample permission: read the travel policy; read weather.');
+ }
+ if(retrieval) {
+ add('app','retrieval','request','Search the company documents','The app sends a focused search and access filter. The document index exists before this request.','Search: hotel allowance. Filter: documents this sample user may read.');
+ add('retrieval','app','request','Add the useful passage','A selected passage comes back. The model’s input now contains company information as well as your question.',policy);
+ }
+ const context=sample+'\nApp instruction: use only the supplied evidence.'+(retrieval?'\n'+policy:'\nNo travel policy supplied.');
+ let activeHost=fallback?'backup':'host';
+ const forward=(payload,again=false)=>{
+  if(local) { add('app','tokenize','request','Prepare the local input','The app passes the assembled context to the model software on this device.',payload); }
+  else {
+   if(routing) add('app','router','request',again?'Send the tool result onward':'Choose a permitted host','The router receives the assembled request and chooses an eligible hosting endpoint.',payload);
+   if(fallback&&!again) {
+    add('router','host','request','Try the first host','The first host receives an attempt. A later timeout will not prove that it saw nothing.',payload);
+    add('host','router','request','The first attempt times out','This simulated attempt produces no usable answer. A retry can add another recipient.','Timeout in this written example; delivery and retention at the first host are unknown.');
+   }
+   add(routing?'router':'app',activeHost,'request',fallback?'Send to the second host':'Reach the model host','The hosting service receives the request. Its operator may be different from the model’s developer.',payload);
+   add(activeHost,'tokenize','request','Prepare the model input','Serving software turns the context into tokens and other model inputs. This stays within the selected host.',payload);
+  }
+  add('tokenize','model','request',again?'The model reads the tool result':'The model receives the context','This is inference: running a trained model. It does not automatically update the model’s learned weights.',payload);
+  add('model','compute','request','Down to processors and memory','CPUs or GPUs perform the calculations. Working data can be distributed across several machines within the hosting system.','Numerical model inputs, learned weights and temporary working state.');
+  add('compute','model','request','Calculations return to the model process','The software uses the results to choose output tokens. This repeats as generation continues.','Calculated token scores and working state; no real computation occurs in this diagram.');
+ };
+ const backToApp=(payload,phase)=>{
+  add('model','tokenize',phase,phase==='tool'?'A request to use a tool':'The model generates an answer',phase==='tool'?'The generated output asks for an operation. The application still has to permit and run it.':'Generated tokens become output. Real services may stream small pieces while generation continues.',payload);
+  if(local) add('tokenize','app',phase,'Return to the local app','The local software receives the generated output.',payload);
+  else {
+   add('tokenize',activeHost,phase,'Output reaches the serving system','The host packages the generated output for the calling application.',payload);
+   if(routing) add(activeHost,'router',phase,'Back through the router','The response passes back through the routing service.',payload);
+   add(routing?'router':activeHost,'app',phase,'Back to the application','The application receives the output and decides what to do next.',payload);
+  }
+ };
+ forward(context);
+ if(tool) {
+  backToApp('Requested operation: read_sample_weather(city="Madrid").','tool');
+  add('app','tool','tool','The app calls an allowed tool','The app checks the requested action and sends only the selected arguments. This walkthrough performs no real weather lookup.','Tool arguments: city = Madrid. No hotel policy or full conversation.');
+  add('tool','app','tool','The tool returns its result','The result comes back to the app. Tool data can be wrong or contain hostile instructions; treat it as information to check.',forecast);
+  forward(context+'\nTool result: '+forecast,true);
+ }
+ const answer=(retrieval?'The sample policy allows a $180 hotel because the limit is $200.':'No travel policy was supplied, so the hotel allowance cannot be confirmed.')+' '+(tool?'The fictional forecast says rain.':'No forecast was looked up.');
+ backToApp(answer,'return');
+ if(!local) {
+ add('app','checks','return','Check the draft answer','The app can review content, permissions and citations. A check is not a guarantee that an answer is correct.',answer);
+ add('checks','app','return','Prepare the display','The app formats the answer. It may also save history if configured to do so.',answer);
+ add('app','edge','return','Back through the service entrance','The answer heads toward your device. Streaming can deliver it in pieces.',answer);
+ add('edge','network','return','Across the encrypted connection again','The response travels back over the network. Stored copies do not disappear when this connection closes.','Encrypted answer plus connection metadata.');
+ }
+ add(local?'app':'network','user','return','The answer reaches you','The round trip is complete. Turn on possible stored copies to explore what might remain after this point.',answer);
+}
+function pathFor(from,to,phase) {
+ const a=definitions[from],b=definitions[to],shift=phase==='return'||phase==='tool'?34:-34;
+ if(a.x===b.x) { const sign=b.y>a.y?1:-1; return `M ${a.x+shift} ${a.y+sign*42} L ${b.x+shift} ${b.y-sign*42}`; }
+ const sign=b.x>a.x?1:-1,aw=from==='user'||a.x===380?103:91,bw=b.x===380?103:91;
+ const x1=a.x+sign*aw,x2=b.x-sign*bw,mid=(x1+x2)/2;
+ return `M ${x1} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${x2} ${b.y}`;
+}
+function drawMap() {
+ $('nodes').replaceChildren();
+ for(const id of visible) {
+  const n=definitions[id],el=document.createElement('button'); el.type='button'; el.className='node'+(n.x!==380?' side':'')+(['history','logs','training'].includes(id)?' copy-node':''); el.dataset.node=id; el.style.left=(n.x/760*100)+'%'; el.style.top=(n.y/1230*100)+'%';
+  const title=document.createElement('b'); title.textContent=nodeTitle(id); const sub=document.createElement('span'); sub.textContent=n.sub; el.append(title,sub); el.setAttribute('aria-pressed',String(selected===id)); el.setAttribute('aria-controls','detail-body'); el.addEventListener('click',()=>{stop();selectNode(id);$('map-return').hidden=false;$('detail-title').focus({preventScroll:true});$('detail-title').scrollIntoView({block:'nearest'});}); $('nodes').append(el);
+ }
+ const local=config.scenario==='local';
+ const zones=local?[{y:20,h:1005,text:'Your device · no remote model call in this example'}]:[{y:20,h:110,text:'Your device'},{y:210,h:335,text:'Application and connected services · may have different operators'},{y:540,h:485,text:'Model serving · first or second host, as selected'}];
+ document.querySelectorAll('.map .zone').forEach(e=>e.remove());
+ for(const z of zones) {const el=document.createElement('div');el.className='zone';el.style.top=z.y/1230*100+'%';el.style.height=z.h/1230*100+'%';const label=document.createElement('span');label.className='zone-label';label.textContent=z.text;el.append(label);$('diagram').prepend(el);}
+ const svg=$('paths'),ns='http://www.w3.org/2000/svg';
+ svg.innerHTML='<defs><marker id="arrow-request" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--link)"/></marker><marker id="arrow-return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker><marker id="arrow-copy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker></defs>';
+ const edgeKeys=new Set();activeEdges=[];
+ for(const s of steps) {
+  if(!s.from) continue; const key=s.from+'-'+s.to+'-'+s.phase; if(edgeKeys.has(key))continue;edgeKeys.add(key);
+  const el=document.createElementNS(ns,'path');el.setAttribute('d',pathFor(s.from,s.to,s.phase));el.setAttribute('class','edge '+s.phase);el.setAttribute('marker-end','url(#arrow-'+(s.phase==='request'?'request':'return')+')');el.dataset.key=key;svg.append(el);activeEdges.push(el);
+ }
+ if(config.showCopies) {
+  const copyPaths=[['app','history','M 277 410 L 15 410 L 15 1100 L 24 1100'],['logs','training','M 483 1100 L 554 1100']];
+  // Each dashed path represents that recipient's separate store, not a shared database.
+  for(const id of ['edge','app','identity','retrieval','router','host','backup','tool','checks']) {
+   if(!visible.has(id))continue;
+   const n=definitions[id];let d;
+   if(n.x===115)d=`M 24 ${n.y+20} L 8 ${n.y+20} L 8 1045 L 345 1045 L 345 1058`;
+   else if(n.x===645)d=`M 736 ${n.y+20} L 752 ${n.y+20} L 752 1045 L 415 1045 L 415 1058`;
+   else d=`M 483 ${n.y+22} L 520 ${n.y+22} L 520 1035 L 380 1035 L 380 1058`;
+   copyPaths.push([id,'logs',d]);
+  }
+  for(const [from,to,d] of copyPaths){const p=document.createElementNS(ns,'path');p.setAttribute('d',d);p.setAttribute('class','edge copy');p.setAttribute('marker-end','url(#arrow-copy)');p.dataset.copyFrom=from;p.dataset.copyTo=to;svg.append(p);}
+
+ }
+ $('map-note').textContent=local?'Local example: the app and model run on your device. Downloads, updates, sync or optional remote tools would add routes. “Local” alone is not proof of privacy.':'Boxes are logical roles, not necessarily separate companies. Arrows show one example sequence. The model’s developer is not automatically an extra stop. Dashed copy lines summarize separate stores at each connected service.';
+}
+function selectNode(id) {
+ selected=id;$('map-return').hidden=true;document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
+ const d=definitions[id];$('detail-title').textContent=nodeTitle(id);$('detail-body').replaceChildren();
+ const parts=[['What happens',d.does],['Who operates it',config.scenario==='local'&&['app','tokenize','model','compute'].includes(id)?'Software running on your device.':d.owner],['What it can see',d.sees],['What may remain',d.keeps],['Question to ask',d.ask]];
+ if(config.scenario==='local'&&id==='app') parts[0][1]='Builds a request for a model on your device. This preset sends no model input to a remote service.';
+ for(const [label,text] of parts){const p=document.createElement('p'),b=document.createElement('strong');b.textContent=label;p.append(b,document.createTextNode(text));$('detail-body').append(p);}
+}
+function renderStep(announce=true) {
+ const s=steps[position];$('phase').textContent=s.phase==='request'?'Request ↓':s.phase==='tool'?'Tool loop ↔':'Answer ↑';$('phase').dataset.phase=s.phase;$('step-title').textContent=s.title;$('step-text').textContent=s.text;$('payload').textContent=s.payload;$('step-count').textContent=`Step ${position+1} of ${steps.length}`;$('progress').max=steps.length-1;$('progress').value=position;$('back').disabled=position===0;$('next').disabled=position===steps.length-1;
+ $('play').disabled=position===steps.length-1;
+ for(const el of document.querySelectorAll('[data-node]')) {el.classList.toggle('current',el.dataset.node===s.to);el.dataset.phase=s.phase;}
+ for(const el of activeEdges)el.classList.toggle('active',el.dataset.key===s.from+'-'+s.to+'-'+s.phase);
+ document.querySelectorAll('#journey-list button').forEach((el,i)=>{if(i===position)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
+ const frame=document.querySelector('.map-scroll');frame.scrollLeft=definitions[s.to].x/760*$('diagram').clientWidth-frame.clientWidth/2;
+ selectNode(s.to);if(announce)$('announce').textContent=`Step ${position+1}. ${s.title}.`;
+ if(position===steps.length-1)stop();
+}
+function renderList() {$('journey-list').replaceChildren();steps.forEach((s,i)=>{const li=document.createElement('li'),btn=document.createElement('button'),small=document.createElement('small');btn.type='button';btn.append(document.createTextNode(s.title));small.textContent=s.text;btn.append(small);btn.addEventListener('click',()=>{stop();position=i;renderStep();$('step-title').scrollIntoView({block:'nearest'});});li.append(btn);$('journey-list').append(li);});}
+function reset() {
+ stop();config=readConfig();const enterprise=config.scenario==='enterprise';
+ for(const id of ['retrieval','tools','routing'])$(id).disabled=!enterprise;
+ $('fallback').disabled=!enterprise||!config.routing;
+ $('scenario-note').textContent=config.scenario==='enterprise'?'A company app adds optional searches, routing and tool calls.':config.scenario==='direct'?'The app sends its request to one model host. No document search or tool call is included.':'The model is already downloaded. App and model computation stay on the device in this example.';
+ position=0;selected='user';createJourney();drawMap();renderList();renderStep(false);$('announce').textContent='Ready. Select Next step or any box.';
+}
+for(const id of ['scenario','retrieval','tools','routing','fallback'])$(id).addEventListener('change',reset);
+$('show-copies').addEventListener('change',()=>{stop();config.showCopies=$('show-copies').checked;const prior=position;createJourney();position=prior;drawMap();renderStep(false);});
+$('center-map').addEventListener('click',()=>{const frame=document.querySelector('.map-scroll');frame.scrollLeft=(frame.scrollWidth-frame.clientWidth)/2;});
+$('back-map').addEventListener('click',()=>{const n=document.querySelector(`[data-node="${selected}"]`);if(n){n.focus();n.scrollIntoView({block:'center',inline:'center'});}});
+$('next').addEventListener('click',()=>{stop();position=Math.min(steps.length-1,position+1);renderStep();});
+$('back').addEventListener('click',()=>{stop();position=Math.max(0,position-1);renderStep();});
+$('restart').addEventListener('click',()=>{stop();position=0;renderStep();});
+$('jump-return').addEventListener('click',()=>{stop();position=steps.findIndex(s=>s.phase==='return');renderStep();});
+$('play').addEventListener('click',()=>{if(timer){stop();return;}if(position===steps.length-1)return;$('play').textContent='Pause';timer=setInterval(()=>{position++;renderStep();},4200);});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+$('download').addEventListener('click',()=>{
+ const data={tool:'Prompt Journey',version:1,kind:'illustrative-simulation',scenario:config.scenario,options:{...config},sample:{request:sample,policy,forecast},journey:steps,limits:'Written example, not live tracing, measured timing or real inference. Storage policies are unspecified.'};
+ const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='prompt-journey.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('download-status').textContent='Downloaded the example setup and ordered journey as JSON.';
+});
+reset();
+})();
+</script>
+</body>
+</html>

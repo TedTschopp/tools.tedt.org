@@ -57,6 +57,12 @@
       "status": "archived"
     },
     {
+      "slug": "prompt-journey",
+      "launch": "https://tools.tedt.org/prompt-journey.html",
+      "migrated": true,
+      "status": "active"
+    },
+    {
       "slug": "agent-business-case-lab",
       "launch": "https://tools.tedt.org/agent-business-case-lab.html",
       "migrated": true,
@@ -667,6 +673,10 @@
       "to": "/about/procedural-text-generation/"
     },
     {
+      "from": "/tools/prompt-journey/",
+      "to": "/about/prompt-journey/"
+    },
+    {
       "from": "/tools/qr-builder/",
       "to": "/about/qr-builder/"
     },
@@ -777,6 +787,7 @@
     "/social-bot-check.html",
     "/start-page/",
     "/vector-trace/",
+    "/prompt-journey.html",
     "/agent-business-case-lab.html",
     "/review-capacity-lab.html",
     "/name-generator-research/",
@@ -6560,6 +6571,7 @@
     "/RPG/MCC-GW/media/paper-dark.webp",
     "/RPG/MCC-GW/media/paper-margin-dark.webp",
     "/media/files/Three_computer-based_models_of_storytelling_BRUTUS.pdf",
+    "/prompt-journey.html",
     "/agent-business-case-lab.html",
     "/review-capacity-lab.html",
     "/css/bootstrap-build.css",
