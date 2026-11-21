@@ -42,11 +42,11 @@ takes and the records it leaves behind are separate questions.
 
 ## How to use it
 
-1. Choose a sample story and setup, then use **Next** to follow each step.
-2. Use **Play** for automatic playback. The diagram follows the current step.
-3. Select a participant to inspect its role, or change the company options to compare routes.
-4. Follow the answer back to the user. In the factory story, continue to the later alert.
-5. Open the ordered journey list or download the example as JSON.
+1. Use **Next step** to follow the sample. The guide shows who receives data and what they receive.
+2. Use **Play** to advance automatically, or jump to **Model**, **Answer** or **Day 3** in the factory story.
+3. Select a box in the diagram to see who runs that stop, what it can see and what it may save.
+4. Open **Change setup** to switch stories, compare routes or show possible saved copies.
+5. Open **All steps** to read the route in order, or download the journey as JSON.
 
 ## Model and limits
 

@@ -4,8 +4,15 @@ import { routeHeaderAssets } from '../shared-header.mjs';
 const node = (page: Page, name: string) => page.locator(`#diagram button[data-node="${name}"]`);
 const transportControls = [
   ['back', 'Back'], ['next', 'Next step'], ['play', 'Play'],
-  ['restart', 'Restart'], ['jump-return', 'Jump to answer'],
+  ['restart', 'Start'], ['jump-model', 'Model'], ['jump-return', 'Answer'],
 ] as const;
+
+async function openSetup(page: Page) {
+  const setup = page.locator('#setup');
+  if (!(await setup.evaluate(element => (element as HTMLDetailsElement).open))) {
+    await setup.locator('summary').click();
+  }
+}
 
 async function pauseJourneyClock(page: Page) {
   await page.clock.install({ time: new Date('2026-11-21T12:00:00Z') });
@@ -79,12 +86,51 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/prompt-journey.html');
 });
 
+for (const viewport of [{ width: 1200, height: 800 }, { width: 390, height: 844 }]) {
+  test(`the first step and labeled controls are available on arrival at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.reload();
+    await expect(page.locator('#setup')).toHaveJSProperty('open', false);
+    await expect(page.getByRole('button', { name: 'Next step', exact: true })).toBeInViewport({ ratio: 1 });
+    await expect(page.locator('#step-title')).toBeInViewport({ ratio: 1 });
+    await expect(page.locator('#payload')).toBeInViewport({ ratio: 1 });
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+    await expect(page.locator('#step-route')).toHaveText('From Your device to Network connection');
+    await expect(page.locator('#step-title')).toBeInViewport({ ratio: 1 });
+  });
+}
+
+test('key steps and the ordered list lead to the corresponding explanation', async ({ page }) => {
+  await expect(page.locator('#jump-later')).toBeHidden();
+  await page.locator('#jump-model').click();
+  await expect(page.locator('#step-title')).toHaveText('The model receives the context');
+  await expect(node(page, 'model')).toHaveAttribute('aria-current', 'step');
+  await page.locator('#jump-return').click();
+  await expect(page.locator('#step-title')).toHaveText('The answer reaches you');
+  await expect(page.locator('#payload')).toContainText('the limit is $200');
+  await page.locator('#open-steps').click();
+  await expect(page.locator('#journey-list button[aria-current="step"]')).toBeFocused();
+  await page.locator('#journey-list').getByRole('button', { name: /Search the company documents/ }).click();
+  await expect(page.locator('#step-title')).toBeFocused();
+  await expect(page.locator('#step-title')).toHaveText('Search the company documents');
+  await expect(node(page, 'retrieval')).toHaveAttribute('aria-current', 'step');
+
+  await openSetup(page);
+  await page.getByLabel('Sample story').selectOption('factory');
+  await page.locator('#view-journey').click();
+  await expect(page.locator('#setup')).toHaveJSProperty('open', false);
+  await expect(page.locator('#next')).toBeFocused();
+  await page.locator('#jump-later').click();
+  await expect(page.locator('#step-title')).toContainText('Three days later');
+  await expect(page.locator('#payload')).toContainText('Responsible person or organization: unknown');
+});
+
 test('the fictional example explains its limits and supports reversible navigation', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await expect(page.getByRole('heading', { name: 'Prompt Journey', exact: true })).toBeVisible();
   await expect(page.locator('#scenario')).toHaveValue('enterprise');
-  await expect(page.locator('body')).toContainText(/illustrative|simulation/i);
+  await expect(page.locator('body')).toContainText('Fictional walkthrough');
   await expect(page.locator('body')).toContainText(/fictional|sample/i);
   await expect(page.locator('#back')).toBeDisabled();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -108,6 +154,7 @@ test('the fictional example explains its limits and supports reversible navigati
 
 for (const scenario of ['enterprise', 'direct', 'local']) {
   test(`${scenario} follows the answer all the way back to the reader`, async ({ page }) => {
+    await openSetup(page);
     await page.locator('#scenario').selectOption(scenario);
     if (scenario !== 'enterprise') {
       for (const control of ['retrieval', 'tools', 'routing']) {
@@ -128,6 +175,7 @@ for (const scenario of ['enterprise', 'direct', 'local']) {
 }
 
 test('optional company connections change the diagram and ordered journey', async ({ page }) => {
+  await openSetup(page);
   for (const [control, participant] of [['retrieval', 'retrieval'], ['tools', 'tool'], ['routing', 'router']]) {
     await page.locator(`#${control}`).check();
     await expect(node(page, participant)).toBeVisible();
@@ -142,14 +190,20 @@ test('optional company connections change the diagram and ordered journey', asyn
 });
 
 test('possible saved copies are separate from the main route', async ({ page }) => {
+  await page.locator('#next').click();
+  const stepBefore = await page.locator('#step-count').textContent();
   const journeyBefore = await page.locator('#journey-list').textContent();
+  await openSetup(page);
   await page.locator('#show-copies').check();
+  await expect(page.locator('#copy-legend')).toBeVisible();
+  await expect(page.locator('#step-count')).toHaveText(stepBefore || '');
   for (const participant of ['history', 'logs', 'training']) {
     await expect(node(page, participant)).toBeVisible();
   }
   await node(page, 'training').click();
   await expect(page.locator('#detail-body')).toContainText(/train|policy|setting|contract/i);
   await page.locator('#show-copies').uncheck();
+  await expect(page.locator('#copy-legend')).toBeHidden();
   for (const participant of ['history', 'logs', 'training']) {
     await expect(node(page, participant)).toBeHidden();
   }
@@ -157,6 +211,7 @@ test('possible saved copies are separate from the main route', async ({ page }) 
 });
 
 test('possible copy paths include each recipient and disappear with removed connections', async ({ page }) => {
+  await openSetup(page);
   await page.locator('#fallback').check();
   await page.locator('#show-copies').check();
   const copyPath = (from: string) => page.locator(`#paths path[data-copy-from="${from}"][data-copy-to="logs"]`);
@@ -178,6 +233,7 @@ test('possible copy paths include each recipient and disappear with removed conn
 });
 
 test('the JSON download preserves selected routes, fictional inputs and the return path', async ({ page }) => {
+  await openSetup(page);
   await page.locator('#routing').uncheck();
   await page.locator('#tools').uncheck();
   const withoutTools = await downloadJourney(page);
@@ -211,6 +267,7 @@ test('the JSON download preserves selected routes, fictional inputs and the retu
 });
 
 test('fallback adds a second recipient and remains unavailable without routing', async ({ page }) => {
+  await openSetup(page);
   await page.locator('#fallback').check();
   await expect(node(page, 'backup')).toBeVisible();
   const data = await downloadJourney(page);
@@ -228,6 +285,7 @@ test('fallback adds a second recipient and remains unavailable without routing',
 });
 
 test('the factory example finishes the summary before a separate, unattributed later observation', async ({ page }) => {
+  await openSetup(page);
   const trackingLink = 'https://canary.example/factory-test-001';
   const trackingRequests: string[] = [];
   await page.route('https://canary.example/**', route => {
@@ -291,12 +349,12 @@ test('the factory example finishes the summary before a separate, unattributed l
 
 test('switching sample stories stops playback and restores each story’s usable defaults', async ({ page }) => {
   await pauseJourneyClock(page);
+  await openSetup(page);
   await page.locator('#fallback').check();
   await page.locator('#show-copies').check();
   await page.locator('#play').click();
   await page.clock.runFor(4000);
   await page.locator('#example').selectOption('factory');
-  await expect(page.locator('#autoplay')).not.toBeChecked();
   await expect(page.locator('#play')).toHaveAccessibleName('Play');
   await expect(page.locator('#progress')).toHaveJSProperty('value', 0);
   await expect(page.locator('#fallback')).not.toBeChecked();
@@ -308,7 +366,7 @@ test('switching sample stories stops playback and restores each story’s usable
   await page.locator('#scenario').selectOption('local');
   await page.locator('#play').click();
   await page.locator('#example').selectOption('travel');
-  await expect(page.locator('#autoplay')).not.toBeChecked();
+  await expect(page.locator('#play')).toHaveAccessibleName('Play');
   await expect(page.locator('#scenario')).toHaveValue('enterprise');
   for (const id of ['retrieval', 'tools', 'routing']) await expect(page.locator(`#${id}`)).toBeChecked();
   for (const id of ['unknown', 'canary', 'security']) await expect(node(page, id)).toBeHidden();
@@ -326,6 +384,7 @@ test('a factory deep link supports optional maintenance tools without reading th
     return route.abort();
   });
   await page.goto('/prompt-journey.html?example=factory');
+  await openSetup(page);
   await expect(page.locator('#example')).toHaveValue('factory');
   await expect(page.locator('#scenario')).toHaveValue('enterprise');
   await expect(page.locator('#tools')).not.toBeChecked();
@@ -345,6 +404,7 @@ test('a factory deep link supports optional maintenance tools without reading th
 });
 
 test('the local factory route does not imply that its model sent the later tracking request', async ({ page }) => {
+  await openSetup(page);
   await page.locator('#example').selectOption('factory');
   await page.locator('#scenario').selectOption('local');
   const data = await downloadJourney(page);
@@ -376,34 +436,31 @@ test('automatic playback advances and stops when the reader pauses or restarts',
   await expect(page.locator('#back')).toBeDisabled();
 });
 
-test('media icons have accessible names and keyboard playback keeps its label in sync', async ({ page }) => {
+test('playback and milestone buttons have visible keyboard-accessible labels', async ({ page }) => {
   await pauseJourneyClock(page);
   for (const [id, name] of transportControls) {
     const control = page.locator(`#${id}`);
     await expect(control).toHaveAccessibleName(name);
-    await expect(control).toHaveAttribute('title', name);
-    await expect(control.locator('svg')).toHaveAttribute('aria-hidden', 'true');
+    await expect(control).toHaveText(name);
   }
-  await expect(page.getByRole('checkbox', { name: 'Autoplay steps', exact: true })).not.toBeChecked();
   await page.getByRole('button', { name: 'Play', exact: true }).focus();
   await page.keyboard.press('Space');
   await expect(page.locator('#play')).toHaveAccessibleName('Pause');
-  await expect(page.locator('#play')).toHaveAttribute('title', 'Pause');
-  await expect(page.locator('#autoplay')).toBeChecked();
+  await expect(page.locator('#play')).toBeFocused();
   await page.keyboard.press('Space');
   await expect(page.locator('#play')).toHaveAccessibleName('Play');
-  await expect(page.locator('#autoplay')).not.toBeChecked();
 });
 
 test('autoplay respects the selected delay and restarts that interval when it changes', async ({ page }) => {
   await pauseJourneyClock(page);
+  await openSetup(page);
   const progress = page.locator('#progress');
-  const autoplay = page.getByRole('checkbox', { name: 'Autoplay steps', exact: true });
+  const play = page.locator('#play');
   await expect(page.locator('#step-delay')).toHaveValue('4000');
   expect(await page.locator('#step-delay option').evaluateAll(options => options.map(option => (option as HTMLOptionElement).value)))
     .toEqual(['2000', '4000', '6000', '10000']);
-  await autoplay.check();
-  await expect(page.locator('#play')).toHaveAccessibleName('Pause');
+  await play.click();
+  await expect(play).toHaveAccessibleName('Pause');
   await page.clock.runFor(3999);
   await expect(progress).toHaveJSProperty('value', 0);
   await page.clock.runFor(1);
@@ -412,62 +469,60 @@ test('autoplay respects the selected delay and restarts that interval when it ch
   await page.clock.runFor(1000);
   await page.locator('#step-delay').selectOption('6000');
   await expect(progress).toHaveJSProperty('value', 1);
-  await expect(autoplay).toBeChecked();
+  await expect(play).toHaveAccessibleName('Pause');
   await page.clock.runFor(5999);
   await expect(progress).toHaveJSProperty('value', 1);
   await page.clock.runFor(1);
   await expect(progress).toHaveJSProperty('value', 2);
 
-  await autoplay.uncheck();
-  await expect(page.locator('#play')).toHaveAccessibleName('Play');
+  await play.click();
+  await expect(play).toHaveAccessibleName('Play');
   await page.clock.runFor(60_000);
   await expect(progress).toHaveJSProperty('value', 2);
 });
 
-test('manual navigation and setup changes stop autoplay and clear its checkbox', async ({ page }) => {
+test('manual navigation and setup changes stop autoplay', async ({ page }) => {
   await pauseJourneyClock(page);
-  const autoplay = page.locator('#autoplay');
-  for (const id of ['next', 'back', 'jump-return', 'restart']) {
-    await autoplay.check();
+  await openSetup(page);
+  const play = page.locator('#play');
+  for (const id of ['next', 'back', 'jump-model', 'restart', 'jump-return']) {
+    await play.click();
     await page.locator(`#${id}`).click();
-    await expect(autoplay).not.toBeChecked();
-    await expect(page.locator('#play')).toHaveAccessibleName('Play');
+    await expect(play).toHaveAccessibleName('Play');
     const pausedStep = await page.locator('#step-count').innerText();
     await page.clock.runFor(20_000);
     await expect(page.locator('#step-count')).toHaveText(pausedStep);
   }
-  await autoplay.check();
+  await page.locator('#restart').click();
+  await play.click();
   await page.locator('#scenario').selectOption('local');
-  await expect(autoplay).not.toBeChecked();
-  await expect(page.locator('#play')).toHaveAccessibleName('Play');
+  await expect(play).toHaveAccessibleName('Play');
   await page.clock.runFor(20_000);
   await expect(page.locator('#progress')).toHaveJSProperty('value', 0);
 });
 
 test('autoplay stops at the final answer and can resume only after leaving the end', async ({ page }) => {
   await pauseJourneyClock(page);
+  await openSetup(page);
   await page.locator('#scenario').selectOption('local');
   await page.locator('#step-delay').selectOption('2000');
-  const autoplay = page.locator('#autoplay');
+  const play = page.locator('#play');
   const lastStep = (await page.locator('#journey-list li').count()) - 1;
-  await autoplay.check();
+  await play.click();
   await page.clock.runFor(lastStep * 2000);
   await expect(page.locator('#step-title')).toHaveText('The answer reaches you');
   await expect(page.locator('#progress')).toHaveJSProperty('value', lastStep);
-  await expect(autoplay).not.toBeChecked();
-  await expect(autoplay).toBeDisabled();
-  await expect(page.locator('#play')).toHaveAccessibleName('Play');
-  await expect(page.locator('#play')).toBeDisabled();
+  await expect(play).toHaveAccessibleName('Play');
+  await expect(play).toBeDisabled();
   await page.clock.runFor(20_000);
   await expect(page.locator('#progress')).toHaveJSProperty('value', lastStep);
 
   await page.locator('#back').click();
-  await expect(autoplay).toBeEnabled();
-  await expect(page.locator('#play')).toBeEnabled();
-  await expect(autoplay).not.toBeChecked();
+  await expect(play).toBeEnabled();
+  await expect(play).toHaveAccessibleName('Play');
   await page.locator('#restart').click();
   await expect(page.locator('#progress')).toHaveJSProperty('value', 0);
-  await expect(autoplay).toBeEnabled();
+  await expect(play).toBeEnabled();
 });
 
 for (const setup of [
@@ -482,6 +537,7 @@ for (const setup of [
     await page.setViewportSize({ width: setup.width, height: setup.height });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await pauseJourneyClock(page);
+    await openSetup(page);
     await page.locator('#scenario').selectOption(setup.scenario);
     if (setup.scenario === 'enterprise') await page.locator('#fallback').check();
     await page.locator('#step-delay').selectOption('2000');
@@ -520,7 +576,7 @@ for (const setup of [
     }
     expect((await followState(page)).current).toBe('user');
     await expect(page.locator('#step-title')).toHaveText('The answer reaches you');
-    await expect(page.locator('#autoplay')).not.toBeChecked();
+    await expect(page.locator('#play')).toHaveAccessibleName('Play');
   });
 }
 
@@ -529,6 +585,7 @@ for (const viewport of [{ width: 375, height: 844 }, { width: 844, height: 390 }
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await pauseJourneyClock(page);
+    await openSetup(page);
     await page.locator('#example').selectOption('factory');
     await page.locator('#step-delay').selectOption('2000');
     const lastStep = (await page.locator('#journey-list li').count()) - 1;
@@ -551,7 +608,8 @@ for (const viewport of [{ width: 375, height: 844 }, { width: 844, height: 390 }
 
     expect(visited.slice(-5)).toEqual(['user', 'unknown', 'canary', 'security', 'security']);
     await expect(page.locator('#step-title')).toHaveText('Investigate before assigning blame');
-    await expect(page.locator('#autoplay')).not.toBeChecked();
+    await expect(page.locator('#step-title')).toBeInViewport({ ratio: 1 });
+    await expect(page.locator('#play')).toHaveAccessibleName('Play');
     await expect(page.locator('#play')).toBeDisabled();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
@@ -561,6 +619,7 @@ test('reduced-motion following is immediate and a paused map stays where the rea
   await page.setViewportSize({ width: 375, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await pauseJourneyClock(page);
+  await openSetup(page);
   await page.locator('#step-delay').selectOption('2000');
   const map = page.locator('.map-scroll');
   await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, left: element.scrollWidth, behavior: 'instant' }));
@@ -594,6 +653,7 @@ test('normal-motion playback smoothly reaches a distant node and pause freezes t
   const journey = page.locator('#journey-list');
   await journey.locator('xpath=ancestor::details[1]').locator('summary').click();
   await journey.getByRole('button').filter({ hasText: 'The app calls an allowed tool' }).click();
+  await openSetup(page);
   await page.locator('#step-delay').selectOption('2000');
   await page.locator('#play').focus();
   await page.keyboard.press('Space');
@@ -613,7 +673,7 @@ test('normal-motion playback smoothly reaches a distant node and pause freezes t
   expect(Math.abs(afterPan.playbackTop - start.playbackTop)).toBeLessThanOrEqual(1);
   await expect(page.locator('#play')).toBeFocused();
   await page.keyboard.press('Space');
-  await expect(page.locator('#autoplay')).not.toBeChecked();
+  await expect(page.locator('#play')).toHaveAccessibleName('Play');
   const paused = await followState(page);
   const pausedStep = await page.locator('#step-count').innerText();
   await page.waitForTimeout(2200);
@@ -628,6 +688,7 @@ for (const viewport of [{ width: 844, height: 390 }, { width: 320, height: 480 }
   test(`returning from the inspector keeps the selected node clear of controls at ${viewport.width}x${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openSetup(page);
     await page.locator('#show-copies').check();
     const stepBeforeInspection = await page.locator('#step-count').innerText();
     await node(page, 'training').focus();
@@ -681,6 +742,7 @@ for (const width of [320, 375]) {
       expect(bounds!.width, `${id} needs a 44px-wide touch target`).toBeGreaterThanOrEqual(44);
       expect(bounds!.height, `${id} needs a 44px-high touch target`).toBeGreaterThanOrEqual(44);
     }
+    await openSetup(page);
     await page.locator('#fallback').check();
     await page.locator('#show-copies').check();
     await expect(node(page, 'training').locator('b')).toHaveText('Later evaluation / training');
