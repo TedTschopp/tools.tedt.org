@@ -42,11 +42,15 @@ input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); 
 .hint { margin:var(--s-2) 0 0; color:var(--fg-2); font-size:var(--fs-small); }
 .sample { padding-top:var(--s-4); margin-top:var(--s-4); border-top:var(--border-soft); }
 .sample p { margin:var(--s-2) 0 0; }
-.workspace { display:grid; grid-template-columns:minmax(0,1fr) 21rem; gap:var(--s-5); align-items:start; }
-.guide { grid-column:2; grid-row:1; position:sticky; top:var(--s-4); }
-.map-panel { grid-column:1; grid-row:1; }
+.workspace { --viewer-top:6rem; --viewer-height:calc(100dvh - 7rem); --controls-height:13rem; scroll-margin-top:var(--viewer-top); display:grid; grid-template-columns:minmax(0,1fr) 21rem; gap:var(--s-5); align-items:start; }
+.guide { grid-column:2; grid-row:1; position:sticky; top:var(--viewer-top); height:var(--viewer-height); display:flex; flex-direction:column; min-height:0; }
+.playback-panel { flex:none; }
+.guide-content { min-height:0; overflow:auto; overscroll-behavior:contain; margin-top:var(--s-4); scrollbar-gutter:stable; }
+.map-panel { grid-column:1; grid-row:1; height:var(--viewer-height); display:flex; flex-direction:column; }
+.map-panel > :not(.map-scroll) { flex:none; }
 .guide .tt-panel + .tt-panel { margin-top:var(--s-4); }
 .phase { color:var(--link); text-transform:uppercase; letter-spacing:var(--tracking-wide); font-size:var(--fs-small); font-weight:var(--fw-semibold); }
+.phase[data-phase=later] { color:var(--warn); }
 .phase[data-phase=return],.phase[data-phase=tool] { color:var(--copper); }
 #step-title { margin:var(--s-2) 0 var(--s-3); font-size:var(--fs-h2); }
 #step-text { margin:0 0 var(--s-4); }
@@ -61,7 +65,7 @@ progress { width:100%; accent-color:var(--accent); height:var(--s-2); margin:var
 .playback-options select { width:auto; margin:0; font-size:var(--fs-small); }
 .payload { margin-top:var(--s-5); padding:var(--s-4); background:var(--bg-inset); border:var(--border-soft); border-radius:var(--r-2); }
 .payload h3 { margin:0 0 var(--s-2); font-size:var(--fs-small); }
-.payload p { font-size:var(--fs-small); margin:0; overflow-wrap:anywhere; }
+.payload p { white-space:pre-line; font-size:var(--fs-small); margin:0; overflow-wrap:anywhere; }
 #detail-title { scroll-margin-top:6rem; margin:0; font-size:var(--fs-h3); }
 #detail-body p { margin-bottom:var(--s-3); font-size:var(--fs-small); }
 #detail-body p:last-child { margin-bottom:0; }
@@ -69,8 +73,9 @@ progress { width:100%; accent-color:var(--accent); height:var(--s-2); margin:var
 .legend { font-size:var(--fs-small); padding:var(--s-3) var(--s-5); color:var(--fg-2); border-bottom:var(--border-soft); }
 .key { display:inline-block; width:1.7rem; vertical-align:middle; border-top:.18rem solid var(--link); margin-right:var(--s-1); }
 .key.return { border-color:var(--copper); }
+.key.later { border-color:var(--warn); }
 .key.copy { border-color:var(--warn); border-top-style:dashed; }
-.map-scroll { overflow:auto; }
+.map-scroll { overflow:auto; flex:1; min-height:0; overscroll-behavior:contain; overflow-anchor:none; scrollbar-gutter:stable; }
 .map { position:relative; width:100%; min-width:48rem; aspect-ratio:760/1230; isolation:isolate; }
 .map svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
 .map .zone { position:absolute; left:1.8%; width:96.4%; border:var(--bw-1) solid var(--rule-soft); border-radius:var(--r-3); background:var(--bg-inset); z-index:-1; }
@@ -83,9 +88,11 @@ progress { width:100%; accent-color:var(--accent); height:var(--s-2); margin:var
 .node[aria-pressed=true] { border-color:var(--link); box-shadow:0 0 0 var(--bw-1) var(--link); }
 .node.current { background:var(--accent-tint); border-color:var(--link); }
 .node.current[data-phase=return],.node.current[data-phase=tool] { border-color:var(--copper); background:var(--copper-tint); }
+.node.current[data-phase=later] { border-color:var(--warn); background:var(--warn-bg); }
 .node.copy-node { border-style:dashed; border-color:var(--warn-border); }
 .edge { fill:none; stroke:var(--link); stroke-width:1.5; opacity:.7; }
 .edge.return,.edge.tool { stroke:var(--copper); }
+.edge.later { stroke:var(--warn); }
 .edge.copy { stroke:var(--warn); stroke-dasharray:5 5; opacity:.7; }
 .edge.active { opacity:1; stroke-width:4; }
 .edge-label { fill:var(--fg-2); font:13px var(--font-body); }
@@ -104,9 +111,14 @@ details li { margin-bottom:var(--s-3); }
 .tt-about p { color:inherit; max-width:none; font-size:var(--fs-small); margin:0; }
 .tt-about p+p { margin-top:var(--s-2); }
 #download-status { font-size:var(--fs-small); margin:var(--s-2) 0 0; }
-@media (max-width:70rem) { .workspace { grid-template-columns:1fr; } .guide { grid-column:1; grid-row:1; position:static; display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4); } .guide .tt-panel+.tt-panel { margin:0; } .map-panel { grid-column:1; grid-row:2; } .map { max-width:52rem; margin:auto; } }
+@media (max-width:70rem) { .workspace { grid-template-columns:1fr; } .guide { display:contents; } .playback-panel { grid-column:1; grid-row:1; position:sticky; top:var(--viewer-top); z-index:var(--z-raised); } .guide-content { grid-column:1; grid-row:3; overflow:visible; margin:0; scrollbar-gutter:auto; } .map-panel { grid-column:1; grid-row:2; height:max(8rem, calc(var(--viewer-height) - var(--controls-height) - var(--s-5))); } .map { max-width:52rem; margin:auto; } }
 @media (max-width:40rem) { .tt-shell { padding:var(--s-5) var(--s-3) var(--s-8); } .controls,.guide { grid-template-columns:1fr; } .tt-panel-body { padding:var(--s-4); } .scroll-hint { display:block; } .tt-title { font-size:2.3rem; } .tt-topbar { margin-bottom:var(--s-5); } }
-@media print { .tt-topbar,.controls,.transport,.playback-options,.tt-actions,.tt-catalog-return,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; } .map { min-width:0; } .map-panel { break-before:page; } .tt-shell { padding:0; } }
+@media (max-width:70rem) and (max-height:40rem) {
+ .playback-panel .tt-panel-body { display:flex; flex-wrap:wrap; align-items:center; gap:var(--s-2) var(--s-4); padding:var(--s-3); }
+ .playback-options,.journey-position { margin:0; }
+ .journey-position progress,.map-panel .tt-panel-head,.map-panel .legend,.map-panel .scroll-hint { display:none; }
+}
+@media print { .tt-topbar,.controls,.transport,.playback-options,.tt-actions,.tt-catalog-return,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; height:auto; } .guide-content,.map-scroll { overflow:visible; } .playback-panel { position:static; } .map-panel { height:auto; display:block; } .map { min-width:0; } .map-panel { break-before:page; } .tt-shell { padding:0; } }
 </style>
 </head>
 <body>
@@ -119,32 +131,36 @@ details li { margin-bottom:var(--s-3); }
 <div class="tt-panel-head"><h2 id="setup-title">Choose a journey</h2><span class="hint">Start with the sample. No private information needed.</span></div>
 <div class="tt-panel-body">
 <div class="controls">
-<div><label for="scenario">Example setup</label><select id="scenario"><option value="enterprise">Company assistant with documents and tools</option><option value="direct">Direct hosted AI service</option><option value="local">Model running on your device</option></select><p id="scenario-note" class="hint"></p></div>
+<div><label for="example">Sample story</label><select id="example"><option value="travel">Travel policy and a tool call</option><option value="factory">Factory report: an unexpected visit</option></select><p id="example-note" class="hint"></p><label for="scenario" style="margin-top:var(--s-4)">Example setup</label><select id="scenario"><option value="enterprise">Company assistant with documents and tools</option><option value="direct">Direct hosted AI service</option><option value="local">Model running on your device</option></select><p id="scenario-note" class="hint"></p></div>
 <fieldset><legend>Company assistant options</legend><div class="options"><label><input type="checkbox" id="retrieval" checked> Search documents</label><label><input type="checkbox" id="tools" checked> Call a tool</label><label><input type="checkbox" id="routing" checked> Use a router</label><label><input type="checkbox" id="fallback"> Try a second host</label></div><p class="hint">Changing the setup restarts the journey.</p></fieldset>
 </div>
 <div class="options"><label><input type="checkbox" id="show-copies"> Show possible stored copies and later use</label></div>
-<div class="sample"><strong>Fictional request</strong><p>“Can I book a $180 hotel in Madrid? Check the sample forecast too.”</p><p class="hint">Sample policy: hotels up to $200 per night. Sample forecast: rain. All messages and answers are written examples.</p></div>
+<div class="sample"><strong>Fictional request</strong><p id="sample-request"></p><p id="sample-context" class="hint" style="white-space:pre-line"></p><p id="sample-note" class="hint"></p></div>
 </div>
 </section>
 <div class="workspace extras">
 <aside class="guide" aria-label="Journey guide">
-<section class="tt-panel" aria-labelledby="step-title"><div class="tt-panel-body">
+<section class="tt-panel playback-panel" aria-label="Playback controls"><div class="tt-panel-body">
 <div class="transport" role="group" aria-label="Journey playback"><button id="restart" type="button" aria-label="Restart" title="Restart"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button><button id="back" type="button" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg></button><button id="play" type="button" class="primary" aria-label="Play" title="Play"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g id="play-icon"><polygon points="6 3 20 12 6 21 6 3"/></g><g id="pause-icon" hidden><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></g></svg></button><button id="next" type="button" aria-label="Next step" title="Next step"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button><button id="jump-return" type="button" aria-label="Jump to answer" title="Jump to answer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button></div>
 <div class="playback-options"><label><input type="checkbox" id="autoplay"> Autoplay steps</label><label for="step-delay">Every <select id="step-delay" aria-label="Time per step"><option value="2000">2 seconds</option><option value="4000" selected>4 seconds</option><option value="6000">6 seconds</option><option value="10000">10 seconds</option></select></label></div>
 <div class="journey-position"><span id="step-count"></span><progress id="progress" aria-label="Journey progress" max="1" value="0"></progress></div>
+</div></section>
+<div class="guide-content" tabindex="0" role="region" aria-label="Step explanation and selected stop">
+<section class="tt-panel" aria-labelledby="step-title"><div class="tt-panel-body">
 <div id="phase" class="phase">Request</div><h2 id="step-title">Your request starts here</h2><p id="step-text"></p>
 <div class="payload"><h3>What travels at this step</h3><p id="payload"></p></div>
 <p id="announce" class="hint" role="status" aria-live="polite" aria-atomic="true"></p>
 </div></section>
 <section class="tt-panel" aria-labelledby="detail-title"><div class="tt-panel-head"><h2 id="detail-title" tabindex="-1">Your device</h2></div><div id="detail-body" class="tt-panel-body"></div><div class="tt-panel-body" id="map-return" hidden><button type="button" id="back-map">Return to selected stop</button></div></section>
+</div>
 </aside>
 <section class="tt-panel map-panel" aria-labelledby="map-title"><div class="tt-panel-head"><h2 id="map-title">The round trip</h2><span class="hint">Select any stop to inspect it.</span></div>
-<div class="legend"><span><i class="key"></i>Request ↓</span><span><i class="key return"></i>Answer / tool loop ↑</span><span><i class="key copy"></i>Possible copy</span><button type="button" id="center-map">Center route</button></div>
-<p class="hint scroll-hint" style="padding:0 var(--s-4)">Scroll the map sideways to see every branch. The guide above and step list below work without the map.</p>
+<div class="legend"><span><i class="key"></i>Request ↓</span><span><i class="key return"></i>Answer / tool loop ↑</span><span><i class="key copy"></i>Possible copy</span><span id="later-legend" hidden><i class="key later"></i>Later observation</span><button type="button" id="center-map">Center route</button></div>
+<p class="hint scroll-hint" style="padding:0 var(--s-4)">The map follows playback. You can also scroll it in any direction.</p>
 <div class="map-scroll" tabindex="0" role="region" aria-label="Scrollable request and response diagram"><div class="map" id="diagram"><svg id="paths" viewBox="0 0 760 1230" aria-hidden="true"></svg><div id="nodes"></div></div></div>
-<p class="map-note" id="map-note"></p>
 </section>
 </div>
+<p class="map-note" id="map-note"></p>
 <section class="extras" aria-label="More ways to explore">
 <div class="tt-actions"><button id="download" type="button">Download this journey</button></div><p id="download-status" role="status"></p>
 <details><summary>Read or jump through every step</summary><ol id="journey-list"></ol></details>
@@ -170,10 +186,17 @@ details li { margin-bottom:var(--s-3); }
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
-const sample = 'Can I book a $180 hotel in Madrid? Check the sample forecast too.';
-const policy = 'Fictional policy: hotels up to $200 per night.';
-const forecast = 'Fictional forecast for Madrid: rain.';
+const trackingLink='https://canary.example/factory-test-001';
+const factoryReport='FACTORY MAINTENANCE REPORT — SAMPLE DATA\nEquipment: Pump P-17\nIssue: A worn seal caused a small leak.\nRepair: The maintenance team replaced the seal.\nDowntime: Production stopped for 40 minutes.\nResult: The pump passed its restart check. No injuries were reported.\nNext action: Inspect the seal at the next scheduled maintenance visit.\nTest tracking link: '+trackingLink;
+const samples={
+ travel:{prompt:'Can I book a $180 hotel in Madrid? Check the sample forecast too.',document:'',reference:'Fictional policy: hotels up to $200 per night.',result:'Fictional forecast for Madrid: rain.',note:'Sample policy: hotels up to $200 per night. Sample forecast: rain.'},
+ factory:{prompt:'Summarize this fictional maintenance report in two sentences. Include the repair, downtime and next action. Do not open the tracking link.',document:factoryReport,reference:'Fictional maintenance guidance: include the repair, downtime and next action.',result:'Fictional maintenance record: Pump P-17 passed its restart check.',note:'The AI returns a summary. Three simulated days later, something requests the unique link.'}
+};
+let sample='',policy='',forecast='';
 const definitions = {
+ unknown:{title:'Unidentified requester',sub:'Person or program unknown',x:115,y:1265,owner:'Unknown in this fictional event.',does:'Requests the unique tracking address three days later. No observed path connects this requester to a particular host, router or store.',sees:'Enough information to request the unique URL. The event alone does not show access to the whole report.',keeps:'Unknown. A link, a queued task or a larger copy could each require investigation.',ask:'Who made the request, and how did they obtain this link?'},
+ canary:{title:'Tracking page',sub:'Records the later visit',x:380,y:1265,owner:'The company’s security test team in this example.',does:'Records a request for the unique address and creates an alert. This diagram never opens that address or creates a real tracking event.',sees:'The requested URL, time and connection details. Connection details alone may not identify the responsible organization.',keeps:'A limited event record for investigation, with access and retention controls.',ask:'Was this link placed anywhere else, such as a support ticket?'},
+ security:{title:'Security investigation',sub:'Signal, not a verdict',x:645,y:1265,owner:'Security, IT, supplier management and the business owner.',does:'Connects the alert to the test report, checks other copies and asks the supplier for records. Decides what use can safely continue while facts are missing.',sees:'The test request, event record, settings and applicable supplier promises.',keeps:'Only evidence needed for the investigation. A visit does not prove whole-report storage, training or a broken privacy promise.',ask:'What happened, who did it, what remained, was it allowed, and what should change while the answer is incomplete?'},
  user:{title:'Your device',sub:'Message in. Answer out.',x:380,y:85,owner:'You or your organization.',does:'The browser or app collects your message and displays the answer. Attachments can travel too.',sees:'Your message, files and the displayed answer.',keeps:'Local history, downloads or browser state may remain. Device extensions and backups need their own review.',ask:'What runs on this device, and what does it save?'},
  network:{title:'Network connection',sub:'Encrypted transport',x:380,y:185,owner:'Network and internet operators.',does:'Carries traffic between your device and the service. This box represents the network, not a separate AI company.',sees:'With normal encrypted transport, network carriers see connection metadata but not the readable prompt. Inspection proxies are a separate case.',keeps:'Connection records can remain without message content.',ask:'Where does encryption end? Is a company proxy inspecting traffic?'},
  edge:{title:'Service entrance',sub:'Traffic and security checks',x:380,y:285,owner:'The app operator or its infrastructure supplier.',does:'Accepts the connection and forwards allowed traffic. It may end transport encryption and check for attacks or excessive traffic.',sees:'Message content if this component terminates encryption; otherwise encrypted traffic only.',keeps:'Access logs or security samples may be retained, depending on configuration.',ask:'Does this service inspect or record request bodies?'},
@@ -193,7 +216,7 @@ const definitions = {
  training:{title:'Later evaluation / training',sub:'A separate policy choice',x:645,y:1100,owner:'Whoever has permission and access for that later use.',does:'Stored material might later be used to evaluate a system or improve a model if the applicable policy permits it. This is not part of the inference round trip.',sees:'Only material made available for the later process. The diagram makes no claim that this occurs.',keeps:'Separate datasets and records can have their own lifecycle.',ask:'Are training and evaluation allowed? Does that promise cover every supplier?'}
 };
 let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[];
-function readConfig() { return {scenario:$('scenario').value,retrieval:$('retrieval').checked,tools:$('tools').checked,routing:$('routing').checked,fallback:$('fallback').checked,showCopies:$('show-copies').checked}; }
+function readConfig() { return {example:$('example').value,scenario:$('scenario').value,retrieval:$('retrieval').checked,tools:$('tools').checked,routing:$('routing').checked,fallback:$('fallback').checked,showCopies:$('show-copies').checked}; }
 function nodeTitle(id) { if(config.scenario==='local'&&id==='app') return 'Local AI application'; return definitions[id].title; }
 function updatePlayback() {
  const playing=timer!==null;
@@ -203,20 +226,49 @@ function updatePlayback() {
  $('pause-icon').toggleAttribute('hidden',!playing);
  $('autoplay').checked=playing;
 }
-function stop() { if(timer!==null) clearInterval(timer); timer=null; updatePlayback(); }
+function stop({cancelPan=true}={}) {
+ if(timer!==null) clearInterval(timer); timer=null; updatePlayback();
+ if(cancelPan){const frame=document.querySelector('.map-scroll');frame.scrollTo({left:frame.scrollLeft,top:frame.scrollTop,behavior:'instant'});}
+}
+function syncViewerLayout() {
+ const workspace=document.querySelector('.workspace');
+ const header=document.querySelector('tedt-global-header');
+ const top=(header?header.getBoundingClientRect().height:0)+16;
+ workspace.style.setProperty('--viewer-top',top+'px');
+ workspace.style.setProperty('--viewer-height',Math.max(320,window.innerHeight-top-16)+'px');
+ workspace.style.setProperty('--controls-height',document.querySelector('.playback-panel').getBoundingClientRect().height+'px');
+}
+function panToNode(id,{smooth=false}={}) {
+ const frame=document.querySelector('.map-scroll'),node=document.querySelector(`[data-node="${id}"]`);
+ if(!node)return;
+ const box=frame.getBoundingClientRect(),target=node.getBoundingClientRect();
+ const left=frame.scrollLeft+target.left-box.left+target.width/2-frame.clientWidth/2;
+ const top=frame.scrollTop+target.top-box.top+target.height/2-frame.clientHeight/2;
+ const behavior=smooth&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches?'smooth':'instant';
+ frame.scrollTo({left,top,behavior});
+}
+function alignPlaybackView() {
+ syncViewerLayout();
+ const workspace=document.querySelector('.workspace');
+ const top=parseFloat(workspace.style.getPropertyValue('--viewer-top'));
+ window.scrollBy({top:workspace.getBoundingClientRect().top-top,behavior:'instant'});
+ panToNode(steps[position].to);
+}
 function play() {
  stop();
  if(position>=steps.length-1)return;
+ alignPlaybackView();
  timer=setInterval(()=>{position=Math.min(steps.length-1,position+1);renderStep();},Number($('step-delay').value));
  updatePlayback();
 }
 function createJourney() {
- const enterprise=config.scenario==='enterprise', local=config.scenario==='local';
+ const enterprise=config.scenario==='enterprise', local=config.scenario==='local', factory=config.example==='factory';
  const retrieval=enterprise&&config.retrieval, tool=enterprise&&config.tools, routing=enterprise&&config.routing, fallback=routing&&config.fallback;
  visible=new Set(['user','app','tokenize','model','compute']);
  if(!local) ['network','edge','identity','host','checks'].forEach(n=>visible.add(n));
  if(retrieval) visible.add('retrieval'); if(tool) visible.add('tool'); if(routing) visible.add('router'); if(fallback) visible.add('backup');
  if(config.showCopies) ['history','logs','training'].forEach(n=>visible.add(n));
+ if(factory)['unknown','canary','security'].forEach(n=>visible.add(n));
  steps=[];
  const add=(from,to,phase,title,text,payload)=>steps.push({from,to,phase,title,text,payload});
  add(null,'user','request','Your request starts here','You type a message. The words below are fictional sample data, ready to explore.',sample);
@@ -226,13 +278,13 @@ function createJourney() {
  add('network','edge','request','Through the service entrance','The service accepts the connection. A component that ends encryption can inspect the content it processes.',sample);
  add('edge','app','request','The app receives your request','The app starts a workflow. It can add instructions and conversation history before any model call.',sample+' + app instructions.');
  add('app','identity','request','Check who is asking','The app checks your identity and permissions. The full prompt does not need to go to the sign-in service.','Sample user ID and access claims; no weather question.');
- add('identity','app','request','Permissions return','The app learns which documents and operations this user may access.','Sample permission: read the travel policy; read weather.');
+ add('identity','app','request','Permissions return','The app learns which documents and operations this user may access.',factory?'Sample permission: read maintenance guidance and repair records.':'Sample permission: read the travel policy; read weather.');
  }
  if(retrieval) {
- add('app','retrieval','request','Search the company documents','The app sends a focused search and access filter. The document index exists before this request.','Search: hotel allowance. Filter: documents this sample user may read.');
+ add('app','retrieval','request','Search the company documents','The app sends a focused search and access filter. The document index exists before this request.',factory?'Search: maintenance report guidance. Filter: documents this sample user may read.':'Search: hotel allowance. Filter: documents this sample user may read.');
  add('retrieval','app','request','Add the useful passage','A selected passage comes back. The model’s input now contains company information as well as your question.',policy);
  }
- const context=sample+'\nApp instruction: use only the supplied evidence.'+(retrieval?'\n'+policy:'\nNo travel policy supplied.');
+ const context=sample+'\nApp instruction: use only the supplied evidence.'+(retrieval?'\n'+policy:factory?'':'\nNo travel policy supplied.');
  let activeHost=fallback?'backup':'host';
  const forward=(payload,again=false)=>{
   if(local) { add('app','tokenize','request','Prepare the local input','The app passes the assembled context to the model software on this device.',payload); }
@@ -260,12 +312,12 @@ function createJourney() {
  };
  forward(context);
  if(tool) {
-  backToApp('Requested operation: read_sample_weather(city="Madrid").','tool');
-  add('app','tool','tool','The app calls an allowed tool','The app checks the requested action and sends only the selected arguments. This walkthrough performs no real weather lookup.','Tool arguments: city = Madrid. No hotel policy or full conversation.');
+  backToApp(factory?'Requested operation: read_sample_repair_record(asset="Pump P-17").':'Requested operation: read_sample_weather(city="Madrid").','tool');
+  add('app','tool','tool','The app calls an allowed tool','The app checks the requested action and sends only the selected arguments. This walkthrough performs no real lookup.',factory?'Tool arguments: asset = Pump P-17. No report or tracking link.':'Tool arguments: city = Madrid. No hotel policy or full conversation.');
   add('tool','app','tool','The tool returns its result','The result comes back to the app. Tool data can be wrong or contain hostile instructions; treat it as information to check.',forecast);
   forward(context+'\nTool result: '+forecast,true);
  }
- const answer=(retrieval?'The sample policy allows a $180 hotel because the limit is $200.':'No travel policy was supplied, so the hotel allowance cannot be confirmed.')+' '+(tool?'The fictional forecast says rain.':'No forecast was looked up.');
+ const answer=factory?'The team replaced Pump P-17’s worn seal after a small leak, with production stopped for 40 minutes and no injuries reported. The pump passed its restart check; inspect the seal again at the next scheduled maintenance visit.':(retrieval?'The sample policy allows a $180 hotel because the limit is $200.':'No travel policy was supplied, so the hotel allowance cannot be confirmed.')+' '+(tool?'The fictional forecast says rain.':'No forecast was looked up.');
  backToApp(answer,'return');
  if(!local) {
  add('app','checks','return','Check the draft answer','The app can review content, permissions and citations. A check is not a guarantee that an answer is correct.',answer);
@@ -273,7 +325,14 @@ function createJourney() {
  add('app','edge','return','Back through the service entrance','The answer heads toward your device. Streaming can deliver it in pieces.',answer);
  add('edge','network','return','Across the encrypted connection again','The response travels back over the network. Stored copies do not disappear when this connection closes.','Encrypted answer plus connection metadata.');
  }
- add(local?'app':'network','user','return','The answer reaches you','The round trip is complete. Turn on possible stored copies to explore what might remain after this point.',answer);
+ add(local?'app':'network','user','return','The answer reaches you',factory?'The summary is complete. The example now jumps forward three days.':'The round trip is complete. Turn on possible stored copies to explore what might remain after this point.',answer);
+ if(factory){
+  const event='SIMULATED EVENT\nTime: three days after the AI request\nLinked test: factory report 001\nAddress requested: '+trackingLink+'\nResponsible person or organization: unknown\nHow the link was obtained: unknown';
+  add(null,'unknown','later','Three days later: an unexpected request',local?'This local route shows no external sharing. The later event is a separate hypothetical signal with an unexplained path; it does not show that the local model sent the link.':'A person or program has enough information to request the unique address. The diagram does not identify who obtained it or how.',event);
+  add('unknown','canary','later','Something requests the tracking link','In the fictional test, this link was placed only in the report. The tracking page records a visit. No real URL is opened by this diagram.',event);
+  add('canary','security','later','The security team receives an alert','The signal starts an investigation. It does not prove that the whole report was kept, that a person read it, that it trained a model, or that a privacy promise was broken.',event);
+  add(null,'security','later','Investigate before assigning blame',local?'Preserve the request and event record. Check device and application records, other copies of the link and the rules in force. Decide what work can continue while the path remains unexplained.':'Preserve the request and event record. Check other copies of the link and the rules in force. Ask which records explain the visit. Decide what information can keep flowing while the answer is incomplete.','Questions: What happened? Who did it? What was kept? Was it allowed? What should change while the facts are missing?');
+ }
 }
 function pathFor(from,to,phase) {
  const a=definitions[from],b=definitions[to],shift=phase==='return'||phase==='tool'?34:-34;
@@ -283,21 +342,26 @@ function pathFor(from,to,phase) {
  return `M ${x1} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${x2} ${b.y}`;
 }
 function drawMap() {
+ const diagramHeight=config.example==='factory'?1400:1230;
+ $('diagram').style.aspectRatio='760 / '+diagramHeight;
+ $('paths').setAttribute('viewBox','0 0 760 '+diagramHeight);
+ $('later-legend').hidden=config.example!=='factory';
  $('nodes').replaceChildren();
  for(const id of visible) {
-  const n=definitions[id],el=document.createElement('button'); el.type='button'; el.className='node'+(n.x!==380?' side':'')+(['history','logs','training'].includes(id)?' copy-node':''); el.dataset.node=id; el.style.left=(n.x/760*100)+'%'; el.style.top=(n.y/1230*100)+'%';
+  const n=definitions[id],el=document.createElement('button'); el.type='button'; el.className='node'+(n.x!==380?' side':'')+(['history','logs','training'].includes(id)?' copy-node':''); el.dataset.node=id; el.style.left=(n.x/760*100)+'%'; el.style.top=(n.y/diagramHeight*100)+'%'; el.style.height=(83.64/diagramHeight*100)+'%';
   const title=document.createElement('b'); title.textContent=nodeTitle(id); const sub=document.createElement('span'); sub.textContent=n.sub; el.append(title,sub); el.setAttribute('aria-pressed',String(selected===id)); el.setAttribute('aria-controls','detail-body'); el.addEventListener('click',()=>{stop();selectNode(id);$('map-return').hidden=false;$('detail-title').focus({preventScroll:true});$('detail-title').scrollIntoView({block:'nearest'});}); $('nodes').append(el);
  }
  const local=config.scenario==='local';
  const zones=local?[{y:20,h:1005,text:'Your device · no remote model call in this example'}]:[{y:20,h:110,text:'Your device'},{y:210,h:335,text:'Application and connected services · may have different operators'},{y:540,h:485,text:'Model serving · first or second host, as selected'}];
+ if(config.example==='factory')zones.push({y:1190,h:140,text:'Later observation · three simulated days later · source unknown'});
  document.querySelectorAll('.map .zone').forEach(e=>e.remove());
- for(const z of zones) {const el=document.createElement('div');el.className='zone';el.style.top=z.y/1230*100+'%';el.style.height=z.h/1230*100+'%';const label=document.createElement('span');label.className='zone-label';label.textContent=z.text;el.append(label);$('diagram').prepend(el);}
+ for(const z of zones) {const el=document.createElement('div');el.className='zone';el.style.top=z.y/diagramHeight*100+'%';el.style.height=z.h/diagramHeight*100+'%';const label=document.createElement('span');label.className='zone-label';label.textContent=z.text;el.append(label);$('diagram').prepend(el);}
  const svg=$('paths'),ns='http://www.w3.org/2000/svg';
  svg.innerHTML='<defs><marker id="arrow-request" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--link)"/></marker><marker id="arrow-return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker><marker id="arrow-copy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker></defs>';
  const edgeKeys=new Set();activeEdges=[];
  for(const s of steps) {
   if(!s.from) continue; const key=s.from+'-'+s.to+'-'+s.phase; if(edgeKeys.has(key))continue;edgeKeys.add(key);
-  const el=document.createElementNS(ns,'path');el.setAttribute('d',pathFor(s.from,s.to,s.phase));el.setAttribute('class','edge '+s.phase);el.setAttribute('marker-end','url(#arrow-'+(s.phase==='request'?'request':'return')+')');el.dataset.key=key;svg.append(el);activeEdges.push(el);
+  const el=document.createElementNS(ns,'path');el.setAttribute('d',pathFor(s.from,s.to,s.phase));el.setAttribute('class','edge '+s.phase);el.setAttribute('marker-end','url(#arrow-'+(s.phase==='request'?'request':s.phase==='later'?'copy':'return')+')');el.dataset.key=key;svg.append(el);activeEdges.push(el);
  }
  if(config.showCopies) {
   const copyPaths=[['app','history','M 277 410 L 15 410 L 15 1100 L 24 1100'],['logs','training','M 483 1100 L 554 1100']];
@@ -319,31 +383,45 @@ function selectNode(id) {
  selected=id;$('map-return').hidden=true;document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
  const d=definitions[id];$('detail-title').textContent=nodeTitle(id);$('detail-body').replaceChildren();
  const parts=[['What happens',d.does],['Who operates it',config.scenario==='local'&&['app','tokenize','model','compute'].includes(id)?'Software running on your device.':d.owner],['What it can see',d.sees],['What may remain',d.keeps],['Question to ask',d.ask]];
+ if(config.example==='factory'&&id==='tool'){parts[0][1]='Runs an operation authorized by the app. If enabled here, it reads a fictional maintenance record; it never fetches the tracking link.';parts[2][1]='Selected arguments: Pump P-17 in this example. The report and tracking link are not included.';}
+ if(config.example==='factory'&&config.scenario==='local'&&id==='security'){parts[0][1]='Connects the alert to the test report. Checks device and application records, other copies of the link and the rules that applied. The route from the device to the unidentified requester remains unexplained.';parts[2][1]='The local test request, event record, device settings and applicable company rules.';}
  if(config.scenario==='local'&&id==='app') parts[0][1]='Builds a request for a model on your device. This preset sends no model input to a remote service.';
  for(const [label,text] of parts){const p=document.createElement('p'),b=document.createElement('strong');b.textContent=label;p.append(b,document.createTextNode(text));$('detail-body').append(p);}
 }
 function renderStep(announce=true) {
- const s=steps[position];$('phase').textContent=s.phase==='request'?'Request ↓':s.phase==='tool'?'Tool loop ↔':'Answer ↑';$('phase').dataset.phase=s.phase;$('step-title').textContent=s.title;$('step-text').textContent=s.text;$('payload').textContent=s.payload;$('step-count').textContent=`Step ${position+1} of ${steps.length}`;$('progress').max=steps.length-1;$('progress').value=position;$('back').disabled=position===0;$('next').disabled=position===steps.length-1;
+ const s=steps[position];$('phase').textContent=s.phase==='request'?'Request ↓':s.phase==='tool'?'Tool loop ↔':s.phase==='later'?'Later observation · day 3':'Answer ↑';$('phase').dataset.phase=s.phase;$('step-title').textContent=s.title;$('step-text').textContent=s.text;$('payload').textContent=s.payload;$('step-count').textContent=`Step ${position+1} of ${steps.length}`;$('progress').max=steps.length-1;$('progress').value=position;$('back').disabled=position===0;$('next').disabled=position===steps.length-1;
  $('play').disabled=position===steps.length-1;$('autoplay').disabled=position===steps.length-1;
  for(const el of document.querySelectorAll('[data-node]')) {el.classList.toggle('current',el.dataset.node===s.to);el.dataset.phase=s.phase;}
  for(const el of activeEdges)el.classList.toggle('active',el.dataset.key===s.from+'-'+s.to+'-'+s.phase);
  document.querySelectorAll('#journey-list button').forEach((el,i)=>{if(i===position)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
- const frame=document.querySelector('.map-scroll');frame.scrollLeft=definitions[s.to].x/760*$('diagram').clientWidth-frame.clientWidth/2;
+ panToNode(s.to,{smooth:timer!==null});
  selectNode(s.to);if(announce)$('announce').textContent=`Step ${position+1}. ${s.title}.`;
- if(position===steps.length-1)stop();
+ if(position===steps.length-1)stop({cancelPan:false});
 }
 function renderList() {$('journey-list').replaceChildren();steps.forEach((s,i)=>{const li=document.createElement('li'),btn=document.createElement('button'),small=document.createElement('small');btn.type='button';btn.append(document.createTextNode(s.title));small.textContent=s.text;btn.append(small);btn.addEventListener('click',()=>{stop();position=i;renderStep();$('step-title').scrollIntoView({block:'nearest'});});li.append(btn);$('journey-list').append(li);});}
 function reset() {
- stop();config=readConfig();const enterprise=config.scenario==='enterprise';
+ stop();config=readConfig();
+ const data=samples[config.example];sample=data.prompt+(data.document?'\n'+data.document:'');policy=data.reference;forecast=data.result;
+ $('sample-request').textContent=data.prompt;
+ $('sample-context').textContent=data.document||data.note;
+ $('example-note').textContent=config.example==='factory'?data.note:'A company policy search and a fictional weather tool add context.';
+ $('sample-note').textContent=config.example==='factory'?'Fictional example. The link is display-only and is never opened. No AI service is called, and no real tracking event occurs.':'All messages, tool results and answers are written examples.';
+ const enterprise=config.scenario==='enterprise';
  for(const id of ['retrieval','tools','routing'])$(id).disabled=!enterprise;
  $('fallback').disabled=!enterprise||!config.routing;
  $('scenario-note').textContent=config.scenario==='enterprise'?'A company app adds optional searches, routing and tool calls.':config.scenario==='direct'?'The app sends its request to one model host. No document search or tool call is included.':'The model is already downloaded. App and model computation stay on the device in this example.';
  position=0;selected='user';createJourney();drawMap();renderList();renderStep(false);$('announce').textContent='Ready. Select Next step or any box.';
 }
+function chooseExample(){
+ if($('example').value==='factory'){$('scenario').value='enterprise';$('retrieval').checked=false;$('tools').checked=false;$('routing').checked=true;$('fallback').checked=false;$('show-copies').checked=false;}
+ else{$('scenario').value='enterprise';$('retrieval').checked=true;$('tools').checked=true;$('routing').checked=true;$('fallback').checked=false;$('show-copies').checked=false;}
+ reset();
+}
+$('example').addEventListener('change',chooseExample);
 for(const id of ['scenario','retrieval','tools','routing','fallback'])$(id).addEventListener('change',reset);
 $('show-copies').addEventListener('change',()=>{stop();config.showCopies=$('show-copies').checked;const prior=position;createJourney();position=prior;drawMap();renderStep(false);});
-$('center-map').addEventListener('click',()=>{const frame=document.querySelector('.map-scroll');frame.scrollLeft=(frame.scrollWidth-frame.clientWidth)/2;});
-$('back-map').addEventListener('click',()=>{const n=document.querySelector(`[data-node="${selected}"]`);if(n){n.focus();n.scrollIntoView({block:'center',inline:'center'});}});
+$('center-map').addEventListener('click',()=>{stop();const frame=document.querySelector('.map-scroll');frame.scrollLeft=(frame.scrollWidth-frame.clientWidth)/2;});
+$('back-map').addEventListener('click',()=>{const n=document.querySelector(`[data-node="${selected}"]`);if(n){n.focus({preventScroll:true});alignPlaybackView();panToNode(selected);}});
 $('next').addEventListener('click',()=>{stop();position=Math.min(steps.length-1,position+1);renderStep();});
 $('back').addEventListener('click',()=>{stop();position=Math.max(0,position-1);renderStep();});
 $('restart').addEventListener('click',()=>{stop();position=0;renderStep();});
@@ -353,10 +431,15 @@ $('autoplay').addEventListener('change',()=>{if($('autoplay').checked)play();els
 $('step-delay').addEventListener('change',()=>{if(timer!==null)play();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
 $('download').addEventListener('click',()=>{
- const data={tool:'Prompt Journey',version:1,kind:'illustrative-simulation',scenario:config.scenario,options:{...config},sample:{request:sample,policy,forecast},journey:steps,limits:'Written example, not live tracing, measured timing or real inference. Storage policies are unspecified.'};
+ const data={tool:'Prompt Journey',version:1,kind:'illustrative-simulation',scenario:config.scenario,options:{...config},sample:config.example==='factory'?{request:sample,report:factoryReport,trackingLink,referenceMaterial:policy,toolResult:forecast}:{request:sample,policy,forecast},journey:steps,limits:'Written example, not live tracing, measured timing or real inference. Storage policies are unspecified.'};
  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='prompt-journey.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('download-status').textContent='Downloaded the example setup and ordered journey as JSON.';
 });
-reset();
+syncViewerLayout();
+const viewerResize=new ResizeObserver(()=>{syncViewerLayout();if(timer!==null)panToNode(steps[position].to);});
+viewerResize.observe(document.querySelector('.playback-panel'));
+const siteHeader=document.querySelector('tedt-global-header');if(siteHeader)viewerResize.observe(siteHeader);
+window.addEventListener('resize',()=>{syncViewerLayout();if(timer!==null)panToNode(steps[position].to);});
+if(new URLSearchParams(window.location.search).get('example')==='factory'){$('example').value='factory';chooseExample();}else reset();
 })();
 </script>
 </body>
