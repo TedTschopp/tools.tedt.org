@@ -950,6 +950,60 @@ test('overview, grouped route, and inside flows keep the walkthrough at the same
 });
 
 for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 }]) {
+  test(`traffic arrows have room to trace each direction at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.evaluate(() => document.fonts.ready);
+
+    const geometry = await page.locator('#paths').evaluate(element => {
+      const path = (key: string, segment?: string) => element.querySelector<SVGPathElement>(segment
+        ? `[data-key="${key}"] [data-segment="${segment}"]`
+        : `path[data-key="${key}"]`)!;
+      const gaps = (coordinates: number[]) => {
+        const sorted = coordinates.sort((a, b) => a - b);
+        return sorted.slice(1).map((point, index) => point - sorted[index]);
+      };
+      const sideWires = [
+        'app-retrieval-request', 'retrieval-app-request', 'app-tool-tool', 'tool-app-tool',
+      ].map(key => ({
+        wire: path(key),
+        fromApp: key.startsWith('app-'),
+      }));
+      const boundaryBend = (wire: SVGPathElement, end: boolean) => {
+        const length = wire.getTotalLength();
+        const boundary = wire.getPointAtLength(end ? length : 0);
+        // Follow the wire inward until it turns away from the group port.
+        for (let distance = 1; distance < length; distance++) {
+          const point = wire.getPointAtLength(end ? length - distance : distance);
+          if (Math.abs(boundary.x - point.x) > 1) return point.y;
+        }
+        return boundary.y;
+      };
+      const request = path('router-host-request', 'exit');
+      const answer = path('host-router-return', 'entry');
+      const application = document.querySelector('[data-node="app"]')!.getBoundingClientRect();
+      const svgBounds = element.getBoundingClientRect();
+      const sidePorts = sideWires.map(({ wire, fromApp }) =>
+        wire.getPointAtLength(fromApp ? 0 : wire.getTotalLength()));
+      return {
+        railGaps: gaps(sideWires.map(({ wire }) => wire.getBBox().x)),
+        portGaps: gaps(sidePorts.map(point => point.y)),
+        portsMeetApp: sidePorts.every(point => Math.abs(svgBounds.left + point.x - application.left) < 1),
+        adjacentGap: Math.abs(path('app-identity-request').getBBox().x - path('identity-app-request').getBBox().x),
+        bendGap: Math.abs(boundaryBend(request, true) - boundaryBend(answer, false)),
+        bridgeGap: Math.abs(path('router-host-request', 'between').getBBox().x -
+          path('host-router-return', 'between').getBBox().x),
+      };
+    });
+
+    const railGap = viewport.width === 320 ? 10 : 18;
+    expect(Math.min(...geometry.railGaps)).toBeGreaterThanOrEqual(railGap - 0.1);
+    expect(Math.min(...geometry.portGaps)).toBeGreaterThanOrEqual(15.9);
+    expect(geometry.portsMeetApp).toBe(true);
+    expect(geometry.adjacentGap).toBeGreaterThanOrEqual(15.9);
+    expect(geometry.bendGap).toBeGreaterThanOrEqual(29.9);
+    expect(geometry.bridgeGap).toBeGreaterThanOrEqual(47.9);
+  });
+
   test(`connections stop at group boundaries and stay below the headings at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await openSetup(page);
@@ -981,9 +1035,16 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
         const y = (path: SVGPathElement, end = false) =>
           svgBounds.top + path.getPointAtLength(end ? path.getTotalLength() : 0).y;
         const near = (actual: number, expected: number) => Math.abs(actual - expected) < 1;
+        const meetsStop = (path: SVGPathElement, end: boolean, stop: Element) => {
+          const point = path.getPointAtLength(end ? path.getTotalLength() : 0);
+          const x = svgBounds.left + point.x;
+          const y = svgBounds.top + point.y;
+          const box = stop.getBoundingClientRect();
+          return (x >= box.left - 1 && x <= box.right + 1 && (near(y, box.top) || near(y, box.bottom))) ||
+            (y >= box.top - 1 && y <= box.bottom + 1 && (near(x, box.left) || near(x, box.right)));
+        };
 
-        if (!near(y(exit), down ? from.getBoundingClientRect().bottom : from.getBoundingClientRect().top) ||
-            !near(y(entry, true), down ? to.getBoundingClientRect().top : to.getBoundingClientRect().bottom)) {
+        if (!meetsStop(exit, false, from) || !meetsStop(entry, true, to)) {
           errors.push(`${key} does not join both stop borders`);
         }
         if (!near(y(exit, true), down ? fromFrame.bottom : fromHeaderBottom) ||

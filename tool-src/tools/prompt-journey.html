@@ -113,7 +113,7 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .copy-records { position:absolute; z-index:2; display:grid; gap:var(--s-2); }
 .copy-card { min-width:0; min-height:2.75rem; padding:var(--s-2); color:var(--fg); background:var(--bg-card); border:var(--bw-1) dashed var(--warn); text-align:start; font-size:var(--fs-small); line-height:1.25; overflow-wrap:anywhere; }
 .copy-card:hover,.copy-card[aria-pressed=true] { border-color:var(--link); background:var(--bg-hover); }
-.copy-card[data-stop=training] { margin-block-start:var(--s-3); }
+.copy-card[data-stop=training] { margin-block-start:var(--s-4); }
 .copy-card small { display:block; margin-top:var(--s-1); color:var(--fg-2); font-size:.8rem; }
 .overview-stop[data-group=copies] { border:var(--bw-1) dashed var(--warn); }
 .route-group[data-group=alert] h3,.overview-stop[data-group=alert] { color:var(--warn); }
@@ -125,6 +125,9 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .map[data-copies] .node { padding-inline-start:var(--s-2); }
 .node[data-has-inside]::after,.inside-key { display:inline-block; width:.58rem; height:.58rem; border:var(--bw-1) solid var(--link); border-radius:var(--bw-1); box-shadow:.18rem -.18rem 0 -.09rem var(--bg-card), .18rem -.18rem 0 0 var(--link); }
 .node[data-has-inside]::after { content:""; position:absolute; top:var(--s-3); right:var(--s-3); }
+.map[data-tight] .copy-card { padding-inline:var(--s-1); }
+.map[data-tight] .node[data-has-inside] { padding-block-start:var(--s-5); padding-inline-end:var(--s-2); }
+.map[data-tight] .node[data-has-inside]::after { top:var(--s-2); right:var(--s-2); }
 .inside-key { margin-inline-end:var(--s-2); }
 .node:hover { border-color:var(--link); background:var(--bg-hover); }
 .node[aria-pressed=true] { border-color:var(--link); box-shadow:0 0 0 var(--bw-1) var(--link); }
@@ -334,8 +337,8 @@ details li { margin-bottom:var(--s-3); }
     <div class="map" id="diagram">
       <svg id="paths" aria-hidden="true">
         <defs>
-          <marker id="arrow-request" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--link)"/></marker>
-          <marker id="arrow-return" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker>
+          <marker id="arrow-request" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--link)"/></marker>
+          <marker id="arrow-return" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker>
           <marker id="arrow-warn" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker>
         </defs>
         <g id="copy-edges"></g>
@@ -746,48 +749,54 @@ function revealRouteStop(id,button=inspectedButton?.dataset.stop===id?inspectedB
  panToNode(id,{button:node});
 }
 const svgNamespace='http://www.w3.org/2000/svg';
+const trafficPortOffsets=[-24,-8,8,24];
+function trafficTrack(phase,direction) {
+ const answer=phase==='return'||phase==='tool';
+ return (answer?2:0)+(direction<0?1:0);
+}
 function pathInGroup(a,b,phase,compact) {
- const returning=phase==='return'||phase==='tool';
  const verticalDirection=Math.sign(b.y-a.y);
- const {left,right}=a.group;
+ const horizontalDirection=Math.sign(b.x-a.x);
+ const track=trafficTrack(phase,verticalDirection||horizontalDirection);
+ const offset=phase==='later'?0:trafficPortOffsets[track];
  if(compact&&Math.abs(a.index-b.index)!==1) {
-  // With copies visible, keep both traffic bypasses to the left of the stop.
-  const side=returning&&!config.showCopies?1:-1;
-  const rail=side===1?right-6:left+(returning?14:6);
-  const startY=a.y+verticalDirection*8, endY=b.y-verticalDirection*8;
-  return `M ${a.x+side*a.width/2} ${startY} H ${rail} V ${endY} H ${b.x+side*b.width/2}`;
+  const rail=a.group.trafficRails[track];
+  const startY=a.y+offset, endY=b.y+offset;
+  return pathFromPoints([[a.x-a.width/2,startY],[rail,startY],[rail,endY],[b.x-b.width/2,endY]]);
  }
  if(compact||a.x===b.x) {
-  const shift=(returning?1:-1)*Math.min(24,(right-left)/22);
-  const x=(compact?a.group.trafficCenter:a.x)+shift;
+  const x=a.x+offset;
   return `M ${x} ${a.y+verticalDirection*a.height/2} V ${b.y-verticalDirection*b.height/2}`;
  }
- const direction=Math.sign(b.x-a.x);
+ const direction=horizontalDirection;
  const x1=a.x+direction*a.width/2, x2=b.x-direction*b.width/2, mid=(x1+x2)/2;
- return `M ${x1} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${x2} ${b.y}`;
+ const y1=a.y+offset,y2=b.y+offset;
+ return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`;
 }
 function pathFromPoints(points) {
  return points.map(([x,y],index)=>`${index?'L':'M'} ${x} ${y}`).join(' ');
 }
-function stopToGroupPort(stop,x,facing,compact,preferRight) {
+function stopToGroupPort(stop,x,facing,compact,track) {
  const group=stop.group;
  const edgeY=facing===1?group.bottom:group.headerBottom;
  const row=facing===1?group.lastRow:group.firstRow;
  const stopY=stop.y+facing*stop.height/2;
  const stopX=Math.max(stop.x-stop.width/2+10,Math.min(x,stop.x+stop.width/2-10));
- const approachY=edgeY-facing*6;
+ const approachY=edgeY-facing*(8+track*10);
  const lead=[[stopX,stopY]];
  const end=[[x,approachY],[x,edgeY]];
  if(stop.y===row) {
   if(stopX===x)return [[stopX,stopY],[x,edgeY]];
   return [...lead,[stopX,approachY],...end];
  }
+ if(compact) {
+  const y=stop.y+trafficPortOffsets[track], rail=group.trafficRails[track];
+  return [[stop.x-stop.width/2,y],[rail,y],[rail,approachY],...end];
+ }
  const center=group.trafficCenter;
- const right=stop.x===center?preferRight:stop.x>center;
- const laneX=config.showCopies?group.left+(preferRight?14:6):compact
-  ?(right?group.right-6:group.left+6)
-  :group.left+(group.right-group.left)*(right ? .68 : .32);
- const turnY=stopY+facing*8;
+ const right=stop.x===center?track>=2:stop.x>center;
+ const laneX=group.left+(group.right-group.left)*(right ? .68 : .32)+(track%2)*8;
+ const turnY=stopY+facing*(8+track*4);
  return [...lead,[stopX,turnY],[laneX,turnY],[laneX,approachY],...end];
 }
 function drawEdgePath(d,phase) {
@@ -801,13 +810,13 @@ function drawBoundaryLink(from,to,phase,compact,arrow) {
  link.setAttribute('class','edge-link '+phase);
  const outward=to.group.top>from.group.top;
  const direction=outward?1:-1;
- const returning=phase==='return'||phase==='tool';
+ const track=trafficTrack(phase,direction);
  const center=from.group.trafficCenter;
- const x=center+(returning?14:outward?-14:-30);
+ const x=center+trafficPortOffsets[track];
  const exitY=outward?from.group.bottom:from.group.top;
  const enterY=outward?to.group.top:to.group.bottom;
- const exit=stopToGroupPort(from,x,direction,compact,returning);
- const entry=stopToGroupPort(to,x,-direction,compact,returning).reverse();
+ const exit=stopToGroupPort(from,x,direction,compact,track);
+ const entry=stopToGroupPort(to,x,-direction,compact,track).reverse();
  const bridge=[[x,exitY],[x,(exitY+enterY)/2],[x,enterY]];
 
  const exitPath=drawEdgePath(pathFromPoints(exit),phase);
@@ -861,24 +870,31 @@ function layoutDiagram() {
  diagramWidth=diagram.clientWidth;
  const copies=config.showCopies;
  const compact=copies||diagramWidth<540;
- const groupInset=copies?8:16, groupGap=28, groupPadding=12;
+ const tight=diagramWidth<400;
+ const groupInset=copies?(tight?4:8):16;
+ const groupGap=40, rowGap=36;
  const contentWidth=diagramWidth-2*groupInset;
- const copyWidth=copies?Math.min(contentWidth*.4,210):0;
- const copyGap=copies?Math.min(36,Math.max(18,contentWidth*.065)):0;
- const trafficRight=copies?contentWidth-copyWidth-copyGap-8:contentWidth;
- const trafficGutter=copies?18:0;
+ const copyWidth=copies?Math.min(contentWidth*.36,210):0;
+ const copyGap=copies?Math.min(44,Math.max(18,contentWidth*.065)):0;
+ const trafficRight=copies?contentWidth-copyWidth-copyGap-6:compact?contentWidth-12:contentWidth;
+ const trackSpacing=Math.max(10,Math.min(20,contentWidth*.035));
+ const railStart=tight?6:10;
+ // Leave a wider gap between the request and answer tracks.
+ const trafficRails=[0,1,2.5,3.5].map(slot=>groupInset+railStart+slot*trackSpacing);
+ const trafficGutter=compact?trafficRails.at(-1)-groupInset+(tight?8:12):0;
  const trafficCenter=(trafficGutter+trafficRight)/2;
  diagram.dataset.layout=compact?'stacked':'columns';
  diagram.toggleAttribute('data-copies',copies);
+ diagram.toggleAttribute('data-tight',tight&&copies);
  for(const button of buttons) {
   const {x}=definitions[button.dataset.node];
   const columnWidth=x===380 ? .271 : .24;
-  const width=copies?trafficRight-trafficGutter:contentWidth*(compact ? .79 : columnWidth);
+  const width=compact?trafficRight-trafficGutter:contentWidth*columnWidth;
   button.style.width=width+'px';
   button.style.height='auto';
  }
  const cardHeight=Math.ceil(Math.max(...buttons.map(button=>button.getBoundingClientRect().height)));
- const rowScale=Math.max(1,(cardHeight+16)/100);
+ const rowScale=Math.max(1,(cardHeight+28)/100);
  const positions=new Map();
  let groupTop=groupInset;
  for(const section of sections) {
@@ -886,23 +902,24 @@ function layoutDiagram() {
   section.style.width=contentWidth+'px';
   section.style.top=groupTop+'px';
   const stops=[...section.querySelectorAll('.node')];
+  const stopIds=new Set(stops.map(button=>button.dataset.node));
+  const needsTurnSpace=stops.length>1&&steps.some(({from,to})=>from&&(stopIds.has(from)!==stopIds.has(to)));
+  const groupPadding=needsTurnSpace?48:16;
   const rowStart=Math.min(...stops.map(button=>definitions[button.dataset.node].y));
   const headingHeight=section.querySelector('h3').getBoundingClientRect().height;
   const firstRow=headingHeight+groupPadding+cardHeight/2;
   const group={
    left:groupInset,right:groupInset+contentWidth,top:groupTop,headerBottom:groupTop+headingHeight,
-   trafficCenter:groupInset+trafficCenter,
+   trafficCenter:groupInset+trafficCenter,trafficRails,
    firstRow:groupTop+firstRow,lastRow:0,bottom:0,
   };
   let lastCenter=firstRow;
   let rowTop=headingHeight+groupPadding;
   for(const [index,button] of stops.entries()) {
    const id=button.dataset.node, definition=definitions[id];
-   const fraction=definition.x/760;
-   const center=compact ? .5+(fraction-.5)*.19 : fraction;
-   const x=copies?trafficCenter:contentWidth*center;
+   const x=compact?trafficCenter:contentWidth*definition.x/760;
    let height=cardHeight;
-   let y=firstRow+(compact?index*(cardHeight+groupGap):(definition.y-rowStart)*rowScale);
+   let y=firstRow+(compact?index*(cardHeight+rowGap):(definition.y-rowStart)*rowScale);
    if(copies) {
     let rowBottom=rowTop+height;
     y=rowTop+height/2;
@@ -922,7 +939,7 @@ function layoutDiagram() {
      rowBottom=Math.max(y+height/2,copyTop+records.getBoundingClientRect().height);
     }
     if(index===0)group.firstRow=groupTop+y;
-    rowTop=rowBottom+groupGap;
+    rowTop=rowBottom+rowGap;
    }
    button.style.left=x+'px';
    button.style.top=y+'px';
@@ -932,7 +949,7 @@ function layoutDiagram() {
    });
    lastCenter=Math.max(lastCenter,y);
   }
-  const groupHeight=Math.ceil((copies?rowTop-groupGap:lastCenter+cardHeight/2)+groupPadding);
+  const groupHeight=Math.ceil((copies?rowTop-rowGap:lastCenter+cardHeight/2)+groupPadding);
   group.lastRow=groupTop+lastCenter;
   group.bottom=groupTop+groupHeight;
   section.style.height=groupHeight+'px';
