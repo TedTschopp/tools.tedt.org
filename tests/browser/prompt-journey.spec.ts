@@ -197,31 +197,55 @@ test('optional company connections change the diagram and ordered journey', asyn
   }
 });
 
-test('showing possible saved copies leaves the walkthrough steps unchanged', async ({ page }) => {
-  await page.locator('#next').click();
-  const stepBefore = await page.locator('#step-count').textContent();
-  const journeyBefore = await page.locator('#journey-list').textContent();
-  await openSetup(page);
-  await page.locator('#show-copies').check();
-  await expect(page.locator('#copy-legend')).toBeVisible();
-  await expect(page.locator('#step-count')).toHaveText(stepBefore || '');
-  for (const participant of ['history', 'logs', 'training']) {
-    await expect(node(page, participant)).toBeVisible();
-  }
-  await node(page, 'training').click();
-  await expect(page.locator('#detail-body')).toContainText(/train|policy|setting|contract/i);
-  await page.locator('#show-copies').uncheck();
-  await expect(page.locator('#copy-legend')).toBeHidden();
-  for (const participant of ['history', 'logs', 'training']) {
-    await expect(node(page, participant)).toBeHidden();
-  }
-  await expect(page.locator('#journey-list')).toHaveText(journeyBefore || '');
-});
+for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 }]) {
+  test(`saved copies start visible and toggle from the diagram at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    const copies = page.locator('#route-legend').getByRole('checkbox', { name: 'Possible saved copies', exact: true });
+    const paths = page.locator('#copy-edges path');
+    await expect(copies).toBeChecked();
+    const pathCount = await paths.count();
+    expect(pathCount).toBeGreaterThan(0);
+    const labelBounds = await copies.locator('..').boundingBox();
+    expect(labelBounds!.height).toBeGreaterThanOrEqual(44);
+    await page.locator('#next').click();
+    const stepBefore = await page.locator('#step-count').textContent();
+    const journeyBefore = await page.locator('#journey-list').textContent();
+    if (viewport.width === 320) {
+      await page.getByRole('link', { name: 'Diagram', exact: true }).click();
+      await expect(copies).toBeInViewport({ ratio: 1 });
+      expect(await copies.evaluate(input => {
+        const bounds = input.getBoundingClientRect();
+        return document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2) === input;
+      })).toBe(true);
+    }
+
+    await copies.press('Space');
+    await expect(copies).not.toBeChecked();
+    await expect(copies).toBeFocused();
+    await expect(paths).toHaveCount(0);
+    for (const participant of ['history', 'logs', 'training']) {
+      await expect(node(page, participant)).toBeHidden();
+    }
+    await expect(node(page, 'network')).toHaveAttribute('aria-current', 'step');
+    await expect(page.locator('#step-count')).toHaveText(stepBefore!);
+
+    await copies.check();
+    await expect(paths).toHaveCount(pathCount);
+    for (const participant of ['history', 'logs', 'training']) {
+      await expect(node(page, participant)).toBeVisible();
+    }
+    await expect(node(page, 'network')).toHaveAttribute('aria-current', 'step');
+    await expect(page.locator('#step-count')).toHaveText(stepBefore!);
+    await expect(page.locator('#journey-list')).toHaveText(journeyBefore!);
+    await expect(page.locator('#setup')).toHaveJSProperty('open', false);
+    await node(page, 'training').click();
+    await expect(page.locator('#detail-body')).toContainText(/train|policy|setting|contract/i);
+  });
+}
 
 test('possible copy paths include each recipient and disappear with removed connections', async ({ page }) => {
   await openSetup(page);
   await page.locator('#fallback').check();
-  await page.locator('#show-copies').check();
   const copyPath = (from: string) => page.locator(`#copy-edges [data-copy-from="${from}"][data-copy-to="logs"]`);
   for (const recipient of ['edge', 'app', 'identity', 'retrieval', 'router', 'host', 'backup', 'tool', 'checks']) {
     await expect(node(page, recipient)).toBeVisible();
@@ -244,7 +268,6 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
     await page.setViewportSize(viewport);
     await openSetup(page);
     await page.locator('#fallback').check();
-    await page.getByLabel('Show possible saved copies').check();
     await page.getByRole('button', { name: 'View journey', exact: true }).click();
     await page.evaluate(() => document.fonts.ready);
 
@@ -423,9 +446,9 @@ test('the factory example finishes the summary before a separate, unattributed l
 
 test('switching sample stories stops playback and restores each story’s usable defaults', async ({ page }) => {
   await pauseJourneyClock(page);
+  await page.locator('#show-copies').uncheck();
   await openSetup(page);
   await page.locator('#fallback').check();
-  await page.locator('#show-copies').check();
   await page.locator('#play').click();
   await page.clock.runFor(4000);
   await page.locator('#example').selectOption('factory');
@@ -438,10 +461,12 @@ test('switching sample stories stops playback and restores each story’s usable
   await expect(page.locator('#progress')).toHaveJSProperty('value', 0);
 
   await page.locator('#scenario').selectOption('local');
+  await page.locator('#show-copies').check();
   await page.locator('#play').click();
   await page.locator('#example').selectOption('travel');
   await expect(page.locator('#play')).toHaveAccessibleName('Play');
   await expect(page.locator('#scenario')).toHaveValue('enterprise');
+  await expect(page.locator('#show-copies')).toBeChecked();
   for (const id of ['retrieval', 'tools', 'routing']) await expect(page.locator(`#${id}`)).toBeChecked();
   for (const id of ['unknown', 'canary', 'security']) await expect(node(page, id)).toBeHidden();
   await expect(page.locator('#sample-request')).toContainText('Madrid');
@@ -458,6 +483,8 @@ test('a factory deep link supports optional maintenance tools without reading th
     return route.abort();
   });
   await page.goto('/prompt-journey.html?example=factory');
+  await expect(page.locator('#show-copies')).toBeChecked();
+  await expect(page.locator('#copy-edges path')).not.toHaveCount(0);
   await openSetup(page);
   await expect(page.locator('#example')).toHaveValue('factory');
   await expect(page.locator('#scenario')).toHaveValue('enterprise');
@@ -760,8 +787,6 @@ for (const viewport of [{ width: 844, height: 390 }, { width: 320, height: 480 }
   test(`returning from the inspector keeps the selected node clear of controls at ${viewport.width}x${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await openSetup(page);
-    await page.locator('#show-copies').check();
     const stepBeforeInspection = await page.locator('#step-count').innerText();
     await node(page, 'training').focus();
     await page.keyboard.press('Enter');
@@ -816,7 +841,6 @@ for (const width of [320, 375, 600, 1035, 1440]) {
     }
     await openSetup(page);
     await page.locator('#fallback').check();
-    await page.locator('#show-copies').check();
     await expect(node(page, 'training').locator('b')).toHaveText('Later evaluation / training');
     await page.evaluate(() => document.fonts.ready);
 
@@ -862,6 +886,7 @@ for (const width of [320, 375, 600, 1035, 1440]) {
 }
 
 test('the operator note precedes the diagram in both layouts', async ({ page }) => {
+  await page.locator('#show-copies').uncheck();
   await page.locator('#jump-model').click();
   for (const width of [1200, 390]) {
     await page.setViewportSize({ width, height: 844 });
@@ -984,9 +1009,7 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
       return errors;
     });
     expect(await boundaryErrors()).toEqual([]);
-    await openSetup(page);
-    await page.locator('#show-copies').check();
-    await page.getByRole('button', { name: 'View journey', exact: true }).click();
+    await page.locator('#show-copies').uncheck();
     expect(await boundaryErrors()).toEqual([]);
     await page.getByRole('button', { name: 'Next step', exact: true }).click();
     await expect(page.locator('#paths g.active[data-key="user-network-request"] path[data-segment]')).toHaveCount(3);
@@ -999,7 +1022,6 @@ test('local and optional groups reflect the example and the alert keeps the requ
   await openSetup(page);
   await page.getByLabel('Sample story').selectOption('factory');
   await page.getByLabel('AI setup', { exact: true }).selectOption('local');
-  await page.getByLabel('Show possible saved copies').check();
   await page.getByRole('button', { name: 'View journey', exact: true }).click();
   await expect(page.locator('#diagram [data-group="device"] [data-node="app"]')).toBeVisible();
   await expect(page.locator('#diagram [data-group="device"] [data-node="model"]')).toBeVisible();
@@ -1023,9 +1045,6 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 1200, height: 900 
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await pauseJourneyClock(page);
-    await openSetup(page);
-    await page.getByLabel('Show possible saved copies').check();
-    await page.getByRole('button', { name: 'View journey', exact: true }).click();
 
     const pane = page.locator('.map-scroll');
     await expect(pane).toHaveCSS('overflow-y', 'visible');
@@ -1057,5 +1076,6 @@ test('the tool is discoverable and launches from its catalog description', async
   await page.goto('/about/prompt-journey/');
   await expect(page.locator('a.primary')).toHaveAttribute('href', 'https://tools.tedt.org/prompt-journey.html');
   await expect(page.locator('body')).toContainText('illustrative simulation');
+  await expect(page.locator('body')).toContainText('Clear Possible saved copies in the diagram legend');
   await expect(page.locator('body')).toContainText('masked visitor analytics');
 });

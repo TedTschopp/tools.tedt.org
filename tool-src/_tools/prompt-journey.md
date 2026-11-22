@@ -38,16 +38,17 @@ the alert shows and why it does not identify who shared the link or prove that
 the whole report was kept.
 
 The company example lets you add document retrieval, external tools and routing
-between model providers. Show possible saved copies to see why the route a request
-takes and the records it leaves behind are separate questions.
+between model providers. Dotted lines in the route diagram show which stops
+might keep records.
 
 ## How to use it
 
 1. Use **Next step** to follow the sample. The guide shows who receives data and what they receive.
 2. Use **Play** to advance automatically, or jump to **Model**, **Answer** or **Day 3** in the factory story.
 3. Use **Overview** to see the groups and **Route** to see their stops. Select a stop to inspect it or open **See inside** for its example flow.
-4. Open **Change setup** to switch stories, compare routes or show possible saved copies.
-5. Open **All steps** to read the route in order, or download the journey as JSON.
+4. Clear **Possible saved copies** in the diagram legend to hide the dotted branches. Select it again to show them.
+5. Open **Change setup** to switch stories or compare routes.
+6. Open **All steps** to read the route in order, or download the journey as JSON.
 
 ## Model and limits
 
