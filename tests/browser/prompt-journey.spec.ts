@@ -197,7 +197,7 @@ test('optional company connections change the diagram and ordered journey', asyn
   }
 });
 
-test('possible saved copies are separate from the main route', async ({ page }) => {
+test('showing possible saved copies leaves the walkthrough steps unchanged', async ({ page }) => {
   await page.locator('#next').click();
   const stepBefore = await page.locator('#step-count').textContent();
   const journeyBefore = await page.locator('#journey-list').textContent();
@@ -222,26 +222,25 @@ test('possible copy paths include each recipient and disappear with removed conn
   await openSetup(page);
   await page.locator('#fallback').check();
   await page.locator('#show-copies').check();
-  const copyPath = (from: string) => page.locator(`.copy-link[data-copy-from="${from}"][data-copy-to="logs"] .copy-wire`);
+  const copyPath = (from: string) => page.locator(`#copy-edges [data-copy-from="${from}"][data-copy-to="logs"]`);
   for (const recipient of ['edge', 'app', 'identity', 'retrieval', 'router', 'host', 'backup', 'tool', 'checks']) {
     await expect(node(page, recipient)).toBeVisible();
-    await expect(copyPath(recipient)).toHaveCount(1);
-    await expect(copyPath(recipient)).toBeVisible();
-    expect(await copyPath(recipient).evaluate(element => getComputedStyle(element, '::before').borderTopStyle))
-      .toBe('dashed');
+    await expect(page.locator(`.copy-records[data-copy-source="${recipient}"] [data-stop="logs"]`)).toBeVisible();
+    await expect(copyPath(recipient)).toHaveCSS('stroke-linecap', 'round');
+    await expect(copyPath(recipient)).not.toHaveCSS('stroke-dasharray', 'none');
   }
   await page.locator('#tools').uncheck();
   await expect(copyPath('tool')).toHaveCount(0);
   await page.locator('#routing').uncheck();
   await expect(copyPath('router')).toHaveCount(0);
   await expect(copyPath('backup')).toHaveCount(0);
-  await expect(copyPath('host')).toBeVisible();
+  await expect(copyPath('host')).toHaveCount(1);
   await page.locator('#show-copies').uncheck();
-  await expect(page.locator('.copy-link')).toHaveCount(0);
+  await expect(page.locator('#copy-edges path')).toHaveCount(0);
 });
 
 for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 }]) {
-  test(`saved-copy links join their own boxes without crossing other lines at ${viewport.width}px`, async ({ page }) => {
+  test(`saved-copy links join traffic stops directly without crossing other lines at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await openSetup(page);
     await page.locator('#fallback').check();
@@ -249,38 +248,61 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
     await page.getByRole('button', { name: 'View journey', exact: true }).click();
     await page.evaluate(() => document.fonts.ready);
 
-    const copyGroup = page.locator('#diagram [data-group="copies"]');
-    await expect(copyGroup.locator('.copy-link')).toHaveCount(11);
-    const geometry = await copyGroup.evaluate(group => {
+    const svg = page.locator('#paths');
+    await expect(svg.locator('#copy-edges path')).toHaveCount(11);
+    const errors = await svg.evaluate(element => {
+      const svg = element as SVGSVGElement;
       const near = (a: number, b: number) => Math.abs(a - b) < 1;
-      const frame = group.getBoundingClientRect();
-      const svg = document.querySelector<SVGSVGElement>('#paths')!;
-      const svgTop = svg.getBoundingClientRect().top;
-      const heading = group.querySelector('h3')!.getBoundingClientRect();
-      const rows = [...group.querySelectorAll('.copy-link')];
-      const wires = rows.map(row => {
-        const [source, wire, target] = [...row.children].map(el => el.getBoundingClientRect());
-        return { source, wire, target, lineY: (wire.top + wire.bottom) / 2 };
-      });
-      return {
-        direct: wires.every(({ source, wire, target, lineY }) =>
-          near(source.right, wire.left) && near(wire.right, target.left) &&
-          wire.width > 0 && lineY >= heading.bottom && lineY < frame.bottom &&
-          lineY > source.top && lineY < source.bottom && lineY > target.top && lineY < target.bottom),
-        separateRows: wires.every((item, index) => !index || wires[index - 1].wire.bottom <= item.wire.top),
-        solidLinesOutside: [...svg.querySelectorAll<SVGPathElement>('#map-edges path')].every(path => {
-          const bounds = path.getBBox();
-          return svgTop + bounds.y + bounds.height < frame.top || svgTop + bounds.y > frame.bottom;
-        }),
-      };
+      const errors: string[] = [];
+      const diagram = svg.closest('#diagram')!;
+      const origin = svg.getBoundingClientRect();
+      const traffic = [...svg.querySelectorAll<SVGGraphicsElement>('#map-edges path, #map-edges circle')];
+      const trafficRight = Math.max(...traffic.map(item => {
+        const box = item.getBBox();
+        return box.x + box.width;
+      }));
+      const wires = [...svg.querySelectorAll<SVGPathElement>('#copy-edges path')];
+      for (const [index, path] of wires.entries()) {
+        const { copyFrom, copyTo, copySource } = path.dataset;
+        const records = diagram.querySelector(`.copy-records[data-copy-source="${copySource}"]`)!;
+        const stop = diagram.querySelector(`.node[data-node="${copySource}"]`)!;
+        const group = stop.closest('.route-group')!;
+        const frame = group.getBoundingClientRect();
+        const heading = group.querySelector('h3')!.getBoundingClientRect();
+        const target = records.querySelector(`[data-stop="${copyTo}"]`)!;
+        const start = path.getPointAtLength(0), end = path.getPointAtLength(path.getTotalLength());
+        const sourceBox = (copyTo === 'training' ? records.querySelector('[data-stop="logs"]')! : stop).getBoundingClientRect();
+        const targetBox = target.getBoundingClientRect();
+        const box = path.getBBox();
+        if (records.closest('.route-group') !== group || box.y + origin.top < heading.bottom ||
+            box.y + box.height + origin.top > frame.bottom || box.x + box.width + origin.left > frame.right) {
+          errors.push(`${copySource}: ${copyFrom} → ${copyTo} leaves its traffic group`);
+        }
+        const sameX = near(start.x, end.x), sameY = near(start.y, end.y);
+        const direct = copyTo === 'training'
+          ? sameX && near(start.y + origin.top, sourceBox.bottom) && near(end.y + origin.top, targetBox.top) &&
+            near(end.x + origin.left, targetBox.left + targetBox.width / 2)
+          : sameY && near(start.x + origin.left, sourceBox.right) && near(end.x + origin.left, targetBox.left) &&
+            near(end.y + origin.top, targetBox.top + targetBox.height / 2) &&
+            start.y + origin.top > sourceBox.top && start.y + origin.top < sourceBox.bottom;
+        if (!direct) errors.push(`${copySource}: ${copyFrom} → ${copyTo} misses its stop or record`);
+        if (box.x - trafficRight < 4) errors.push(`${copySource}: copy line enters the traffic lane`);
+        for (const other of wires.slice(0, index)) {
+          const prior = other.getBBox();
+          const separate = box.x > prior.x + prior.width + 2 || prior.x > box.x + box.width + 2 ||
+            box.y > prior.y + prior.height + 2 || prior.y > box.y + box.height + 2;
+          if (!separate) errors.push(`${copySource}: copy lines overlap`);
+        }
+      }
+      return errors;
     });
-    expect(geometry).toEqual({ direct: true, separateRows: true, solidLinesOutside: true });
-    const backupLog = copyGroup.locator('[data-copy-from="backup"] .copy-target');
-    await backupLog.click();
+    expect(errors).toEqual([]);
+    const hostLog = page.locator('.copy-records[data-copy-source="host"] [data-stop="logs"]');
+    await hostLog.click();
     await expect(page.locator('#detail-title')).toHaveText('Logs & caches');
     await page.getByRole('button', { name: 'Return to stop', exact: true }).click();
-    await expect(backupLog).toBeFocused();
-    await expect(backupLog).toBeInViewport({ ratio: 1 });
+    await expect(hostLog).toBeFocused();
+    await expect(hostLog).toBeInViewport({ ratio: 1 });
   });
 }
 
@@ -798,7 +820,7 @@ for (const width of [320, 375, 600, 1035, 1440]) {
     await expect(node(page, 'training').locator('b')).toHaveText('Later evaluation / training');
     await page.evaluate(() => document.fonts.ready);
 
-    const clippedText = await page.locator('#diagram button[data-node]').evaluateAll(elements => {
+    const clippedText = await page.locator('#diagram button[data-stop]').evaluateAll(elements => {
       const clipped: { node: string | undefined; text: string | null }[] = [];
       const pane = document.querySelector('.map-scroll') as HTMLElement;
       const paneLeft = pane.getBoundingClientRect().left + pane.clientLeft;
@@ -814,7 +836,7 @@ for (const width of [320, 375, 600, 1035, 1440]) {
         if (card.left < frame.left || card.right > frame.right || card.top < heading.bottom || card.bottom > frame.bottom) {
           clipped.push({ node: (element as HTMLElement).dataset.node, text: 'Card overlaps the group heading or leaves its frame' });
         }
-        for (const label of element.querySelectorAll('b, span')) {
+        for (const label of element.querySelectorAll('b, span, small')) {
           const range = document.createRange();
           range.selectNodeContents(label);
           const fits = [...range.getClientRects()].every(rect =>
@@ -913,7 +935,7 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
     const links = page.locator('#paths g.edge-link[data-key]');
     await expect(links.filter({ has: page.locator('[data-segment="between"]') })).not.toHaveCount(0);
     await expect(page.locator('#paths [data-key="host-router-request"] [data-segment="between"]')).toHaveCount(1);
-    const errors = await links.evaluateAll(elements => {
+    const boundaryErrors = () => links.evaluateAll(elements => {
       const errors: string[] = [];
       for (const group of elements) {
         const key = (group as SVGGElement).dataset.key!;
@@ -961,7 +983,11 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
       }
       return errors;
     });
-    expect(errors).toEqual([]);
+    expect(await boundaryErrors()).toEqual([]);
+    await openSetup(page);
+    await page.locator('#show-copies').check();
+    await page.getByRole('button', { name: 'View journey', exact: true }).click();
+    expect(await boundaryErrors()).toEqual([]);
     await page.getByRole('button', { name: 'Next step', exact: true }).click();
     await expect(page.locator('#paths g.active[data-key="user-network-request"] path[data-segment]')).toHaveCount(3);
     await page.getByRole('button', { name: 'Answer', exact: true }).click();
@@ -977,7 +1003,7 @@ test('local and optional groups reflect the example and the alert keeps the requ
   await page.getByRole('button', { name: 'View journey', exact: true }).click();
   await expect(page.locator('#diagram [data-group="device"] [data-node="app"]')).toBeVisible();
   await expect(page.locator('#diagram [data-group="device"] [data-node="model"]')).toBeVisible();
-  await expect(page.locator('#diagram [data-group="copies"] [data-node="logs"]')).toBeVisible();
+  await expect(page.locator('#diagram [data-group="device"] [data-copy-source="app"] [data-node="logs"]')).toBeVisible();
   const levels = page.getByRole('group', { name: 'Diagram level' });
   await levels.getByRole('button', { name: 'Overview', exact: true }).click();
   await expect(page.locator('#overview-flow .overview-stop')).toHaveCount(1);
@@ -997,6 +1023,9 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 1200, height: 900 
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await pauseJourneyClock(page);
+    await openSetup(page);
+    await page.getByLabel('Show possible saved copies').check();
+    await page.getByRole('button', { name: 'View journey', exact: true }).click();
 
     const pane = page.locator('.map-scroll');
     await expect(pane).toHaveCSS('overflow-y', 'visible');
