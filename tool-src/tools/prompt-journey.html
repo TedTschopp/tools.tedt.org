@@ -58,11 +58,14 @@ input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); 
 .workspace { --viewer-top:var(--s-4); --viewer-height:calc(100dvh - var(--s-7)); --controls-height:9rem; --viewer-gap:var(--s-4); scroll-margin-top:var(--viewer-top); display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:var(--viewer-gap); align-items:start; }
 .guide { grid-column:1; grid-row:1; position:sticky; top:var(--viewer-top); height:var(--viewer-height); display:flex; flex-direction:column; min-height:0; }
 .playback-panel { flex:none; }
-.playback-panel .tt-panel-body { display:grid; gap:var(--s-2); padding:var(--s-3) var(--s-4) var(--s-2); }
+.playback-panel .tt-panel-body { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s-2); padding:var(--s-3) var(--s-4) var(--s-2); }
 .guide-content { min-height:0; overflow:auto; overflow-anchor:none; overscroll-behavior:contain; margin-top:var(--viewer-gap); scrollbar-gutter:stable; }
 .map-panel { grid-column:2; grid-row:1; height:var(--viewer-height); display:flex; flex-direction:column; }
 .map-panel > :not(.map-scroll) { flex:none; }
 .map-panel .tt-panel-head { gap:var(--s-2); }
+.map-views { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s-2); padding:var(--s-2) var(--s-4); border-bottom:var(--border-soft); }
+.map-views button { padding-inline:var(--s-1); font-size:var(--fs-small); color:var(--fg); border-color:var(--rule-strong); }
+.map-views button[aria-pressed=true] { background:var(--accent-tint); color:var(--link); border-color:var(--link); font-weight:var(--fw-semibold); }
 .map-key { padding:var(--s-3) var(--s-5); border-bottom:var(--border-soft); }
 #map-caption { margin:0; color:var(--fg-2); font-size:var(--fs-small); line-height:var(--lh-normal); }
 #find-stop { padding-inline:var(--s-2); font-size:var(--fs-small); }
@@ -76,7 +79,7 @@ input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); 
 #step-route { margin:0 0 var(--s-2); font-size:var(--fs-small); color:var(--fg-2); }
 #step-text { margin:0; }
 #step-count { font-family:var(--font-mono); color:var(--fg-2); font-size:var(--fs-small); }
-#read-step { display:none; }
+.narrow-shortcuts { display:none; }
 .journey-position { display:flex; align-items:center; gap:var(--s-3); }
 progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .transport,.milestones { display:flex; gap:var(--s-2); align-items:center; }
@@ -101,11 +104,20 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .key.copy { border-color:var(--warn); border-top-style:dashed; }
 .map-scroll { overflow:hidden auto; flex:1; min-height:0; background:var(--bg-inset); overscroll-behavior-y:contain; overflow-anchor:none; scrollbar-width:thin; scrollbar-gutter:stable; }
 .map { position:relative; width:100%; max-width:56rem; margin-inline:auto; isolation:isolate; }
-.map svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
-.node { position:absolute; min-height:5.25rem; transform:translate(-50%,-50%); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:var(--s-2) var(--s-3); text-align:left; color:var(--fg); background:var(--bg-card); border:var(--border); font-size:var(--fs-small); line-height:1.25; overflow-wrap:anywhere; }
+.map svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1; }
+.route-group { position:absolute; border-radius:var(--r-3); background:var(--bg-sunken); box-shadow:inset 0 0 0 var(--bw-1) var(--rule-strong); }
+.route-group h3 { position:relative; z-index:2; margin:0; padding:var(--s-2) var(--s-3); border-bottom:var(--border); font-size:var(--fs-small); overflow-wrap:anywhere; }
+.route-group[data-group=copies] { outline:var(--bw-1) dashed var(--warn); outline-offset:calc(-1 * var(--bw-1)); }
+.overview-stop[data-group=copies] { border:var(--bw-1) dashed var(--warn); }
+.route-group[data-group=alert] h3,.overview-stop[data-group=alert] { color:var(--warn); }
+.node { position:absolute; z-index:2; min-height:5.25rem; transform:translate(-50%,-50%); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:var(--s-2) var(--s-3); text-align:left; color:var(--fg); background:var(--bg-card); border:var(--border); font-size:var(--fs-small); line-height:1.25; overflow-wrap:anywhere; }
 .node b,.node span { max-width:100%; }
 .node b { font-size:var(--fs-small); font-weight:var(--fw-semibold); }
 .node span { color:var(--fg-2); margin-top:var(--s-1); font-size:.8rem; }
+.node[data-has-inside] { padding-right:var(--s-6); }
+.node[data-has-inside]::after,.inside-key { display:inline-block; width:.58rem; height:.58rem; border:var(--bw-1) solid var(--link); border-radius:var(--bw-1); box-shadow:.18rem -.18rem 0 -.09rem var(--bg-card), .18rem -.18rem 0 0 var(--link); }
+.node[data-has-inside]::after { content:""; position:absolute; top:var(--s-3); right:var(--s-3); }
+.inside-key { margin-inline-end:var(--s-2); }
 .node:hover { border-color:var(--link); background:var(--bg-hover); }
 .node[aria-pressed=true] { border-color:var(--link); box-shadow:0 0 0 var(--bw-1) var(--link); }
 .node.current { background:var(--accent-tint); border-color:var(--link); }
@@ -117,6 +129,24 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .edge.later { stroke:var(--warn); }
 .edge.copy { stroke:var(--warn); stroke-dasharray:5 5; opacity:.7; }
 .edge.active { opacity:1; stroke-width:4; }
+.map-alternate { max-width:44rem; margin:auto; padding:var(--s-4); }
+.map-alternate h3 { margin:0 0 var(--s-2); }
+.map-alternate p { margin:0 0 var(--s-3); }
+.overview-flow,.inside-flow { display:grid; gap:var(--s-6); margin:0; padding:0; list-style:none; }
+.overview-flow li,.inside-flow li { position:relative; }
+.overview-flow li+li::before,.inside-flow li+li::before { content:"↓"; position:absolute; inset-inline-start:50%; top:calc(-1 * var(--s-6)); transform:translateX(-50%); color:var(--link); }
+.overview-flow li+li::before { margin-inline-start:calc(-1 * var(--s-2)); }
+.overview-flow li+li::after { content:"↑"; position:absolute; inset-inline-start:50%; top:calc(-1 * var(--s-6)); margin-inline-start:var(--s-2); transform:translateX(-50%); color:var(--copper); }
+.overview-stop,.inside-flow li { width:100%; padding:var(--s-3); text-align:left; color:var(--fg); background:var(--bg-card); border:var(--border); border-radius:var(--r-2); }
+.overview-stop:hover { border-color:var(--link); background:var(--bg-hover); }
+.overview-stop[aria-current=step] { border-color:var(--link); background:var(--accent-tint); }
+.overview-stop small { display:block; margin-top:var(--s-1); }
+.overview-branches { display:grid; gap:var(--s-3); margin-top:var(--s-5); }
+.inside-box { margin-top:var(--s-4); padding:var(--s-4); border:var(--bw-1) solid var(--rule-strong); border-radius:var(--r-3); }
+#inside-heading { font-size:var(--fs-h3); }
+#inside-in-route { margin-top:var(--s-4); }
+#detail-actions { display:flex; flex-wrap:wrap; gap:var(--s-2); }
+#detail-actions button { font-size:var(--fs-small); padding-inline:var(--s-2); }
 .extras { margin-top:var(--s-5); }
 .extras details { margin-top:var(--s-4); padding:var(--s-5); border:var(--border); border-radius:var(--r-3); background:var(--bg-card); }
 summary { cursor:pointer; font-weight:var(--fw-semibold); }
@@ -135,12 +165,14 @@ details li { margin-bottom:var(--s-3); }
  .workspace { --viewer-gap:var(--s-2); --below-playback:calc(var(--viewer-top) + var(--controls-height) + var(--viewer-gap)); grid-template-columns:minmax(0,1fr); overflow-anchor:none; }
  .guide,.guide-content { display:contents; }
  .playback-panel { grid-row:1; position:sticky; top:var(--viewer-top); z-index:var(--z-raised); }
- #read-step { display:inline-flex; align-items:center; min-height:1.5rem; white-space:nowrap; font-size:var(--fs-small); }
+ .journey-position { gap:var(--s-2); }
+ .narrow-shortcuts { display:flex; gap:var(--s-2); font-size:.8125rem; }
+ .narrow-shortcuts a { display:inline-flex; align-items:center; min-height:1.5rem; white-space:nowrap; }
  .step-panel { grid-row:2; }
  .map-panel { grid-column:1; grid-row:3; height:auto; }
  .map-scroll { flex:none; overflow:visible; overscroll-behavior:auto; scrollbar-gutter:auto; }
  .inspector-panel { grid-row:4; margin:0; }
- #step-title,#detail-title,.node { scroll-margin-top:var(--below-playback); }
+ #step-title,#detail-title,#map-title,#inside-heading,.node { scroll-margin-top:var(--below-playback); }
 }
 @media (max-width:40rem) {
  .tt-shell { padding:var(--s-4) var(--s-3) var(--s-8); }
@@ -163,7 +195,7 @@ details li { margin-bottom:var(--s-3); }
 @media (min-width:64rem) and (max-height:36rem) {
  .map-panel .legend { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); }
 }
-@media print { .setup-panel,.transport,.milestones,.tt-actions,.tt-catalog-return,#read-step,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; height:auto; } .guide-content,.step-panel,.map-scroll { display:block; height:auto; overflow:visible; } .playback-panel { position:static; } .map-panel { height:auto; display:block; break-before:page; } .tt-shell { padding:0; } }
+@media print { .setup-panel,.transport,.milestones,.tt-actions,.tt-catalog-return,.narrow-shortcuts,.map-views,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; height:auto; } .guide-content,.step-panel,.map-scroll { display:block; height:auto; overflow:visible; } .playback-panel { position:static; } .map-panel { height:auto; display:block; break-before:page; } .tt-shell { padding:0; } }
 </style>
 </head>
 <body>
@@ -237,7 +269,7 @@ details li { margin-bottom:var(--s-3); }
 <div class="tt-panel-body">
   <div class="journey-position">
     <span id="step-count"></span><progress id="progress" aria-label="Journey progress" max="1" value="0"></progress>
-    <a id="read-step" href="#step-title">Read step</a>
+    <div class="narrow-shortcuts"><a id="read-step" href="#step-title">Read step</a><a id="open-diagram" href="#map-title">Diagram</a></div>
   </div>
   <div class="transport" role="group" aria-label="Journey playback">
     <button id="back" type="button">Back</button>
@@ -262,24 +294,37 @@ details li { margin-bottom:var(--s-3); }
   <div class="payload"><h3 id="payload-title">Your message</h3><p id="payload"></p></div>
 </div></section>
 <section class="tt-panel inspector-panel" aria-labelledby="detail-title">
-  <div class="tt-panel-head"><h2 id="detail-title" tabindex="-1">Your device</h2><button type="button" id="back-map" hidden>Return to stop</button></div>
+  <div class="tt-panel-head">
+    <h2 id="detail-title" tabindex="-1">Your device</h2>
+    <div id="detail-actions"><button type="button" id="open-inside">See inside</button><button type="button" id="back-map" hidden>Return to stop</button></div>
+  </div>
   <div id="detail-body" class="tt-panel-body"></div>
 </section>
 </div>
 </aside>
 <section class="tt-panel map-panel" aria-labelledby="map-title">
-  <div class="tt-panel-head"><h2 id="map-title">Route diagram</h2><button type="button" id="find-stop">Find current stop</button></div>
+  <div class="tt-panel-head"><h2 id="map-title" tabindex="-1">Route diagram</h2><button type="button" id="find-stop">Find current stop</button></div>
+  <div id="map-views" class="map-views" role="group" aria-label="Diagram level">
+    <button type="button" value="overview" aria-pressed="false" aria-controls="overview-map">Overview</button>
+    <button type="button" value="route" aria-pressed="true" aria-controls="diagram">Route</button>
+    <button type="button" value="inside" aria-pressed="false" aria-controls="inside-map">Inside a stop</button>
+  </div>
   <div class="map-key">
-    <p id="map-caption"><span id="map-context">Stops can have different operators.</span> <span class="map-tip">Select a stop to see who runs it.</span></p>
-    <div class="legend">
+    <p id="map-caption"><span id="map-context">Stops can have different operators.</span> <span id="map-tip" class="map-tip">Select a stop to inspect it.</span></p>
+    <div class="legend" id="route-legend">
       <span><i class="key"></i>Request</span>
       <span><i class="key return"></i>Answer or tool call</span>
       <span id="copy-legend" hidden><i class="key copy"></i>Possible saved copy</span>
       <span id="later-legend" hidden><i class="key later"></i>Later alert</span>
+      <span id="inside-legend"><i class="inside-key" aria-hidden="true"></i>Inside flow available</span>
     </div>
   </div>
-  <p class="visually-hidden" id="map-help">Scroll up or down. Select a stop to inspect what it receives and may save.</p>
+  <p class="visually-hidden" id="map-help">Scroll up or down to explore the selected diagram level.</p>
   <div class="map-scroll" tabindex="0" role="region" aria-label="Route stops" aria-describedby="map-caption map-help">
+    <div class="map-alternate" id="overview-map" hidden>
+      <ol class="overview-flow" id="overview-flow" aria-label="Request goes down and the answer comes back"></ol>
+      <div class="overview-branches" id="overview-branches"></div>
+    </div>
     <div class="map" id="diagram">
       <svg id="paths" aria-hidden="true">
         <defs>
@@ -290,6 +335,16 @@ details li { margin-bottom:var(--s-3); }
         <g id="map-edges"></g>
       </svg>
       <div id="nodes"></div>
+    </div>
+    <div class="map-alternate" id="inside-map" hidden>
+      <label for="inside-stop">Stop</label>
+      <select id="inside-stop"></select>
+      <section class="inside-box" aria-labelledby="inside-heading">
+        <h3 id="inside-heading" tabindex="-1"></h3>
+        <ol class="inside-flow" id="inside-flow"></ol>
+        <p id="inside-unknown" hidden>The alert leaves the requester’s identity and internal activity unknown.</p>
+      </section>
+      <button type="button" id="inside-in-route">Show stop in route</button>
     </div>
   </div>
 </section>
@@ -354,6 +409,38 @@ const definitions = {
 let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[], diagramWidth=0;
 let mapAnimation=null;
 const copyStops = ['history','logs','training'];
+const hostingStops = ['host','backup','tokenize','model','compute'];
+const serviceGroups = [
+ {id:'device',title:'On your device',description:'You send the request and read the answer.',stops:['user']},
+ {id:'connection',title:'Across the network',description:'The request and answer travel over the network.',stops:['network']},
+ {id:'application',title:'Application and connected services',description:'The app assembles the request and coordinates connected services.',stops:['edge','identity','app','retrieval','router','tool','checks']},
+ {id:'serving',title:'Model serving',description:'The host prepares input and runs the model.',stops:hostingStops},
+ {id:'copies',title:'Possible saved copies',description:'Different stops may keep separate records.',stops:copyStops},
+ {id:'alert',title:'Later observation',description:'The factory story continues three days later.',stops:['unknown','canary','security']},
+];
+const insideFlows = {
+ user:['Enter a message or attach a file','Submit the request','Display the returned answer'],
+ network:['Send encrypted traffic','Forward packets across the network','Carry the reply back'],
+ edge:['Accept the connection','Apply traffic and entry checks','Forward the request to the app'],
+ identity:['Read the sign-in information','Check the account and its permissions','Return the allowed access'],
+ app:['Receive the message','Assemble instructions and permitted context','Send the assembled request','Prepare the returned answer for display'],
+ retrieval:['Receive a search query and access filter','Find matching permitted passages','Return the selected passages'],
+ router:['Read the permitted host choices','Choose an eligible host','Forward the model request'],
+ host:['Receive the model request','Queue work on available hardware','Return the model output'],
+ backup:['Receive the retried request','Run the request on the second host','Return its model output'],
+ tokenize:['Split input text into tokens','Convert tokens to numerical inputs','Decode output tokens into text'],
+ model:['Read the token inputs','Calculate next-token scores','Choose output tokens and repeat'],
+ compute:['Load weights and inputs into memory','Run the model calculations','Return the results to the model process'],
+ tool:['Read the selected arguments','Run the authorized operation','Return its result to the app'],
+ checks:['Receive the draft answer','Review content, permissions or citations','Return the review result to the app'],
+ history:['Select the conversation data to save','Write to the conversation store','Make saved history available to later sessions'],
+ logs:['Capture selected operational data','Write to that service’s log or cache','Apply its own access and retention rules'],
+ training:['Select data permitted for this use','Prepare the evaluation or training material','Run evaluation or training separately'],
+ canary:['Receive the request for the unique address','Record the visit','Send an alert to the test team'],
+ security:['Connect the alert to the test report','Compare records and other copies of the link','Record what the evidence supports'],
+};
+const mapViews = {overview:'overview-map',route:'diagram',inside:'inside-map'};
+let mapView='route', mapGroups=[], insideStop='user';
 const milestones = {
  restart: () => 0,
  'jump-model': () => steps.findIndex(step => step.to === 'model'),
@@ -427,6 +514,7 @@ function startTimer() {
 function play() {
  stop();
  if(position>=steps.length-1)return;
+ if(mapView!=='route')showMapView('route');
  if(!mapUsesPageScroll())alignPlaybackView();
  panToNode(steps[position].to);
  startTimer();
@@ -504,21 +592,15 @@ function createJourney() {
   add(null,'security','later','Investigate before assigning blame',local?'Preserve the request and event record. Check device and application records, other copies of the link and the rules in force. Decide what work can continue while the path remains unexplained.':'Preserve the request and event record. Check other copies of the link and the rules in force. Ask which records explain the visit. Decide what information can keep flowing while the answer is incomplete.','Questions: What happened? Who did it? What was kept? Was it allowed? What should change while the facts are missing?');
  }
 }
-function drawMap() {
- $('map-context').textContent=config.scenario==='local'?'The app and model run on your device.':'Stops can have different operators.';
- $('later-legend').hidden=config.example!=='factory';
- $('copy-legend').hidden=!config.showCopies;
- $('nodes').replaceChildren();
- const orderedStops = new Set([
-  ...steps.filter(step=>step.phase!=='later').map(step=>step.to),
-  ...copyStops.filter(id=>visible.has(id)),
-  ...steps.filter(step=>step.phase==='later').map(step=>step.to),
- ]);
- for(const id of orderedStops) {
+function drawRouteStop(id) {
   const button=document.createElement('button');
   button.type='button';
   button.className=copyStops.includes(id)?'node copy-node':'node';
   button.dataset.node=id;
+  if(insideFlows[id]) {
+   button.dataset.hasInside='';
+   button.setAttribute('aria-description','An example flow is available in the stop details.');
+  }
   const title=document.createElement('b'), subtitle=document.createElement('span');
   title.textContent=nodeTitle(id);
   subtitle.textContent=definitions[id].sub;
@@ -532,27 +614,123 @@ function drawMap() {
    $('detail-title').focus({preventScroll:true});
    $('detail-title').scrollIntoView({block:'center'});
   });
-  $('nodes').append(button);
- }
- layoutDiagram();
+  return button;
 }
-function pathFor(a,b,phase,width,compact) {
+function drawMap() {
+ const localGroups=[
+  {id:'device',title:'On your device',description:'The application and model run on your device.',stops:['user','app','tokenize','model','compute']},
+  ...serviceGroups.filter(group=>group.id==='copies'||group.id==='alert'),
+ ];
+ const order=[...new Set([...steps.map(step=>step.to),...copyStops])];
+ const groups=config.scenario==='local'?localGroups:serviceGroups;
+ mapGroups=groups.map(group=>({
+  ...group,
+  stops:order.filter(id=>visible.has(id)&&group.stops.includes(id)),
+ })).filter(group=>group.stops.length);
+
+ $('nodes').replaceChildren();
+ for(const group of mapGroups) {
+  const section=document.createElement('section'), heading=document.createElement('h3');
+  section.className='route-group';
+  section.dataset.group=group.id;
+  heading.id='group-'+group.id;
+  heading.textContent=group.title;
+  section.setAttribute('aria-labelledby',heading.id);
+  section.append(heading,...group.stops.map(drawRouteStop));
+  $('nodes').append(section);
+ }
+ showMapView(mapView);
+}
+function drawOverview() {
+ const flow=$('overview-flow'), branches=$('overview-branches');
+ flow.replaceChildren();
+ branches.replaceChildren();
+ for(const group of mapGroups) {
+  const button=document.createElement('button'), title=document.createElement('strong'), description=document.createElement('small');
+  button.type='button';
+  button.className='overview-stop';
+  button.dataset.group=group.id;
+  title.textContent=group.title;
+  description.textContent=group.description;
+  button.append(title,description);
+  const current=steps[position].to;
+  if(group.stops.includes(current))button.setAttribute('aria-current','step');
+  button.addEventListener('click',()=>revealRouteStop(group.stops.includes(current)?current:group.stops[0]));
+  if(group.id==='copies'||group.id==='alert') {
+   branches.append(button);
+  } else {
+   const item=document.createElement('li');
+   item.append(button);
+   flow.append(item);
+  }
+ }
+ branches.hidden=branches.childElementCount===0;
+}
+function drawInsideMap() {
+ if(!visible.has(insideStop))insideStop=steps[position].to;
+ const select=$('inside-stop');
+ select.replaceChildren();
+ for(const group of mapGroups) {
+  const options=document.createElement('optgroup');
+  options.label=group.title;
+  for(const id of group.stops)options.append(new Option(nodeTitle(id),id));
+  select.append(options);
+ }
+ select.value=insideStop;
+ $('inside-heading').textContent=nodeTitle(insideStop);
+ const stages=insideFlows[insideStop]||[];
+ $('inside-flow').replaceChildren(...stages.map(label=>{
+  const stage=document.createElement('li');
+  stage.textContent=label;
+  return stage;
+ }));
+ $('inside-unknown').hidden=stages.length>0;
+}
+function showMapView(view) {
+ const changed=mapView!==view;
+ mapView=view;
+ for(const [level,id] of Object.entries(mapViews))$(id).hidden=level!==view;
+ for(const button of $('map-views').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.value===view));
+ const route=view==='route', inside=view==='inside';
+ const routeContext=config.scenario==='local'?'The app and model run on your device.':'Stops can have different operators.';
+ const context={route:routeContext,overview:'Select a group to see its stops.',inside:'Follow an example sequence inside the selected stop.'};
+ $('map-context').textContent=context[view];
+ $('map-tip').textContent=route?'Select a stop to inspect it.':'';
+ $('route-legend').hidden=inside;
+ $('inside-legend').hidden=!route;
+ $('later-legend').hidden=config.example!=='factory';
+ $('copy-legend').hidden=!config.showCopies;
+ if(route)layoutDiagram();
+ else if(inside)drawInsideMap();
+ else drawOverview();
+ if(changed&&!mapUsesPageScroll())mapPane.scrollTop=0;
+}
+function revealRouteStop(id) {
+ if(mapView!=='route')showMapView('route');
+ const node=$('nodes').querySelector(`[data-node="${id}"]`);
+ if(!node)return;
+ if(selected!==id)selectNode(id);
+ node.focus({preventScroll:true});
+ if(!mapUsesPageScroll())alignPlaybackView();
+ panToNode(id);
+}
+function pathFor(a,b,phase,width,compact,groupInset) {
  const returning=phase==='return'||phase==='tool';
  const verticalDirection=Math.sign(b.y-a.y);
- const sideConnect=compact&&(phase==='copy'||Math.abs(a.index-b.index)!==1);
+ const boundary=a.group!==b.group;
+ const sideConnect=boundary||compact&&(phase==='copy'||Math.abs(a.index-b.index)!==1);
  if(sideConnect) {
-  // Long connections run beside the cards so they stay visible between rows.
+  // Cross-group links use the outer lanes to keep group headings clear.
   const side=returning||phase==='copy' ? 1 : -1;
-  const trackInset=phase==='copy' ? 6 : 13;
+  const trackInset=boundary?(phase==='copy'?5:10):groupInset+10;
   const rail=side===1 ? width-trackInset : trackInset;
+  if(!compact) {
+   const startX=a.x+side*a.width/5, endX=b.x+side*b.width/5;
+   const startY=a.y+verticalDirection*a.height/2, endY=b.y-verticalDirection*b.height/2;
+   return `M ${startX} ${startY} V ${startY+verticalDirection*8} H ${rail} V ${endY-verticalDirection*8} H ${endX} V ${endY}`;
+  }
   const startY=a.y+verticalDirection*8, endY=b.y-verticalDirection*8;
   return `M ${a.x+side*a.width/2} ${startY} H ${rail} V ${endY} H ${b.x+side*b.width/2}`;
- }
- if(phase==='copy'&&verticalDirection!==0) {
-  const side=Math.sign(b.x-a.x)||1, rail=side===1?width-8:8;
-  const startX=a.x+side*a.width/3, startY=a.y+a.height/2;
-  const endX=b.x+side*b.width/5, endY=b.y-b.height/2;
-  return `M ${startX} ${startY} V ${startY+8} H ${rail} V ${endY-12} H ${endX} V ${endY}`;
  }
  if(compact||a.x===b.x) {
   const shift=(returning?1:-1)*Math.min(24,width/22);
@@ -564,32 +742,50 @@ function pathFor(a,b,phase,width,compact) {
  return `M ${x1} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${x2} ${b.y}`;
 }
 function layoutDiagram() {
- const diagram=$('diagram'), buttons=[...$('nodes').children];
+ const diagram=$('diagram'), sections=[...$('nodes').children];
+ const buttons=[...$('nodes').querySelectorAll('.node')];
  diagramWidth=diagram.clientWidth;
  const compact=diagramWidth<540;
+ const groupInset=16, groupGap=28, groupPadding=12;
+ const contentWidth=diagramWidth-2*groupInset;
  diagram.dataset.layout=compact?'stacked':'columns';
  for(const button of buttons) {
   const {x}=definitions[button.dataset.node];
   const columnWidth=x===380 ? .271 : .24;
-  button.style.width=diagramWidth*(compact ? .77 : columnWidth)+'px';
+  button.style.width=contentWidth*(compact ? .79 : columnWidth)+'px';
   button.style.height='auto';
  }
  const cardHeight=Math.ceil(Math.max(...buttons.map(button=>button.getBoundingClientRect().height)));
  const rowScale=Math.max(1,(cardHeight+16)/100);
  const positions=new Map();
- for(const [index,button] of buttons.entries()) {
-  const id=button.dataset.node, definition=definitions[id];
-  const fraction=definition.x/760;
-  const center=compact ? .5+(fraction-.5)*.19 : fraction;
-  const x=diagramWidth*center;
-  const y=compact ? 16+cardHeight/2+index*(cardHeight+28) : definition.y*rowScale;
-  const width=parseFloat(button.style.width);
-  button.style.left=x+'px';
-  button.style.top=y+'px';
-  button.style.height=cardHeight+'px';
-  positions.set(id,{x,y,width,height:cardHeight,index});
+ let groupTop=groupInset;
+ for(const section of sections) {
+  section.style.left=groupInset+'px';
+  section.style.width=contentWidth+'px';
+  section.style.top=groupTop+'px';
+  const stops=[...section.querySelectorAll('.node')];
+  const rowStart=Math.min(...stops.map(button=>definitions[button.dataset.node].y));
+  const firstRow=section.querySelector('h3').offsetHeight+groupPadding+cardHeight/2;
+  let lastCenter=firstRow;
+  for(const [index,button] of stops.entries()) {
+   const id=button.dataset.node, definition=definitions[id];
+   const fraction=definition.x/760;
+   const center=compact ? .5+(fraction-.5)*.19 : fraction;
+   const x=contentWidth*center;
+   const y=firstRow+(compact?index*(cardHeight+groupGap):(definition.y-rowStart)*rowScale);
+   button.style.left=x+'px';
+   button.style.top=y+'px';
+   button.style.height=cardHeight+'px';
+   positions.set(id,{
+    x:x+groupInset,y:y+groupTop,width:parseFloat(button.style.width),height:cardHeight,index,group:section.dataset.group,
+   });
+   lastCenter=Math.max(lastCenter,y);
+  }
+  const groupHeight=Math.ceil(lastCenter+cardHeight/2+groupPadding);
+  section.style.height=groupHeight+'px';
+  groupTop+=groupHeight+groupGap;
  }
- const mapHeight=Math.ceil(Math.max(...Array.from(positions.values(),stop=>stop.y))+cardHeight/2+16);
+ const mapHeight=groupTop-groupGap+groupInset;
  diagram.style.height=mapHeight+'px';
  $('paths').setAttribute('viewBox',`0 0 ${diagramWidth} ${mapHeight}`);
  $('map-edges').replaceChildren();
@@ -600,7 +796,7 @@ function layoutDiagram() {
   if(edgeKeys.has(key))return;
   edgeKeys.add(key);
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',pathFor(positions.get(from),positions.get(to),phase,diagramWidth,compact));
+  path.setAttribute('d',pathFor(positions.get(from),positions.get(to),phase,diagramWidth,compact,groupInset));
   path.setAttribute('class','edge '+phase);
   const arrow=phase==='request'?'request':phase==='later'||phase==='copy'?'copy':'return';
   path.setAttribute('marker-end','url(#arrow-'+arrow+')');
@@ -633,7 +829,7 @@ function highlightMapEdge(step) {
  }
 }
 function selectNode(id) {
- selected=id;$('back-map').hidden=true;document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
+ selected=id;$('back-map').hidden=true;$('open-inside').hidden=!insideFlows[id];document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
  const d=definitions[id];$('detail-title').textContent=nodeTitle(id);$('detail-body').replaceChildren();
  const parts=[['What happens',d.does],['Who operates it',config.scenario==='local'&&['app','tokenize','model','compute'].includes(id)?'Software running on your device.':d.owner],['What it can see',d.sees],['What may remain',d.keeps],['Question to ask',d.ask]];
  if(config.example==='factory'&&id==='tool'){parts[0][1]='Runs an operation authorized by the app. If enabled here, it reads a fictional maintenance record; it never fetches the tracking link.';parts[2][1]='Selected arguments: Pump P-17 in this example. The report and tracking link are not included.';}
@@ -672,7 +868,7 @@ function renderStep(announce=true) {
  }
  highlightMapEdge(s);
  document.querySelectorAll('#journey-list button').forEach((el,i)=>{if(i===position)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
- if(timer!==null||!mapUsesPageScroll())panToNode(s.to,{smooth:timer!==null});
+ if(mapView==='route'&&(timer!==null||!mapUsesPageScroll()))panToNode(s.to,{smooth:timer!==null});
  selectNode(s.to);
  document.querySelector('.guide-content').scrollTop=0;
  if(announce)$('announce').textContent=`${count}. ${s.title}.`;
@@ -681,6 +877,7 @@ function renderStep(announce=true) {
 function goToStep(index, announce=true) {
  stop();
  position=index;
+ if(mapView!=='route')showMapView('route');
  alignPlaybackView();
  renderStep(announce);
 }
@@ -740,6 +937,7 @@ $('show-copies').addEventListener('change',()=>{
 });
 $('view-journey').addEventListener('click',()=>{
  $('setup').open=false;
+ if(mapView!=='route')showMapView('route');
  alignPlaybackView();
  if(!mapUsesPageScroll())panToNode(steps[position].to);
  (position===steps.length-1?$('step-title'):$('next')).focus({preventScroll:true});
@@ -750,6 +948,35 @@ $('read-step').addEventListener('click',event=>{
  alignPlaybackView();
  $('step-title').focus({preventScroll:true});
 });
+function focusDiagram() {
+ $('map-title').focus({preventScroll:true});
+ $('map-title').scrollIntoView({block:'start'});
+}
+$('open-diagram').addEventListener('click',event=>{
+ event.preventDefault();
+ stop();
+ focusDiagram();
+});
+for(const button of $('map-views').querySelectorAll('button')) {
+ button.addEventListener('click',()=>{
+  if(button.value===mapView)return;
+  stop();
+  if(button.value==='inside')insideStop=selected;
+  showMapView(button.value);
+  if(button.value==='route'&&!mapUsesPageScroll())panToNode(steps[position].to);
+ });
+}
+$('open-inside').addEventListener('click',()=>{
+ stop();
+ insideStop=selected;
+ showMapView('inside');
+ focusDiagram();
+});
+$('inside-stop').addEventListener('change',()=>{
+ insideStop=$('inside-stop').value;
+ drawInsideMap();
+});
+$('inside-in-route').addEventListener('click',()=>revealRouteStop(insideStop));
 $('open-steps').addEventListener('click',event=>{
  event.preventDefault();
  stop();
@@ -758,14 +985,8 @@ $('open-steps').addEventListener('click',event=>{
  current.focus({preventScroll:true});
  current.scrollIntoView({block:'center'});
 });
-$('find-stop').addEventListener('click',()=>panToNode(steps[position].to));
-$('back-map').addEventListener('click',()=>{
- const node=document.querySelector(`[data-node="${selected}"]`);
- if(!node)return;
- node.focus({preventScroll:true});
- if(!mapUsesPageScroll())alignPlaybackView();
- panToNode(selected);
-});
+$('find-stop').addEventListener('click',()=>revealRouteStop(steps[position].to));
+$('back-map').addEventListener('click',()=>revealRouteStop(selected));
 $('next').addEventListener('click',()=>goToStep(position+1));
 $('back').addEventListener('click',()=>goToStep(position-1));
 for(const [id,getStep] of Object.entries(milestones))$(id).addEventListener('click',()=>goToStep(getStep()));
@@ -783,7 +1004,7 @@ $('download').addEventListener('click',()=>{
 });
 syncViewerLayout();
 function recenterAfterResize() {
- if(timer!==null||!mapUsesPageScroll())panToNode(selected);
+ if(mapView==='route'&&(timer!==null||!mapUsesPageScroll()))panToNode(selected);
 }
 function resizeViewer() {
  syncViewerLayout();
@@ -795,13 +1016,13 @@ const siteHeader=document.querySelector('tedt-global-header');if(siteHeader)view
 window.addEventListener('resize',resizeViewer);
 if(new URLSearchParams(window.location.search).get('example')==='factory'){$('example').value='factory';chooseExample(false);}else reset(false);
 const mapResize=new ResizeObserver(()=>{
- if($('diagram').clientWidth===diagramWidth)return;
+ if(mapView!=='route'||$('diagram').clientWidth===diagramWidth)return;
  layoutDiagram();
  recenterAfterResize();
 });
 mapResize.observe(mapPane);
 document.fonts.ready.then(()=>{
- layoutDiagram();
+ if(mapView==='route')layoutDiagram();
  if(timer!==null)panToNode(steps[position].to);
 });
 })();

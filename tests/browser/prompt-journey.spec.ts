@@ -772,6 +772,12 @@ for (const width of [320, 375, 600, 1035, 1440]) {
         if (card.left < paneLeft || card.right > paneRight) {
           clipped.push({ node: (element as HTMLElement).dataset.node, text: 'Card is outside the diagram pane' });
         }
+        const group = element.closest('.route-group')!;
+        const frame = group.getBoundingClientRect();
+        const heading = group.querySelector('h3')!.getBoundingClientRect();
+        if (card.left < frame.left || card.right > frame.right || card.top < heading.bottom || card.bottom > frame.bottom) {
+          clipped.push({ node: (element as HTMLElement).dataset.node, text: 'Card overlaps the group heading or leaves its frame' });
+        }
         for (const label of element.querySelectorAll('b, span')) {
           const range = document.createRange();
           range.selectNodeContents(label);
@@ -817,6 +823,70 @@ test('the operator note precedes the diagram in both layouts', async ({ page }) 
     expect(await map.evaluate(element => element.scrollLeft)).toBe(0);
     await expect(page.locator('#step-title')).toHaveText('The model receives the context');
   }
+});
+
+test('overview, grouped route, and inside flows keep the walkthrough at the same step', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 480 });
+  await page.locator('#next').click();
+  const count = await page.locator('#step-count').textContent();
+  const levels = page.getByRole('group', { name: 'Diagram level' });
+  const route = page.locator('#diagram');
+  await expect(route.locator('[data-group="device"] [data-node="user"]')).toBeVisible();
+  await expect(route.locator('[data-group="application"] [data-node="app"]')).toBeVisible();
+  await expect(route.locator('[data-group="serving"] [data-node="model"]')).toBeVisible();
+  await expect(node(page, 'app')).toHaveAttribute('data-has-inside', '');
+
+  await levels.getByRole('button', { name: 'Overview', exact: true }).click();
+  await expect(route).toBeHidden();
+  await expect(page.locator('#overview-flow .overview-stop')).toHaveCount(4);
+  await expect(page.locator('#overview-flow [aria-current="step"]')).toContainText('Across the network');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.locator('#overview-flow [data-group="application"]').click();
+  await expect(levels.getByRole('button', { name: 'Route', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(node(page, 'edge')).toBeFocused();
+  await expectCurrentStopVisible(page, 'edge');
+  await expect(page.locator('#step-count')).toHaveText(count!);
+
+  await node(page, 'app').click();
+  await page.getByRole('button', { name: 'See inside', exact: true }).click();
+  await expect(levels.getByRole('button', { name: 'Inside a stop', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#inside-heading')).toHaveText('AI application');
+  await expect(page.locator('#inside-flow li')).toHaveCount(4);
+  await expect(page.locator('#inside-flow')).toContainText('Assemble instructions and permitted context');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByLabel('Stop', { exact: true }).selectOption('model');
+  await expect(page.locator('#inside-flow')).toContainText('Calculate next-token scores');
+  await page.getByRole('button', { name: 'Show stop in route', exact: true }).click();
+  await expect(node(page, 'model')).toBeFocused();
+  await expectCurrentStopVisible(page, 'model');
+  await expect(page.locator('#step-count')).toHaveText(count!);
+  await expect(page.locator('.map-scroll')).toHaveCSS('overflow-y', 'visible');
+  await page.getByRole('link', { name: 'Diagram', exact: true }).click();
+  await expect(page.locator('#map-title')).toBeFocused();
+  await expect(page.locator('#map-title')).toBeInViewport({ ratio: 1 });
+});
+
+test('local and optional groups reflect the example and the alert keeps the requester unknown', async ({ page }) => {
+  await openSetup(page);
+  await page.getByLabel('Sample story').selectOption('factory');
+  await page.getByLabel('AI setup', { exact: true }).selectOption('local');
+  await page.getByLabel('Show possible saved copies').check();
+  await page.getByRole('button', { name: 'View journey', exact: true }).click();
+  await expect(page.locator('#diagram [data-group="device"] [data-node="app"]')).toBeVisible();
+  await expect(page.locator('#diagram [data-group="device"] [data-node="model"]')).toBeVisible();
+  await expect(page.locator('#diagram [data-group="copies"] [data-node="logs"]')).toBeVisible();
+  const levels = page.getByRole('group', { name: 'Diagram level' });
+  await levels.getByRole('button', { name: 'Overview', exact: true }).click();
+  await expect(page.locator('#overview-flow .overview-stop')).toHaveCount(1);
+  await expect(page.locator('#overview-branches .overview-stop')).toHaveCount(2);
+  await page.locator('#overview-branches [data-group="alert"]').click();
+  await node(page, 'unknown').click();
+  await expect(page.getByRole('button', { name: 'See inside', exact: true })).toBeHidden();
+  await levels.getByRole('button', { name: 'Inside a stop', exact: true }).click();
+  await expect(page.locator('#inside-flow li')).toHaveCount(0);
+  await expect(page.locator('#inside-unknown')).toContainText('unknown');
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  await expect(levels.getByRole('button', { name: 'Route', exact: true })).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('scrolling the narrow route moves the page and gives the reader control of playback', async ({ page }) => {

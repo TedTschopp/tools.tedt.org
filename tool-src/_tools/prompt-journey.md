@@ -19,6 +19,7 @@ features:
   - "Compare company application, direct provider and local model examples"
   - "Add or remove company documents, external tools and model routing"
   - "Inspect each participant and distinguish processing from possible saved copies"
+  - "Explore groups, the detailed route and example flows inside individual stops"
   - "Read the complete journey as an ordered text list"
   - "Download the selected example and its journey as JSON"
 ---
@@ -44,7 +45,7 @@ takes and the records it leaves behind are separate questions.
 
 1. Use **Next step** to follow the sample. The guide shows who receives data and what they receive.
 2. Use **Play** to advance automatically, or jump to **Model**, **Answer** or **Day 3** in the factory story.
-3. Select a box in the diagram to see who runs that stop, what it can see and what it may save.
+3. Use **Overview** to see the groups and **Route** to see their stops. Select a stop to inspect it or open **See inside** for its example flow.
 4. Open **Change setup** to switch stories, compare routes or show possible saved copies.
 5. Open **All steps** to read the route in order, or download the journey as JSON.
 
