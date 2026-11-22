@@ -29,7 +29,7 @@ features:
 Prompt Journey explains how an AI request can pass through several systems before
 an answer reaches your screen. Follow a fictional example through a company
 application, a direct connection to an AI provider, or a model running locally.
-Select a participant in the diagram to learn its role.
+Select a participant in the diagram to see its ArchiMate 4 element type and role.
 
 Choose the travel-policy example or a factory maintenance report containing a
 display-only tracking link. The factory story continues three simulated days
@@ -49,6 +49,7 @@ might keep records.
 4. Clear **Possible saved copies** in the diagram legend to hide the dotted branches. Select it again to show them.
 5. Open **Change setup** to switch stories or compare routes.
 6. Open **All steps** to read the route in order, or download the journey as JSON.
+7. Use the **ArchiMate 4 key** at the bottom of the page to identify element icons and relationship symbols.
 
 ## Model and limits
 

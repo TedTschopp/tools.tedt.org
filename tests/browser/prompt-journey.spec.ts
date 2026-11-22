@@ -250,6 +250,8 @@ test('possible copy paths include each recipient and disappear with removed conn
   for (const recipient of ['edge', 'app', 'identity', 'retrieval', 'router', 'host', 'backup', 'tool', 'checks']) {
     await expect(node(page, recipient)).toBeVisible();
     await expect(page.locator(`.copy-records[data-copy-source="${recipient}"] [data-stop="logs"]`)).toBeVisible();
+    await expect(copyPath(recipient)).toHaveAttribute('data-am-relationship', 'write-access');
+    await expect(copyPath(recipient)).toHaveAttribute('marker-end', 'url(#am-marker-copy-open-arrow)');
     await expect(copyPath(recipient)).toHaveCSS('stroke-linecap', 'round');
     await expect(copyPath(recipient)).not.toHaveCSS('stroke-dasharray', 'none');
   }
@@ -303,8 +305,9 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
         }
         const sameX = near(start.x, end.x), sameY = near(start.y, end.y);
         const direct = copyTo === 'training'
-          ? sameX && near(start.y + origin.top, sourceBox.bottom) && near(end.y + origin.top, targetBox.top) &&
-            near(end.x + origin.left, targetBox.left + targetBox.width / 2)
+          ? sameX && near(end.y + origin.top, sourceBox.bottom) && near(start.y + origin.top, targetBox.top) &&
+            near(start.x + origin.left, targetBox.left + targetBox.width / 2) &&
+            path.getAttribute('marker-start') === 'url(#am-marker-copy-open-arrow)' && !path.hasAttribute('marker-end')
           : sameY && near(start.x + origin.left, sourceBox.right) && near(end.x + origin.left, targetBox.left) &&
             near(end.y + origin.top, targetBox.top + targetBox.height / 2) &&
             start.y + origin.top > sourceBox.top && start.y + origin.top < sourceBox.bottom;
@@ -328,6 +331,77 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
     await expect(hostLog).toBeInViewport({ ratio: 1 });
   });
 }
+
+for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 }]) {
+  test(`ArchiMate 4 types and endpoints label the diagram at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await openSetup(page);
+    await page.getByLabel('Sample story').selectOption('factory');
+    await page.locator('#retrieval').check();
+    await page.locator('#tools').check();
+    await page.locator('#fallback').check();
+    await page.getByRole('button', { name: 'View journey', exact: true }).click();
+    const svg = page.locator('#paths');
+    await expect(node(page, 'user')).toHaveAttribute('data-am-element', 'device');
+    await expect(node(page, 'app')).toHaveAttribute('data-am-element', 'application-component');
+    await expect(node(page, 'identity')).toHaveAttribute('data-am-element', 'service');
+    await expect(node(page, 'history')).toHaveAttribute('data-am-element', 'data-object');
+    await expect(node(page, 'logs')).toHaveAttribute('data-am-element', 'artifact');
+    await expect(node(page, 'unknown')).toHaveAttribute('data-am-element', 'role');
+    await expect(node(page, 'app')).toHaveAccessibleDescription(/Application Component in the Application domain/);
+    await expect(svg.locator('[data-key="user-network-request"] [data-segment="entry"]'))
+      .toHaveAttribute('data-am-relationship', 'flow');
+    await expect(svg.locator('[data-key="user-network-request"] [data-segment="entry"]'))
+      .toHaveAttribute('marker-end', 'url(#am-marker-request-filled-arrow)');
+    await expect(svg.locator('[data-key="host-router-request"] [data-segment="entry"]'))
+      .toHaveAttribute('data-am-relationship', 'triggering');
+
+    const iconErrors = await page.locator('#diagram :is(.node,.copy-card,.route-group)').evaluateAll(cards =>
+      cards.flatMap(card => {
+        const icon = card.querySelector<SVGElement>(':scope > .am-icon');
+        const symbol = icon?.querySelector('use');
+        const ink = symbol?.getBBox();
+        const bounds = card.getBoundingClientRect();
+        const glyph = icon?.getBoundingClientRect();
+        const expand = card.querySelector(':scope > .inside-indicator')?.getBoundingClientRect();
+        const position = glyph && glyph.width > 0 && glyph.right <= bounds.right &&
+          glyph.right > bounds.right - 18 && glyph.top >= bounds.top && glyph.top < bounds.top + 18;
+        const bottom = !card.hasAttribute('data-has-inside') ||
+          (expand && expand.right <= bounds.right && expand.right > bounds.right - 20 &&
+            expand.bottom <= bounds.bottom && expand.bottom > bounds.bottom - 18);
+        const title = card.querySelector(':scope > b');
+        let titleClearsExpand = true;
+        if (title && expand) {
+          const text = document.createRange();
+          text.selectNodeContents(title);
+          titleClearsExpand = Array.from(text.getClientRects()).every(line =>
+            line.right <= expand.left || line.bottom <= expand.top - 3,
+          );
+        }
+        const type = (card as HTMLElement).dataset.amElement;
+        return type && ink && ink.width > 0 && ink.height > 0 && position && bottom && titleClearsExpand ? [] : [type];
+      }),
+    );
+    expect(iconErrors).toEqual([]);
+  });
+}
+
+test('the bottom key includes the full ArchiMate 4 element and relationship notation', async ({ page }) => {
+  const key = page.getByRole('region', { name: 'ArchiMate® 4 key' });
+  await page.getByRole('link', { name: 'ArchiMate key', exact: true }).click();
+  await expect(page).toHaveURL(/#archimate-key$/);
+  await expect(key.getByRole('heading', { name: 'ArchiMate® 4 key' })).toBeInViewport();
+  await expect(key.locator('#journey-notation-elements [data-am-element="grouping"]')).toBeVisible();
+  await key.getByText('Full ArchiMate 4 notation reference', { exact: true }).click();
+  await expect(key.locator('#all-notation-elements h3')).toHaveCount(7);
+  await expect(key.locator('#all-notation-elements [data-am-element]')).toHaveCount(42);
+  await expect(key.locator('#all-notation-relationships [data-am-relationship]')).toHaveCount(15);
+  await expect(key.locator('#all-notation-relationships [data-am-junction]')).toHaveCount(2);
+  await expect(key.locator('[data-am-relationship="assignment"]')).toHaveAttribute('marker-start', 'url(#am-marker-key-dot)');
+  await expect(key.locator('[data-am-relationship="realization"]')).toHaveAttribute('marker-end', 'url(#am-marker-key-open-triangle)');
+  await expect(key.locator('[data-am-relationship="directed-association"]')).toHaveAttribute('marker-end', 'url(#am-marker-key-half-arrow)');
+  await expect(key.getByRole('link', { name: /ArchiMate 4 Specification/ })).toHaveAttribute('href', 'https://publications.opengroup.org/c260');
+});
 
 test('the JSON download preserves selected routes, fictional inputs and the return path', async ({ page }) => {
   await openSetup(page);
@@ -1116,9 +1190,12 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
         }
         if (!near(y(bridge), down ? fromFrame.bottom : fromFrame.top) ||
             !near(y(bridge, true), down ? toFrame.top : toFrame.bottom) ||
-            bridge.getBBox().width > 1 ||
-            group.querySelectorAll('.edge-port').length !== 3) {
+            bridge.getBBox().width > 1) {
           errors.push(`${key} does not cross the gap directly between the groups`);
+        }
+        if (group.querySelector('circle,[marker-mid]') || bridge.hasAttribute('marker-end') ||
+            exit.hasAttribute('marker-end') || !entry.hasAttribute('marker-end')) {
+          errors.push(`${key} decorates a group boundary as if it were a relationship endpoint`);
         }
         for (const [path, frame, headerBottom] of [[exit, fromFrame, fromHeaderBottom], [entry, toFrame, toHeaderBottom]] as const) {
           const bounds = path.getBBox();
