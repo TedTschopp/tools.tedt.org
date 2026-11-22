@@ -750,6 +750,7 @@ function revealRouteStop(id,button=inspectedButton?.dataset.stop===id?inspectedB
 }
 const svgNamespace='http://www.w3.org/2000/svg';
 const trafficPortOffsets=[-24,-8,8,24];
+const trafficCornerRadius=12;
 function trafficTrack(phase,direction) {
  const answer=phase==='return'||phase==='tool';
  return (answer?2:0)+(direction<0?1:0);
@@ -762,7 +763,7 @@ function pathInGroup(a,b,phase,compact) {
  if(compact&&Math.abs(a.index-b.index)!==1) {
   const rail=a.group.trafficRails[track];
   const startY=a.y+offset, endY=b.y+offset;
-  return pathFromPoints([[a.x-a.width/2,startY],[rail,startY],[rail,endY],[b.x-b.width/2,endY]]);
+  return pathFromPoints([[a.x-a.width/2,startY],[rail,startY],[rail,endY],[b.x-b.width/2,endY]],trafficCornerRadius);
  }
  if(compact||a.x===b.x) {
   const x=a.x+offset;
@@ -773,8 +774,24 @@ function pathInGroup(a,b,phase,compact) {
  const y1=a.y+offset,y2=b.y+offset;
  return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`;
 }
-function pathFromPoints(points) {
- return points.map(([x,y],index)=>`${index?'L':'M'} ${x} ${y}`).join(' ');
+function pathFromPoints(points,cornerRadius=0) {
+ return points.map(([x,y],index)=>{
+  if(index===0)return `M ${x} ${y}`;
+  const next=points[index+1];
+  if(!cornerRadius||!next)return `L ${x} ${y}`;
+  const previous=points[index-1];
+  const inX=x-previous[0], inY=y-previous[1];
+  const outX=next[0]-x, outY=next[1]-y;
+  if(inX*outY===inY*outX)return `L ${x} ${y}`;
+
+  const inLength=Math.hypot(inX,inY);
+  const outLength=Math.hypot(outX,outY);
+  // Keep straight approaches at the ends and room for a bend on either side of each leg.
+  const radius=Math.min(cornerRadius,inLength/2,outLength/2);
+  const startX=x-inX/inLength*radius, startY=y-inY/inLength*radius;
+  const endX=x+outX/outLength*radius, endY=y+outY/outLength*radius;
+  return `L ${startX} ${startY} Q ${x} ${y} ${endX} ${endY}`;
+ }).join(' ');
 }
 function stopToGroupPort(stop,x,facing,compact,track) {
  const group=stop.group;
@@ -819,12 +836,12 @@ function drawBoundaryLink(from,to,phase,compact,arrow) {
  const entry=stopToGroupPort(to,x,-direction,compact,track).reverse();
  const bridge=[[x,exitY],[x,(exitY+enterY)/2],[x,enterY]];
 
- const exitPath=drawEdgePath(pathFromPoints(exit),phase);
+ const exitPath=drawEdgePath(pathFromPoints(exit,trafficCornerRadius),phase);
  exitPath.dataset.segment='exit';
  const bridgePath=drawEdgePath(pathFromPoints(bridge),phase);
  bridgePath.dataset.segment='between';
  bridgePath.setAttribute('marker-mid',arrow);
- const entryPath=drawEdgePath(pathFromPoints(entry),phase);
+ const entryPath=drawEdgePath(pathFromPoints(entry,trafficCornerRadius),phase);
  entryPath.dataset.segment='entry';
  entryPath.setAttribute('marker-end',arrow);
  link.append(exitPath,bridgePath,entryPath);

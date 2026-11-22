@@ -950,7 +950,7 @@ test('overview, grouped route, and inside flows keep the walkthrough at the same
 });
 
 for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 }]) {
-  test(`traffic arrows have room to trace each direction at ${viewport.width}px`, async ({ page }) => {
+  test(`traffic arrows round their turns and have room to trace each direction at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.evaluate(() => document.fonts.ready);
 
@@ -971,10 +971,11 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
       const boundaryBend = (wire: SVGPathElement, end: boolean) => {
         const length = wire.getTotalLength();
         const boundary = wire.getPointAtLength(end ? length : 0);
-        // Follow the wire inward until it turns away from the group port.
-        for (let distance = 1; distance < length; distance++) {
+        // Measure the horizontal run beyond the curved turn at the group port.
+        for (let distance = 4; distance < length; distance++) {
           const point = wire.getPointAtLength(end ? length - distance : distance);
-          if (Math.abs(boundary.x - point.x) > 1) return point.y;
+          const previous = wire.getPointAtLength(end ? length - distance + 3 : distance - 3);
+          if (Math.abs(point.y - previous.y) < 0.02 && Math.abs(point.x - previous.x) > 2.9) return point.y;
         }
         return boundary.y;
       };
@@ -985,6 +986,13 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
       const sidePorts = sideWires.map(({ wire, fromApp }) =>
         wire.getPointAtLength(fromApp ? 0 : wire.getTotalLength()));
       return {
+        bendCounts: [...sideWires.map(({ wire }) => wire), request, answer].map(wire =>
+          wire.getAttribute('d')?.match(/\bQ /g)?.length ?? 0),
+        straightAtApp: sideWires.every(({ wire, fromApp }, index) => {
+          const port = sidePorts[index];
+          const lead = wire.getPointAtLength(fromApp ? 3 : wire.getTotalLength() - 3);
+          return Math.abs(lead.y - port.y) < 0.1 && lead.x < port.x - 2.9;
+        }),
         railGaps: gaps(sideWires.map(({ wire }) => wire.getBBox().x)),
         portGaps: gaps(sidePorts.map(point => point.y)),
         portsMeetApp: sidePorts.every(point => Math.abs(svgBounds.left + point.x - application.left) < 1),
@@ -995,6 +1003,8 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
       };
     });
 
+    expect(geometry.bendCounts).toEqual([2, 2, 2, 2, 3, 3]);
+    expect(geometry.straightAtApp).toBe(true);
     const railGap = viewport.width === 320 ? 10 : 18;
     expect(Math.min(...geometry.railGaps)).toBeGreaterThanOrEqual(railGap - 0.1);
     expect(Math.min(...geometry.portGaps)).toBeGreaterThanOrEqual(15.9);
