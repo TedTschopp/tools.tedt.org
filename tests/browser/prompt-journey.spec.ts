@@ -29,7 +29,6 @@ async function followState(page: Page, target?: string) {
     const nodeBounds = current.getBoundingClientRect();
     const playbackBounds = playback.getBoundingClientRect();
     const playbackSharesMapColumn = playbackBounds.left < paneBounds.right && playbackBounds.right > paneBounds.left;
-    const onPage = getComputedStyle(pane).overflowY === 'visible';
     return {
       current: current.dataset.node,
       node: { top: nodeBounds.top, right: nodeBounds.right, bottom: nodeBounds.bottom, left: nodeBounds.left },
@@ -41,8 +40,7 @@ async function followState(page: Page, target?: string) {
       },
       paneTop: pane.scrollTop,
       paneLeft: pane.scrollLeft,
-      onPage,
-      routeScrollTop: onPage ? scrollY : pane.scrollTop,
+      routeScrollTop: scrollY,
       pageX: scrollX,
       pageY: scrollY,
       playbackTop: playbackBounds.top,
@@ -54,12 +52,8 @@ async function followState(page: Page, target?: string) {
 
 async function scrollToEndOfMap(page: Page) {
   await page.locator('.map-scroll').evaluate(pane => {
-    if (getComputedStyle(pane).overflowY === 'visible') {
-      const bottom = scrollY + pane.getBoundingClientRect().bottom;
-      window.scrollTo({ top: bottom - innerHeight + 16, behavior: 'instant' });
-    } else {
-      pane.scrollTo({ top: pane.scrollHeight, behavior: 'instant' });
-    }
+    const bottom = scrollY + pane.getBoundingClientRect().bottom;
+    window.scrollTo({ top: bottom - innerHeight + 16, behavior: 'instant' });
   });
 }
 
@@ -228,13 +222,13 @@ test('possible copy paths include each recipient and disappear with removed conn
   await openSetup(page);
   await page.locator('#fallback').check();
   await page.locator('#show-copies').check();
-  const copyPath = (from: string) => page.locator(`#paths [data-copy-from="${from}"][data-copy-to="logs"]`);
+  const copyPath = (from: string) => page.locator(`.copy-link[data-copy-from="${from}"][data-copy-to="logs"] .copy-wire`);
   for (const recipient of ['edge', 'app', 'identity', 'retrieval', 'router', 'host', 'backup', 'tool', 'checks']) {
     await expect(node(page, recipient)).toBeVisible();
     await expect(copyPath(recipient)).toHaveCount(1);
     await expect(copyPath(recipient)).toBeVisible();
-    expect(await copyPath(recipient).evaluate(element => getComputedStyle(element).strokeDasharray))
-      .not.toBe('none');
+    expect(await copyPath(recipient).evaluate(element => getComputedStyle(element, '::before').borderTopStyle))
+      .toBe('dashed');
   }
   await page.locator('#tools').uncheck();
   await expect(copyPath('tool')).toHaveCount(0);
@@ -243,8 +237,52 @@ test('possible copy paths include each recipient and disappear with removed conn
   await expect(copyPath('backup')).toHaveCount(0);
   await expect(copyPath('host')).toBeVisible();
   await page.locator('#show-copies').uncheck();
-  await expect(page.locator('#paths [data-copy-from]')).toHaveCount(0);
+  await expect(page.locator('.copy-link')).toHaveCount(0);
 });
+
+for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 }]) {
+  test(`saved-copy links join their own boxes without crossing other lines at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await openSetup(page);
+    await page.locator('#fallback').check();
+    await page.getByLabel('Show possible saved copies').check();
+    await page.getByRole('button', { name: 'View journey', exact: true }).click();
+    await page.evaluate(() => document.fonts.ready);
+
+    const copyGroup = page.locator('#diagram [data-group="copies"]');
+    await expect(copyGroup.locator('.copy-link')).toHaveCount(11);
+    const geometry = await copyGroup.evaluate(group => {
+      const near = (a: number, b: number) => Math.abs(a - b) < 1;
+      const frame = group.getBoundingClientRect();
+      const svg = document.querySelector<SVGSVGElement>('#paths')!;
+      const svgTop = svg.getBoundingClientRect().top;
+      const heading = group.querySelector('h3')!.getBoundingClientRect();
+      const rows = [...group.querySelectorAll('.copy-link')];
+      const wires = rows.map(row => {
+        const [source, wire, target] = [...row.children].map(el => el.getBoundingClientRect());
+        return { source, wire, target, lineY: (wire.top + wire.bottom) / 2 };
+      });
+      return {
+        direct: wires.every(({ source, wire, target, lineY }) =>
+          near(source.right, wire.left) && near(wire.right, target.left) &&
+          wire.width > 0 && lineY >= heading.bottom && lineY < frame.bottom &&
+          lineY > source.top && lineY < source.bottom && lineY > target.top && lineY < target.bottom),
+        separateRows: wires.every((item, index) => !index || wires[index - 1].wire.bottom <= item.wire.top),
+        solidLinesOutside: [...svg.querySelectorAll<SVGPathElement>('#map-edges path')].every(path => {
+          const bounds = path.getBBox();
+          return svgTop + bounds.y + bounds.height < frame.top || svgTop + bounds.y > frame.bottom;
+        }),
+      };
+    });
+    expect(geometry).toEqual({ direct: true, separateRows: true, solidLinesOutside: true });
+    const backupLog = copyGroup.locator('[data-copy-from="backup"] .copy-target');
+    await backupLog.click();
+    await expect(page.locator('#detail-title')).toHaveText('Logs & caches');
+    await page.getByRole('button', { name: 'Return to stop', exact: true }).click();
+    await expect(backupLog).toBeFocused();
+    await expect(backupLog).toBeInViewport({ ratio: 1 });
+  });
+}
 
 test('the JSON download preserves selected routes, fictional inputs and the return path', async ({ page }) => {
   await openSetup(page);
@@ -573,8 +611,7 @@ for (const setup of [
       routePositions.push(state.routeScrollTop);
       expect(state.paneLeft, `diagram horizontal position at step ${step}`).toBe(0);
       expect(Math.abs(state.pageX - initial.pageX), `page x at step ${step}`).toBeLessThanOrEqual(1);
-      if (initial.onPage) expect(state.paneTop).toBe(0);
-      else expect(Math.abs(state.pageY - initial.pageY), `page y at step ${step}`).toBeLessThanOrEqual(1);
+      expect(state.paneTop).toBe(0);
       expect(Math.abs(state.playbackTop - initial.playbackTop), `control position at step ${step}`).toBeLessThanOrEqual(1);
       if (step < lastStep) await expect(page.locator('#play')).toBeFocused();
     }
@@ -604,7 +641,6 @@ for (const viewport of [{ width: 375, height: 844 }, { width: 844, height: 390 }
     await page.keyboard.press('Space');
     await page.clock.runFor(32);
     const initial = await expectCurrentStopVisible(page);
-    expect(initial.onPage).toBe(true);
     const visited: string[] = [initial.current!];
 
     for (let step = 1; step <= lastStep; step += 1) {
@@ -956,30 +992,34 @@ test('local and optional groups reflect the example and the alert keeps the requ
   await expect(levels.getByRole('button', { name: 'Route', exact: true })).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('scrolling the narrow route moves the page and gives the reader control of playback', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await pauseJourneyClock(page);
+for (const viewport of [{ width: 390, height: 844 }, { width: 1200, height: 900 }]) {
+  test(`scrolling the route moves the page and pauses playback at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await pauseJourneyClock(page);
 
-  const pane = page.locator('.map-scroll');
-  await expect(pane).toHaveCSS('overflow-y', 'visible');
-  expect(await pane.evaluate(element => element.clientHeight === element.scrollHeight)).toBe(true);
-  await page.getByRole('button', { name: 'Play', exact: true }).click();
-  const start = await expectCurrentStopVisible(page);
-  const bounds = await node(page, 'user').boundingBox();
-  await page.mouse.move(bounds!.x + bounds!.width / 2, bounds!.y + bounds!.height / 2);
-  await page.mouse.wheel(0, 400);
+    const pane = page.locator('.map-scroll');
+    await expect(pane).toHaveCSS('overflow-y', 'visible');
+    expect(await pane.evaluate(element => element.clientHeight === element.scrollHeight)).toBe(true);
+    await page.getByRole('button', { name: 'Play', exact: true }).click();
+    const start = await expectCurrentStopVisible(page);
+    const bounds = await node(page, 'user').boundingBox();
+    await page.mouse.move(bounds!.x + bounds!.width / 2, bounds!.y + bounds!.height / 2);
+    await page.mouse.wheel(0, 400);
 
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(start.pageY + 250);
-  await expect(page.locator('#play')).toHaveAccessibleName('Play');
-  await page.clock.runFor(20_000);
-  await expect(page.locator('#step-count')).toHaveText('Step 1 of 35');
-  expect(await pane.evaluate(element => element.scrollTop)).toBe(0);
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(start.pageY + 250);
+    await expect(page.locator('#play')).toHaveAccessibleName('Play');
+    await page.clock.runFor(20_000);
+    await expect(page.locator('#step-count')).toHaveText('Step 1 of 35');
+    expect(await pane.evaluate(element => element.scrollTop)).toBe(0);
 
-  await page.getByRole('link', { name: 'Read step' }).click();
-  await expect(page.locator('#step-title')).toBeFocused();
-  await expect(page.locator('#step-title')).toBeInViewport({ ratio: 1 });
-});
+    if (viewport.width < 1024) {
+      await page.getByRole('link', { name: 'Read step' }).click();
+      await expect(page.locator('#step-title')).toBeFocused();
+    }
+    await expect(page.locator('#step-title')).toBeInViewport({ ratio: 1 });
+  });
+}
 
 test('the tool is discoverable and launches from its catalog description', async ({ page }) => {
   await page.goto('/');

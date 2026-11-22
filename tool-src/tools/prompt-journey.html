@@ -55,13 +55,13 @@ input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); 
 .sample { padding-top:var(--s-4); margin-top:var(--s-4); border-top:var(--border-soft); }
 .sample p { margin:var(--s-2) 0 0; }
 #sample-context { white-space:pre-line; overflow-wrap:anywhere; }
-.workspace { --viewer-top:var(--s-4); --viewer-height:calc(100dvh - var(--s-7)); --controls-height:9rem; --viewer-gap:var(--s-4); scroll-margin-top:var(--viewer-top); display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:var(--viewer-gap); align-items:start; }
+.workspace { --viewer-top:var(--s-4); --viewer-height:calc(100dvh - var(--s-7)); --controls-height:9rem; --viewer-gap:var(--s-4); scroll-margin-top:var(--viewer-top); display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:var(--viewer-gap); align-items:start; overflow-anchor:none; }
 .guide { grid-column:1; grid-row:1; position:sticky; top:var(--viewer-top); height:var(--viewer-height); display:flex; flex-direction:column; min-height:0; }
 .playback-panel { flex:none; }
 .playback-panel .tt-panel-body { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s-2); padding:var(--s-3) var(--s-4) var(--s-2); }
-.guide-content { min-height:0; overflow:auto; overflow-anchor:none; overscroll-behavior:contain; margin-top:var(--viewer-gap); scrollbar-gutter:stable; }
-.map-panel { grid-column:2; grid-row:1; height:var(--viewer-height); display:flex; flex-direction:column; }
-.map-panel > :not(.map-scroll) { flex:none; }
+.guide-content { min-height:0; overflow:auto; overflow-anchor:none; margin-top:var(--viewer-gap); scrollbar-gutter:stable; }
+.map-panel { grid-column:2; grid-row:1; }
+#map-title,#inside-heading,.node,.copy-card { scroll-margin-top:var(--viewer-top); }
 .map-panel .tt-panel-head { gap:var(--s-2); }
 .map-views { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s-2); padding:var(--s-2) var(--s-4); border-bottom:var(--border-soft); }
 .map-views button { padding-inline:var(--s-1); font-size:var(--fs-small); color:var(--fg); border-color:var(--rule-strong); }
@@ -102,12 +102,20 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .key.return { border-color:var(--copper); }
 .key.later { border-color:var(--warn); }
 .key.copy { border-color:var(--warn); border-top-style:dashed; }
-.map-scroll { overflow:hidden auto; flex:1; min-height:0; background:var(--bg-inset); overscroll-behavior-y:contain; overflow-anchor:none; scrollbar-width:thin; scrollbar-gutter:stable; }
+.map-scroll { background:var(--bg-inset); }
 .map { position:relative; width:100%; max-width:56rem; margin-inline:auto; isolation:isolate; }
 .map svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1; }
 .route-group { position:absolute; border-radius:var(--r-3); background:var(--bg-sunken); box-shadow:inset 0 0 0 var(--bw-1) var(--rule-strong); }
 .route-group h3 { position:relative; z-index:2; margin:0; padding:var(--s-2) var(--s-3); border-bottom:var(--border); font-size:var(--fs-small); overflow-wrap:anywhere; }
 .route-group[data-group=copies] { outline:var(--bw-1) dashed var(--warn); outline-offset:calc(-1 * var(--bw-1)); }
+.copy-links { display:grid; gap:var(--s-2); margin:0; padding:var(--s-3); list-style:none; }
+.copy-link { display:grid; grid-template-columns:minmax(0,1fr) minmax(1.25rem,10%) minmax(0,1fr); }
+.copy-card { min-width:0; padding:var(--s-2); color:var(--fg); background:var(--bg-card); border:var(--border); text-align:start; font-size:var(--fs-small); line-height:var(--lh-normal); overflow-wrap:anywhere; }
+.copy-card:hover,.copy-card[aria-pressed=true] { border-color:var(--link); background:var(--bg-hover); }
+.copy-target { border-style:dashed; border-color:var(--warn); }
+.copy-wire { position:relative; display:grid; align-content:center; }
+.copy-wire::before { content:""; border-top:var(--bw-2) dashed var(--warn); }
+.copy-wire::after { content:""; position:absolute; inset-inline-end:0; top:50%; transform:translateY(-50%); border-block:.25rem solid transparent; border-inline-start:.36rem solid var(--warn); }
 .overview-stop[data-group=copies] { border:var(--bw-1) dashed var(--warn); }
 .route-group[data-group=alert] h3,.overview-stop[data-group=alert] { color:var(--warn); }
 .node { position:absolute; z-index:2; min-height:5.25rem; transform:translate(-50%,-50%); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:var(--s-2) var(--s-3); text-align:left; color:var(--fg); background:var(--bg-card); border:var(--border); font-size:var(--fs-small); line-height:1.25; overflow-wrap:anywhere; }
@@ -123,12 +131,10 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .node.current { background:var(--accent-tint); border-color:var(--link); }
 .node.current[data-phase=return],.node.current[data-phase=tool] { border-color:var(--copper); background:var(--copper-tint); }
 .node.current[data-phase=later] { border-color:var(--warn); background:var(--warn-bg); }
-.node.copy-node { border-style:dashed; border-color:var(--warn-border); }
 .edge,.edge-link { --edge-color:var(--link); }
 .edge:is(.return,.tool),.edge-link:is(.return,.tool) { --edge-color:var(--copper); }
-.edge:is(.later,.copy),.edge-link:is(.later,.copy) { --edge-color:var(--warn); }
+.edge.later,.edge-link.later { --edge-color:var(--warn); }
 .edge { fill:none; stroke:var(--edge-color); stroke-width:1.5; stroke-linejoin:round; opacity:.7; }
-.edge.copy,.edge-link.copy { stroke-dasharray:5 5; }
 .edge.active,.edge-link.active .edge { opacity:1; stroke-width:4; }
 .edge-port { fill:var(--bg-inset); stroke:var(--edge-color); stroke-width:1.5; stroke-dasharray:none; }
 .edge-link.active .edge-port { stroke-width:2.5; }
@@ -165,17 +171,16 @@ details li { margin-bottom:var(--s-3); }
 #download-status { font-size:var(--fs-small); margin:var(--s-2) 0 0; }
 .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
 @media (max-width:63.99rem) {
- .workspace { --viewer-gap:var(--s-2); --below-playback:calc(var(--viewer-top) + var(--controls-height) + var(--viewer-gap)); grid-template-columns:minmax(0,1fr); overflow-anchor:none; }
+ .workspace { --viewer-gap:var(--s-2); --below-playback:calc(var(--viewer-top) + var(--controls-height) + var(--viewer-gap)); grid-template-columns:minmax(0,1fr); }
  .guide,.guide-content { display:contents; }
  .playback-panel { grid-row:1; position:sticky; top:var(--viewer-top); z-index:var(--z-raised); }
  .journey-position { gap:var(--s-2); }
  .narrow-shortcuts { display:flex; gap:var(--s-2); font-size:.8125rem; }
  .narrow-shortcuts a { display:inline-flex; align-items:center; min-height:1.5rem; white-space:nowrap; }
  .step-panel { grid-row:2; }
- .map-panel { grid-column:1; grid-row:3; height:auto; }
- .map-scroll { flex:none; overflow:visible; overscroll-behavior:auto; scrollbar-gutter:auto; }
+ .map-panel { grid-column:1; grid-row:3; }
  .inspector-panel { grid-row:4; margin:0; }
- #step-title,#detail-title,#map-title,#inside-heading,.node { scroll-margin-top:var(--below-playback); }
+ #step-title,#detail-title,#map-title,#inside-heading,.node,.copy-card { scroll-margin-top:var(--below-playback); }
 }
 @media (max-width:40rem) {
  .tt-shell { padding:var(--s-4) var(--s-3) var(--s-8); }
@@ -194,9 +199,6 @@ details li { margin-bottom:var(--s-3); }
  .map-panel .tt-panel-head h2 { font-size:var(--fs-body); }
  .map-key { padding:var(--s-1) var(--s-3); }
  .map-tip { display:none; }
-}
-@media (min-width:64rem) and (max-height:36rem) {
- .map-panel .legend { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); }
 }
 @media print { .setup-panel,.transport,.milestones,.tt-actions,.tt-catalog-return,.narrow-shortcuts,.map-views,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; height:auto; } .guide-content,.step-panel,.map-scroll { display:block; height:auto; overflow:visible; } .playback-panel { position:static; } .map-panel { height:auto; display:block; break-before:page; } .tt-shell { padding:0; } }
 </style>
@@ -322,8 +324,8 @@ details li { margin-bottom:var(--s-3); }
       <span id="inside-legend"><i class="inside-key" aria-hidden="true"></i>Inside flow available</span>
     </div>
   </div>
-  <p class="visually-hidden" id="map-help">Scroll up or down to explore the selected diagram level.</p>
-  <div class="map-scroll" tabindex="0" role="region" aria-label="Route stops" aria-describedby="map-caption map-help">
+  <p class="visually-hidden" id="map-help">Scroll the page to explore the selected diagram level.</p>
+  <div class="map-scroll" role="region" aria-label="Route stops" aria-describedby="map-caption map-help">
     <div class="map-alternate" id="overview-map" hidden>
       <ol class="overview-flow" id="overview-flow" aria-label="Request goes down and the answer comes back"></ol>
       <div class="overview-branches" id="overview-branches"></div>
@@ -333,7 +335,7 @@ details li { margin-bottom:var(--s-3); }
         <defs>
           <marker id="arrow-request" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--link)"/></marker>
           <marker id="arrow-return" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker>
-          <marker id="arrow-copy" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker>
+          <marker id="arrow-later" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker>
         </defs>
         <g id="map-edges"></g>
       </svg>
@@ -356,7 +358,7 @@ details li { margin-bottom:var(--s-3); }
 <details id="all-steps"><summary>All steps</summary><p>Select a step to return to the walkthrough at that point.</p><ol id="journey-list"></ol></details>
 <div class="tt-actions extras"><button id="download" type="button">Download journey JSON</button></div><p id="download-status" role="status"></p>
 <details><summary>What can remain after the answer?</summary>
-<p>In Change setup, turn on “Show possible saved copies” to add the dashed branches. Each branch gives you a place to ask about saved data.</p>
+<p>In Change setup, turn on “Show possible saved copies” to see which stops might save data and what they might keep.</p>
 <ul><li><strong>Conversation history:</strong> the app may save your messages, attachments and answers. Saved memory may add information to a later request.</li><li><strong>Logs and monitoring:</strong> the app, router, host and tools can each keep their own records. Those records might contain usage totals, content, or both. Backups and support access need their own checks.</li><li><strong>Caches:</strong> a saved answer can avoid a model call. A prompt-processing cache reuses earlier computation while a model still generates an answer. Neither is shown as a cache hit in this walkthrough.</li><li><strong>Training or evaluation:</strong> using information to improve or test a model is a separate policy decision. It is not an automatic step after every answer. “No training” and “no storage” promise different things.</li></ul>
 <p>This diagram does not assign storage periods or legal guarantees. Ask each operator what is stored, who can access it, where it is processed and when it is deleted.</p>
 </details>
@@ -411,7 +413,9 @@ const definitions = {
 };
 let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[], diagramWidth=0;
 let mapAnimation=null;
+let inspectedButton=null;
 const copyStops = ['history','logs','training'];
+const loggingStops = ['edge','app','identity','retrieval','router','host','backup','tool','checks'];
 const hostingStops = ['host','backup','tokenize','model','compute'];
 const serviceGroups = [
  {id:'device',title:'On your device',description:'You send the request and read the answer.',stops:['user']},
@@ -471,25 +475,31 @@ function syncViewerLayout() {
  workspace.style.setProperty('--viewer-height',Math.max(320,window.innerHeight-top-16)+'px');
  workspace.style.setProperty('--controls-height',playbackPanel.getBoundingClientRect().height+'px');
 }
-function mapUsesPageScroll() {
- return getComputedStyle(mapPane).overflowY==='visible';
+function mapSharesPlaybackColumn() {
+ const map=mapPane.getBoundingClientRect(), playback=playbackPanel.getBoundingClientRect();
+ return playback.right>map.left&&playback.left<map.right;
 }
-function panToNode(id,{smooth=false}={}) {
- const node=document.querySelector(`[data-node="${id}"]`);
+function panToNode(id,{smooth=false,button=null}={}) {
+ const node=button||$('nodes').querySelector(`[data-node="${id}"]`);
  if(!node)return;
  cancelMapPan();
- const onPage=mapUsesPageScroll();
- const scroller=onPage?document.scrollingElement:mapPane;
- const viewportTop=onPage
-  ?parseFloat(workspace.style.getPropertyValue('--viewer-top'))+playbackPanel.getBoundingClientRect().height
-  :mapPane.getBoundingClientRect().top;
- const viewportBottom=onPage?window.innerHeight:viewportTop+mapPane.clientHeight;
+ const scroller=document.scrollingElement;
+ const headerSpace=parseFloat(workspace.style.getPropertyValue('--viewer-top'));
+ const stacked=mapSharesPlaybackColumn();
+ const controlsSpace=stacked?playbackPanel.getBoundingClientRect().height:0;
  const target=node.getBoundingClientRect();
  const start=scroller.scrollTop;
  const targetCenter=target.top+target.height/2;
- const viewportCenter=(viewportTop+viewportBottom)/2;
- const centered=start+targetCenter-viewportCenter;
- const end=Math.max(0,Math.min(centered,scroller.scrollHeight-scroller.clientHeight));
+ const viewportCenter=(headerSpace+controlsSpace+window.innerHeight)/2;
+ const scene=workspace.getBoundingClientRect();
+ const sceneStart=start+scene.top-headerSpace;
+ let goal=Math.max(start+targetCenter-viewportCenter,sceneStart);
+ if(!stacked) {
+  const guideHeight=parseFloat(workspace.style.getPropertyValue('--viewer-height'));
+  const sceneEnd=start+scene.bottom-headerSpace-guideHeight;
+  goal=Math.min(goal,Math.max(sceneEnd,sceneStart));
+ }
+ const end=Math.max(0,Math.min(goal,scroller.scrollHeight-scroller.clientHeight));
  if(!smooth||start===end||window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   scroller.scrollTop=end;
   return;
@@ -518,7 +528,6 @@ function play() {
  stop();
  if(position>=steps.length-1)return;
  if(mapView!=='route')showMapView('route');
- if(!mapUsesPageScroll())alignPlaybackView();
  panToNode(steps[position].to);
  startTimer();
 }
@@ -595,29 +604,61 @@ function createJourney() {
   add(null,'security','later','Investigate before assigning blame',local?'Preserve the request and event record. Check device and application records, other copies of the link and the rules in force. Decide what work can continue while the path remains unexplained.':'Preserve the request and event record. Check other copies of the link and the rules in force. Ask which records explain the visit. Decide what information can keep flowing while the answer is incomplete.','Questions: What happened? Who did it? What was kept? Was it allowed? What should change while the facts are missing?');
  }
 }
-function drawRouteStop(id) {
+function drawRouteStop(id,{copy='',anchor=true}={}) {
   const button=document.createElement('button');
   button.type='button';
-  button.className=copyStops.includes(id)?'node copy-node':'node';
-  button.dataset.node=id;
+  button.className=copy?'copy-card':'node';
+  button.dataset.stop=id;
+  if(anchor)button.dataset.node=id;
+  if(copy==='target')button.classList.add('copy-target');
   if(insideFlows[id]) {
    button.dataset.hasInside='';
    button.setAttribute('aria-description','An example flow is available in the stop details.');
   }
-  const title=document.createElement('b'), subtitle=document.createElement('span');
+  const title=document.createElement('b');
   title.textContent=nodeTitle(id);
-  subtitle.textContent=definitions[id].sub;
-  button.append(title,subtitle);
+  button.append(title);
+  if(!copy) {
+   const subtitle=document.createElement('span');
+   subtitle.textContent=definitions[id].sub;
+   button.append(subtitle);
+  }
   button.setAttribute('aria-pressed',String(selected===id));
   button.setAttribute('aria-controls','detail-body');
   button.addEventListener('click',()=>{
    stop();
    selectNode(id);
+   inspectedButton=button;
    $('back-map').hidden=false;
    $('detail-title').focus({preventScroll:true});
    $('detail-title').scrollIntoView({block:'center'});
   });
   return button;
+}
+function drawCopyLinks() {
+ const list=document.createElement('ul');
+ list.className='copy-links';
+ const links=[
+  ['app','history'],
+  ...loggingStops.filter(id=>visible.has(id)).map(id=>[id,'logs']),
+  ['logs','training'],
+ ];
+ const anchors=new Set();
+ for(const [from,to] of links) {
+  const row=document.createElement('li'), wire=document.createElement('span');
+  row.className='copy-link';
+  row.dataset.copyFrom=from;
+  row.dataset.copyTo=to;
+  wire.className='copy-wire';
+  wire.setAttribute('aria-hidden','true');
+  const source=drawRouteStop(from,{copy:'source',anchor:false});
+  const target=drawRouteStop(to,{copy:'target',anchor:!anchors.has(to)});
+  target.setAttribute('aria-description','Possible copy associated with '+nodeTitle(from)+'.');
+  anchors.add(to);
+  row.append(source,wire,target);
+  list.append(row);
+ }
+ return list;
 }
 function drawMap() {
  const localGroups=[
@@ -639,7 +680,9 @@ function drawMap() {
   heading.id='group-'+group.id;
   heading.textContent=group.title;
   section.setAttribute('aria-labelledby',heading.id);
-  section.append(heading,...group.stops.map(drawRouteStop));
+  section.append(heading);
+  if(group.id==='copies')section.append(drawCopyLinks());
+  else section.append(...group.stops.map(id=>drawRouteStop(id)));
   $('nodes').append(section);
  }
  showMapView(mapView);
@@ -690,7 +733,6 @@ function drawInsideMap() {
  $('inside-unknown').hidden=stages.length>0;
 }
 function showMapView(view) {
- const changed=mapView!==view;
  mapView=view;
  for(const [level,id] of Object.entries(mapViews))$(id).hidden=level!==view;
  for(const button of $('map-views').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.value===view));
@@ -706,24 +748,22 @@ function showMapView(view) {
  if(route)layoutDiagram();
  else if(inside)drawInsideMap();
  else drawOverview();
- if(changed&&!mapUsesPageScroll())mapPane.scrollTop=0;
 }
-function revealRouteStop(id) {
+function revealRouteStop(id,button=null) {
  if(mapView!=='route')showMapView('route');
- const node=$('nodes').querySelector(`[data-node="${id}"]`);
+ const node=button?.isConnected?button:$('nodes').querySelector(`[data-node="${id}"]`);
  if(!node)return;
  if(selected!==id)selectNode(id);
  node.focus({preventScroll:true});
- if(!mapUsesPageScroll())alignPlaybackView();
- panToNode(id);
+ panToNode(id,{button:node});
 }
 const svgNamespace='http://www.w3.org/2000/svg';
 function pathInGroup(a,b,phase,compact) {
  const returning=phase==='return'||phase==='tool';
  const verticalDirection=Math.sign(b.y-a.y);
  const {left,right}=a.group;
- if(compact&&(phase==='copy'||Math.abs(a.index-b.index)!==1)) {
-  const side=returning||phase==='copy'?1:-1;
+ if(compact&&Math.abs(a.index-b.index)!==1) {
+  const side=returning?1:-1;
   const rail=side===1?right-6:left+6;
   const startY=a.y+verticalDirection*8, endY=b.y-verticalDirection*8;
   return `M ${a.x+side*a.width/2} ${startY} H ${rail} V ${endY} H ${b.x+side*b.width/2}`;
@@ -770,26 +810,22 @@ function drawEdgePath(d,phase) {
 function drawBoundaryLink(from,to,phase,compact,arrow) {
  const link=document.createElementNS(svgNamespace,'g');
  link.setAttribute('class','edge-link '+phase);
- const outward=to.group.index>from.group.index;
+ const outward=to.group.top>from.group.top;
  const direction=outward?1:-1;
  const returning=phase==='return'||phase==='tool';
  const center=(from.group.left+from.group.right)/2;
- const x=phase==='copy'?from.group.right-10:center+(returning?14:outward?-14:-30);
+ const x=center+(returning?14:outward?-14:-30);
  const exitY=outward?from.group.bottom:from.group.top;
  const enterY=outward?to.group.top:to.group.bottom;
- const exit=stopToGroupPort(from,x,direction,compact,returning||phase==='copy');
- const entry=stopToGroupPort(to,x,-direction,compact,returning||phase==='copy').reverse();
- const adjacent=Math.abs(to.group.index-from.group.index)===1;
- const bypassX=from.group.right+8;
- const bridge=adjacent
-  ?[[x,exitY],[x,(exitY+enterY)/2],[x,enterY]]
-  :[[x,exitY],[x,exitY+direction*8],[bypassX,exitY+direction*8],[bypassX,enterY-direction*8],[x,enterY-direction*8],[x,enterY]];
+ const exit=stopToGroupPort(from,x,direction,compact,returning);
+ const entry=stopToGroupPort(to,x,-direction,compact,returning).reverse();
+ const bridge=[[x,exitY],[x,(exitY+enterY)/2],[x,enterY]];
 
  const exitPath=drawEdgePath(pathFromPoints(exit),phase);
  exitPath.dataset.segment='exit';
  const bridgePath=drawEdgePath(pathFromPoints(bridge),phase);
  bridgePath.dataset.segment='between';
- bridgePath.setAttribute(adjacent?'marker-mid':'marker-end',arrow);
+ bridgePath.setAttribute('marker-mid',arrow);
  const entryPath=drawEdgePath(pathFromPoints(entry),phase);
  entryPath.dataset.segment='entry';
  entryPath.setAttribute('marker-end',arrow);
@@ -825,16 +861,20 @@ function layoutDiagram() {
  const rowScale=Math.max(1,(cardHeight+16)/100);
  const positions=new Map();
  let groupTop=groupInset;
- for(const [groupIndex,section] of sections.entries()) {
+ for(const section of sections) {
   section.style.left=groupInset+'px';
   section.style.width=contentWidth+'px';
   section.style.top=groupTop+'px';
+  if(section.dataset.group==='copies') {
+   groupTop+=Math.ceil(section.getBoundingClientRect().height)+groupGap;
+   continue;
+  }
   const stops=[...section.querySelectorAll('.node')];
   const rowStart=Math.min(...stops.map(button=>definitions[button.dataset.node].y));
   const headingHeight=section.querySelector('h3').getBoundingClientRect().height;
   const firstRow=headingHeight+groupPadding+cardHeight/2;
   const group={
-   index:groupIndex,left:groupInset,right:groupInset+contentWidth,top:groupTop,headerBottom:groupTop+headingHeight,
+   left:groupInset,right:groupInset+contentWidth,top:groupTop,headerBottom:groupTop+headingHeight,
    firstRow:groupTop+firstRow,lastRow:0,bottom:0,
   };
   let lastCenter=firstRow;
@@ -869,31 +909,18 @@ function layoutDiagram() {
   if(edgeKeys.has(key))return;
   edgeKeys.add(key);
   const a=positions.get(from), b=positions.get(to);
-  const arrowColor=phase==='request'?'request':phase==='later'||phase==='copy'?'copy':'return';
+  const arrowColor=phase==='request'?'request':phase==='later'?'later':'return';
   const arrow='url(#arrow-'+arrowColor+')';
   const sameGroup=a.group===b.group;
   const edge=sameGroup
    ?drawEdgePath(pathInGroup(a,b,phase,compact),phase)
    :drawBoundaryLink(a,b,phase,compact,arrow);
   if(sameGroup)edge.setAttribute('marker-end',arrow);
-  if(phase==='copy') {
-   edge.dataset.copyFrom=from;
-   edge.dataset.copyTo=to;
-  } else {
-   edge.dataset.key=key;
-   activeEdges.push(edge);
-  }
+  edge.dataset.key=key;
+  activeEdges.push(edge);
   $('map-edges').append(edge);
  }
  for(const step of steps)if(step.from)addEdge(step.from,step.to,step.phase);
- if(config.showCopies) {
-  // Dashed lines represent possible separate records at each recipient.
-  addEdge('app','history','copy');
-  addEdge('logs','training','copy');
-  for(const id of ['edge','app','identity','retrieval','router','host','backup','tool','checks']) {
-   if(visible.has(id))addEdge(id,'logs','copy');
-  }
- }
  highlightMapEdge(steps[position]);
 }
 function highlightMapEdge(step) {
@@ -905,7 +932,7 @@ function highlightMapEdge(step) {
  }
 }
 function selectNode(id) {
- selected=id;$('back-map').hidden=true;$('open-inside').hidden=!insideFlows[id];document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
+ selected=id;inspectedButton=null;$('back-map').hidden=true;$('open-inside').hidden=!insideFlows[id];$('nodes').querySelectorAll('[data-stop]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.stop===id)));
  const d=definitions[id];$('detail-title').textContent=nodeTitle(id);$('detail-body').replaceChildren();
  const parts=[['What happens',d.does],['Who operates it',config.scenario==='local'&&['app','tokenize','model','compute'].includes(id)?'Software running on your device.':d.owner],['What it can see',d.sees],['What may remain',d.keeps],['Question to ask',d.ask]];
  if(config.example==='factory'&&id==='tool'){parts[0][1]='Runs an operation authorized by the app. If enabled here, it reads a fictional maintenance record; it never fetches the tracking link.';parts[2][1]='Selected arguments: Pump P-17 in this example. The report and tracking link are not included.';}
@@ -944,7 +971,7 @@ function renderStep(announce=true) {
  }
  highlightMapEdge(s);
  document.querySelectorAll('#journey-list button').forEach((el,i)=>{if(i===position)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
- if(mapView==='route'&&(timer!==null||!mapUsesPageScroll()))panToNode(s.to,{smooth:timer!==null});
+ if(mapView==='route'&&timer!==null)panToNode(s.to,{smooth:true});
  selectNode(s.to);
  document.querySelector('.guide-content').scrollTop=0;
  if(announce)$('announce').textContent=`${count}. ${s.title}.`;
@@ -954,8 +981,9 @@ function goToStep(index, announce=true) {
  stop();
  position=index;
  if(mapView!=='route')showMapView('route');
- alignPlaybackView();
  renderStep(announce);
+ if(mapSharesPlaybackColumn())alignPlaybackView();
+ else panToNode(steps[position].to);
 }
 function renderList() {
  $('journey-list').replaceChildren();
@@ -1015,7 +1043,6 @@ $('view-journey').addEventListener('click',()=>{
  $('setup').open=false;
  if(mapView!=='route')showMapView('route');
  alignPlaybackView();
- if(!mapUsesPageScroll())panToNode(steps[position].to);
  (position===steps.length-1?$('step-title'):$('next')).focus({preventScroll:true});
 });
 $('read-step').addEventListener('click',event=>{
@@ -1039,7 +1066,6 @@ for(const button of $('map-views').querySelectorAll('button')) {
   stop();
   if(button.value==='inside')insideStop=selected;
   showMapView(button.value);
-  if(button.value==='route'&&!mapUsesPageScroll())panToNode(steps[position].to);
  });
 }
 $('open-inside').addEventListener('click',()=>{
@@ -1062,7 +1088,7 @@ $('open-steps').addEventListener('click',event=>{
  current.scrollIntoView({block:'center'});
 });
 $('find-stop').addEventListener('click',()=>revealRouteStop(steps[position].to));
-$('back-map').addEventListener('click',()=>revealRouteStop(selected));
+$('back-map').addEventListener('click',()=>revealRouteStop(selected,inspectedButton));
 $('next').addEventListener('click',()=>goToStep(position+1));
 $('back').addEventListener('click',()=>goToStep(position-1));
 for(const [id,getStep] of Object.entries(milestones))$(id).addEventListener('click',()=>goToStep(getStep()));
@@ -1070,7 +1096,7 @@ $('play').addEventListener('click',()=>{if(timer!==null)stop();else play();});
 $('step-delay').addEventListener('change',()=>{if(timer!==null){clearInterval(timer);startTimer();}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
 function pauseForPageScroll() {
- if((timer!==null||mapAnimation!==null)&&mapUsesPageScroll())stop();
+ if(timer!==null||mapAnimation!==null)stop();
 }
 window.addEventListener('wheel',pauseForPageScroll,{passive:true});
 window.addEventListener('touchmove',pauseForPageScroll,{passive:true});
@@ -1080,7 +1106,7 @@ $('download').addEventListener('click',()=>{
 });
 syncViewerLayout();
 function recenterAfterResize() {
- if(mapView==='route'&&(timer!==null||!mapUsesPageScroll()))panToNode(selected);
+ if(mapView==='route'&&timer!==null)panToNode(steps[position].to);
 }
 function resizeViewer() {
  syncViewerLayout();
