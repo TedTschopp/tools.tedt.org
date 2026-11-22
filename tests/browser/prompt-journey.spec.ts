@@ -1005,13 +1005,66 @@ for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 
 
     expect(geometry.bendCounts).toEqual([2, 2, 2, 2, 3, 3]);
     expect(geometry.straightAtApp).toBe(true);
-    const railGap = viewport.width === 320 ? 10 : 18;
+    const railGap = viewport.width === 320 ? 6 : 14;
     expect(Math.min(...geometry.railGaps)).toBeGreaterThanOrEqual(railGap - 0.1);
     expect(Math.min(...geometry.portGaps)).toBeGreaterThanOrEqual(15.9);
     expect(geometry.portsMeetApp).toBe(true);
     expect(geometry.adjacentGap).toBeGreaterThanOrEqual(15.9);
     expect(geometry.bendGap).toBeGreaterThanOrEqual(29.9);
     expect(geometry.bridgeGap).toBeGreaterThanOrEqual(47.9);
+  });
+
+  test(`crossings have bridges and parallel routes use separate tracks at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await openSetup(page);
+    await page.locator('#fallback').check();
+    await page.getByRole('button', { name: 'View journey', exact: true }).click();
+    await page.evaluate(() => document.fonts.ready);
+    const svg = page.locator('#paths');
+    const crossingGeometry = () => svg.evaluate(element => {
+      const tracks: { axis: number; coordinate: number; start: number; end: number; key: string }[] = [];
+      for (const edge of element.querySelectorAll<SVGPathElement>('#map-edges path')) {
+        const key = (edge.closest('[data-key]') as SVGElement).dataset.key!;
+        let previous: number[] | undefined;
+        for (const command of edge.getAttribute('d')!.matchAll(/([MLQC])\s*([^MLQC]+)/g)) {
+          const point = command[2].trim().split(/\s+/).map(Number).slice(-2);
+          if (command[1] === 'L' && previous) {
+            const axis = Math.abs(previous[0] - point[0]) < 0.1 ? 1 : 0;
+            const start = Math.min(previous[axis], point[axis]);
+            const end = Math.max(previous[axis], point[axis]);
+            if (end - start > 0.25) tracks.push({ axis, coordinate: point[1 - axis], start, end, key });
+          }
+          previous = point;
+        }
+      }
+      const overlaps = tracks.flatMap((track, index) => tracks.slice(0, index).filter(other =>
+        other.key !== track.key && other.axis === track.axis &&
+        Math.abs(other.coordinate - track.coordinate) < 0.1 &&
+        Math.min(other.end, track.end) - Math.max(other.start, track.start) > 0.25,
+      ).map(other => `${track.key} and ${other.key}`));
+      const cutouts = [...element.querySelectorAll<SVGPathElement>('#crossing-masks mask path')];
+      const colors = cutouts.map(cutout => [
+        cutout.dataset.over!.split('-').at(-1),
+        (cutout.parentElement as unknown as SVGElement).dataset.under!.split('-').at(-1),
+      ]);
+      return {
+        overlaps,
+        sameColor: colors.some(([over, under]) => over === under),
+        mixedColors: colors.some(([over, under]) => over !== under),
+        allCurved: cutouts.every(cutout => cutout.getAttribute('d')?.includes(' C ') &&
+          element.querySelector(`#map-edges path[mask="url(#${cutout.parentElement!.id})"]`)),
+      };
+    });
+    const groupPort = (key: string) => svg.locator(`[data-key="${key}"] [data-segment="between"]`)
+      .evaluate(path => (path as SVGPathElement).getBBox().x);
+
+    expect(await crossingGeometry()).toEqual({ overlaps: [], sameColor: true, mixedColors: true, allCurved: true });
+    expect(Math.abs(await groupPort('router-host-request') - await groupPort('router-backup-request'))).toBeGreaterThanOrEqual(9.9);
+    await expect(svg.locator('[data-key="backup-router-return"]')).toHaveCount(1);
+    await expect(svg.locator('[data-key="backup-router-tool"]')).toHaveCount(0);
+
+    await page.locator('#show-copies').uncheck();
+    expect(await crossingGeometry()).toEqual({ overlaps: [], sameColor: true, mixedColors: true, allCurved: true });
   });
 
   test(`connections stop at group boundaries and stay below the headings at ${viewport.width}px`, async ({ page }) => {

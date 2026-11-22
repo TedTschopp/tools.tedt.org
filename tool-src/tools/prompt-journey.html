@@ -126,7 +126,7 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .node[data-has-inside]::after,.inside-key { display:inline-block; width:.58rem; height:.58rem; border:var(--bw-1) solid var(--link); border-radius:var(--bw-1); box-shadow:.18rem -.18rem 0 -.09rem var(--bg-card), .18rem -.18rem 0 0 var(--link); }
 .node[data-has-inside]::after { content:""; position:absolute; top:var(--s-3); right:var(--s-3); }
 .map[data-tight] .copy-card { padding-inline:var(--s-1); }
-.map[data-tight] .node[data-has-inside] { padding-block-start:var(--s-5); padding-inline-end:var(--s-2); }
+.map[data-tight] .node[data-has-inside] { padding-block-start:var(--s-5); padding-inline:var(--s-1); }
 .map[data-tight] .node[data-has-inside]::after { top:var(--s-2); right:var(--s-2); }
 .inside-key { margin-inline-end:var(--s-2); }
 .node:hover { border-color:var(--link); background:var(--bg-hover); }
@@ -341,6 +341,7 @@ details li { margin-bottom:var(--s-3); }
           <marker id="arrow-return" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--copper)"/></marker>
           <marker id="arrow-warn" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/></marker>
         </defs>
+        <defs id="crossing-masks"></defs>
         <g id="copy-edges"></g>
         <g id="map-edges"></g>
       </svg>
@@ -416,7 +417,7 @@ const definitions = {
  logs:{title:'Logs & caches',sub:'Each service, separately',x:380,y:1100,owner:'Each participating service may have its own records.',does:'Can record usage, errors, security events or content. Caches can store answers or reuse prompt processing.',sees:'Metadata, selected content or both, depending on configuration.',keeps:'Unknown in this example. This is a summary box for separate stores, not one shared database.',ask:'Which stores contain content, and how are logs, caches and backups deleted?'},
  training:{title:'Later evaluation / training',sub:'A separate policy choice',x:645,y:1100,owner:'Whoever has permission and access for that later use.',does:'Stored material might later be used to evaluate a system or improve a model if the applicable policy permits it. This is not part of the inference round trip.',sees:'Only material made available for the later process. The diagram makes no claim that this occurs.',keeps:'Separate datasets and records can have their own lifecycle.',ask:'Are training and evaluation allowed? Does that promise cover every supplier?'}
 };
-let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=[], diagramWidth=0;
+let config, steps=[], position=0, selected='user', timer=null, visible=new Set(), activeEdges=new Map(), diagramWidth=0;
 let mapAnimation=null;
 let inspectedButton=null;
 const copyStops = ['history','logs','training'];
@@ -755,51 +756,278 @@ function trafficTrack(phase,direction) {
  const answer=phase==='return'||phase==='tool';
  return (answer?2:0)+(direction<0?1:0);
 }
-function pathInGroup(a,b,phase,compact) {
+function trafficKey(from,to,phase) {
+ return from+'-'+to+'-'+(phase==='tool'?'return':phase);
+}
+function planTraffic(sections,compact) {
+ const stops=new Map(), routes=new Map(), boundaries=new Map();
+ const groups=sections.map((section,index)=>{
+  const group={section,index,padding:16,lanes:[[],[],[],[]]};
+  group.stops=[...section.querySelectorAll('.node')].map((button,index)=>{
+   const id=button.dataset.node;
+   const stop={id,button,group,index,leftPorts:[],rightPorts:[]};
+   stops.set(id,stop);
+   return stop;
+  });
+  return group;
+ });
+ // A tool call and an answer can use the same directed connection.
+ for(const {from,to,phase} of steps) {
+  if(!from)continue;
+  const key=trafficKey(from,to,phase);
+  if(!routes.has(key))routes.set(key,{key,phase,from:{stop:stops.get(from)},to:{stop:stops.get(to)}});
+  if(phase==='return')routes.get(key).phase=phase;
+ }
+ function sidePort(endpoint,side,track,toward) {
+  Object.assign(endpoint,{track,toward,slot:0});
+  endpoint.stop[side+'Ports'].push(endpoint);
+ }
+ function reserveLane(group,track,start,end,ends) {
+  group.lanes[track].push({start:Math.min(start,end),end:Math.max(start,end),ends});
+ }
+ for(const route of routes.values()) {
+  const a=route.from.stop, b=route.to.stop;
+  const groupDirection=Math.sign(b.group.index-a.group.index);
+  const horizontal=Math.sign(definitions[b.id].x-definitions[a.id].x);
+  const vertical=compact?Math.sign(b.index-a.index):Math.sign(definitions[b.id].y-definitions[a.id].y);
+  route.track=trafficTrack(route.phase,groupDirection||vertical||horizontal);
+  if(groupDirection) {
+   const boundary=Math.min(a.group.index,b.group.index);
+   if(!boundaries.has(boundary))boundaries.set(boundary,[]);
+   boundaries.get(boundary).push(route);
+   if(compact) {
+    for(const [endpoint,facing] of [[route.from,groupDirection],[route.to,-groupDirection]]) {
+     const {stop}=endpoint;
+     const adjacent=facing>0?stop.group.stops.length-1:0;
+     if(stop.index===adjacent)continue;
+     const outside=facing>0?stop.group.stops.length:-1;
+     sidePort(endpoint,'left',route.track,facing);
+     reserveLane(stop.group,route.track,stop.index,outside,[endpoint]);
+    }
+   }
+  } else if(compact&&Math.abs(a.index-b.index)>1) {
+   sidePort(route.from,'left',route.track,vertical);
+   sidePort(route.to,'left',route.track,-vertical);
+   reserveLane(a.group,route.track,a.index,b.index,[route.from,route.to]);
+  } else if(!compact&&horizontal) {
+   sidePort(route.from,horizontal>0?'right':'left',route.track,vertical);
+   sidePort(route.to,horizontal>0?'left':'right',route.track,-vertical);
+  }
+ }
+ for(const routesAtBoundary of boundaries.values()) {
+  let usedTracks=0;
+  for(const [track,offset] of trafficPortOffsets.entries()) {
+   const routesOnTrack=routesAtBoundary.filter(route=>route.track===track);
+   for(const [index,route] of routesOnTrack.entries()) {
+    route.boundaryOffset=offset+(index-(routesOnTrack.length-1)/2)*10;
+    route.turnInset=8+(Math.max(track,usedTracks)+index)*10;
+    for(const {stop} of [route.from,route.to]) {
+     if(stop.group.stops.length>1)stop.group.padding=Math.max(stop.group.padding,route.turnInset+12);
+    }
+   }
+   usedTracks=Math.max(usedTracks,track)+routesOnTrack.length;
+  }
+ }
+ const trackCounts=[0,0,0,0];
+ for(const group of groups) {
+  for(const [track,lanes] of group.lanes.entries()) {
+   const occupiedUntil=[];
+   lanes.sort((a,b)=>a.start-b.start||b.end-a.end);
+   for(const lane of lanes) {
+    const reusable=occupiedUntil.findIndex(end=>end<=lane.start);
+    const slot=reusable===-1?occupiedUntil.length:reusable;
+    occupiedUntil[slot]=lane.end;
+    for(const endpoint of lane.ends)endpoint.slot=slot;
+   }
+   trackCounts[track]=Math.max(trackCounts[track],occupiedUntil.length);
+  }
+  for(const stop of group.stops) {
+   for(const ports of [stop.leftPorts,stop.rightPorts]) {
+    ports.sort((a,b)=>a.track-b.track||a.slot-b.slot||a.toward-b.toward);
+    ports.forEach((port,index)=>{port.offset=(index-(ports.length-1)/2)*16;});
+   }
+   stop.portHeight=(Math.max(stop.leftPorts.length,stop.rightPorts.length)-1)*16+24;
+  }
+ }
+ return {groups,routes:[...routes.values()],trackCounts};
+}
+function pointsInGroup(route,compact,trafficRails) {
+ const {from,to,phase,track}=route;
+ const a=from.stop, b=to.stop;
  const verticalDirection=Math.sign(b.y-a.y);
  const horizontalDirection=Math.sign(b.x-a.x);
- const track=trafficTrack(phase,verticalDirection||horizontalDirection);
  const offset=phase==='later'?0:trafficPortOffsets[track];
- if(compact&&Math.abs(a.index-b.index)!==1) {
-  const rail=a.group.trafficRails[track];
-  const startY=a.y+offset, endY=b.y+offset;
-  return pathFromPoints([[a.x-a.width/2,startY],[rail,startY],[rail,endY],[b.x-b.width/2,endY]],trafficCornerRadius);
+ if(compact&&from.offset!==undefined) {
+  const rail=trafficRails[track][from.slot];
+  const startY=a.y+from.offset, endY=b.y+to.offset;
+  return [[a.x-a.width/2,startY],[rail,startY],[rail,endY],[b.x-b.width/2,endY]];
  }
  if(compact||a.x===b.x) {
   const x=a.x+offset;
-  return `M ${x} ${a.y+verticalDirection*a.height/2} V ${b.y-verticalDirection*b.height/2}`;
+  return [[x,a.y+verticalDirection*a.height/2],[x,b.y-verticalDirection*b.height/2]];
  }
  const direction=horizontalDirection;
- const x1=a.x+direction*a.width/2, x2=b.x-direction*b.width/2, mid=(x1+x2)/2;
- const y1=a.y+offset,y2=b.y+offset;
- return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`;
+ const x1=a.x+direction*a.width/2, x2=b.x-direction*b.width/2;
+ const y1=a.y+from.offset,y2=b.y+to.offset;
+ if(y1===y2)return [[x1,y1],[x2,y2]];
+ const mid=(x1+x2)/2+offset/2+direction*3;
+ return [[x1,y1],[mid,y1],[mid,y2],[x2,y2]];
 }
-function pathFromPoints(points,cornerRadius=0) {
- return points.map(([x,y],index)=>{
-  if(index===0)return `M ${x} ${y}`;
-  const next=points[index+1];
-  if(!cornerRadius||!next)return `L ${x} ${y}`;
-  const previous=points[index-1];
-  const inX=x-previous[0], inY=y-previous[1];
-  const outX=next[0]-x, outY=next[1]-y;
-  if(inX*outY===inY*outX)return `L ${x} ${y}`;
-
-  const inLength=Math.hypot(inX,inY);
-  const outLength=Math.hypot(outX,outY);
-  // Keep straight approaches at the ends and room for a bend on either side of each leg.
-  const radius=Math.min(cornerRadius,inLength/2,outLength/2);
-  const startX=x-inX/inLength*radius, startY=y-inY/inLength*radius;
-  const endX=x+outX/outLength*radius, endY=y+outY/outLength*radius;
-  return `L ${startX} ${startY} Q ${x} ${y} ${endX} ${endY}`;
- }).join(' ');
+function pathFromPoints(points) {
+ return points.map(([x,y],index)=>`${index?'L':'M'} ${x} ${y}`).join(' ');
 }
-function stopToGroupPort(stop,x,facing,compact,track) {
+function pointOnLine(run,distance,lift=0) {
+ const point=[...run.start];
+ point[run.axis]+=distance*run.direction;
+ point[1-run.axis]+=lift;
+ return point.join(' ');
+}
+function findCrossings(runs) {
+ const horizontal=runs.filter(run=>run.axis===0);
+ const vertical=runs.filter(run=>run.axis===1);
+ const crossings=[];
+ for(const across of horizontal) {
+  for(const down of vertical) {
+   if(across.wire.route===down.wire.route)continue;
+   const x=(down.start[0]-across.start[0])*across.direction;
+   const y=(across.start[1]-down.start[1])*down.direction;
+   if(x<=0.1||x>=across.length-0.1||y<=0.1||y>=down.length-0.1)continue;
+   const h={run:across,distance:x}, v={run:down,distance:y};
+   across.crossings.push(h);
+   down.crossings.push(v);
+   crossings.push([h,v]);
+  }
+ }
+ for(const run of runs) {
+  run.crossings.sort((a,b)=>a.distance-b.distance);
+  for(const [index,crossing] of run.crossings.entries()) {
+   const previous=run.crossings[index-1], next=run.crossings[index+1];
+   const before=previous?crossing.distance-previous.distance:Infinity;
+   const after=next?next.distance-crossing.distance:Infinity;
+   crossing.room=Math.min(6,crossing.distance*.75,(run.length-crossing.distance)*.75,before*.45,after*.45);
+  }
+ }
+ for(const [horizontal,vertical] of crossings) {
+  // Prefer a horizontal bridge. A vertical bridge fits beside short leads into stops.
+  const over=horizontal.room>=2.8||horizontal.room>=vertical.room?horizontal:vertical;
+  const under=over===horizontal?vertical:horizontal;
+  over.under=under;
+  const preferred=over.run.axis===0?-1:1;
+  const lift=Math.min(5,over.room+1.5)*preferred;
+  const apex=under.distance+lift*under.run.direction;
+  over.lift=apex>=2&&apex<=under.run.length-2?lift:-lift;
+  over.before=over.after=0;
+ }
+ for(const run of runs) {
+  for(let index=0;index<run.crossings.length;index++) {
+   const first=run.crossings[index];
+   if(!first.under)continue;
+   let last=first, endIndex=index;
+   // Use one bridge over closely spaced lanes so small screens have a clear crossing.
+   while(endIndex+1<run.crossings.length) {
+    const next=run.crossings[endIndex+1];
+    if(!next.under||next.distance-last.distance>9||Math.sign(next.lift)!==Math.sign(first.lift))break;
+    last=next;
+    endIndex++;
+   }
+   const span=run.crossings.slice(index,endIndex+1);
+   const lift=Math.sign(first.lift)*Math.min(...span.map(crossing=>Math.abs(crossing.lift)));
+   first.before=first.room;
+   last.after=last.room;
+   const start=pointOnLine(run,first.distance-first.before);
+   const finish=pointOnLine(run,last.distance+last.after);
+   const rise=pointOnLine(run,first.distance-first.before*.55);
+   const raisedLeft=pointOnLine(run,first.distance-first.before*.5,lift);
+   const topLeft=pointOnLine(run,first.distance,lift);
+   const topRight=pointOnLine(run,last.distance,lift);
+   const raisedRight=pointOnLine(run,last.distance+last.after*.5,lift);
+   const fall=pointOnLine(run,last.distance+last.after*.55);
+   const deck=first===last?'':` L ${topRight}`;
+   const curve=`C ${rise} ${raisedLeft} ${topLeft}${deck} C ${raisedRight} ${fall} ${finish}`;
+   first.bridge={start,curve};
+   for(const {under} of span) {
+    under.before=Math.max(0,4-lift*under.run.direction);
+    under.after=Math.max(0,4+lift*under.run.direction);
+    under.run.wire.clearances.push({route:run.wire.route.key,start,curve});
+   }
+   index=endIndex;
+  }
+ }
+}
+function curvedWirePath(wire) {
+ let d='M '+wire.points[0].join(' ');
+ for(const [index,run] of wire.runs.entries()) {
+  for(const crossing of run.crossings) {
+   if(crossing.bridge)d+=` L ${crossing.bridge.start} ${crossing.bridge.curve}`;
+  }
+  const next=wire.runs[index+1];
+  let radius=0;
+  if(next&&run.axis!==next.axis) {
+   const last=run.crossings.at(-1), first=next.crossings[0];
+   const before=last?run.length-last.distance-last.after:run.length;
+   const after=first?first.distance-first.before:next.length;
+   radius=Math.max(0,Math.min(trafficCornerRadius,run.length/2,next.length/2,before,after));
+  }
+  d+=' L '+pointOnLine(run,run.length-radius);
+  if(radius)d+=` Q ${run.end.join(' ')} ${pointOnLine(next,radius)}`;
+ }
+ return d;
+}
+function drawCrossingWires(wires,width,height) {
+ const masks=$('crossing-masks');
+ masks.replaceChildren();
+ const runs=wires.flatMap(wire=>{
+  wire.points=wire.points.filter(([x,y],index,points)=>index===0||x!==points[index-1][0]||y!==points[index-1][1]);
+  wire.clearances=[];
+  wire.runs=wire.points.slice(1).map((end,index)=>{
+   const start=wire.points[index];
+   const axis=start[0]===end[0]?1:0;
+   const signedLength=end[axis]-start[axis];
+   return {wire,start,end,axis,length:Math.abs(signedLength),direction:Math.sign(signedLength),crossings:[]};
+  });
+  return wire.runs;
+ });
+ findCrossings(runs);
+ for(const [index,wire] of wires.entries()) {
+  wire.element.setAttribute('d',curvedWirePath(wire));
+  if(!wire.clearances.length)continue;
+  const mask=document.createElementNS(svgNamespace,'mask');
+  mask.id='traffic-crossing-'+index;
+  mask.dataset.under=wire.route.key;
+  mask.setAttribute('maskUnits','userSpaceOnUse');
+  mask.setAttribute('x',0);
+  mask.setAttribute('y',0);
+  mask.setAttribute('width',width);
+  mask.setAttribute('height',height);
+  const clear=document.createElementNS(svgNamespace,'rect');
+  clear.setAttribute('width',width);
+  clear.setAttribute('height',height);
+  clear.setAttribute('fill','white');
+  mask.append(clear);
+  for(const {route,start,curve} of wire.clearances) {
+   const gap=document.createElementNS(svgNamespace,'path');
+   gap.dataset.over=route;
+   gap.setAttribute('d',`M ${start} ${curve}`);
+   gap.setAttribute('fill','none');
+   gap.setAttribute('stroke','black');
+   gap.setAttribute('stroke-width','7');
+   gap.setAttribute('stroke-linecap','round');
+   mask.append(gap);
+  }
+  masks.append(mask);
+  wire.element.setAttribute('mask',`url(#${mask.id})`);
+ }
+}
+function stopToGroupPort(endpoint,x,facing,compact,route,trafficRails) {
+ const {stop}=endpoint;
+ const {track,turnInset}=route;
  const group=stop.group;
  const edgeY=facing===1?group.bottom:group.headerBottom;
  const row=facing===1?group.lastRow:group.firstRow;
  const stopY=stop.y+facing*stop.height/2;
- const stopX=Math.max(stop.x-stop.width/2+10,Math.min(x,stop.x+stop.width/2-10));
- const approachY=edgeY-facing*(8+track*10);
+ const inset=compact?10:10+track*8;
+ const stopX=Math.max(stop.x-stop.width/2+inset,Math.min(x,stop.x+stop.width/2-inset));
+ const approachY=edgeY-facing*turnInset;
  const lead=[[stopX,stopY]];
  const end=[[x,approachY],[x,edgeY]];
  if(stop.y===row) {
@@ -807,7 +1035,7 @@ function stopToGroupPort(stop,x,facing,compact,track) {
   return [...lead,[stopX,approachY],...end];
  }
  if(compact) {
-  const y=stop.y+trafficPortOffsets[track], rail=group.trafficRails[track];
+  const y=stop.y+endpoint.offset, rail=trafficRails[track][endpoint.slot];
   return [[stop.x-stop.width/2,y],[rail,y],[rail,approachY],...end];
  }
  const center=group.trafficCenter;
@@ -822,29 +1050,30 @@ function drawEdgePath(d,phase) {
  path.setAttribute('class','edge '+phase);
  return path;
 }
-function drawBoundaryLink(from,to,phase,compact,arrow) {
+function drawBoundaryLink(route,compact,trafficRails,arrow,wires) {
+ const {from,to,phase}=route;
+ const a=from.stop, b=to.stop;
  const link=document.createElementNS(svgNamespace,'g');
  link.setAttribute('class','edge-link '+phase);
- const outward=to.group.top>from.group.top;
+ const outward=b.group.top>a.group.top;
  const direction=outward?1:-1;
- const track=trafficTrack(phase,direction);
- const center=from.group.trafficCenter;
- const x=center+trafficPortOffsets[track];
- const exitY=outward?from.group.bottom:from.group.top;
- const enterY=outward?to.group.top:to.group.bottom;
- const exit=stopToGroupPort(from,x,direction,compact,track);
- const entry=stopToGroupPort(to,x,-direction,compact,track).reverse();
+ const x=a.group.trafficCenter+route.boundaryOffset;
+ const exitY=outward?a.group.bottom:a.group.top;
+ const enterY=outward?b.group.top:b.group.bottom;
+ const exit=stopToGroupPort(from,x,direction,compact,route,trafficRails);
+ const entry=stopToGroupPort(to,x,-direction,compact,route,trafficRails).reverse();
  const bridge=[[x,exitY],[x,(exitY+enterY)/2],[x,enterY]];
 
- const exitPath=drawEdgePath(pathFromPoints(exit,trafficCornerRadius),phase);
+ const exitPath=drawEdgePath('',phase);
  exitPath.dataset.segment='exit';
  const bridgePath=drawEdgePath(pathFromPoints(bridge),phase);
  bridgePath.dataset.segment='between';
  bridgePath.setAttribute('marker-mid',arrow);
- const entryPath=drawEdgePath(pathFromPoints(entry,trafficCornerRadius),phase);
+ const entryPath=drawEdgePath('',phase);
  entryPath.dataset.segment='entry';
  entryPath.setAttribute('marker-end',arrow);
  link.append(exitPath,bridgePath,entryPath);
+ wires.push({route,element:exitPath,points:exit},{route,element:entryPath,points:entry});
 
  // The header occupies the space between its outer and inner ports.
  const ports=new Set([exitY,enterY,exit.at(-1)[1],entry[0][1]]);
@@ -887,18 +1116,26 @@ function layoutDiagram() {
  diagramWidth=diagram.clientWidth;
  const copies=config.showCopies;
  const compact=copies||diagramWidth<540;
+ const {groups,routes,trackCounts}=planTraffic(sections,compact);
  const tight=diagramWidth<400;
  const groupInset=copies?(tight?4:8):16;
  const groupGap=40, rowGap=36;
  const contentWidth=diagramWidth-2*groupInset;
- const copyWidth=copies?Math.min(contentWidth*.36,210):0;
- const copyGap=copies?Math.min(44,Math.max(18,contentWidth*.065)):0;
+ const copyWidth=copies?Math.min(contentWidth*(tight ? .35 : .36),210):0;
+ const copyGap=copies?Math.min(44,Math.max(16,contentWidth*.062)):0;
  const trafficRight=copies?contentWidth-copyWidth-copyGap-6:compact?contentWidth-12:contentWidth;
- const trackSpacing=Math.max(10,Math.min(20,contentWidth*.035));
- const railStart=tight?6:10;
- // Leave a wider gap between the request and answer tracks.
- const trafficRails=[0,1,2.5,3.5].map(slot=>groupInset+railStart+slot*trackSpacing);
- const trafficGutter=compact?trafficRails.at(-1)-groupInset+(tight?8:12):0;
+ const laneSpacing=Math.max(6,Math.min(14,contentWidth*.022));
+ let rail=groupInset+(tight?6:10);
+ const trafficRails=trackCounts.map((count,track)=>{
+  if(track===2&&(trackCounts[0]||trackCounts[1]))rail+=tight?3:6;
+  return Array.from({length:count},()=>{
+   const x=rail;
+   rail+=laneSpacing;
+   return x;
+  });
+ });
+ const lastRail=Math.max(groupInset,...trafficRails.flat());
+ const trafficGutter=compact?Math.max(12,lastRail-groupInset+(tight?8:12)):0;
  const trafficCenter=(trafficGutter+trafficRight)/2;
  diagram.dataset.layout=compact?'stacked':'columns';
  diagram.toggleAttribute('data-copies',copies);
@@ -910,34 +1147,31 @@ function layoutDiagram() {
   button.style.width=width+'px';
   button.style.height='auto';
  }
- const cardHeight=Math.ceil(Math.max(...buttons.map(button=>button.getBoundingClientRect().height)));
+ const measuredHeight=Math.ceil(Math.max(...buttons.map(button=>button.getBoundingClientRect().height)));
+ const cardHeight=compact?measuredHeight:Math.max(measuredHeight,...groups.flatMap(group=>group.stops.map(stop=>stop.portHeight)));
  const rowScale=Math.max(1,(cardHeight+28)/100);
- const positions=new Map();
  let groupTop=groupInset;
- for(const section of sections) {
+ for(const group of groups) {
+  const {section,stops,padding:groupPadding}=group;
   section.style.left=groupInset+'px';
   section.style.width=contentWidth+'px';
   section.style.top=groupTop+'px';
-  const stops=[...section.querySelectorAll('.node')];
-  const stopIds=new Set(stops.map(button=>button.dataset.node));
-  const needsTurnSpace=stops.length>1&&steps.some(({from,to})=>from&&(stopIds.has(from)!==stopIds.has(to)));
-  const groupPadding=needsTurnSpace?48:16;
-  const rowStart=Math.min(...stops.map(button=>definitions[button.dataset.node].y));
+  const rowStart=Math.min(...stops.map(stop=>definitions[stop.id].y));
   const headingHeight=section.querySelector('h3').getBoundingClientRect().height;
   const firstRow=headingHeight+groupPadding+cardHeight/2;
-  const group={
+  Object.assign(group,{
    left:groupInset,right:groupInset+contentWidth,top:groupTop,headerBottom:groupTop+headingHeight,
-   trafficCenter:groupInset+trafficCenter,trafficRails,
+   trafficCenter:groupInset+trafficCenter,
    firstRow:groupTop+firstRow,lastRow:0,bottom:0,
-  };
+  });
   let lastCenter=firstRow;
   let rowTop=headingHeight+groupPadding;
-  for(const [index,button] of stops.entries()) {
-   const id=button.dataset.node, definition=definitions[id];
+  for(const stop of stops) {
+   const {id,button,index}=stop, definition=definitions[id];
    const x=compact?trafficCenter:contentWidth*definition.x/760;
-   let height=cardHeight;
-   let y=firstRow+(compact?index*(cardHeight+rowGap):(definition.y-rowStart)*rowScale);
-   if(copies) {
+   let height=Math.max(cardHeight,stop.portHeight);
+   let y=firstRow+(definition.y-rowStart)*rowScale;
+   if(compact) {
     let rowBottom=rowTop+height;
     y=rowTop+height/2;
     const records=button.nextElementSibling;
@@ -961,12 +1195,10 @@ function layoutDiagram() {
    button.style.left=x+'px';
    button.style.top=y+'px';
    button.style.height=height+'px';
-   positions.set(id,{
-    x:x+groupInset,y:y+groupTop,width:parseFloat(button.style.width),height,index,group,
-   });
+   Object.assign(stop,{x:x+groupInset,y:y+groupTop,width:parseFloat(button.style.width),height});
    lastCenter=Math.max(lastCenter,y);
   }
-  const groupHeight=Math.ceil((copies?rowTop-rowGap:lastCenter+cardHeight/2)+groupPadding);
+  const groupHeight=Math.ceil((compact?rowTop-rowGap:lastCenter+cardHeight/2)+groupPadding);
   group.lastRow=groupTop+lastCenter;
   group.bottom=groupTop+groupHeight;
   section.style.height=groupHeight+'px';
@@ -977,31 +1209,31 @@ function layoutDiagram() {
  $('paths').setAttribute('viewBox',`0 0 ${diagramWidth} ${mapHeight}`);
  drawCopyEdges(diagram);
  $('map-edges').replaceChildren();
- activeEdges=[];
- const edgeKeys=new Set();
- function addEdge(from,to,phase) {
-  const key=from+'-'+to+'-'+phase;
-  if(edgeKeys.has(key))return;
-  edgeKeys.add(key);
-  const a=positions.get(from), b=positions.get(to);
+ activeEdges.clear();
+ const wires=[];
+ for(const route of routes) {
+  const {from,to,phase,key}=route;
   const arrowColor=phase==='request'?'request':phase==='later'?'warn':'return';
   const arrow='url(#arrow-'+arrowColor+')';
-  const sameGroup=a.group===b.group;
+  const sameGroup=from.stop.group===to.stop.group;
   const edge=sameGroup
-   ?drawEdgePath(pathInGroup(a,b,phase,compact),phase)
-   :drawBoundaryLink(a,b,phase,compact,arrow);
-  if(sameGroup)edge.setAttribute('marker-end',arrow);
-  edge.dataset.key=key;
-  activeEdges.push(edge);
+   ?drawEdgePath('',phase)
+   :drawBoundaryLink(route,compact,trafficRails,arrow,wires);
+  if(sameGroup) {
+   edge.setAttribute('marker-end',arrow);
+   wires.push({route,element:edge,points:pointsInGroup(route,compact,trafficRails)});
+  }
+  edge.dataset.key=from.stop.id+'-'+to.stop.id+'-'+phase;
+  activeEdges.set(key,edge);
   $('map-edges').append(edge);
  }
- for(const step of steps)if(step.from)addEdge(step.from,step.to,step.phase);
+ drawCrossingWires(wires,diagramWidth,mapHeight);
  highlightMapEdge(steps[position]);
 }
 function highlightMapEdge(step) {
- const key=step.from+'-'+step.to+'-'+step.phase;
- for(const path of activeEdges) {
-  const active=path.dataset.key===key;
+ const key=trafficKey(step.from,step.to,step.phase);
+ for(const [route,path] of activeEdges) {
+  const active=route===key;
   path.classList.toggle('active',active);
   if(active)$('map-edges').append(path);
  }
