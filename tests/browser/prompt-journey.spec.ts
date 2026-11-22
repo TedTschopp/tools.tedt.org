@@ -29,6 +29,7 @@ async function followState(page: Page, target?: string) {
     const nodeBounds = current.getBoundingClientRect();
     const playbackBounds = playback.getBoundingClientRect();
     const playbackSharesMapColumn = playbackBounds.left < paneBounds.right && playbackBounds.right > paneBounds.left;
+    const onPage = getComputedStyle(pane).overflowY === 'visible';
     return {
       current: current.dataset.node,
       node: { top: nodeBounds.top, right: nodeBounds.right, bottom: nodeBounds.bottom, left: nodeBounds.left },
@@ -40,6 +41,8 @@ async function followState(page: Page, target?: string) {
       },
       paneTop: pane.scrollTop,
       paneLeft: pane.scrollLeft,
+      onPage,
+      routeScrollTop: onPage ? scrollY : pane.scrollTop,
       pageX: scrollX,
       pageY: scrollY,
       playbackTop: playbackBounds.top,
@@ -47,6 +50,17 @@ async function followState(page: Page, target?: string) {
       viewportHeight: innerHeight,
     };
   }, target);
+}
+
+async function scrollToEndOfMap(page: Page) {
+  await page.locator('.map-scroll').evaluate(pane => {
+    if (getComputedStyle(pane).overflowY === 'visible') {
+      const bottom = scrollY + pane.getBoundingClientRect().bottom;
+      window.scrollTo({ top: bottom - innerHeight + 16, behavior: 'instant' });
+    } else {
+      pane.scrollTo({ top: pane.scrollHeight, behavior: 'instant' });
+    }
+  });
 }
 
 async function expectCurrentStopVisible(page: Page, target?: string) {
@@ -548,7 +562,7 @@ for (const setup of [
     await page.clock.runFor(32);
     const initial = await expectCurrentStopVisible(page);
     const visited = new Set([initial.current]);
-    const paneTops = [initial.paneTop];
+    const routePositions = [initial.routeScrollTop];
 
     for (let step = 1; step <= lastStep; step += 1) {
       await page.clock.runFor(2000);
@@ -556,15 +570,16 @@ for (const setup of [
       await expect(page.locator('#progress')).toHaveJSProperty('value', step);
       const state = await expectCurrentStopVisible(page);
       visited.add(state.current);
-      paneTops.push(state.paneTop);
+      routePositions.push(state.routeScrollTop);
       expect(state.paneLeft, `diagram horizontal position at step ${step}`).toBe(0);
       expect(Math.abs(state.pageX - initial.pageX), `page x at step ${step}`).toBeLessThanOrEqual(1);
-      expect(Math.abs(state.pageY - initial.pageY), `page y at step ${step}`).toBeLessThanOrEqual(1);
+      if (initial.onPage) expect(state.paneTop).toBe(0);
+      else expect(Math.abs(state.pageY - initial.pageY), `page y at step ${step}`).toBeLessThanOrEqual(1);
       expect(Math.abs(state.playbackTop - initial.playbackTop), `control position at step ${step}`).toBeLessThanOrEqual(1);
       if (step < lastStep) await expect(page.locator('#play')).toBeFocused();
     }
 
-    expect(Math.max(...paneTops) - Math.min(...paneTops), 'the map must pan vertically').toBeGreaterThan(100);
+    expect(Math.max(...routePositions) - Math.min(...routePositions), 'the route must follow steps vertically').toBeGreaterThan(100);
     if (setup.scenario === 'enterprise') {
       for (const stop of ['retrieval', 'router', 'host', 'backup', 'tool', 'checks', 'model']) {
         expect(visited, `the full walkthrough includes ${stop}`).toContain(stop);
@@ -589,6 +604,7 @@ for (const viewport of [{ width: 375, height: 844 }, { width: 844, height: 390 }
     await page.keyboard.press('Space');
     await page.clock.runFor(32);
     const initial = await expectCurrentStopVisible(page);
+    expect(initial.onPage).toBe(true);
     const visited: string[] = [initial.current!];
 
     for (let step = 1; step <= lastStep; step += 1) {
@@ -596,7 +612,7 @@ for (const viewport of [{ width: 375, height: 844 }, { width: 844, height: 390 }
       await expect(page.locator('#progress')).toHaveJSProperty('value', step);
       const state = await expectCurrentStopVisible(page);
       visited.push(state.current!);
-      expect(Math.abs(state.pageY - initial.pageY), `page position at step ${step}`).toBeLessThanOrEqual(1);
+      expect(state.paneTop, `inner scroll position at step ${step}`).toBe(0);
       expect(Math.abs(state.pageX - initial.pageX), `page horizontal position at step ${step}`).toBeLessThanOrEqual(1);
       expect(Math.abs(state.playbackTop - initial.playbackTop), `controls at step ${step}`).toBeLessThanOrEqual(1);
       if (step < lastStep) await expect(page.locator('#play')).toBeFocused();
@@ -604,7 +620,9 @@ for (const viewport of [{ width: 375, height: 844 }, { width: 844, height: 390 }
 
     expect(visited.slice(-5)).toEqual(['user', 'unknown', 'canary', 'security', 'security']);
     await expect(page.locator('#step-title')).toHaveText('Investigate before assigning blame');
+    await page.getByRole('link', { name: 'Read step' }).click();
     await expect(page.locator('#step-title')).toBeInViewport({ ratio: 1 });
+    await expect(page.locator('#step-title')).toBeFocused();
     await expect(page.locator('#play')).toHaveAccessibleName('Play');
     await expect(page.locator('#play')).toBeDisabled();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -617,20 +635,19 @@ test('reduced-motion following is immediate and a paused map stays where the rea
   await pauseJourneyClock(page);
   await openSetup(page);
   await page.locator('#step-delay').selectOption('2000');
-  const map = page.locator('.map-scroll');
-  await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, behavior: 'instant' }));
+  await scrollToEndOfMap(page);
   await page.locator('#play').click();
   await page.clock.runFor(32);
   await expectCurrentStopVisible(page);
   await page.clock.runFor(4032);
   await expectCurrentStopVisible(page);
   await page.locator('#play').click();
-  await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, behavior: 'instant' }));
+  await scrollToEndOfMap(page);
   const paused = await followState(page);
   const pausedStep = await page.locator('#step-count').innerText();
   await page.clock.runFor(20_000);
   const afterPause = await followState(page);
-  expect(afterPause.paneTop).toBe(paused.paneTop);
+  expect(afterPause.routeScrollTop).toBe(paused.routeScrollTop);
   expect(afterPause.paneLeft).toBe(paused.paneLeft);
   await expect(page.locator('#step-count')).toHaveText(pausedStep);
 
@@ -664,9 +681,9 @@ test('normal-motion playback smoothly reaches a distant node and pause freezes t
       state.node.left >= state.visible.left - 1 && state.node.right <= state.visible.right + 1;
   }, { timeout: 1500, intervals: [50, 100, 150] }).toBe(true);
   const afterPan = await expectCurrentStopVisible(page);
-  expect(Math.abs(afterPan.paneTop - start.paneTop)).toBeGreaterThan(100);
+  expect(Math.abs(afterPan.routeScrollTop - start.routeScrollTop)).toBeGreaterThan(100);
   expect(afterPan.paneLeft).toBe(0);
-  expect(Math.abs(afterPan.pageY - start.pageY)).toBeLessThanOrEqual(1);
+  expect(afterPan.paneTop).toBe(0);
   expect(Math.abs(afterPan.playbackTop - start.playbackTop)).toBeLessThanOrEqual(1);
   await expect(page.locator('#play')).toBeFocused();
   await page.keyboard.press('Space');
@@ -675,7 +692,7 @@ test('normal-motion playback smoothly reaches a distant node and pause freezes t
   const pausedStep = await page.locator('#step-count').innerText();
   await page.waitForTimeout(2200);
   const later = await followState(page);
-  expect(later.paneTop).toBe(paused.paneTop);
+  expect(later.routeScrollTop).toBe(paused.routeScrollTop);
   expect(later.paneLeft).toBe(paused.paneLeft);
   await expect(page.locator('#step-count')).toHaveText(pausedStep);
   await expect(page.locator('#play')).toBeFocused();
@@ -780,24 +797,51 @@ for (const width of [320, 375, 600, 1035, 1440]) {
   });
 }
 
-test('the operator note stays above the diagram when the viewer narrows and scrolls', async ({ page }) => {
+test('the operator note precedes the diagram in both layouts', async ({ page }) => {
   await page.locator('#jump-model').click();
   for (const width of [1200, 390]) {
     await page.setViewportSize({ width, height: 844 });
     const diagram = page.locator('#diagram');
     const caption = page.locator('#map-context');
-    const map = page.getByRole('region', { name: 'Scrollable route diagram', exact: true });
+    const map = page.getByRole('region', { name: 'Route stops', exact: true });
     await expect(diagram).toHaveAttribute('data-layout', width===1200?'columns':'stacked');
     await expect(caption).toHaveText('Stops can have different operators.');
     await expect(map).toHaveAccessibleDescription(/Stops can have different operators/);
     const captionBounds = await caption.boundingBox();
     const mapBounds = await map.boundingBox();
     expect(captionBounds!.y + captionBounds!.height).toBeLessThan(mapBounds!.y);
-    await map.evaluate(element => element.scrollTo({ top: element.scrollHeight, left: element.scrollWidth }));
-    expect(await caption.boundingBox()).toEqual(captionBounds);
+    await scrollToEndOfMap(page);
+    const nextCaption = await caption.boundingBox();
+    const nextMap = await map.boundingBox();
+    expect(nextCaption!.y + nextCaption!.height).toBeLessThan(nextMap!.y);
     expect(await map.evaluate(element => element.scrollLeft)).toBe(0);
     await expect(page.locator('#step-title')).toHaveText('The model receives the context');
   }
+});
+
+test('scrolling the narrow route moves the page and gives the reader control of playback', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await pauseJourneyClock(page);
+
+  const pane = page.locator('.map-scroll');
+  await expect(pane).toHaveCSS('overflow-y', 'visible');
+  expect(await pane.evaluate(element => element.clientHeight === element.scrollHeight)).toBe(true);
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  const start = await expectCurrentStopVisible(page);
+  const bounds = await node(page, 'user').boundingBox();
+  await page.mouse.move(bounds!.x + bounds!.width / 2, bounds!.y + bounds!.height / 2);
+  await page.mouse.wheel(0, 400);
+
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(start.pageY + 250);
+  await expect(page.locator('#play')).toHaveAccessibleName('Play');
+  await page.clock.runFor(20_000);
+  await expect(page.locator('#step-count')).toHaveText('Step 1 of 35');
+  expect(await pane.evaluate(element => element.scrollTop)).toBe(0);
+
+  await page.getByRole('link', { name: 'Read step' }).click();
+  await expect(page.locator('#step-title')).toBeFocused();
+  await expect(page.locator('#step-title')).toBeInViewport({ ratio: 1 });
 });
 
 test('the tool is discoverable and launches from its catalog description', async ({ page }) => {

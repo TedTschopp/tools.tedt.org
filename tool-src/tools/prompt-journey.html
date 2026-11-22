@@ -76,6 +76,7 @@ input[type=checkbox] { width:1.1rem; height:1.1rem; accent-color:var(--accent); 
 #step-route { margin:0 0 var(--s-2); font-size:var(--fs-small); color:var(--fg-2); }
 #step-text { margin:0; }
 #step-count { font-family:var(--font-mono); color:var(--fg-2); font-size:var(--fs-small); }
+#read-step { display:none; }
 .journey-position { display:flex; align-items:center; gap:var(--s-3); }
 progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .transport,.milestones { display:flex; gap:var(--s-2); align-items:center; }
@@ -130,14 +131,16 @@ details li { margin-bottom:var(--s-3); }
 .tt-about p+p { margin-top:var(--s-2); }
 #download-status { font-size:var(--fs-small); margin:var(--s-2) 0 0; }
 .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
-@media (max-width:63.99rem) and (min-height:35rem), (max-width:43.99rem) {
- .workspace { --viewer-gap:var(--s-2); --step-height:clamp(7rem, 29dvh, 16rem); grid-template-columns:minmax(0,1fr); }
+@media (max-width:63.99rem) {
+ .workspace { --viewer-gap:var(--s-2); --below-playback:calc(var(--viewer-top) + var(--controls-height) + var(--viewer-gap)); grid-template-columns:minmax(0,1fr); overflow-anchor:none; }
  .guide,.guide-content { display:contents; }
  .playback-panel { grid-row:1; position:sticky; top:var(--viewer-top); z-index:var(--z-raised); }
- .step-panel { grid-row:2; height:var(--step-height); overflow:auto; overscroll-behavior:contain; }
- .map-panel { grid-column:1; grid-row:3; height:max(9rem, calc(var(--viewer-height) - var(--controls-height) - var(--step-height) - 2 * var(--viewer-gap))); }
+ #read-step { display:inline-flex; align-items:center; min-height:1.5rem; white-space:nowrap; font-size:var(--fs-small); }
+ .step-panel { grid-row:2; }
+ .map-panel { grid-column:1; grid-row:3; height:auto; }
+ .map-scroll { flex:none; overflow:visible; overscroll-behavior:auto; scrollbar-gutter:auto; }
  .inspector-panel { grid-row:4; margin:0; }
- #detail-title { scroll-margin-top:calc(var(--viewer-top) + var(--controls-height) + var(--viewer-gap)); }
+ #step-title,#detail-title,.node { scroll-margin-top:var(--below-playback); }
 }
 @media (max-width:40rem) {
  .tt-shell { padding:var(--s-4) var(--s-3) var(--s-8); }
@@ -156,14 +159,11 @@ details li { margin-bottom:var(--s-3); }
  .map-panel .tt-panel-head h2 { font-size:var(--fs-body); }
  .map-key { padding:var(--s-1) var(--s-3); }
  .map-tip { display:none; }
+}
+@media (min-width:64rem) and (max-height:36rem) {
  .map-panel .legend { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); }
 }
-@media (max-width:43.99rem) and (max-height:36rem) {
- .workspace { --step-height:6rem; }
- .map-panel { height:calc(max(8rem, var(--viewer-height) - var(--controls-height) - var(--step-height) - 2 * var(--viewer-gap)) + 2.75rem + 2 * var(--bw-1)); }
- .map-panel .tt-panel-head { order:1; border-top:var(--border); border-bottom:0; }
-}
-@media print { .setup-panel,.transport,.milestones,.tt-actions,.tt-catalog-return,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; height:auto; } .guide-content,.step-panel,.map-scroll { display:block; height:auto; overflow:visible; } .playback-panel { position:static; } .map-panel { height:auto; display:block; } .map { min-width:0; } .map-panel { break-before:page; } .tt-shell { padding:0; } }
+@media print { .setup-panel,.transport,.milestones,.tt-actions,.tt-catalog-return,#read-step,tedt-global-header { display:none; } .workspace { display:block; } .guide { position:static; display:block; height:auto; } .guide-content,.step-panel,.map-scroll { display:block; height:auto; overflow:visible; } .playback-panel { position:static; } .map-panel { height:auto; display:block; break-before:page; } .tt-shell { padding:0; } }
 </style>
 </head>
 <body>
@@ -237,6 +237,7 @@ details li { margin-bottom:var(--s-3); }
 <div class="tt-panel-body">
   <div class="journey-position">
     <span id="step-count"></span><progress id="progress" aria-label="Journey progress" max="1" value="0"></progress>
+    <a id="read-step" href="#step-title">Read step</a>
   </div>
   <div class="transport" role="group" aria-label="Journey playback">
     <button id="back" type="button">Back</button>
@@ -260,7 +261,10 @@ details li { margin-bottom:var(--s-3); }
   <p id="step-text"></p>
   <div class="payload"><h3 id="payload-title">Your message</h3><p id="payload"></p></div>
 </div></section>
-<section class="tt-panel inspector-panel" aria-labelledby="detail-title"><div class="tt-panel-head"><h2 id="detail-title" tabindex="-1">Your device</h2></div><div id="detail-body" class="tt-panel-body"></div><div class="tt-panel-body" id="map-return" hidden><button type="button" id="back-map">Return to selected stop</button></div></section>
+<section class="tt-panel inspector-panel" aria-labelledby="detail-title">
+  <div class="tt-panel-head"><h2 id="detail-title" tabindex="-1">Your device</h2><button type="button" id="back-map" hidden>Return to stop</button></div>
+  <div id="detail-body" class="tt-panel-body"></div>
+</section>
 </div>
 </aside>
 <section class="tt-panel map-panel" aria-labelledby="map-title">
@@ -275,7 +279,7 @@ details li { margin-bottom:var(--s-3); }
     </div>
   </div>
   <p class="visually-hidden" id="map-help">Scroll up or down. Select a stop to inspect what it receives and may save.</p>
-  <div class="map-scroll" tabindex="0" role="region" aria-label="Scrollable route diagram" aria-describedby="map-caption map-help">
+  <div class="map-scroll" tabindex="0" role="region" aria-label="Route stops" aria-describedby="map-caption map-help">
     <div class="map" id="diagram">
       <svg id="paths" aria-hidden="true">
         <defs>
@@ -315,6 +319,9 @@ details li { margin-bottom:var(--s-3); }
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
+const workspace=document.querySelector('.workspace');
+const playbackPanel=document.querySelector('.playback-panel');
+const mapPane=document.querySelector('.map-scroll');
 const trackingLink='https://canary.example/factory-test-001';
 const factoryReport='FACTORY MAINTENANCE REPORT — SAMPLE DATA\nEquipment: Pump P-17\nIssue: A worn seal caused a small leak.\nRepair: The maintenance team replaced the seal.\nDowntime: Production stopped for 40 minutes.\nResult: The pump passed its restart check. No injuries were reported.\nNext action: Inspect the seal at the next scheduled maintenance visit.\nTest tracking link: '+trackingLink;
 const samples={
@@ -368,36 +375,45 @@ function stop({cancelPan=true}={}) {
  if(cancelPan)cancelMapPan();
 }
 function syncViewerLayout() {
- const workspace=document.querySelector('.workspace');
  const header=document.querySelector('tedt-global-header');
  const top=(header?header.getBoundingClientRect().height:0)+16;
  workspace.style.setProperty('--viewer-top',top+'px');
  workspace.style.setProperty('--viewer-height',Math.max(320,window.innerHeight-top-16)+'px');
- workspace.style.setProperty('--controls-height',document.querySelector('.playback-panel').getBoundingClientRect().height+'px');
+ workspace.style.setProperty('--controls-height',playbackPanel.getBoundingClientRect().height+'px');
+}
+function mapUsesPageScroll() {
+ return getComputedStyle(mapPane).overflowY==='visible';
 }
 function panToNode(id,{smooth=false}={}) {
- const frame=document.querySelector('.map-scroll'),node=document.querySelector(`[data-node="${id}"]`);
+ const node=document.querySelector(`[data-node="${id}"]`);
  if(!node)return;
  cancelMapPan();
- const box=frame.getBoundingClientRect(),target=node.getBoundingClientRect();
- const start=frame.scrollTop;
- const centered=start+target.top-box.top+target.height/2-frame.clientHeight/2;
- const end=Math.max(0,Math.min(centered,frame.scrollHeight-frame.clientHeight));
+ const onPage=mapUsesPageScroll();
+ const scroller=onPage?document.scrollingElement:mapPane;
+ const viewportTop=onPage
+  ?parseFloat(workspace.style.getPropertyValue('--viewer-top'))+playbackPanel.getBoundingClientRect().height
+  :mapPane.getBoundingClientRect().top;
+ const viewportBottom=onPage?window.innerHeight:viewportTop+mapPane.clientHeight;
+ const target=node.getBoundingClientRect();
+ const start=scroller.scrollTop;
+ const targetCenter=target.top+target.height/2;
+ const viewportCenter=(viewportTop+viewportBottom)/2;
+ const centered=start+targetCenter-viewportCenter;
+ const end=Math.max(0,Math.min(centered,scroller.scrollHeight-scroller.clientHeight));
  if(!smooth||start===end||window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  frame.scrollTop=end;
+  scroller.scrollTop=end;
   return;
  }
  const startTime=performance.now();
  function follow(now) {
   const progress=Math.min((now-startTime)/240,1);
-  frame.scrollTop=start+(end-start)*(1-(1-progress)**3);
+  scroller.scrollTop=start+(end-start)*(1-(1-progress)**3);
   mapAnimation=progress<1?requestAnimationFrame(follow):null;
  }
  mapAnimation=requestAnimationFrame(follow);
 }
 function alignPlaybackView() {
  syncViewerLayout();
- const workspace=document.querySelector('.workspace');
  const top=parseFloat(workspace.style.getPropertyValue('--viewer-top'));
  window.scrollBy({top:workspace.getBoundingClientRect().top-top,behavior:'instant'});
 }
@@ -411,7 +427,7 @@ function startTimer() {
 function play() {
  stop();
  if(position>=steps.length-1)return;
- alignPlaybackView();
+ if(!mapUsesPageScroll())alignPlaybackView();
  panToNode(steps[position].to);
  startTimer();
 }
@@ -512,7 +528,7 @@ function drawMap() {
   button.addEventListener('click',()=>{
    stop();
    selectNode(id);
-   $('map-return').hidden=false;
+   $('back-map').hidden=false;
    $('detail-title').focus({preventScroll:true});
    $('detail-title').scrollIntoView({block:'center'});
   });
@@ -617,7 +633,7 @@ function highlightMapEdge(step) {
  }
 }
 function selectNode(id) {
- selected=id;$('map-return').hidden=true;document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
+ selected=id;$('back-map').hidden=true;document.querySelectorAll('[data-node]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.node===id)));
  const d=definitions[id];$('detail-title').textContent=nodeTitle(id);$('detail-body').replaceChildren();
  const parts=[['What happens',d.does],['Who operates it',config.scenario==='local'&&['app','tokenize','model','compute'].includes(id)?'Software running on your device.':d.owner],['What it can see',d.sees],['What may remain',d.keeps],['Question to ask',d.ask]];
  if(config.example==='factory'&&id==='tool'){parts[0][1]='Runs an operation authorized by the app. If enabled here, it reads a fictional maintenance record; it never fetches the tracking link.';parts[2][1]='Selected arguments: Pump P-17 in this example. The report and tracking link are not included.';}
@@ -656,9 +672,8 @@ function renderStep(announce=true) {
  }
  highlightMapEdge(s);
  document.querySelectorAll('#journey-list button').forEach((el,i)=>{if(i===position)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
- panToNode(s.to,{smooth:timer!==null});
+ if(timer!==null||!mapUsesPageScroll())panToNode(s.to,{smooth:timer!==null});
  selectNode(s.to);
- document.querySelector('.step-panel').scrollTop=0;
  document.querySelector('.guide-content').scrollTop=0;
  if(announce)$('announce').textContent=`${count}. ${s.title}.`;
  if(atEnd)stop({cancelPan:false});
@@ -726,8 +741,14 @@ $('show-copies').addEventListener('change',()=>{
 $('view-journey').addEventListener('click',()=>{
  $('setup').open=false;
  alignPlaybackView();
- panToNode(steps[position].to);
+ if(!mapUsesPageScroll())panToNode(steps[position].to);
  (position===steps.length-1?$('step-title'):$('next')).focus({preventScroll:true});
+});
+$('read-step').addEventListener('click',event=>{
+ event.preventDefault();
+ stop();
+ alignPlaybackView();
+ $('step-title').focus({preventScroll:true});
 });
 $('open-steps').addEventListener('click',event=>{
  event.preventDefault();
@@ -738,29 +759,47 @@ $('open-steps').addEventListener('click',event=>{
  current.scrollIntoView({block:'center'});
 });
 $('find-stop').addEventListener('click',()=>panToNode(steps[position].to));
-$('back-map').addEventListener('click',()=>{const n=document.querySelector(`[data-node="${selected}"]`);if(n){n.focus({preventScroll:true});alignPlaybackView();panToNode(selected);}});
+$('back-map').addEventListener('click',()=>{
+ const node=document.querySelector(`[data-node="${selected}"]`);
+ if(!node)return;
+ node.focus({preventScroll:true});
+ if(!mapUsesPageScroll())alignPlaybackView();
+ panToNode(selected);
+});
 $('next').addEventListener('click',()=>goToStep(position+1));
 $('back').addEventListener('click',()=>goToStep(position-1));
 for(const [id,getStep] of Object.entries(milestones))$(id).addEventListener('click',()=>goToStep(getStep()));
 $('play').addEventListener('click',()=>{if(timer!==null)stop();else play();});
 $('step-delay').addEventListener('change',()=>{if(timer!==null){clearInterval(timer);startTimer();}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+function pauseForPageScroll() {
+ if((timer!==null||mapAnimation!==null)&&mapUsesPageScroll())stop();
+}
+window.addEventListener('wheel',pauseForPageScroll,{passive:true});
+window.addEventListener('touchmove',pauseForPageScroll,{passive:true});
 $('download').addEventListener('click',()=>{
  const data={tool:'Prompt Journey',version:1,kind:'illustrative-simulation',scenario:config.scenario,options:{...config},sample:config.example==='factory'?{request:sample,report:factoryReport,trackingLink,referenceMaterial:policy,toolResult:forecast}:{request:sample,policy,forecast},journey:steps,limits:'Written example, not live tracing, measured timing or real inference. Storage policies are unspecified.'};
  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='prompt-journey.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('download-status').textContent='Downloaded the example setup and ordered journey as JSON.';
 });
 syncViewerLayout();
-const viewerResize=new ResizeObserver(()=>{syncViewerLayout();if(timer!==null)panToNode(steps[position].to);});
-viewerResize.observe(document.querySelector('.playback-panel'));
+function recenterAfterResize() {
+ if(timer!==null||!mapUsesPageScroll())panToNode(selected);
+}
+function resizeViewer() {
+ syncViewerLayout();
+ recenterAfterResize();
+}
+const viewerResize=new ResizeObserver(resizeViewer);
+viewerResize.observe(playbackPanel);
 const siteHeader=document.querySelector('tedt-global-header');if(siteHeader)viewerResize.observe(siteHeader);
-window.addEventListener('resize',()=>{syncViewerLayout();panToNode(steps[position].to);});
+window.addEventListener('resize',resizeViewer);
 if(new URLSearchParams(window.location.search).get('example')==='factory'){$('example').value='factory';chooseExample(false);}else reset(false);
 const mapResize=new ResizeObserver(()=>{
  if($('diagram').clientWidth===diagramWidth)return;
  layoutDiagram();
- panToNode(selected);
+ recenterAfterResize();
 });
-mapResize.observe(document.querySelector('.map-scroll'));
+mapResize.observe(mapPane);
 document.fonts.ready.then(()=>{
  layoutDiagram();
  if(timer!==null)panToNode(steps[position].to);
