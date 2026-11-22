@@ -124,11 +124,14 @@ progress { flex:1; min-width:0; accent-color:var(--accent); height:var(--s-2); }
 .node.current[data-phase=return],.node.current[data-phase=tool] { border-color:var(--copper); background:var(--copper-tint); }
 .node.current[data-phase=later] { border-color:var(--warn); background:var(--warn-bg); }
 .node.copy-node { border-style:dashed; border-color:var(--warn-border); }
-.edge { fill:none; stroke:var(--link); stroke-width:1.5; opacity:.7; }
-.edge.return,.edge.tool { stroke:var(--copper); }
-.edge.later { stroke:var(--warn); }
-.edge.copy { stroke:var(--warn); stroke-dasharray:5 5; opacity:.7; }
-.edge.active { opacity:1; stroke-width:4; }
+.edge,.edge-link { --edge-color:var(--link); }
+.edge:is(.return,.tool),.edge-link:is(.return,.tool) { --edge-color:var(--copper); }
+.edge:is(.later,.copy),.edge-link:is(.later,.copy) { --edge-color:var(--warn); }
+.edge { fill:none; stroke:var(--edge-color); stroke-width:1.5; stroke-linejoin:round; opacity:.7; }
+.edge.copy,.edge-link.copy { stroke-dasharray:5 5; }
+.edge.active,.edge-link.active .edge { opacity:1; stroke-width:4; }
+.edge-port { fill:var(--bg-inset); stroke:var(--edge-color); stroke-width:1.5; stroke-dasharray:none; }
+.edge-link.active .edge-port { stroke-width:2.5; }
 .map-alternate { max-width:44rem; margin:auto; padding:var(--s-4); }
 .map-alternate h3 { margin:0 0 var(--s-2); }
 .map-alternate p { margin:0 0 var(--s-3); }
@@ -714,32 +717,95 @@ function revealRouteStop(id) {
  if(!mapUsesPageScroll())alignPlaybackView();
  panToNode(id);
 }
-function pathFor(a,b,phase,width,compact,groupInset) {
+const svgNamespace='http://www.w3.org/2000/svg';
+function pathInGroup(a,b,phase,compact) {
  const returning=phase==='return'||phase==='tool';
  const verticalDirection=Math.sign(b.y-a.y);
- const boundary=a.group!==b.group;
- const sideConnect=boundary||compact&&(phase==='copy'||Math.abs(a.index-b.index)!==1);
- if(sideConnect) {
-  // Cross-group links use the outer lanes to keep group headings clear.
-  const side=returning||phase==='copy' ? 1 : -1;
-  const trackInset=boundary?(phase==='copy'?5:10):groupInset+10;
-  const rail=side===1 ? width-trackInset : trackInset;
-  if(!compact) {
-   const startX=a.x+side*a.width/5, endX=b.x+side*b.width/5;
-   const startY=a.y+verticalDirection*a.height/2, endY=b.y-verticalDirection*b.height/2;
-   return `M ${startX} ${startY} V ${startY+verticalDirection*8} H ${rail} V ${endY-verticalDirection*8} H ${endX} V ${endY}`;
-  }
+ const {left,right}=a.group;
+ if(compact&&(phase==='copy'||Math.abs(a.index-b.index)!==1)) {
+  const side=returning||phase==='copy'?1:-1;
+  const rail=side===1?right-6:left+6;
   const startY=a.y+verticalDirection*8, endY=b.y-verticalDirection*8;
   return `M ${a.x+side*a.width/2} ${startY} H ${rail} V ${endY} H ${b.x+side*b.width/2}`;
  }
  if(compact||a.x===b.x) {
-  const shift=(returning?1:-1)*Math.min(24,width/22);
-  const x=(compact?width/2:a.x)+shift;
+  const shift=(returning?1:-1)*Math.min(24,(right-left)/22);
+  const x=(compact?(left+right)/2:a.x)+shift;
   return `M ${x} ${a.y+verticalDirection*a.height/2} V ${b.y-verticalDirection*b.height/2}`;
  }
  const direction=Math.sign(b.x-a.x);
  const x1=a.x+direction*a.width/2, x2=b.x-direction*b.width/2, mid=(x1+x2)/2;
  return `M ${x1} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${x2} ${b.y}`;
+}
+function pathFromPoints(points) {
+ return points.map(([x,y],index)=>`${index?'L':'M'} ${x} ${y}`).join(' ');
+}
+function stopToGroupPort(stop,x,facing,compact,preferRight) {
+ const group=stop.group;
+ const edgeY=facing===1?group.bottom:group.headerBottom;
+ const row=facing===1?group.lastRow:group.firstRow;
+ const stopY=stop.y+facing*stop.height/2;
+ const stopX=Math.max(stop.x-stop.width/2+10,Math.min(x,stop.x+stop.width/2-10));
+ const approachY=edgeY-facing*6;
+ const lead=[[stopX,stopY]];
+ const end=[[x,approachY],[x,edgeY]];
+ if(stop.y===row) {
+  if(stopX===x)return [[stopX,stopY],[x,edgeY]];
+  return [...lead,[stopX,approachY],...end];
+ }
+ const center=(group.left+group.right)/2;
+ const right=stop.x===center?preferRight:stop.x>center;
+ const laneX=compact
+  ?(right?group.right-6:group.left+6)
+  :group.left+(group.right-group.left)*(right ? .68 : .32);
+ const turnY=stopY+facing*8;
+ return [...lead,[stopX,turnY],[laneX,turnY],[laneX,approachY],...end];
+}
+function drawEdgePath(d,phase) {
+ const path=document.createElementNS(svgNamespace,'path');
+ path.setAttribute('d',d);
+ path.setAttribute('class','edge '+phase);
+ return path;
+}
+function drawBoundaryLink(from,to,phase,compact,arrow) {
+ const link=document.createElementNS(svgNamespace,'g');
+ link.setAttribute('class','edge-link '+phase);
+ const outward=to.group.index>from.group.index;
+ const direction=outward?1:-1;
+ const returning=phase==='return'||phase==='tool';
+ const center=(from.group.left+from.group.right)/2;
+ const x=phase==='copy'?from.group.right-10:center+(returning?14:outward?-14:-30);
+ const exitY=outward?from.group.bottom:from.group.top;
+ const enterY=outward?to.group.top:to.group.bottom;
+ const exit=stopToGroupPort(from,x,direction,compact,returning||phase==='copy');
+ const entry=stopToGroupPort(to,x,-direction,compact,returning||phase==='copy').reverse();
+ const adjacent=Math.abs(to.group.index-from.group.index)===1;
+ const bypassX=from.group.right+8;
+ const bridge=adjacent
+  ?[[x,exitY],[x,(exitY+enterY)/2],[x,enterY]]
+  :[[x,exitY],[x,exitY+direction*8],[bypassX,exitY+direction*8],[bypassX,enterY-direction*8],[x,enterY-direction*8],[x,enterY]];
+
+ const exitPath=drawEdgePath(pathFromPoints(exit),phase);
+ exitPath.dataset.segment='exit';
+ const bridgePath=drawEdgePath(pathFromPoints(bridge),phase);
+ bridgePath.dataset.segment='between';
+ bridgePath.setAttribute(adjacent?'marker-mid':'marker-end',arrow);
+ const entryPath=drawEdgePath(pathFromPoints(entry),phase);
+ entryPath.dataset.segment='entry';
+ entryPath.setAttribute('marker-end',arrow);
+ link.append(exitPath,bridgePath,entryPath);
+
+ // The header occupies the space between its outer and inner ports.
+ const ports=new Set([exitY,enterY,exit.at(-1)[1],entry[0][1]]);
+ for(const y of ports) {
+  const port=document.createElementNS(svgNamespace,'circle');
+  port.setAttribute('class','edge-port');
+  port.setAttribute('cx',x);
+  port.setAttribute('cy',y);
+  port.setAttribute('r','3');
+  link.append(port);
+ }
+ return link;
 }
 function layoutDiagram() {
  const diagram=$('diagram'), sections=[...$('nodes').children];
@@ -759,13 +825,18 @@ function layoutDiagram() {
  const rowScale=Math.max(1,(cardHeight+16)/100);
  const positions=new Map();
  let groupTop=groupInset;
- for(const section of sections) {
+ for(const [groupIndex,section] of sections.entries()) {
   section.style.left=groupInset+'px';
   section.style.width=contentWidth+'px';
   section.style.top=groupTop+'px';
   const stops=[...section.querySelectorAll('.node')];
   const rowStart=Math.min(...stops.map(button=>definitions[button.dataset.node].y));
-  const firstRow=section.querySelector('h3').offsetHeight+groupPadding+cardHeight/2;
+  const headingHeight=section.querySelector('h3').getBoundingClientRect().height;
+  const firstRow=headingHeight+groupPadding+cardHeight/2;
+  const group={
+   index:groupIndex,left:groupInset,right:groupInset+contentWidth,top:groupTop,headerBottom:groupTop+headingHeight,
+   firstRow:groupTop+firstRow,lastRow:0,bottom:0,
+  };
   let lastCenter=firstRow;
   for(const [index,button] of stops.entries()) {
    const id=button.dataset.node, definition=definitions[id];
@@ -777,11 +848,13 @@ function layoutDiagram() {
    button.style.top=y+'px';
    button.style.height=cardHeight+'px';
    positions.set(id,{
-    x:x+groupInset,y:y+groupTop,width:parseFloat(button.style.width),height:cardHeight,index,group:section.dataset.group,
+    x:x+groupInset,y:y+groupTop,width:parseFloat(button.style.width),height:cardHeight,index,group,
    });
    lastCenter=Math.max(lastCenter,y);
   }
   const groupHeight=Math.ceil(lastCenter+cardHeight/2+groupPadding);
+  group.lastRow=groupTop+lastCenter;
+  group.bottom=groupTop+groupHeight;
   section.style.height=groupHeight+'px';
   groupTop+=groupHeight+groupGap;
  }
@@ -795,19 +868,22 @@ function layoutDiagram() {
   const key=from+'-'+to+'-'+phase;
   if(edgeKeys.has(key))return;
   edgeKeys.add(key);
-  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',pathFor(positions.get(from),positions.get(to),phase,diagramWidth,compact,groupInset));
-  path.setAttribute('class','edge '+phase);
-  const arrow=phase==='request'?'request':phase==='later'||phase==='copy'?'copy':'return';
-  path.setAttribute('marker-end','url(#arrow-'+arrow+')');
+  const a=positions.get(from), b=positions.get(to);
+  const arrowColor=phase==='request'?'request':phase==='later'||phase==='copy'?'copy':'return';
+  const arrow='url(#arrow-'+arrowColor+')';
+  const sameGroup=a.group===b.group;
+  const edge=sameGroup
+   ?drawEdgePath(pathInGroup(a,b,phase,compact),phase)
+   :drawBoundaryLink(a,b,phase,compact,arrow);
+  if(sameGroup)edge.setAttribute('marker-end',arrow);
   if(phase==='copy') {
-   path.dataset.copyFrom=from;
-   path.dataset.copyTo=to;
+   edge.dataset.copyFrom=from;
+   edge.dataset.copyTo=to;
   } else {
-   path.dataset.key=key;
-   activeEdges.push(path);
+   edge.dataset.key=key;
+   activeEdges.push(edge);
   }
-  $('map-edges').append(path);
+  $('map-edges').append(edge);
  }
  for(const step of steps)if(step.from)addEdge(step.from,step.to,step.phase);
  if(config.showCopies) {

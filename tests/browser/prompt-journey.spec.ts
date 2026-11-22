@@ -228,7 +228,7 @@ test('possible copy paths include each recipient and disappear with removed conn
   await openSetup(page);
   await page.locator('#fallback').check();
   await page.locator('#show-copies').check();
-  const copyPath = (from: string) => page.locator(`#paths path[data-copy-from="${from}"][data-copy-to="logs"]`);
+  const copyPath = (from: string) => page.locator(`#paths [data-copy-from="${from}"][data-copy-to="logs"]`);
   for (const recipient of ['edge', 'app', 'identity', 'retrieval', 'router', 'host', 'backup', 'tool', 'checks']) {
     await expect(node(page, recipient)).toBeVisible();
     await expect(copyPath(recipient)).toHaveCount(1);
@@ -243,7 +243,7 @@ test('possible copy paths include each recipient and disappear with removed conn
   await expect(copyPath('backup')).toHaveCount(0);
   await expect(copyPath('host')).toBeVisible();
   await page.locator('#show-copies').uncheck();
-  await expect(page.locator('#paths path[data-copy-from]')).toHaveCount(0);
+  await expect(page.locator('#paths [data-copy-from]')).toHaveCount(0);
 });
 
 test('the JSON download preserves selected routes, fictional inputs and the return path', async ({ page }) => {
@@ -865,6 +865,73 @@ test('overview, grouped route, and inside flows keep the walkthrough at the same
   await expect(page.locator('#map-title')).toBeFocused();
   await expect(page.locator('#map-title')).toBeInViewport({ ratio: 1 });
 });
+
+for (const viewport of [{ width: 320, height: 480 }, { width: 1200, height: 900 }]) {
+  test(`connections stop at group boundaries and stay below the headings at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await openSetup(page);
+    await page.locator('#fallback').check();
+    await page.getByRole('button', { name: 'View journey', exact: true }).click();
+    await page.evaluate(() => document.fonts.ready);
+
+    const links = page.locator('#paths g.edge-link[data-key]');
+    await expect(links.filter({ has: page.locator('[data-segment="between"]') })).not.toHaveCount(0);
+    await expect(page.locator('#paths [data-key="host-router-request"] [data-segment="between"]')).toHaveCount(1);
+    const errors = await links.evaluateAll(elements => {
+      const errors: string[] = [];
+      for (const group of elements) {
+        const key = (group as SVGGElement).dataset.key!;
+        const [fromId, toId] = key.split('-');
+        const from = document.querySelector(`[data-node="${fromId}"]`)!;
+        const to = document.querySelector(`[data-node="${toId}"]`)!;
+        const fromGroup = from.closest('.route-group')!;
+        const toGroup = to.closest('.route-group')!;
+        const fromFrame = fromGroup.getBoundingClientRect();
+        const toFrame = toGroup.getBoundingClientRect();
+        const fromHeaderBottom = fromGroup.querySelector('h3')!.getBoundingClientRect().bottom;
+        const toHeaderBottom = toGroup.querySelector('h3')!.getBoundingClientRect().bottom;
+        const down = fromFrame.top < toFrame.top;
+        const svgBounds = (group as SVGGElement).ownerSVGElement!.getBoundingClientRect();
+        const exit = group.querySelector<SVGPathElement>('[data-segment="exit"]')!;
+        const bridge = group.querySelector<SVGPathElement>('[data-segment="between"]')!;
+        const entry = group.querySelector<SVGPathElement>('[data-segment="entry"]')!;
+        const y = (path: SVGPathElement, end = false) =>
+          svgBounds.top + path.getPointAtLength(end ? path.getTotalLength() : 0).y;
+        const near = (actual: number, expected: number) => Math.abs(actual - expected) < 1;
+
+        if (!near(y(exit), down ? from.getBoundingClientRect().bottom : from.getBoundingClientRect().top) ||
+            !near(y(entry, true), down ? to.getBoundingClientRect().top : to.getBoundingClientRect().bottom)) {
+          errors.push(`${key} does not join both stop borders`);
+        }
+        if (!near(y(exit, true), down ? fromFrame.bottom : fromHeaderBottom) ||
+            !near(y(entry), down ? toHeaderBottom : toFrame.bottom)) {
+          errors.push(`${key} does not connect the inner group boundaries`);
+        }
+        if (!near(y(bridge), down ? fromFrame.bottom : fromFrame.top) ||
+            !near(y(bridge, true), down ? toFrame.top : toFrame.bottom) ||
+            bridge.getBBox().width > 1 ||
+            group.querySelectorAll('.edge-port').length !== 3) {
+          errors.push(`${key} does not cross the gap directly between the groups`);
+        }
+        for (const [path, frame, headerBottom] of [[exit, fromFrame, fromHeaderBottom], [entry, toFrame, toHeaderBottom]] as const) {
+          const bounds = path.getBBox();
+          if (bounds.y + svgBounds.top < headerBottom - 1 ||
+              bounds.y + bounds.height + svgBounds.top > frame.bottom + 1 ||
+              bounds.x + svgBounds.left < frame.left - 1 ||
+              bounds.x + bounds.width + svgBounds.left > frame.right + 1) {
+            errors.push(`${key} leaves its group or crosses its heading`);
+          }
+        }
+      }
+      return errors;
+    });
+    expect(errors).toEqual([]);
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+    await expect(page.locator('#paths g.active[data-key="user-network-request"] path[data-segment]')).toHaveCount(3);
+    await page.getByRole('button', { name: 'Answer', exact: true }).click();
+    await expect(page.locator('#paths g.active[data-key="network-user-return"] path[data-segment]')).toHaveCount(3);
+  });
+}
 
 test('local and optional groups reflect the example and the alert keeps the requester unknown', async ({ page }) => {
   await openSetup(page);
