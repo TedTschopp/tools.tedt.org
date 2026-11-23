@@ -57,6 +57,12 @@ or a scoped Wrangler credential; never store credentials in source or reports.
 
 `version.json` identifies the deployed commit and original source snapshot.
 
+The Pages build includes the default Perplexity Projections chart card and a
+share-page fallback. Settings travel in the view URL. A Cloudflare Worker serves
+view-specific Open Graph and X images under `/share/perplexity-projections/`.
+After the Pages change is live, deploy that Worker with
+`npm run deploy:perplexity --prefix worker`.
+
 ## Migration and rollback
 
 `reports/source-inventory.json` records the original source commit, every imported

@@ -5,6 +5,8 @@ import yaml from 'js-yaml';
 import { marked } from 'marked';
 import { Liquid } from 'liquidjs';
 import * as sass from 'sass';
+import { renderPreview } from '../worker/src/perplexity/preview.mjs';
+import { defaultView, sharePath } from '../tool-src/tools/perplexity-projections/model.mjs';
 
 const root = process.cwd(), source = path.join(root, 'tool-src'), out = path.join(root, 'public');
 export const site = 'https://tools.tedt.org';
@@ -153,6 +155,17 @@ for (const tool of catalog) {
   staticFiles.push('/' + dest);
 }
 await fs.writeFile(path.join(out, 'lib/tedt-org-tools-loader.js'), `(function(){if(document.querySelector('link[data-tedt-org-tools-css="true"]'))return;var link=document.createElement('link');link.rel='stylesheet';link.dataset.tedtOrgToolsCss='true';link.href=new URL(location.protocol==='file:'?'tedt-org-tools-local.css':'tedt-org-tools.css',document.currentScript.src).href;document.head.appendChild(link);}());\n`);
+await writeStatic('tools/perplexity-projections/model.mjs', 'perplexity-projections/model.mjs');
+staticFiles.push('/perplexity-projections/model.mjs');
+const shareFallback = path.join(out, sharePath, 'index.html');
+await fs.mkdir(path.dirname(shareFallback), { recursive: true });
+const defaultProjectionPage = await fs.readFile(path.join(out, 'perplexity-projections.html'), 'utf8');
+await fs.writeFile(shareFallback, defaultProjectionPage.replace(
+  'name="robots" content="index, follow, max-image-preview:large"',
+  'name="robots" content="noindex, follow, max-image-preview:large"',
+));
+await fs.writeFile(path.join(out, 'img/perplexity-projections-preview.png'), await renderPreview(defaultView));
+staticFiles.push('/img/perplexity-projections-preview.png');
 for (const entry of ['bootstrap-build', 'game-theory', 'inside-ai']) {
   const input = matter(await read('css/' + entry + '.scss')).content;
   const result = sass.compileString(input, {loadPaths:[path.join(source,'_sass'),path.join(source,'css')],style:'compressed',logger:sass.Logger.silent});

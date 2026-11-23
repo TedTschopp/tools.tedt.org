@@ -1,13 +1,9 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { runInNewContext } from 'node:vm';
-
-const html = readFileSync(new URL('../tool-src/tools/perplexity-projections.html', import.meta.url), 'utf8');
-const source = html.match(/<script id="projection-model">([\s\S]*?)<\/script>/)[1];
-const model = runInNewContext(source + '\nprojectionModel');
+import {
+  projectionModel as model, defaultView, encodeView, readView, sharePath, shareViewUrl, viewData,
+} from '../tool-src/tools/perplexity-projections/model.mjs';
 const scenarios = model.scenarios(.20, .70);
-const compare = value => JSON.parse(JSON.stringify(value));
 
 test('measurements and fitted scenarios reproduce the workbook checkpoints', () => {
   assert.equal(model.measurements.length, 14);
@@ -15,9 +11,9 @@ test('measurements and fitted scenarios reproduce the workbook checkpoints', () 
   assert.equal(model.formatMonth(0), 'Mar 2022');
   assert.equal(model.latest.loss, .761);
   assert.equal(model.measurements.at(-1).loss, .732);
-  assert.deepEqual(compare(scenarios.map(scenario => scenario.points.length)), [6, 13, 8]);
-  assert.deepEqual(compare(scenarios.map(scenario => model.project(scenario, 360).toFixed(3))), ['0.201', '0.227', '0.703']);
-  assert.deepEqual(compare(scenarios.map(scenario => (1 - Math.exp(scenario.slope)).toFixed(5))), ['0.19970', '0.03951', '0.09129']);
+  assert.deepEqual(scenarios.map(scenario => scenario.points.length), [6, 13, 8]);
+  assert.deepEqual(scenarios.map(scenario => model.project(scenario, 360).toFixed(3)), ['0.201', '0.227', '0.703']);
+  assert.deepEqual(scenarios.map(scenario => (1 - Math.exp(scenario.slope)).toFixed(5)), ['0.19970', '0.03951', '0.09129']);
   assert.equal(model.sensitivityPast.toFixed(3), '0.869');
 });
 
@@ -28,10 +24,10 @@ test('eight bands preserve IQ order and reproduce the three workbook crossing ro
   assert.equal(band.bands.at(-1).iqHigh, 160);
   const thresholds = [band.lower, band.median, band.upper];
   assert.deepEqual(thresholds.map(value => value.toFixed(3)), ['0.650', '0.690', '0.730']);
-  const crossingDates = months => compare(scenarios.map(scenario => thresholds.map(value => {
+  const crossingDates = months => scenarios.map(scenario => thresholds.map(value => {
     const finding = model.crossing(scenario, value, months);
     return finding.label ?? model.formatMonth(finding.offset);
-  })));
+  }));
   assert.deepEqual(crossingDates(360), [
     ['Nov 2027', 'Jul 2027', 'Mar 2027'],
     ['Oct 2030', 'May 2029', 'Dec 2027'],
@@ -64,8 +60,31 @@ test('auto min follows the optimistic cutoff and the viewport has a 1.00 ceiling
   const automatic = model.autoMin(scenarios[0], 360);
   assert.ok(Math.abs(automatic - .20070247099803865) < 1e-10);
   assert.equal(model.autoMin(scenarios[0], 60).toFixed(3), '0.384');
-  assert.deepEqual(compare(model.viewRange(automatic, .64, .75)), { min: .64, max: .75 });
-  assert.deepEqual(compare(model.viewRange(automatic, 0, 1.02)), { min: automatic, max: 1 });
-  assert.deepEqual(compare(model.viewRange(.761, .64, .75)), { min: .761, max: 1 });
-  assert.deepEqual(compare(model.human[0].span), [85, 256]);
+  assert.deepEqual(model.viewRange(automatic, .64, .75), { min: .64, max: .75 });
+  assert.deepEqual(model.viewRange(automatic, 0, 1.02), { min: automatic, max: 1 });
+  assert.deepEqual(model.viewRange(.761, .64, .75), { min: .761, max: 1 });
+  assert.deepEqual(model.human[0].span, [85, 256]);
+});
+
+test('shared URLs round-trip the chart settings', () => {
+  const settings = {
+    ...defaultView, future: 60, base: .5, minimum: .64, maximum: .77, lowerIq: .72, higherIq: .67,
+    optimisticFloor: .23, pessimisticFloor: .68, cursor: 72,
+    series: { ...defaultView.series, historical: false, window: true },
+    marks: { annual: false, quarterly: true, monthly: true },
+  };
+  const url = new URL(shareViewUrl(settings));
+  assert.equal(url.origin, 'https://tools.tedt.org');
+  assert.equal(url.pathname, sharePath);
+  assert.deepEqual(readView(url.searchParams.get('view')), settings);
+  assert.deepEqual(readView(encodeView(defaultView)), defaultView);
+  assert.deepEqual(viewData(settings).range, { min: .64, max: .77 });
+});
+
+test('malformed and out-of-range share settings are rejected', () => {
+  assert.equal(readView('<script>alert(1)</script>'), null);
+  for (const overrides of [
+    { future: 361 }, { base: 0 }, { future: 0, minimum: .1 }, { maximum: 1.1 },
+    { lowerIq: .67, higherIq: .72 }, { optimisticFloor: .9 }, { cursor: 500 },
+  ]) assert.equal(readView(encodeView({ ...defaultView, ...overrides })), null, JSON.stringify(overrides));
 });

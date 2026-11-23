@@ -92,3 +92,41 @@ test('fits a narrow Night viewport and is listed in the Tools catalog', async ({
   const details = await request.get('/about/perplexity-projections/');
   expect(details.ok()).toBeTruthy();
 });
+
+test('Share View copies a link that reopens the selected chart', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto(pagePath);
+  await page.getByLabel('Future years', { exact: true }).fill('60');
+  await page.getByLabel('Time-scale base').fill('0.5');
+  await page.getByLabel('IQ 85 (−1 SD)').fill('0.710');
+  await page.getByLabel('IQ 115 (+1 SD)').fill('0.670');
+  await page.getByLabel('Y minimum', { exact: true }).fill('0.640');
+  await page.getByLabel('Y maximum', { exact: true }).fill('0.780');
+  await page.getByRole('checkbox', { name: 'Annual', exact: true }).uncheck();
+  await page.getByRole('checkbox', { name: 'Quarterly', exact: true }).check();
+  await page.getByRole('checkbox', { name: 'Monthly', exact: true }).check();
+  await page.getByRole('checkbox', { name: 'Historical fit', exact: true }).uncheck();
+  await page.getByLabel('Optimistic floor').fill('0.22');
+  await page.getByRole('slider', { name: 'Inspect month' }).fill('62');
+  await page.getByRole('button', { name: 'Share View', exact: true }).click();
+  await expect(page.locator('#share-status')).toHaveText('Link copied. It opens this chart view.');
+  const link = new URL(await page.evaluate(() => navigator.clipboard.readText()));
+  expect(link.origin).toBe('https://tools.tedt.org');
+  expect(link.pathname).toBe('/share/perplexity-projections/');
+  expect(link.searchParams.get('view')).toMatch(/^[A-Za-z0-9_-]+$/);
+
+  await page.goto(link.pathname + link.search);
+  await expect(page.locator('#future-end')).toHaveText('Through Nov 2031');
+  await expect(page.getByLabel('Time-scale base')).toHaveValue('0.5');
+  await expect(page.locator('#y-range')).toContainText('Showing 0.640–0.780');
+  await expect(page.getByLabel('IQ 85 (−1 SD)')).toHaveValue('0.71');
+  await expect(page.getByLabel('IQ 115 (+1 SD)')).toHaveValue('0.67');
+  await expect(page.getByLabel('Optimistic floor')).toHaveValue('0.22');
+  await expect(page.getByRole('checkbox', { name: 'Annual', exact: true })).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Quarterly', exact: true })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Monthly', exact: true })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Historical fit', exact: true })).not.toBeChecked();
+  await expect(page.locator('#inspect-date')).toHaveText('May 2027');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://tools.tedt.org/perplexity-projections.html');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+});

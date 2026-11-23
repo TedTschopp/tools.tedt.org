@@ -17,6 +17,7 @@ features:
   - "Toggle annual, quarterly, and monthly calendar lines independently"
   - "Edit the IQ anchors and read the first crossing month within the chosen horizon"
   - "Inspect the IQ bell curve and the separate human and GPT-2 study on OpenWebText"
+  - "Copy a link to the current chart with a matching social preview"
   - "Download the measurements and monthly projections as CSV"
 ---
 
@@ -34,6 +35,7 @@ scale, zoom into the reference bands, or move the far edge of the chart.
 3. Toggle **Annual**, **Quarterly**, or **Monthly** calendar marks, or hide chart series.
 4. Change the two **IQ anchors** to update the mapped bands and crossing dates.
 5. Inspect any month on the chart or use the keyboard-accessible month slider. Download the display’s data as CSV.
+6. Choose **Share View** to copy the current chart settings into a link. The link opens the same view and includes a chart image for link previews.
 
 ## What the Numbers Mean
 
