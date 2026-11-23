@@ -246,7 +246,7 @@
     .pp-error { color: var(--signal-danger); min-height: 1.4em; margin: .3rem 0 0; }
     .pp-error:empty { display: none; }
     .pp-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-2); }
-    .pp-share-status:empty { display: none; }
+    .pp-action-status:empty { display: none; }
     .btn-primary, .btn-outline-primary {
       min-height: var(--target-min); padding: .5rem .75rem; font-size: .875rem; font-weight: 600;
       border: 1px solid var(--ia-primary); border-radius: var(--radius-sm); cursor: pointer;
@@ -391,9 +391,13 @@
         <div class="pp-actions">
           <button class="btn-primary" type="button" id="zoom-iq">Zoom to IQ Bands</button>
           <button class="btn-outline-primary" type="button" id="reset-view">Reset View</button>
-          <button class="btn-outline-primary" type="button" id="share-view">Share View</button>
         </div>
-        <p class="pp-small pp-control-note pp-share-status" id="share-status" role="status"></p>
+        <div class="pp-actions">
+          <button class="btn-outline-primary" type="button" id="share-view">Share View</button>
+          <button class="btn-outline-primary" type="button" id="download-png">Download PNG</button>
+        </div>
+        <p class="pp-small pp-control-note pp-action-status" id="share-status" role="status"></p>
+        <p class="pp-small pp-control-note pp-action-status" id="png-status" role="status"></p>
         <div class="pp-field pp-group" id="share-link-field" hidden>
           <label for="share-link">View link</label><input type="url" id="share-link" readonly>
         </div>
@@ -502,7 +506,7 @@
   </main>
 
   <script type="module">
-    import { projectionModel, defaultView, readView, shareViewUrl } from "/perplexity-projections/model.mjs";
+    import { projectionModel, defaultView, previewPath, readView, shareViewUrl } from "/perplexity-projections/model.mjs";
 
     (() => {
       const model = projectionModel;
@@ -962,14 +966,18 @@
         refresh();
       }
 
-      async function shareView() {
+      function currentView() {
         const { min, max } = limits();
-        const link = shareViewUrl({
+        return {
           future: state.future, base: state.base, minimum: min === state.minimum ? min : null, maximum: max,
           lowerIq: state.lowerIq, higherIq: state.higherIq,
           optimisticFloor: state.scenarios[0].floor, pessimisticFloor: state.scenarios[2].floor,
           series: state.series, marks: state.marks, cursor: state.pinned ? state.inspect : null,
-        });
+        };
+      }
+
+      async function shareView() {
+        const link = shareViewUrl(currentView());
         const field = byId("share-link-field");
         try {
           await navigator.clipboard.writeText(link);
@@ -982,6 +990,34 @@
           input.focus();
           input.select();
           text("share-status", "Copy the selected link to share this view.");
+        }
+      }
+
+      function downloadFile(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = Object.assign(document.createElement("a"), { href: url, download: filename, hidden: true });
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      async function downloadPng() {
+        const button = byId("download-png");
+        const preview = new URL(shareViewUrl(currentView(), previewPath));
+        button.disabled = true;
+        text("png-status", "Preparing chart PNG…");
+        try {
+          const response = await fetch(preview.pathname + preview.search);
+          if (!response.ok || !/^image\/png(?:\s*;|$)/i.test(response.headers.get("content-type") ?? "")) {
+            throw new Error("The chart preview is unavailable.");
+          }
+          downloadFile(await response.blob(), "perplexity-projections.png");
+          text("png-status", "Chart PNG download started.");
+        } catch {
+          text("png-status", "Couldn’t download the chart PNG. Try again.");
+        } finally {
+          button.disabled = false;
         }
       }
 
@@ -1002,10 +1038,7 @@
         }
         const escape = field => '"' + String(field).replaceAll('"', '""') + '"';
         const csv = data.map(fields => fields.map(escape).join(",")).join("\r\n") + "\r\n";
-        const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-        const link = Object.assign(document.createElement("a"), { href: url, download: "perplexity-projections.csv" });
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        downloadFile(new Blob([csv], { type: "text/csv;charset=utf-8" }), "perplexity-projections.csv");
       }
 
       const theme = matchMedia("(prefers-color-scheme: dark)");
@@ -1107,6 +1140,7 @@
         updateHuman();
       });
       byId("share-view").addEventListener("click", shareView);
+      byId("download-png").addEventListener("click", downloadPng);
       byId("download-data").addEventListener("click", downloadData);
       byId("observed-rows").replaceChildren(...model.measurements.map(point => row(point.name,
         [model.formatMonth(point.month), loss(point.loss), point.internal ? "Internal model" : "Released model", point.note ?? "—"])));

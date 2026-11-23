@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import { appUrl, previewHeight, previewPath, previewWidth, readView } from '../../tool-src/tools/perplexity-projections/model.mjs';
+import { renderPreview } from '../../worker/src/perplexity/preview.mjs';
 
 const pagePath = '/perplexity-projections.html';
 
@@ -129,4 +131,47 @@ test('Share View copies a link that reopens the selected chart', async ({ page, 
   await expect(page.locator('#inspect-date')).toHaveText('May 2027');
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://tools.tedt.org/perplexity-projections.html');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+});
+
+test('Download PNG saves the active chart and sits next to Share View', async ({ page, baseURL }) => {
+  const isLive = new URL(baseURL!).origin === new URL(appUrl).origin;
+  const isPreview = (url: URL) => url.pathname === previewPath;
+  if (!isLive) {
+    await page.route(isPreview, async route => {
+      const settings = readView(new URL(route.request().url()).searchParams.get('view'));
+      if (!settings) return route.fulfill({ status: 400 });
+      await route.fulfill({ contentType: 'image/png', body: Buffer.from(await renderPreview(settings)) });
+    });
+  }
+
+  await page.setViewportSize({ width: 320, height: 920 });
+  await page.goto(pagePath);
+  await page.getByLabel('Future years', { exact: true }).fill('60');
+  await page.getByLabel('Time-scale base').fill('1');
+  await page.getByLabel('Y minimum', { exact: true }).fill('0.640');
+  await page.getByLabel('Y maximum', { exact: true }).fill('0.780');
+  await page.getByLabel('IQ 85 (−1 SD)').fill('0.710');
+  await page.getByLabel('IQ 115 (+1 SD)').fill('0.670');
+  await page.getByRole('checkbox', { name: 'Pessimistic', exact: true }).uncheck();
+  await page.getByRole('checkbox', { name: 'Quarterly', exact: true }).check();
+
+  const downloadButton = page.getByRole('button', { name: 'Download PNG', exact: true });
+  const shareButton = page.getByRole('button', { name: 'Share View', exact: true });
+  const [shareBox, downloadBox] = await Promise.all([shareButton.boundingBox(), downloadButton.boundingBox()]);
+  expect(downloadBox!.y).toBeCloseTo(shareBox!.y, 0);
+  expect(downloadBox!.x).toBeGreaterThan(shareBox!.x);
+
+  const requested = page.waitForRequest(request => isPreview(new URL(request.url())));
+  const downloaded = page.waitForEvent('download');
+  await downloadButton.click();
+  const [request, file] = await Promise.all([requested, downloaded]);
+  expect(readView(new URL(request.url()).searchParams.get('view'))).toMatchObject({
+    future: 60, base: 1, minimum: .64, maximum: .78, lowerIq: .71, higherIq: .67,
+    series: { pessimistic: false }, marks: { quarterly: true },
+  });
+  expect(file.suggestedFilename()).toBe('perplexity-projections.png');
+  const png = await readFile((await file.path())!);
+  expect(png.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([previewWidth, previewHeight]);
+  await expect(downloadButton).toBeEnabled();
 });
