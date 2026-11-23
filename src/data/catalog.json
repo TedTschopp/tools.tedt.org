@@ -326,6 +326,40 @@
     "html": "<h2>What it does</h2>\n<p>Explain what the tool is and why you made it.</p>\n<h2>How it works</h2>\n<p>Add notes, screenshots, architectural details, etc.</p>\n<h2>Notes</h2>\n<p>Any caveats, future ideas, or context.</p>\n"
   },
   {
+    "slug": "perplexity-projections",
+    "title": "Perplexity Projections",
+    "summary": "Explore three paths for OpenAI’s code-benchmark log-perplexity. Adjust the chart and the illustrative IQ bands to see when each scenario crosses them.",
+    "status": "active",
+    "category": "AI and learning",
+    "tags": [
+      "ai",
+      "learning",
+      "modeling",
+      "statistics",
+      "projections"
+    ],
+    "type": "webapp",
+    "updated": "2026-11-23",
+    "featured": false,
+    "launch": "https://tools.tedt.org/perplexity-projections.html",
+    "migrated": true,
+    "image": "",
+    "imageAlt": "Perplexity Projections",
+    "screenshots": [],
+    "features": [
+      "Compare OpenAI’s 14 measurements with optimistic, historical-fit, and pessimistic scenarios",
+      "Adjust the future horizon, time-scale base, and log-perplexity bounds",
+      "Toggle annual, quarterly, and monthly calendar lines independently",
+      "Edit the IQ anchors and read the first crossing month within the chosen horizon",
+      "Inspect the IQ bell curve and the separate human and GPT-2 study on OpenWebText",
+      "Download the measurements and monthly projections as CSV"
+    ],
+    "repo": "https://github.com/TedTschopp/tools.tedt.org",
+    "upstream": "",
+    "sourcePath": "tool-src/tools/perplexity-projections.html",
+    "html": "<h2>What It Does</h2>\n<p>I built this to explore what different rates of progress would imply for the\nlog-perplexity measurements OpenAI shared in November 2026. Change the time\nscale, zoom into the reference bands, or move the far edge of the chart.\n<a href=\"https://openai.com/index/perplexity-and-intelligence/#base-model-log-perplexity\">OpenAI’s source chart</a></p>\n<h2>How to Use It</h2>\n<ol>\n<li>Move <strong>Future years</strong> to change the time window. Set <strong>Time-scale base</strong> to 1 for linear time.</li>\n<li>Choose <strong>Zoom to IQ Bands</strong> or enter your own vertical bounds. Clear the minimum to use the optimistic endpoint, floored at zero. The upper ceiling is 1.00.</li>\n<li>Toggle <strong>Annual</strong>, <strong>Quarterly</strong>, or <strong>Monthly</strong> calendar marks, or hide chart series.</li>\n<li>Change the two <strong>IQ anchors</strong> to update the mapped bands and crossing dates.</li>\n<li>Inspect any month on the chart or use the keyboard-accessible month slider. Download the display’s data as CSV.</li>\n</ol>\n<h2>What the Numbers Mean</h2>\n<p>The projections start at the latest released observation and close a constant\nfraction of their gap to an assumed floor each year. The historical fit uses all\n13 released measurements and a zero floor. The other scenarios use different\nfit periods and editable floors.</p>\n<p>The IQ bell curve uses a mean of 100 and a standard deviation of 15. Its\nmapping onto log-perplexity is illustrative. OpenAI’s fixed internal-code\nbenchmark has no published IQ calibration. The separate OpenWebText chart\nshows the published human and GPT-2 comparison with sampling uncertainty.\n<a href=\"https://dictionary.apa.org/deviation-iq\">APA Dictionary of Psychology</a> ·\n<a href=\"https://arxiv.org/html/2212.11281v2#S4.F4\">Shlegeris et al., Figure 4</a></p>\n"
+  },
+  {
     "slug": "prompt-journey",
     "title": "Prompt Journey",
     "summary": "Follow fictional travel and factory-report requests to the model and back. Compare AI setups and explore what an unexpected tracking-link visit can reveal.",

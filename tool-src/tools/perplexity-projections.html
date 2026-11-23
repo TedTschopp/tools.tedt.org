@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Perplexity Projections · Ted’s Tools</title>
+  <meta name="description" content="Explore three projections for OpenAI’s code-benchmark log-perplexity. Adjust the time scale, zoom into illustrative IQ bands, and see when each curve crosses them.">
+  <link rel="canonical" href="https://tools.tedt.org/perplexity-projections.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ted’s Tools">
+  <meta property="og:title" content="Perplexity Projections">
+  <meta property="og:description" content="Explore OpenAI’s measurements, three scenarios through 2056, and editable IQ reference bands.">
+  <meta property="og:url" content="https://tools.tedt.org/perplexity-projections.html">
+  <meta property="og:image" content="https://tools.tedt.org/img/Site-Logo.webp">
+  <meta property="og:image:alt" content="Ted Tschopp’s site mark">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="https://tools.tedt.org/assets/logo/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&amp;family=Fira+Code:wght@400;500&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+  <script>
+    if (location.protocol === "file:" || !document.documentElement.dataset.theme) {
+      const theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.dataset.theme = theme;
+    }
+  </script>
+  <style>
+    /* Public Workbench theme tokens */
+    /* Public Workbench tokens, generated from tokens.json. Light = Paper (default), Dark = Night.
+       Theme hooks: [data-theme] (design system) and [data-bs-theme] (tedt.org / Bootstrap). */
+    :root, [data-theme="light"], [data-bs-theme="light"] {
+      --ia-paper: #f8f6f0;
+      --ia-surface: #fffdfa;
+      --ia-ink: #101820;
+      --ia-muted: #4e5962;
+      --ia-link: #00446f;
+      --ia-link-hover: #003659;
+      --ia-accent: #b64216;
+      --ia-rule: #d7d5ce;
+      --ia-control: #7d858b;
+      --ia-primary: #00446f;
+      --ia-on-primary: #ffffff;
+      --nav-bg: #101820;
+      --nav-ink: #f8f6f0;
+      --switcher-border: rgba(248, 246, 240, 0.55);
+      --banner-bg: #f5ebd4;
+      --banner-ink: #373023;
+      --banner-rule: #c9b98f;
+      --banner-link: #00446f;
+      --brand-orange: #bf4714;
+      --brand-cyan: #00779e;
+      --brand-orange-decor: #e86027;
+      --brand-cyan-decor: #00a9e0;
+      --on-brand: #ffffff;
+      --category-cyan: #059cb6;
+      --category-violet: #9a79f9;
+      --signal-success: #004817;
+      --signal-danger: #64001a;
+      --signal-warning: #614b23;
+      --signal-info: #00445a;
+    }
+    [data-theme="dark"], [data-bs-theme="dark"] {
+      --ia-paper: #101820;
+      --ia-surface: #17222c;
+      --ia-ink: #f8f6f0;
+      --ia-muted: #bac6ce;
+      --ia-link: #8dd6f3;
+      --ia-link-hover: #8dd6f3;
+      --ia-accent: #ffb18c;
+      --ia-rule: #40505c;
+      --ia-control: #647683;
+      --ia-primary: #8dd6f3;
+      --ia-on-primary: #101820;
+      --nav-bg: #101820;
+      --nav-ink: #f8f6f0;
+      --switcher-border: rgba(248, 246, 240, 0.55);
+      --banner-bg: #f5ebd4;
+      --banner-ink: #373023;
+      --banner-rule: #c9b98f;
+      --banner-link: #00446f;
+      --brand-orange: #e86027;
+      --brand-cyan: #00a9e0;
+      --brand-orange-decor: #e86027;
+      --brand-cyan-decor: #00a9e0;
+      --on-brand: #101820;
+      --category-cyan: #06b6d4;
+      --category-violet: #a78bfa;
+      --signal-success: #66d188;
+      --signal-danger: #fb668d;
+      --signal-warning: #f7d79a;
+      --signal-info: #66cbec;
+    }
+    :root {
+      --space-1: 0.5rem;
+      --space-2: 0.75rem;
+      --space-3: 1rem;
+      --space-4: 1.25rem;
+      --space-5: 1.5rem;
+      --space-6: 2rem;
+      --space-7: 2.5rem;
+      --space-8: 3rem;
+      --space-9: 3.5rem;
+      --space-10: 4.5rem;
+      --radius-none: 0;
+      --radius-sm: 0.375rem;
+      --radius-pill: 1rem;
+      --nav-height: 70px;
+      --container-max: 1280px;
+      --measure: 46rem;
+      --target-min: 44px;
+      --field-min: 48px;
+      --focus-width: 3px;
+      --hero-photo-h: 390px;
+      --font-display: "Cal Sans", "Titillium Web", sans-serif;
+      --font-sans: Inter, "Noto Sans", "Helvetica Neue", "Segoe UI", Roboto, "Liberation Sans", sans-serif;
+      --font-mono: "Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    :root { color-scheme: light; }
+    :root[data-theme="dark"] { color-scheme: dark; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--ia-paper); color: var(--ia-ink); font: 1.125rem/1.65 var(--font-sans); }
+    a { color: var(--ia-link); text-underline-offset: .18em; }
+    a:hover { text-decoration-thickness: .15em; }
+    :is(a, button, input, select, summary, [tabindex]):focus-visible {
+      outline: var(--focus-width) solid var(--ia-link);
+      outline-offset: 4px;
+    }
+    .ia-skip-link { position: absolute; inset-inline-start: var(--space-3); transform: translateY(-200%); }
+    .ia-skip-link:focus { transform: none; background: var(--ia-surface); padding: var(--space-1) var(--space-3); }
+    .ia-container { width: min(100%, var(--container-max)); margin-inline: auto; padding-inline: clamp(1rem, 3.5vw, 2.5rem); }
+    .pp-local-nav { background: var(--nav-bg); color: var(--nav-ink); }
+    .pp-local-nav .ia-container { display: flex; align-items: center; justify-content: space-between; min-height: var(--nav-height); gap: var(--space-1); }
+    .pp-local-nav a { color: inherit; min-height: var(--target-min); display: inline-flex; align-items: center; }
+    .pp-local-nav :focus-visible { outline-color: var(--nav-ink); }
+    .pp-local-nav .pp-scheme { min-height: var(--target-min); width: auto; background: var(--nav-bg); color: var(--nav-ink); border-color: var(--switcher-border); }
+    body:has(> tedt-global-header) .pp-local-nav,
+    body:has(.pp-nav-current) > .tt-catalog-return { display: none; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: -.025em; line-height: 1.15; }
+    h1.display-1 { margin: 0 0 var(--space-1); font-size: clamp(2.35rem, 6vw, 4.5rem); }
+    h2 { margin: 0 0 var(--space-2); font-size: clamp(1.45rem, 2.8vw, 2.1rem); }
+    h3 { margin: 0 0 var(--space-1); font-size: 1.22rem; }
+    p { margin: 0 0 var(--space-3); }
+    .pp-intro { padding-block: var(--space-6) var(--space-5); }
+    .pp-breadcrumb { display: flex; align-items: center; gap: var(--space-1); margin-bottom: var(--space-1); }
+    .pp-breadcrumb a { display: inline-flex; align-items: center; min-height: var(--target-min); }
+    .pp-lead { color: var(--ia-muted); max-width: var(--measure); margin: 0; }
+    .pp-jump { display: none; }
+    .pp-jump a { display: inline-flex; align-items: center; min-height: var(--target-min); }
+    .pp-small, .pp-breadcrumb { font-size: .875rem; line-height: 1.55; color: var(--ia-muted); }
+    .pp-mono, :is(td, th) .pp-number { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    :is(main, section, details, [id]) { scroll-margin-top: 125px; }
+    .pp-workbench {
+      display: grid;
+      grid-template-areas: "chart controls" "crossings controls";
+      grid-template-columns: minmax(0, 1fr) minmax(16rem, 19rem);
+      column-gap: clamp(1.5rem, 4vw, 3rem);
+      align-items: start;
+      border-top: 1px solid var(--ia-rule);
+      padding-top: var(--space-5);
+    }
+    .pp-plot { grid-area: chart; min-width: 0; }
+    .pp-controls { grid-area: controls; min-width: 0; border-inline-start: 1px solid var(--ia-rule); padding-inline-start: var(--space-5); }
+    .pp-crossings { grid-area: crossings; min-width: 0; margin-top: var(--space-5); }
+    .pp-section { border-top: 1px solid var(--ia-rule); margin-top: var(--space-8); padding-top: var(--space-6); }
+    .pp-section > p { max-width: var(--measure); }
+    .pp-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); align-items: start; }
+    .pp-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 var(--space-2); }
+    .pp-row > p { margin-bottom: var(--space-1); }
+    .pp-chart { display: block; width: 100%; height: clamp(17rem, 29vw, 25rem); }
+    .pp-iq-chart { height: 13.75rem; }
+    .pp-human-chart { height: 11rem; }
+    figure { margin: 0; }
+    .pp-figure-caption { margin: var(--space-1) 0 0; }
+    .pp-series, .pp-calendar { display: flex; flex-wrap: wrap; gap: 0 var(--space-3); }
+    .pp-series { padding-top: var(--space-1); border-top: 1px solid var(--ia-rule); }
+    .pp-series label, .pp-calendar label {
+      display: inline-flex; gap: .4rem; align-items: center; min-height: var(--target-min);
+      font-size: .825rem; cursor: pointer;
+    }
+    .pp-series label { --series-color: var(--ia-ink); }
+    .pp-series .pp-optimistic { --series-color: var(--signal-success); }
+    .pp-series .pp-historical { --series-color: var(--ia-link); }
+    .pp-series .pp-pessimistic { --series-color: var(--brand-orange); }
+    .pp-series .pp-iq { --series-color: var(--ia-muted); }
+    .pp-series .pp-reference { --series-color: var(--brand-cyan); }
+    .pp-swatch { width: 1.35rem; height: .68rem; display: inline-block; color: var(--series-color); align-content: center; }
+    .pp-swatch::before { content: ""; display: block; border-top: 2px solid currentColor; }
+    :is(.pp-optimistic, .pp-pessimistic) .pp-swatch::before { border-top-style: dashed; }
+    .pp-reference .pp-swatch::before { border-top-style: dotted; }
+    .pp-iq .pp-swatch { background: color-mix(in srgb, var(--ia-link) 16%, var(--ia-paper)); }
+    .pp-inspect { margin-top: var(--space-1); border-block: 1px solid var(--ia-rule); padding-block: var(--space-1); }
+    .pp-inspect dl { display: flex; flex-wrap: wrap; gap: .15rem var(--space-3); margin: 0 0 var(--space-1); }
+    .pp-inspect dl > div { display: flex; align-items: baseline; gap: .4rem; }
+    .pp-inspect dd { margin: 0; color: var(--ia-ink); }
+    .pp-inspect input { width: 100%; max-width: 23rem; }
+    fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+    legend { padding: 0; }
+    .pp-group { border-top: 1px solid var(--ia-rule); padding: var(--space-2) 0 0; margin-top: var(--space-2); }
+    .pp-group :is(h3, legend) { margin-bottom: var(--space-1); }
+    .pp-group > p:last-child { margin-bottom: 0; }
+    .pp-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-1); }
+    .pp-field { display: grid; gap: .25rem; min-width: 0; }
+    .pp-control-label, .pp-field label { font-size: .875rem; font-weight: 600; }
+    .pp-field input { width: 100%; }
+    .pp-control-note { margin: .35rem 0 0; }
+    input, select, button { font: inherit; }
+    :is(input[type="number"], select) {
+      background: var(--ia-surface); border: 1px solid var(--ia-control); border-radius: var(--radius-sm);
+      color: var(--ia-ink); min-height: var(--field-min); padding: .4rem .55rem; min-width: 0; font-size: .9375rem;
+    }
+    input[type="number"] { font-family: var(--font-mono); }
+    input[type="range"] { display: block; width: 100%; height: var(--target-min); margin: 0; }
+    input:is([type="range"], [type="checkbox"]) { accent-color: var(--ia-primary); cursor: pointer; }
+    input[type="checkbox"] { width: 1.15rem; height: 1.15rem; margin: 0; }
+    [aria-invalid="true"] { border-color: var(--signal-danger) !important; }
+    .pp-error { color: var(--signal-danger); min-height: 1.4em; margin: .3rem 0 0; }
+    .pp-error:empty { display: none; }
+    .pp-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-2); }
+    .btn-primary, .btn-outline-primary {
+      min-height: var(--target-min); padding: .5rem .75rem; font-size: .875rem; font-weight: 600;
+      border: 1px solid var(--ia-primary); border-radius: var(--radius-sm); cursor: pointer;
+    }
+    .btn-primary { color: var(--ia-on-primary); background: var(--ia-primary); }
+    .btn-primary:hover { background: var(--ia-link-hover); }
+    .btn-outline-primary { color: var(--ia-link); background: transparent; border-color: var(--ia-link); }
+    .btn-outline-primary:hover { color: var(--ia-paper); background: var(--ia-link); }
+    .pp-table-wrap { min-width: 0; overflow: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: .875rem; line-height: 1.4; text-align: left; }
+    th, td { padding: .55rem .55rem .55rem 0; border-bottom: 1px solid var(--ia-rule); }
+    thead th { font-weight: 600; }
+    tbody th { font-weight: 500; }
+    .pp-table-wide { min-width: 36rem; }
+    .pp-table-numbers td, .pp-table-numbers th:not(:first-child) { text-align: right; }
+    .pp-table-numbers td:last-child, .pp-table-numbers th:last-child { padding-right: 0; }
+    .pp-crossings table { table-layout: fixed; }
+    .pp-crossings thead th:first-child { width: 29%; }
+    .pp-crossings th > span { display: block; }
+    .pp-table-note { margin: var(--space-1) 0 0; }
+    .pp-iq-central { background: color-mix(in srgb, var(--ia-link) 9%, var(--ia-paper)); }
+    .pp-iq-central th { font-weight: 600; }
+    .pp-floor { width: 6rem; max-width: 100%; }
+    summary {
+      display: list-item; padding-block: .62rem; min-height: var(--target-min); cursor: pointer;
+      font-weight: 600; color: var(--ia-link); text-decoration: underline; text-underline-offset: .18em;
+    }
+    details + details { margin-top: var(--space-2); border-top: 1px solid var(--ia-rule); }
+    .pp-footer { border-top: 1px solid var(--ia-rule); margin-block: var(--space-8) var(--space-6); padding-top: var(--space-2); }
+    .pp-footer a { min-height: var(--target-min); display: inline-flex; align-items: center; }
+    [hidden] { display: none !important; }
+
+    @media (max-width: 940px) {
+      .pp-jump { display: flex; flex-wrap: wrap; gap: 0 var(--space-3); }
+      .pp-workbench { grid-template: "chart" "controls" "crossings" / minmax(0, 1fr); }
+      .pp-controls { padding: var(--space-4) 0 0; margin-top: var(--space-5); border-inline-start: 0; border-top: 1px solid var(--ia-rule); }
+      .pp-controls-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-6); }
+      .pp-chart { height: clamp(17rem, 47vw, 23rem); }
+      .pp-iq-chart { height: 13.75rem; }
+      .pp-human-chart { height: 11rem; }
+    }
+    @media (max-width: 640px) {
+      .pp-columns, .pp-controls-inner { grid-template-columns: minmax(0, 1fr); }
+      .pp-intro { padding-top: var(--space-3); }
+      .pp-lead { font-size: 1rem; }
+      .pp-chart:not(.pp-iq-chart, .pp-human-chart) { height: 18.75rem; }
+      .pp-crossings table { font-size: .76rem; }
+      .pp-crossings :is(td, th) { padding-right: .2rem; }
+      .pp-series { gap: 0 var(--space-2); }
+      .pp-section { margin-top: var(--space-6); padding-top: var(--space-5); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body class="library-site">
+  <a class="ia-skip-link" href="#main">Skip to tool</a>
+  <header class="pp-local-nav">
+    <nav class="ia-container" aria-label="Site navigation">
+      <a href="https://tools.tedt.org/">Ted’s Tools</a>
+      <select class="pp-scheme" id="appearance" aria-label="Color scheme">
+        <option value="system">System</option><option value="light">Paper</option><option value="dark">Night</option>
+      </select>
+    </nav>
+  </header>
+  <main id="main" class="ia-container" tabindex="-1">
+    <header class="pp-intro">
+      <nav class="pp-breadcrumb pp-nav-current" aria-label="Breadcrumb">
+        <a href="https://tools.tedt.org/">Ted’s Tools</a><span aria-hidden="true">/</span><span>AI and learning</span>
+      </nav>
+      <h1 class="display-1">Perplexity Projections</h1>
+      <p class="pp-lead">Follow OpenAI’s progress on next-token prediction, then explore three paths through 2056. Adjust the chart to see when each scenario crosses an illustrative IQ reference band.</p>
+      <nav class="pp-jump pp-small" aria-label="Jump to tool sections">
+        <a href="#controls-heading">Chart Controls</a><a href="#crossings-heading">Crossing Dates</a>
+      </nav>
+    </header>
+    <noscript><p>Enable JavaScript to use the interactive chart. <a href="https://openai.com/index/perplexity-and-intelligence/#base-model-log-perplexity">OpenAI’s original chart</a></p></noscript>
+    <section class="pp-workbench" aria-label="Projection workbench">
+      <div class="pp-plot">
+        <div class="pp-row">
+          <h2 id="trend-heading">Code Benchmark</h2>
+          <p class="pp-small" id="plot-window"></p>
+        </div>
+        <p class="pp-small">Lower log-perplexity means better next-token prediction on OpenAI’s fixed code snapshot. <a href="https://openai.com/index/perplexity-and-intelligence/#base-model-log-perplexity">Source chart</a></p>
+        <figure aria-labelledby="trend-heading">
+          <canvas class="pp-chart" id="trend-chart" role="img" aria-label="OpenAI log-perplexity measurements and three projections by date" aria-describedby="plot-window trend-key crossings-heading"></canvas>
+          <figcaption class="pp-figure-caption pp-small" id="trend-key">Circles show released models. The square shows OpenAI’s internal model. The eight shaded bands use the editable IQ anchors below.</figcaption>
+        </figure>
+        <fieldset class="pp-series" aria-label="Chart series">
+          <label><input type="checkbox" id="show-observed" checked><span class="pp-swatch" aria-hidden="true"></span>Observed models</label>
+          <label class="pp-optimistic"><input type="checkbox" id="show-optimistic" checked><span class="pp-swatch" aria-hidden="true"></span>Optimistic</label>
+          <label class="pp-historical"><input type="checkbox" id="show-historical" checked><span class="pp-swatch" aria-hidden="true"></span>Historical fit</label>
+          <label class="pp-pessimistic"><input type="checkbox" id="show-pessimistic" checked><span class="pp-swatch" aria-hidden="true"></span>Pessimistic</label>
+          <label class="pp-iq"><input type="checkbox" id="show-iq" checked><span class="pp-swatch" aria-hidden="true"></span>IQ bands</label>
+          <label class="pp-reference"><input type="checkbox" id="show-window"><span class="pp-swatch" aria-hidden="true"></span>OpenAI window</label>
+        </fieldset>
+        <div class="pp-inspect">
+          <div class="pp-row">
+            <label class="pp-control-label" for="inspect-month">Inspect month</label>
+            <output class="pp-mono pp-small" id="inspect-date" for="inspect-month"></output>
+          </div>
+          <input type="range" id="inspect-month" min="0" max="416" step="1" value="56" aria-describedby="inspect-values">
+          <dl class="pp-small" id="inspect-values"></dl>
+        </div>
+      </div>
+      <aside class="pp-controls" aria-labelledby="controls-heading">
+        <h2 id="controls-heading">Chart Controls</h2>
+        <div class="pp-controls-inner">
+          <div>
+            <label class="pp-control-label" for="future-months">Future years</label>
+            <output class="pp-mono pp-small" id="future-years" for="future-months"></output>
+            <input type="range" id="future-months" min="0" max="360" step="1" value="360" aria-describedby="future-end">
+            <p class="pp-small pp-control-note" id="future-end"></p>
+            <div class="pp-field pp-group">
+              <label for="time-base">Time-scale base</label>
+              <input type="number" id="time-base" value="35.667" step="any" inputmode="decimal" aria-describedby="time-hint time-error">
+            </div>
+            <p class="pp-small pp-control-note" id="time-hint">Use 1 for linear time. Higher bases give early dates more space. Bases below 1 give later dates more space.</p>
+            <p class="pp-small pp-error" id="time-error" role="status"></p>
+          </div>
+          <div>
+            <div class="pp-group">
+              <div class="pp-fields">
+                <div class="pp-field"><label for="y-min">Y minimum</label><input type="number" id="y-min" min="0" max="1" step="any" inputmode="decimal" placeholder="Auto" aria-describedby="y-range y-error"></div>
+                <div class="pp-field"><label for="y-max">Y maximum</label><input type="number" id="y-max" min="0" max="1" step="any" inputmode="decimal" value="1.00" aria-describedby="y-range y-error"></div>
+              </div>
+              <p class="pp-small pp-control-note" id="y-range"></p>
+              <p class="pp-small pp-control-note">Leave the minimum blank for Auto. The maximum is capped at 1.00.</p>
+              <p class="pp-small pp-error" id="y-error" role="status"></p>
+            </div>
+            <div class="pp-group">
+              <h3 id="calendar-heading">Calendar Marks</h3>
+              <fieldset class="pp-calendar" aria-labelledby="calendar-heading">
+                <label><input type="checkbox" id="marks-annual" checked>Annual</label>
+                <label><input type="checkbox" id="marks-quarterly">Quarterly</label>
+                <label><input type="checkbox" id="marks-monthly">Monthly</label>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+        <div class="pp-actions">
+          <button class="btn-primary" type="button" id="zoom-iq">Zoom to IQ Bands</button>
+          <button class="btn-outline-primary" type="button" id="reset-view">Reset View</button>
+        </div>
+      </aside>
+      <section class="pp-crossings" aria-labelledby="crossings-heading">
+        <div class="pp-row"><h2 id="crossings-heading">IQ Reference Crossings</h2><p class="pp-small" id="crossing-window"></p></div>
+        <table class="pp-table-numbers" aria-labelledby="crossings-heading">
+          <thead><tr><th scope="col">Scenario</th><th scope="col">Lower<span class="pp-number" id="cross-lower"></span></th><th scope="col">Median<span class="pp-number" id="cross-median"></span></th><th scope="col">Upper<span class="pp-number" id="cross-upper"></span></th></tr></thead>
+          <tbody id="crossing-rows"></tbody>
+        </table>
+        <p class="pp-small pp-table-note">Dates show the first month within the time window at or below the reference line. <a href="#iq-anchors">Edit IQ anchors</a></p>
+      </section>
+    </section>
+
+    <section class="pp-section" aria-labelledby="iq-heading">
+      <h2 id="iq-heading">Human IQ Reference</h2>
+      <p>The bell curve uses a mean of 100 and a standard deviation of 15. The projection chart assumes a linear drop in log-perplexity as IQ rises. OpenAI’s code benchmark has no published IQ calibration. <a href="https://dictionary.apa.org/deviation-iq">APA Dictionary of Psychology</a></p>
+      <div class="pp-columns">
+        <div>
+          <figure>
+            <canvas class="pp-chart pp-iq-chart" id="iq-chart" role="img" aria-label="Normal IQ curve from 40 to 160, with a mean of 100 and one standard deviation highlighted on each side"></canvas>
+            <figcaption class="pp-small">About 68% of this normal model falls between IQ 85 and 115.</figcaption>
+          </figure>
+          <fieldset class="pp-group" id="iq-anchors">
+            <legend class="pp-control-label">IQ anchors on the log-perplexity axis</legend>
+            <div class="pp-fields">
+              <div class="pp-field"><label for="anchor-low-iq">IQ 85 (−1 SD)</label><input type="number" id="anchor-low-iq" min="0" max="1" value="0.700" step="any" inputmode="decimal" aria-describedby="anchor-error"></div>
+              <div class="pp-field"><label for="anchor-high-iq">IQ 115 (+1 SD)</label><input type="number" id="anchor-high-iq" min="0" max="1" value="0.680" step="any" inputmode="decimal" aria-describedby="anchor-error"></div>
+            </div>
+            <p class="pp-small pp-error" id="anchor-error" role="status"></p>
+          </fieldset>
+        </div>
+        <table class="pp-table-numbers" aria-label="Eight illustrative IQ reference bands">
+          <thead><tr><th scope="col">IQ band</th><th scope="col">SD from mean</th><th scope="col">Mapped loss</th></tr></thead>
+          <tbody id="iq-bands"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="pp-section" aria-labelledby="human-heading">
+      <h2 id="human-heading">Human and GPT-2 Perplexity</h2>
+      <p>Shlegeris and colleagues asked 54 participants to judge next-token probabilities on English web text. The spans show sampling uncertainty across 120 context–token pairs. OpenAI’s projection chart uses a separate internal code benchmark. <a href="https://arxiv.org/html/2212.11281v2#S4.F4">Shlegeris et al., Figure 4</a></p>
+      <div class="pp-row">
+        <h3>OpenWebText</h3>
+        <label class="pp-control-label" for="human-units">Units <select id="human-units"><option value="raw">Perplexity</option><option value="ln">Natural log</option></select></label>
+      </div>
+      <div class="pp-columns">
+        <figure>
+          <canvas class="pp-chart pp-human-chart" id="human-chart" role="img" aria-label="Human and GPT-2 estimates on OpenWebText, with sampling spans for the pooled human and rounded GPT-2 estimates"></canvas>
+          <figcaption class="pp-small">Lower means better next-token prediction. Values are approximate readings from Figure 4.</figcaption>
+        </figure>
+        <table class="pp-table-numbers" aria-labelledby="human-heading">
+          <thead><tr><th scope="col">Predictor</th><th scope="col">Estimate</th><th scope="col">Span</th></tr></thead>
+          <tbody id="human-rows"></tbody>
+        </table>
+      </div>
+      <p class="pp-small pp-table-note">Rounded GPT-2 uses the same eleven probability choices as participants. A separate programming study compared model perplexity with human EEG responses. <a href="https://arxiv.org/abs/2508.18547">Abdelsalam et al.</a></p>
+    </section>
+
+    <section class="pp-section" aria-labelledby="assumptions-heading">
+      <h2 id="assumptions-heading">Projection Assumptions</h2>
+      <p>Each curve starts at the latest released model and closes a fixed share of the gap to its floor each year. The rate comes from the selected historical releases. The optimistic and pessimistic floors are editable.</p>
+      <div class="pp-table-wrap" tabindex="0" role="region" aria-label="Scrollable projection assumptions table">
+        <table class="pp-table-wide pp-table-numbers" aria-labelledby="assumptions-heading">
+          <thead><tr><th scope="col">Scenario</th><th scope="col">Fit period</th><th scope="col">Releases</th><th scope="col">Floor</th><th scope="col">Annual gap reduction</th><th scope="col">Year-one loss decline</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Optimistic</th><td id="optimistic-period"></td><td id="optimistic-count"></td><td><input class="pp-floor" type="number" id="optimistic-floor" aria-label="Optimistic floor" min="0" step="any" inputmode="decimal" value="0.20" aria-describedby="floor-error"></td><td id="optimistic-rate" class="pp-mono"></td><td id="optimistic-first" class="pp-mono"></td></tr>
+            <tr><th scope="row">Historical fit</th><td id="historical-period"></td><td id="historical-count"></td><td class="pp-mono">0.00</td><td id="historical-rate" class="pp-mono"></td><td id="historical-first" class="pp-mono"></td></tr>
+            <tr><th scope="row">Pessimistic</th><td id="pessimistic-period"></td><td id="pessimistic-count"></td><td><input class="pp-floor" type="number" id="pessimistic-floor" aria-label="Pessimistic floor" min="0" step="any" inputmode="decimal" value="0.70" aria-describedby="floor-error"></td><td id="pessimistic-rate" class="pp-mono"></td><td id="pessimistic-first" class="pp-mono"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="pp-small pp-error" id="floor-error" role="status"></p>
+      <p class="pp-small pp-table-note" id="sensitivity"></p>
+      <details>
+        <summary>Crossings of OpenAI’s 0.68–0.70 Window</summary>
+        <table class="pp-table-numbers" aria-label="OpenAI reference window crossings">
+          <thead><tr><th scope="col">Scenario</th><th scope="col">Reaches 0.70</th><th scope="col">Reaches 0.68</th></tr></thead>
+          <tbody id="reference-crossings"></tbody>
+        </table>
+        <p class="pp-small pp-table-note">OpenAI described this interval in its discussion of emerging capabilities. The IQ anchors start at the same values for illustration. <a href="https://openai.com/index/perplexity-and-intelligence/">Perplexity and Intelligence</a></p>
+      </details>
+    </section>
+
+    <section class="pp-section" aria-labelledby="data-heading">
+      <div class="pp-row"><h2 id="data-heading">Measurements and Projections</h2><button class="btn-outline-primary" type="button" id="download-data">Download CSV</button></div>
+      <p class="pp-small">The CSV includes all 14 measurements and monthly scenario values through the displayed end date.</p>
+      <details>
+        <summary>Observed Measurements</summary>
+        <div class="pp-table-wrap" tabindex="0" role="region" aria-label="Scrollable source measurements">
+          <table class="pp-table-wide" aria-label="OpenAI source measurements">
+            <thead><tr><th scope="col">Model</th><th scope="col">Month</th><th scope="col">Log-perplexity</th><th scope="col">Series</th><th scope="col">OpenAI’s chart note</th></tr></thead>
+            <tbody id="observed-rows"></tbody>
+          </table>
+        </div>
+      </details>
+      <details>
+        <summary>Annual Projections</summary>
+        <table class="pp-table-numbers" aria-label="Annual projection values through the displayed end date">
+          <thead><tr><th scope="col">Month</th><th scope="col">Optimistic</th><th scope="col">Historical fit</th><th scope="col">Pessimistic</th></tr></thead>
+          <tbody id="annual-rows"></tbody>
+        </table>
+      </details>
+    </section>
+    <footer class="pp-footer pp-small"><a href="https://tools.tedt.org/">Back to Ted’s Tools</a></footer>
+  </main>
+
+  <script id="projection-model">
+    const projectionModel = (() => {
+      const firstMonth = 2022 * 12 + 2;
+      const maxFuture = 360;
+      const ceiling = 1;
+      const reference = { lower: .68, upper: .70 };
+      const iqMean = 100;
+      const iqSd = 15;
+      const measurements = [
+        ["GPT-3.5", 2022, 3, .986, "Fluent conversation"],
+        ["GPT-4", 2023, 3, .913, "Benefits from thinking before answering"],
+        ["GPT-4 Turbo", 2023, 11, .909],
+        ["GPT-4o / o1", 2024, 5, .904],
+        ["GPT-4.5", 2025, 2, .876],
+        ["GPT-4.1 / o3", 2025, 4, .902],
+        ["GPT-5 / 5.1", 2025, 8, .893],
+        ["GPT-5.2", 2025, 12, .888],
+        ["GPT-5.3-Codex / 5.4", 2026, 2, .871, "Useful coder"],
+        ["GPT-5.5", 2026, 4, .848],
+        ["GPT-5.6 Sol", 2026, 7, .828, "Cybersecurity expert"],
+        ["GPT-6 Astra", 2026, 9, .783],
+        ["GPT-6.2 Astra", 2026, 11, .761, "Solved a Millennium Prize math problem"],
+        ["Internal model", 2026, 11, .732],
+      ].map(([name, year, month, loss, note]) => ({
+        name, month: year * 12 + month - 1 - firstMonth, loss, note, internal: name === "Internal model",
+      }));
+      const released = measurements.filter(point => !point.internal);
+      const latest = released.at(-1);
+      const defaults = {
+        future: maxFuture, base: 1 + (latest.month + maxFuture) / 12,
+        lowerIq: reference.upper, higherIq: reference.lower,
+        optimisticFloor: .2, pessimisticFloor: .7,
+        series: { observed: true, optimistic: true, historical: true, pessimistic: true, iq: true, window: false },
+        marks: { annual: true, quarterly: false, monthly: false },
+      };
+      const human = [
+        { name: "Human (pooled)", label: "Human (pooled)", point: 148, span: [85, 256] },
+        { name: "GPT-2 Small (rounded)", label: "GPT-2 rounded", point: 46, span: [34, 61] },
+        { name: "GPT-2 Small (reference)", label: "GPT-2 reference", point: 24, span: null },
+      ];
+      const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
+      const shortFormat = new Intl.DateTimeFormat("en-US", { month: "short", year: "2-digit", timeZone: "UTC" });
+      const monthDate = offset => {
+        const month = firstMonth + Math.round(offset);
+        return new Date(Date.UTC(Math.floor(month / 12), month % 12, 1));
+      };
+      const formatMonth = (offset, short = false) => (short ? shortFormat : dateFormat).format(monthDate(offset));
+      const isoMonth = offset => monthDate(offset).toISOString().slice(0, 7);
+      const clamp = (value, lower, upper) => Math.min(upper, Math.max(lower, value));
+
+      // Least-squares slope of log(loss − floor) against elapsed calendar years.
+      function fit(points, floor) {
+        const xs = points.map(point => point.month / 12);
+        const ys = points.map(point => Math.log(point.loss - floor));
+        const mean = values => values.reduce((sum, value) => sum + value, 0) / values.length;
+        const xMean = mean(xs);
+        const yMean = mean(ys);
+        const numerator = xs.reduce((sum, x, index) => sum + (x - xMean) * (ys[index] - yMean), 0);
+        const denominator = xs.reduce((sum, x) => sum + (x - xMean) ** 2, 0);
+        return numerator / denominator;
+      }
+
+      function scenarios(optimisticFloor, pessimisticFloor) {
+        const inputs = [
+          ["optimistic", "Optimistic", released.slice(7), optimisticFloor],
+          ["historical", "Historical fit", released, 0],
+          ["pessimistic", "Pessimistic", released.slice(0, 8), pessimisticFloor],
+        ];
+        return inputs.map(([id, name, points, floor]) => ({ id, name, points, floor, slope: fit(points, floor) }));
+      }
+
+      function project(scenario, months) {
+        return scenario.floor + (latest.loss - scenario.floor) * Math.exp(scenario.slope * months / 12);
+      }
+
+      function crossing(scenario, threshold, future) {
+        if (latest.loss <= threshold + 1e-12) return { offset: latest.month, exact: latest.month };
+        if (threshold <= scenario.floor || scenario.slope >= 0) return { label: "No crossing" };
+        const elapsed = 12 * Math.log((threshold - scenario.floor) / (latest.loss - scenario.floor)) / scenario.slope;
+        const month = Math.ceil(elapsed - 1e-10);
+        if (month > future) return { label: "Outside view" };
+        return { offset: latest.month + month, exact: latest.month + elapsed };
+      }
+
+      function iq(scale85, scale115) {
+        const median = (scale85 + scale115) / 2;
+        const drop = (scale85 - scale115) / 2;
+        const atSd = sd => median - drop * sd;
+        const bands = Array.from({ length: 8 }, (_, index) => {
+          const sd = index - 4;
+          return {
+            sd, iqLow: iqMean + sd * iqSd, iqHigh: iqMean + (sd + 1) * iqSd,
+            lower: atSd(sd + 1), upper: atSd(sd),
+          };
+        });
+        return { lower: atSd(4), median, upper: atSd(-4), bands };
+      }
+
+      function timePosition(month, end, base) {
+        if (month <= 0) return 0;
+        if (month >= end) return 1;
+        const share = month / end;
+        if (Math.abs(base - 1) < 1e-8) return share;
+        return Math.log1p((base - 1) * share) / Math.log(base);
+      }
+
+      function timeMonth(position, end, base) {
+        if (position <= 0) return 0;
+        if (position >= 1) return end;
+        if (Math.abs(base - 1) < 1e-8) return position * end;
+        return end * (Math.expm1(Math.log(base) * position) / (base - 1));
+      }
+
+      function calendarMark(offset, marks) {
+        const month = (firstMonth + offset) % 12;
+        if (month === 0 && marks.annual) return "annual";
+        if (month % 3 === 0 && marks.quarterly) return "quarterly";
+        return marks.monthly ? "monthly" : null;
+      }
+
+      function autoMin(optimistic, future) {
+        return Math.max(0, project(optimistic, future));
+      }
+
+      function viewRange(automatic, minimum, maximum) {
+        const cap = maximum > automatic && maximum <= ceiling ? maximum : ceiling;
+        const min = minimum !== null && minimum >= automatic && minimum < cap ? minimum : automatic;
+        return { min, max: cap };
+      }
+
+      const pastFit = released.slice(0, 8);
+      const endPastFit = pastFit.at(-1);
+      const sensitivityPast = endPastFit.loss * Math.exp(fit(pastFit, 0) * (latest.month - endPastFit.month) / 12);
+
+      return {
+        maxFuture, ceiling, reference, iqMean, iqSd, measurements, released, latest, defaults, human,
+        clamp, formatMonth, isoMonth, scenarios, project, crossing, iq, timePosition, timeMonth,
+        calendarMark, autoMin, viewRange, sensitivityPast,
+      };
+    })();
+  </script>
+  <script>
+    (() => {
+      const model = projectionModel;
+      const defaults = model.defaults;
+      const byId = id => document.getElementById(id);
+      const value = id => byId(id).valueAsNumber;
+      const loss = number => number.toFixed(3);
+      const pct = number => (100 * number).toFixed(1) + "%";
+      const signed = number => number < 0 ? "−" + -number : number > 0 ? "+" + number : "0";
+      const seriesColors = { optimistic: "success", historical: "link", pessimistic: "orange" };
+      const seriesDashes = { optimistic: [7, 4], historical: [], pessimistic: [9, 3, 2, 3] };
+      const thresholds = ["lower", "median", "upper"];
+      const state = {
+        future: defaults.future, base: defaults.base, minimum: null, maximum: 1,
+        inspect: model.latest.month, pinned: false, band: model.iq(defaults.lowerIq, defaults.higherIq),
+        scenarios: model.scenarios(defaults.optimisticFloor, defaults.pessimisticFloor),
+        series: { ...defaults.series }, marks: { ...defaults.marks }, units: "raw",
+      };
+      const limits = () => {
+        const automatic = model.autoMin(state.scenarios[0], state.future);
+        return { automatic, ...model.viewRange(automatic, state.minimum, state.maximum) };
+      };
+      const end = () => model.latest.month + state.future;
+      const text = (id, content) => { byId(id).textContent = content; };
+      const plot = byId("trend-chart");
+      const iqChart = byId("iq-chart");
+      const humanChart = byId("human-chart");
+      let plotPosition;
+      let frame;
+
+      function row(heading, values, classes = "") {
+        const tr = document.createElement("tr");
+        const th = document.createElement("th");
+        tr.className = classes;
+        th.scope = "row";
+        th.textContent = heading;
+        tr.append(th);
+        for (const content of values) {
+          const cell = document.createElement("td");
+          cell.textContent = content;
+          tr.append(cell);
+        }
+        return tr;
+      }
+
+      function updateTables() {
+        const band = state.band;
+        const dateTo = "Through " + model.formatMonth(end());
+        text("future-end", dateTo);
+        text("crossing-window", dateTo);
+        for (const threshold of thresholds) text("cross-" + threshold, loss(band[threshold]));
+
+        function crosses(scenario, levels) {
+          return levels.map(level => {
+            const crossing = model.crossing(scenario, level, state.future);
+            return crossing.label ?? model.formatMonth(crossing.offset);
+          });
+        }
+
+        byId("crossing-rows").replaceChildren(...state.scenarios.map(scenario =>
+          row(scenario.name, crosses(scenario, thresholds.map(threshold => band[threshold])))));
+        byId("reference-crossings").replaceChildren(...state.scenarios.map(scenario =>
+          row(scenario.name, crosses(scenario, [model.reference.upper, model.reference.lower]))));
+        byId("iq-bands").replaceChildren(...band.bands.map(item =>
+          row(item.iqLow + "–" + item.iqHigh, [
+            signed(item.sd) + " to " + signed(item.sd + 1), loss(item.lower) + "–" + loss(item.upper),
+          ], item.sd === -1 || item.sd === 0 ? "pp-iq-central" : "")));
+
+        const annual = [];
+        for (let month = 0; month <= state.future; month += 12) annual.push(month);
+        if (annual.at(-1) !== state.future) annual.push(state.future);
+        byId("annual-rows").replaceChildren(...annual.map(month => row(model.formatMonth(model.latest.month + month),
+          state.scenarios.map(scenario => loss(model.project(scenario, month))))));
+        for (const { id, points, slope, floor } of state.scenarios) {
+          text(id + "-period", model.formatMonth(points[0].month) + "–" + model.formatMonth(points.at(-1).month));
+          text(id + "-count", points.length);
+          text(id + "-rate", pct(1 - Math.exp(slope)));
+          text(id + "-first", pct(1 - model.project({ slope, floor }, 12) / model.latest.loss));
+        }
+        const historical = state.scenarios[1];
+        const pessimisticFloor = state.scenarios[2].floor;
+        const alteredFit = { ...historical, floor: pessimisticFloor };
+        text("sensitivity", "A fit through Dec 2025 projected " + loss(model.sensitivityPast) + " for Nov 2026. The observed release scored " +
+          loss(model.latest.loss) + ". At the historical rate, a " + pessimisticFloor.toFixed(2) + " floor gives " +
+          loss(model.project(alteredFit, model.maxFuture)) + " in Nov 2056. The zero-floor fit gives " + loss(model.project(historical, model.maxFuture)) + ".");
+      }
+
+      function updateInspector() {
+        const slider = byId("inspect-month");
+        slider.max = end();
+        slider.value = state.inspect;
+        slider.setAttribute("aria-valuetext", model.formatMonth(state.inspect));
+        text("inspect-date", model.formatMonth(state.inspect));
+        const readings = state.series.observed
+          ? model.measurements.filter(point => point.month === state.inspect).map(point => [point.name, point.loss])
+          : [];
+        if (state.future > 0 && state.inspect >= model.latest.month) {
+          for (const scenario of state.scenarios) {
+            if (state.series[scenario.id]) readings.push([scenario.name, model.project(scenario, state.inspect - model.latest.month)]);
+          }
+        }
+        const items = readings.map(([name, reading]) => {
+          const item = document.createElement("div");
+          const term = document.createElement("dt");
+          const number = document.createElement("dd");
+          term.textContent = name;
+          number.textContent = loss(reading);
+          number.className = "pp-mono";
+          item.append(term, number);
+          return item;
+        });
+        byId("inspect-values").replaceChildren(...items);
+        byId("inspect-values").hidden = items.length === 0;
+      }
+
+      function refresh() {
+        const { automatic, min, max } = limits();
+        const years = Math.floor(state.future / 12);
+        const months = state.future % 12;
+        const yearsLabel = years + (years === 1 ? " year" : " years");
+        const monthsLabel = months + (months === 1 ? " month" : " months");
+        const horizon = months ? (years ? yearsLabel + " " : "") + monthsLabel : yearsLabel;
+        text("future-years", horizon);
+        byId("future-months").setAttribute("aria-valuetext", horizon);
+        text("plot-window", model.formatMonth(0) + "–" + model.formatMonth(end()) + " · " + loss(min) + "–" + loss(max));
+        text("y-range", "Showing " + loss(min) + "–" + loss(max) + ". Auto minimum " + loss(automatic) + ".");
+        state.inspect = model.clamp(state.inspect, 0, end());
+        updateTables();
+        updateInspector();
+        scheduleDraw();
+      }
+
+      function colorPalette() {
+        const css = getComputedStyle(document.documentElement);
+        const token = name => css.getPropertyValue("--" + name).trim();
+        return {
+          paper: token("ia-paper"), ink: token("ia-ink"), muted: token("ia-muted"), rule: token("ia-rule"),
+          control: token("ia-control"), link: token("ia-link"), orange: token("brand-orange"),
+          cyan: token("brand-cyan"), success: token("signal-success"), mono: token("font-mono"), sans: token("font-sans"),
+        };
+      }
+
+      function chartSurface(canvas) {
+        const box = canvas.getBoundingClientRect();
+        const width = Math.max(1, box.width);
+        const height = Math.max(1, box.height);
+        const scale = Math.min(window.devicePixelRatio || 1, 3);
+        const pixels = Math.round(width * scale);
+        const rows = Math.round(height * scale);
+        if (canvas.width !== pixels) canvas.width = pixels;
+        if (canvas.height !== rows) canvas.height = rows;
+        const ctx = canvas.getContext("2d");
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        ctx.clearRect(0, 0, width, height);
+        return { ctx, width, height };
+      }
+
+      function stroke(ctx, points, color, width = 1, dash = []) {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.setLineDash(dash);
+        points.forEach(([x, y], index) => index ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      function dot(ctx, x, y, radius, color, square = false, outline = null) {
+        ctx.fillStyle = color;
+        if (outline) {
+          ctx.strokeStyle = outline;
+          ctx.lineWidth = 1.5;
+        }
+        if (square) {
+          ctx.fillRect(x - radius, y - radius, 2 * radius, 2 * radius);
+          if (outline) ctx.strokeRect(x - radius, y - radius, 2 * radius, 2 * radius);
+        } else {
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, 2 * Math.PI);
+          ctx.fill();
+          if (outline) ctx.stroke();
+        }
+      }
+
+      function drawTrend(palette) {
+        const { ctx, width, height } = chartSurface(plot);
+        const narrow = width < 420;
+        const { min, max } = limits();
+        const span = max - min;
+        const digits = Math.max(3, Math.min(10, 2 - Math.floor(Math.log10(span))));
+        ctx.font = "11px " + palette.mono;
+        const left = Math.max(narrow ? 49 : 58, ctx.measureText(max.toFixed(digits)).width + 10);
+        const right = width - 32, top = 25, bottom = height - 50;
+        const x = month => left + (right - left) * model.timePosition(month, end(), state.base);
+        const y = number => bottom - (bottom - top) * (number - min) / span;
+        plotPosition = { left, right };
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(left - 2, top - 1, right - left + 3, bottom - top + 2);
+        ctx.clip();
+        if (state.series.iq) {
+          ctx.fillStyle = palette.link;
+          for (const band of state.band.bands) {
+            ctx.globalAlpha = [.05, .08, .13, .19, .19, .13, .08, .05][band.sd + 4];
+            const upper = model.clamp(band.upper, min, max);
+            const lower = model.clamp(band.lower, min, max);
+            ctx.fillRect(left, y(upper), right - left, y(lower) - y(upper));
+          }
+          ctx.globalAlpha = 1;
+        }
+        if (state.series.window) {
+          const upper = model.clamp(model.reference.upper, min, max);
+          const lower = model.clamp(model.reference.lower, min, max);
+          ctx.fillStyle = palette.cyan;
+          ctx.globalAlpha = .12;
+          ctx.fillRect(left, y(upper), right - left, y(lower) - y(upper));
+          ctx.globalAlpha = 1;
+          for (const bound of [model.reference.lower, model.reference.upper]) {
+            if (bound >= min && bound <= max) stroke(ctx, [[left, y(bound)], [right, y(bound)]], palette.cyan, 1.2, [2, 3]);
+          }
+        }
+        for (let offset = 1; offset <= end(); offset++) {
+          const mark = model.calendarMark(offset, state.marks);
+          if (mark) {
+            ctx.globalAlpha = { annual: .64, quarterly: .39, monthly: .21 }[mark];
+            stroke(ctx, [[x(offset), top], [x(offset), bottom]], palette.control, mark === "annual" ? 1.15 : .8);
+          }
+        }
+        ctx.globalAlpha = 1;
+        for (let index = 1; index <= 5; index++) {
+          const lineY = bottom - (bottom - top) * index / 5;
+          stroke(ctx, [[left, lineY], [right, lineY]], palette.rule);
+        }
+        if (state.series.iq) {
+          for (const threshold of thresholds) {
+            const bound = state.band[threshold];
+            if (bound < min || bound > max) continue;
+            stroke(ctx, [[left, y(bound)], [right, y(bound)]], palette.muted, threshold === "median" ? 1.8 : 1, threshold === "median" ? [] : [3, 3]);
+          }
+        }
+        if (state.series.observed) {
+          stroke(ctx, model.released.map(point => [x(point.month), y(point.loss)]), palette.ink, 1.7);
+          for (const point of model.measurements) {
+            if (point.loss >= min && point.loss <= max) {
+              dot(ctx, x(point.month), y(point.loss), point.internal ? 4.5 : 3.1,
+                point.internal ? palette.paper : palette.ink, point.internal, palette.ink);
+            }
+          }
+        }
+        if (state.future > 0) {
+          for (const scenario of state.scenarios) {
+            if (!state.series[scenario.id]) continue;
+            const color = palette[seriesColors[scenario.id]];
+            const samples = Math.max(2, Math.ceil(right - x(model.latest.month)));
+            const start = model.timePosition(model.latest.month, end(), state.base);
+            const points = Array.from({ length: samples }, (_, index) => {
+              const position = start + (1 - start) * index / (samples - 1);
+              const month = model.timeMonth(position, end(), state.base);
+              return [left + position * (right - left), y(model.project(scenario, month - model.latest.month))];
+            });
+            stroke(ctx, points, color, 2.1, seriesDashes[scenario.id]);
+            if (!state.series.iq) continue;
+            for (const threshold of thresholds) {
+              const bound = state.band[threshold];
+              const crossing = model.crossing(scenario, bound, state.future);
+              if (crossing.exact > model.latest.month && bound >= min && bound <= max) {
+                dot(ctx, x(crossing.exact), y(bound), 3, palette.paper, false, color);
+              }
+            }
+          }
+        }
+        if (state.pinned) stroke(ctx, [[x(state.inspect), top], [x(state.inspect), bottom]], palette.ink, 1, [2, 4]);
+        ctx.restore();
+
+        stroke(ctx, [[left, top], [left, bottom], [right, bottom]], palette.control, 1);
+        ctx.fillStyle = palette.muted;
+        ctx.font = "11px " + palette.mono;
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        for (let index = 0; index <= 5; index++) {
+          const number = min + span * index / 5;
+          ctx.fillText(number.toFixed(digits), left - 7, y(number));
+        }
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        const count = narrow ? 3 : 6;
+        let previousX = -Infinity;
+        for (let index = 0; index <= count; index++) {
+          const month = Math.round(model.timeMonth(index / count, end(), state.base));
+          const tickX = x(month);
+          if (index > 0 && index < count && (tickX - previousX < 52 || right - tickX < 52)) continue;
+          if (index === count && right - previousX < 42) continue;
+          ctx.fillText(model.formatMonth(month, true), tickX, bottom + 7);
+          previousX = tickX;
+        }
+        ctx.font = "12px " + palette.sans;
+        ctx.textAlign = "left";
+        ctx.fillText("Log-perplexity", left, 3);
+        ctx.textAlign = "center";
+        ctx.fillText("Calendar date", (left + right) / 2, bottom + 28);
+      }
+
+      function drawIq(palette) {
+        const { ctx, width, height } = chartSurface(iqChart);
+        const left = 22, right = width - 22, bottom = height - 45;
+        const x = z => left + (z + 4) / 8 * (right - left);
+        const y = z => bottom - (bottom - 16) * Math.exp(-(z * z) / 2);
+        for (let band = -4; band < 4; band++) {
+          ctx.fillStyle = palette.link;
+          ctx.globalAlpha = [.06, .09, .15, .22, .22, .15, .09, .06][band + 4];
+          ctx.beginPath();
+          ctx.moveTo(x(band), bottom);
+          for (let index = 0; index <= 24; index++) {
+            const z = band + index / 24;
+            ctx.lineTo(x(z), y(z));
+          }
+          ctx.lineTo(x(band + 1), bottom);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        stroke(ctx, [[left, bottom], [right, bottom]], palette.control);
+        stroke(ctx, [[x(0), y(0)], [x(0), bottom]], palette.muted);
+        stroke(ctx, Array.from({ length: 161 }, (_, index) => {
+          const z = -4 + index / 20;
+          return [x(z), y(z)];
+        }), palette.link, 2.1);
+        ctx.fillStyle = palette.muted;
+        ctx.font = "11px " + palette.mono;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        for (let z = -4; z <= 4; z++) ctx.fillText(model.iqMean + z * model.iqSd, x(z), bottom + 7);
+        ctx.font = "12px " + palette.sans;
+        ctx.fillText("IQ standard score", (left + right) / 2, bottom + 26);
+      }
+
+      function humanScale(number) {
+        return state.units === "ln" ? Math.log(number) : number;
+      }
+
+      function updateHuman() {
+        const print = number => state.units === "ln" ? loss(humanScale(number)) : String(number);
+        byId("human-rows").replaceChildren(...model.human.map(item => row(item.name,
+          [print(item.point), item.span ? item.span.map(print).join("–") : "—"])));
+        scheduleDraw();
+      }
+
+      function drawHuman(palette) {
+        const { ctx, width, height } = chartSurface(humanChart);
+        const left = 113, right = width - 24, bottom = height - 34;
+        const low = state.units === "ln" ? 3 : 0;
+        const high = state.units === "ln" ? 6 : 280;
+        const x = number => left + ((number - low) / (high - low)) * (right - left);
+        ctx.font = "11px " + palette.sans;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        model.human.forEach((entry, index) => {
+          const y = 24 + index * (bottom - 30) / 3;
+          ctx.fillStyle = palette.ink;
+          ctx.fillText(entry.label, 0, y);
+          stroke(ctx, [[left, y], [right, y]], palette.rule);
+          if (entry.span) {
+            const [from, to] = entry.span.map(number => x(humanScale(number)));
+            stroke(ctx, [[from, y], [to, y]], palette.link, 2.3);
+            stroke(ctx, [[from, y - 4], [from, y + 4]], palette.link, 1.6);
+            stroke(ctx, [[to, y - 4], [to, y + 4]], palette.link, 1.6);
+          }
+          dot(ctx, x(humanScale(entry.point)), y, 4, palette.link, index === 2, palette.paper);
+        });
+        stroke(ctx, [[left, bottom], [right, bottom]], palette.control);
+        ctx.fillStyle = palette.muted;
+        ctx.font = "11px " + palette.mono;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        for (let index = 0; index <= 4; index++) {
+          const tick = low + index * (high - low) / 4;
+          ctx.fillText(state.units === "ln" ? tick.toFixed(2) : tick, x(tick), bottom + 7);
+        }
+      }
+
+      function scheduleDraw() {
+        if (frame !== undefined) return;
+        frame = requestAnimationFrame(() => {
+          frame = undefined;
+          const palette = colorPalette();
+          drawTrend(palette);
+          drawIq(palette);
+          drawHuman(palette);
+        });
+      }
+
+      function error(id, fields, message) {
+        text(id, message);
+        for (const field of fields) byId(field).setAttribute("aria-invalid", String(Boolean(message)));
+      }
+
+      function updateRange() {
+        const minInput = byId("y-min");
+        const automatic = limits().automatic;
+        const minimum = !minInput.value && !minInput.validity.badInput ? null : value("y-min");
+        const maximum = value("y-max");
+        state.minimum = Number.isFinite(minimum) ? minimum : null;
+        state.maximum = Number.isFinite(maximum) ? maximum : model.ceiling;
+        let message = "";
+        if (!Number.isFinite(maximum) || maximum > model.ceiling || maximum <= automatic) {
+          message = "Choose a maximum above " + loss(automatic) + " and at most 1.00.";
+        } else if (minimum !== null && (!Number.isFinite(minimum) || minimum < automatic || minimum >= maximum)) {
+          message = "Choose a minimum at or above " + loss(automatic) + " and below the maximum, or clear it.";
+        }
+        error("y-error", ["y-min", "y-max"], message);
+        refresh();
+      }
+
+      function updateFloors() {
+        const optimistic = value("optimistic-floor");
+        const pessimistic = value("pessimistic-floor");
+        if ([optimistic, pessimistic].some(floor => !(floor >= 0 && floor < model.latest.loss))) {
+          error("floor-error", ["optimistic-floor", "pessimistic-floor"], "Choose floors from 0 up to, but below, " + loss(model.latest.loss) + ".");
+          return;
+        }
+        error("floor-error", ["optimistic-floor", "pessimistic-floor"], "");
+        state.scenarios = model.scenarios(optimistic, pessimistic);
+        updateRange();
+      }
+
+      function updateAnchors() {
+        const lowerIq = value("anchor-low-iq");
+        const higherIq = value("anchor-high-iq");
+        if (!(higherIq >= 0 && lowerIq <= 1 && lowerIq > higherIq)) {
+          error("anchor-error", ["anchor-low-iq", "anchor-high-iq"], "Enter two losses from 0 to 1. The IQ 85 loss must be higher than the IQ 115 loss.");
+          return;
+        }
+        error("anchor-error", ["anchor-low-iq", "anchor-high-iq"], "");
+        state.band = model.iq(lowerIq, higherIq);
+        refresh();
+      }
+
+      function downloadData() {
+        const headers = ["month", "released_model", "released_log_perplexity", "internal_model", "internal_log_perplexity",
+          "optimistic", "historical_fit", "pessimistic", "iq_lower", "iq_median", "iq_upper", "openai_chart_note"];
+        const data = [headers];
+        for (let offset = 0; offset <= end(); offset++) {
+          const released = model.released.find(point => point.month === offset);
+          const internal = model.measurements.find(point => point.internal && point.month === offset);
+          const projections = offset >= model.latest.month
+            ? state.scenarios.map(scenario => loss(model.project(scenario, offset - model.latest.month)))
+            : ["", "", ""];
+          data.push([
+            model.isoMonth(offset), released?.name ?? "", released?.loss ?? "", internal?.name ?? "", internal?.loss ?? "",
+            ...projections, ...thresholds.map(threshold => loss(state.band[threshold])), released?.note ?? "",
+          ]);
+        }
+        const escape = field => '"' + String(field).replaceAll('"', '""') + '"';
+        const csv = data.map(fields => fields.map(escape).join(",")).join("\r\n") + "\r\n";
+        const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+        const link = Object.assign(document.createElement("a"), { href: url, download: "perplexity-projections.csv" });
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      const theme = matchMedia("(prefers-color-scheme: dark)");
+      const appearance = byId("appearance");
+      function setPreviewTheme() {
+        document.documentElement.dataset.theme = appearance.value === "system"
+          ? (theme.matches ? "dark" : "light") : appearance.value;
+      }
+      appearance.addEventListener("change", setPreviewTheme);
+      theme.addEventListener("change", () => {
+        if (!document.querySelector("tedt-global-header") && appearance.value === "system") setPreviewTheme();
+      });
+      new MutationObserver(scheduleDraw).observe(document.documentElement, { attributeFilter: ["data-theme", "data-bs-theme"] });
+      const resize = new ResizeObserver(scheduleDraw);
+      for (const canvas of [plot, iqChart, humanChart]) resize.observe(canvas);
+      document.fonts.ready.then(scheduleDraw);
+      document.body.prepend(document.querySelector(".ia-skip-link"));
+
+      byId("future-months").addEventListener("input", event => {
+        state.future = Number(event.target.value);
+        updateRange();
+      });
+      byId("time-base").addEventListener("input", () => {
+        const base = value("time-base");
+        if (!(Number.isFinite(base) && base > 0)) {
+          error("time-error", ["time-base"], "Enter a positive time-scale base.");
+          return;
+        }
+        error("time-error", ["time-base"], "");
+        state.base = base;
+        scheduleDraw();
+      });
+      for (const control of ["y-min", "y-max"]) byId(control).addEventListener("input", updateRange);
+      for (const control of ["optimistic-floor", "pessimistic-floor"]) byId(control).addEventListener("input", updateFloors);
+      for (const control of ["anchor-low-iq", "anchor-high-iq"]) byId(control).addEventListener("input", updateAnchors);
+      for (const series of Object.keys(state.series)) {
+        byId("show-" + series).addEventListener("change", event => {
+          state.series[series] = event.target.checked;
+          updateInspector();
+          scheduleDraw();
+        });
+      }
+      for (const mark of Object.keys(state.marks)) {
+        byId("marks-" + mark).addEventListener("change", event => {
+          state.marks[mark] = event.target.checked;
+          scheduleDraw();
+        });
+      }
+      byId("zoom-iq").addEventListener("click", () => {
+        const { automatic } = limits();
+        if (state.band.upper < automatic || state.band.lower >= model.ceiling) {
+          error("y-error", [], "The IQ bands are outside the full view. Extend Future years or edit the anchors.");
+          return;
+        }
+        const bottom = Math.round((state.band.lower - .01) * 1e6) / 1e6;
+        const top = Math.round((state.band.upper + .02) * 1e6) / 1e6;
+        byId("y-min").value = bottom > automatic ? String(bottom) : "";
+        byId("y-max").value = String(Math.min(model.ceiling, top));
+        state.series.iq = true;
+        byId("show-iq").checked = true;
+        updateRange();
+      });
+      byId("reset-view").addEventListener("click", () => {
+        state.future = defaults.future;
+        state.base = defaults.base;
+        state.pinned = false;
+        state.inspect = model.latest.month;
+        byId("future-months").value = defaults.future;
+        byId("time-base").value = defaults.base.toFixed(3);
+        byId("y-min").value = "";
+        byId("y-max").value = "1.00";
+        state.series = { ...defaults.series };
+        state.marks = { ...defaults.marks };
+        for (const [name, active] of Object.entries(state.series)) byId("show-" + name).checked = active;
+        for (const [name, active] of Object.entries(state.marks)) byId("marks-" + name).checked = active;
+        error("time-error", ["time-base"], "");
+        updateRange();
+      });
+      byId("inspect-month").addEventListener("input", event => {
+        state.inspect = Number(event.target.value);
+        state.pinned = true;
+        updateInspector();
+        scheduleDraw();
+      });
+      function inspectPointer(event) {
+        if (!plotPosition) return;
+        const { left, right } = plotPosition;
+        const fraction = (event.clientX - plot.getBoundingClientRect().left - left) / (right - left);
+        const month = Math.round(model.timeMonth(fraction, end(), state.base));
+        if (month === state.inspect && state.pinned) return;
+        state.inspect = month;
+        state.pinned = true;
+        updateInspector();
+        scheduleDraw();
+      }
+      plot.addEventListener("pointermove", event => { if (event.pointerType === "mouse") inspectPointer(event); });
+      plot.addEventListener("pointerdown", inspectPointer);
+      byId("human-units").addEventListener("change", event => {
+        state.units = event.target.value;
+        updateHuman();
+      });
+      byId("download-data").addEventListener("click", downloadData);
+      byId("observed-rows").replaceChildren(...model.measurements.map(point => row(point.name,
+        [model.formatMonth(point.month), loss(point.loss), point.internal ? "Internal model" : "Released model", point.note ?? "—"])));
+      refresh();
+      updateHuman();
+    })();
+  </script>
+</body>
+</html>
