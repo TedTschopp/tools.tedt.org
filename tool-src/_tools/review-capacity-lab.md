@@ -12,6 +12,8 @@ tech: [JavaScript, HTML, CSS]
 links:
   live: "/tools/review-capacity-lab.html"
   repo: null
+hero_image: "/img/2026-11/review-capacity-lab-hero.webp"
+image-alt: "Rows of copper blocks queue at a narrow opening between two blue panels."
 features:
   - "Five hand-checkable examples, including long work activities"
   - "Request rates per intake hour, workday, workweek, or average work month"

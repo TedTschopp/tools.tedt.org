@@ -12,6 +12,8 @@ tech: [JavaScript, HTML, CSS]
 links:
   live: "/tools/agent-business-case-lab.html"
   repo: null
+hero_image: "/img/2026-11/agent-business-case-lab-hero.webp"
+image-alt: "The distributor’s 30-order scenario with editable assumptions and a comparison of three workflows."
 features:
   - "Tap through the growth and operating cost examples before editing assumptions"
   - "Paid demand, fulfillment capacity, and contribution at the same paid volume"

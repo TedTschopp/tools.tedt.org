@@ -166,6 +166,16 @@ await fs.writeFile(shareFallback, defaultProjectionPage.replace(
 ));
 await fs.writeFile(path.join(out, 'img/perplexity-projections-preview.png'), await renderPreview(defaultView));
 staticFiles.push('/img/perplexity-projections-preview.png');
+// Catalog artwork can be added after the original migration inventory was captured.
+const catalogArtwork = new Set(catalog.flatMap(tool => [tool.image, ...tool.screenshots]));
+for (const image of catalogArtwork) {
+  if (!image.startsWith('/img/')) continue;
+  const imagePath = path.posix.normalize(decodeURIComponent(new URL(image, site).pathname));
+  if (!imagePath.startsWith('/img/') || staticFiles.includes(imagePath)) continue;
+  const file = imagePath.slice(1);
+  await writeStatic(file, file);
+  staticFiles.push(imagePath);
+}
 for (const entry of ['bootstrap-build', 'game-theory', 'inside-ai']) {
   const input = matter(await read('css/' + entry + '.scss')).content;
   const result = sass.compileString(input, {loadPaths:[path.join(source,'_sass'),path.join(source,'css')],style:'compressed',logger:sass.Logger.silent});

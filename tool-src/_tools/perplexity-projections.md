@@ -11,6 +11,8 @@ tags: [ai, learning, modeling, statistics, projections]
 tech: [JavaScript, HTML, CSS, Canvas]
 links:
   live: "/tools/perplexity-projections.html"
+hero_image: "/img/2026-11/perplexity-projections-hero.webp"
+image-alt: "Historical log-perplexity measurements and three projection curves with shaded IQ bands."
 features:
   - "Compare OpenAI’s 14 measurements with optimistic, historical-fit, and pessimistic scenarios"
   - "Adjust the future horizon, time-scale base, and log-perplexity bounds"
