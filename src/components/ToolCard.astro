@@ -1,0 +1,48 @@
+---
+import type { CatalogTool } from '../data/catalog-sections';
+
+interface Props {
+  tool: CatalogTool;
+  index: number;
+  showPlaceholder?: boolean;
+}
+
+const { tool, index, showPlaceholder = true } = Astro.props;
+const detailUrl = `/about/${tool.slug}/`;
+---
+<article
+  class:list={['tool-card', { featured: tool.featured }]}
+  data-tool-card
+  data-index={index}
+  data-title={tool.title.toLowerCase()}
+  data-search={[tool.title, tool.summary, ...tool.tags].join(' ').toLowerCase()}
+  data-category={tool.category}
+  data-status={tool.status}
+  data-tags={JSON.stringify(tool.tags)}
+  data-updated={tool.updated}
+>
+  {(tool.image || showPlaceholder) && (
+    <a class="tool-cover" href={detailUrl} tabindex="-1" aria-hidden="true">
+      {tool.image
+        ? <img src={tool.image} alt="" loading="lazy" width="640" height="360" />
+        : <span class="text-cover"><span>tt.</span><span>{tool.category}</span></span>}
+    </a>
+  )}
+  <div class="tool-card-body">
+    <div class="metadata">
+      <span class="kind">{tool.category}</span>
+      <span class:list={['status', tool.status]}>{tool.status}</span>
+    </div>
+    <h3><a href={detailUrl}>{tool.title}</a></h3>
+    <p class="card-description">{tool.summary}</p>
+    <div class="tags">{tool.tags.slice(0, 3).map(tag => <span>{tag}</span>)}</div>
+    <div class="card-bottom">
+      <span>{tool.migrated ? 'On this site' : new URL(tool.launch).hostname}</span>
+      {tool.updated && <time datetime={tool.updated}>{tool.updated}</time>}
+    </div>
+    <div class="card-actions">
+      <a class="open-link" href={tool.launch}>Open <span aria-hidden="true">↗</span></a>
+      <a href={detailUrl}>Details</a>
+    </div>
+  </div>
+</article>

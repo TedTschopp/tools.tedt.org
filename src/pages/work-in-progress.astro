@@ -1,0 +1,46 @@
+---
+import CatalogFilters from '../components/CatalogFilters.astro';
+import ToolCard from '../components/ToolCard.astro';
+import { workInProgressSections, workInProgressTools } from '../data/catalog-sections';
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Work in progress and on hold" description="Browse standalone prototypes, Mastodon demos, and Wizardawn tools.">
+  <header class="catalog-heading content">
+    <h1>Work in progress and on hold</h1>
+    <div class="accent-rule"></div>
+  </header>
+  <div class="content">
+    <CatalogFilters tools={workInProgressTools} />
+    <div class="catalog-bar">
+      <span>Tools <span data-count>({workInProgressTools.length})</span></span>
+      <label class="sort">
+        Sort
+        <select id="sort">
+          <option value="featured">Default order</option>
+          <option value="recent">Recently updated</option>
+          <option value="title">Alphabetical</option>
+        </select>
+      </label>
+    </div>
+    <p class="sr-only" aria-live="polite" aria-atomic="true" data-results-live></p>
+    {workInProgressSections.map(section => (
+      <section id={section.id} class="project-group" aria-labelledby={`${section.id}-title`} data-tool-section>
+        <h2 id={`${section.id}-title`}>{section.title}</h2>
+        <div class="tool-grid" data-tool-grid>
+          {section.tools.map((tool, index) => <ToolCard tool={tool} index={index} showPlaceholder={false} />)}
+        </div>
+      </section>
+    ))}
+    <p class="empty-state" data-empty hidden>Nothing matches those filters. Reset one and try again.</p>
+  </div>
+</Layout>
+
+<style>
+  .project-group {
+    margin-block-end: 2.5rem;
+  }
+
+  .project-group h2 {
+    margin-block: 0 1rem;
+  }
+</style>

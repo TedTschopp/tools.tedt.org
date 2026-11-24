@@ -187,7 +187,7 @@ await json(path.join(out, 'catalog.json'), catalog.map(({html, ...t})=>t));
 await fs.writeFile(path.join(out,'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
 await fs.writeFile(path.join(out,'CNAME'), 'tools.tedt.org\n');
 await fs.copyFile('README.md', path.join(out,'README.md'));
-await fs.writeFile(path.join(out,'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+['/', '/about/',...catalog.map(t=>'/about/'+t.slug+'/'),...new Set(pageUrls)].map(p=>`<url><loc>${escape(site+p)}</loc></url>`).join('')+'</urlset>');
+await fs.writeFile(path.join(out,'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+['/', '/about/', '/work-in-progress/',...catalog.map(t=>'/about/'+t.slug+'/'),...new Set(pageUrls)].map(p=>`<url><loc>${escape(site+p)}</loc></url>`).join('')+'</urlset>');
 const {execFileSync} = await import('node:child_process');
 let commit='local';try{commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();}catch{}
 await json(path.join(out,'version.json'),{commit,sourceCommit:inventory.commit,tools:catalog.length});

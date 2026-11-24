@@ -1,0 +1,43 @@
+---
+import type { CatalogTool } from '../data/catalog-sections';
+
+interface Props {
+  tools: CatalogTool[];
+}
+
+const { tools } = Astro.props;
+const categories = [...new Set(tools.map(tool => tool.category))].sort();
+const statuses = [...new Set(tools.map(tool => tool.status))].sort();
+const tags = [...new Set(tools.flatMap(tool => tool.tags))].sort();
+---
+<form class="filters" data-filters role="search" aria-label="Find a tool">
+  <div class="search-field">
+    <label for="search">Search</label>
+    <div class="search-input">
+      <input id="search" type="search" placeholder="Title, purpose, or tag…" autocomplete="off" />
+      <button class="text-button" type="button" data-clear>Clear</button>
+    </div>
+  </div>
+  <div>
+    <label for="category">Category</label>
+    <select id="category">
+      <option value="">All categories</option>
+      {categories.map(category => <option>{category}</option>)}
+    </select>
+  </div>
+  <div>
+    <label for="status">Status</label>
+    <select id="status">
+      <option value="">All statuses</option>
+      {statuses.map(status => <option>{status}</option>)}
+    </select>
+  </div>
+  <div>
+    <label for="tag">Tag</label>
+    <select id="tag">
+      <option value="">All tags</option>
+      {tags.map(tag => <option>{tag}</option>)}
+    </select>
+  </div>
+  <button type="reset" class="secondary">Reset filters</button>
+</form>
