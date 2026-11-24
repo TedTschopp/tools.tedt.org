@@ -22,9 +22,25 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <UniversalHeader />
-    <div class="shelf"><a class="shelf-brand" href="/">Tools.Tedt.org <span>Ted’s Tools</span></a><nav aria-label="Tools"><a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Catalog</a><a href="/about/">About</a><a href="https://github.com/TedTschopp/tools.tedt.org">Source</a></nav></div>
+    <div class="shelf">
+      <a class="shelf-brand" href="/">Tools.Tedt.org <span>Ted’s Tools</span></a>
+      <nav aria-label="Tools">
+        <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Catalog</a>
+        <a href="/work-in-progress/" aria-current={Astro.url.pathname === '/work-in-progress/' ? 'page' : undefined}>Work in progress</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/TedTschopp/tools.tedt.org">Source</a>
+      </nav>
+    </div>
     <main id="main"><slot /></main>
     <footer class="site-footer content"><div><a href="https://tedt.org/">Ted Tschopp’s Public Workbench</a><p>Small tools. Clear boundaries. Work in your browser.</p></div><div><a href="https://ai.tedt.org/">AI Library</a> · <a href="https://busy.tedt.org/">BUSY Bar Apps</a> · <a href="/catalog.json">Catalog JSON</a><p><a href="/about/#credits">Credits and licenses</a></p></div></footer>
     <script src="../scripts/site.ts"></script>
   </body>
 </html>
+
+<style>
+  .shelf nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    row-gap: 0.375rem;
+  }
+</style>

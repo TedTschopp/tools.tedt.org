@@ -3,16 +3,68 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 const routes=JSON.parse(fs.readFileSync('reports/migration-routes.json','utf8'));
 const origin=new URL(process.env.TOOLS_BASE_URL || 'http://127.0.0.1:4322').origin;
+type CatalogRoute = { slug: string; launch: string; status: string };
+const catalog: CatalogRoute[] = routes.catalog;
+const standaloneSlugs = [
+  'algorithmic-art-kintsugi-currents', 'name-generator-research', 'onboard',
+  'onboard-pro', 'start-page', 'vector-trace',
+];
+const prototypes = catalog.filter(tool => tool.status === 'prototype');
+const progressGroups = {
+  'Other standalone entries': prototypes.filter(tool => standaloneSlugs.includes(tool.slug)),
+  'Mastodon demos': prototypes.filter(tool => new URL(tool.launch).pathname.startsWith('/mastodon/')),
+  'Wizardawn tools': prototypes.filter(tool => new URL(tool.launch).pathname.startsWith('/osr-tools/')),
+};
+const progressSlugs = new Set(Object.values(progressGroups).flat().map(tool => tool.slug));
+const homepageTools = catalog.filter(tool => !progressSlugs.has(tool.slug));
+
 test('catalog search, filters, sorting, reset, and empty results',async({page})=>{
  await page.goto('/');await expect(page.getByRole('heading',{name:'Ted’s Tools',exact:true})).toBeVisible();
- const visible=page.locator('[data-tool-card]:not([hidden])');await expect(visible).toHaveCount(routes.catalog.length);
+ const visible=page.locator('[data-tool-card]:not([hidden])');await expect(visible).toHaveCount(homepageTools.length);
+ const homepageDetails = await visible.locator('h3 a').evaluateAll(links => links.map(link => link.getAttribute('href')).sort());
+ expect(homepageDetails).toEqual(homepageTools.map(tool => `/about/${tool.slug}/`).sort());
  await page.screenshot({path:'reports/catalog-desktop.png',fullPage:false});
  await page.locator('#search').fill('Morph — Text Transformer');await expect(visible).toHaveCount(1);await expect(visible).toContainText('Morph');
- await page.getByRole('button',{name:'Clear',exact:true}).click();await page.locator('#status').selectOption('prototype');await expect(visible.first()).toBeVisible();expect(await visible.count()).toBeGreaterThan(42);
- await page.getByRole('button',{name:'Reset filters'}).click();await expect(visible).toHaveCount(routes.catalog.length);
+ await page.getByRole('button',{name:'Clear',exact:true}).click();await page.locator('#status').selectOption('prototype');await expect(visible).toHaveCount(homepageTools.filter(tool => tool.status === 'prototype').length);
+ await page.getByRole('button',{name:'Reset filters'}).click();await expect(visible).toHaveCount(homepageTools.length);
  await page.locator('#sort').selectOption('title');const titles=await visible.locator('h3').allTextContents();expect(titles).toEqual([...titles].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase())));
  await page.locator('#search').fill('zqx-not-a-tool-9157');await expect(visible).toHaveCount(0);await expect(page.locator('[data-empty]')).toBeVisible();
 });
+
+test('work in progress groups moved entries and supports browsing and search', async ({ page }) => {
+  await page.goto('/');
+  const navigation = page.getByRole('navigation', { name: 'Tools', exact: true });
+  await navigation.getByRole('link', { name: 'Work in progress' }).click();
+  await expect(page).toHaveURL('/work-in-progress/');
+  await expect(page.getByRole('heading', { name: 'Work in progress and on hold' })).toBeVisible();
+  await expect(page.locator('[data-tool-card]')).toHaveCount(progressSlugs.size);
+
+  for (const [name, expected] of Object.entries(progressGroups)) {
+    const section = page.getByRole('region', { name, exact: true });
+    await expect(section).toBeVisible();
+    const details = await section.locator('h3 a').evaluateAll(links => links.map(link => link.getAttribute('href')).sort());
+    const launches = await section.locator('.open-link').evaluateAll(links => links.map(link => link.getAttribute('href')).sort());
+    expect(details).toEqual(expected.map(tool => `/about/${tool.slug}/`).sort());
+    expect(launches).toEqual(expected.map(tool => tool.launch).sort());
+  }
+
+  await page.getByRole('searchbox', { name: 'Search' }).fill('Dungeon Builder');
+  const visible = page.locator('[data-tool-card]:visible');
+  await expect(visible).toHaveCount(1);
+  const wizardawn = page.getByRole('region', { name: 'Wizardawn tools', exact: true });
+  await wizardawn.getByRole('link', { name: 'Dungeon Builder', exact: true }).click();
+  const breadcrumb = page.getByRole('navigation', { name: 'Breadcrumb' });
+  await expect(breadcrumb.getByRole('link', { name: 'Work in progress' })).toHaveAttribute('href', '/work-in-progress/#wizardawn-tools');
+  await page.getByRole('link', { name: 'osr', exact: true }).click();
+  await expect(page).toHaveURL('/work-in-progress/?tag=osr');
+  await expect(visible).toHaveCount(progressGroups['Wizardawn tools'].length);
+
+  await page.getByRole('button', { name: 'Reset filters' }).click();
+  await expect(visible).toHaveCount(progressSlugs.size);
+  await page.setViewportSize({ width: 320, height: 800 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+});
+
 test('themes, keyboard focus, external links, and mobile catalog',async({page})=>{
  await page.goto('/');await page.getByRole('button',{name:'Dark',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');await page.reload();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
  await page.getByRole('button',{name:'Light',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','light');
