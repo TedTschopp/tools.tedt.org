@@ -326,6 +326,38 @@
     "html": "<h2>What it does</h2>\n<p>Explain what the tool is and why you made it.</p>\n<h2>How it works</h2>\n<p>Add notes, screenshots, architectural details, etc.</p>\n<h2>Notes</h2>\n<p>Any caveats, future ideas, or context.</p>\n"
   },
   {
+    "slug": "traveller-npc-generator",
+    "title": "Traveller NPC Generator",
+    "summary": "Roll adult sophonts for Mongoose Traveller 2E. Build an encounter, hire crew by specialty, or generate a patron and a job.",
+    "status": "active",
+    "category": "Maps and RPG",
+    "tags": [
+      "rpg",
+      "traveller",
+      "npc",
+      "sci-fi",
+      "generator"
+    ],
+    "type": "webapp",
+    "updated": "2026-11-24",
+    "featured": false,
+    "launch": "https://tools.tedt.org/traveller-npc-generator.html",
+    "migrated": true,
+    "image": "",
+    "imageAlt": "Traveller NPC Generator",
+    "screenshots": [],
+    "features": [
+      "Choose Imperial starter profiles, options from the Traveller library, or a sourced referee-defined species",
+      "Set exact skill and characteristic minimums for professional or crew hiring",
+      "Reproduce each NPC from its seed, lock values, and reroll fields independently",
+      "Show a player encounter card and save a private referee record with full roll provenance"
+    ],
+    "repo": "https://github.com/TedTschopp/tools.tedt.org",
+    "upstream": "",
+    "sourcePath": "tool-src/tools/traveller-npc-generator.html",
+    "html": "<h2>Roll an encounter</h2>\n<p>Choose a species profile, occupation, and level of competence, or let the\ngenerator roll them. Each NPC comes with present-day characteristics, a useful\nwork kit, and a hook that gives the Travellers a reason to talk to them.</p>\n<h2>Find a crew candidate</h2>\n<p>Set the required skill and specialty in <strong>Required skills and characteristics</strong>.\nFor example, enter <strong>Engineer (j-drive) = 2</strong> to search for a qualified jump\nengineer. The generator draws from the eligible combinations using their\noriginal weights. The referee record shows each rating and the underlying grant.</p>\n<h2>Run and save</h2>\n<p>Show the <strong>Player view</strong> at the table. Open the <strong>Referee record</strong> for mechanical\ndetails, motives, secrets, and the roll history. Save the referee JSON to reopen\nthe same NPC with its seed and locks. The player TXT contains the introduction.</p>\n<p>This uses original, unofficial NPC generation rules with source references for\nthe enabled Mongoose Traveller profiles. Traveller is a registered trademark of\nFar Future Enterprises.</p>\n"
+  },
+  {
     "slug": "perplexity-projections",
     "title": "Perplexity Projections",
     "summary": "Explore three paths for OpenAI’s code-benchmark log-perplexity. Adjust the chart and the illustrative IQ bands to see when each scenario crosses them.",

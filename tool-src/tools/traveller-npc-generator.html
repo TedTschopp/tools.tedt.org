@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Traveller NPC Generator — Ted’s Tools</title>
+  <meta name="description" content="Create reproducible NPCs for Mongoose Traveller 2E. Generate a player introduction, referee dossier, crew qualifications, and a saved roll record.">
+  <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="colors_and_type.css">
+  <style>
+    [hidden] { display: none !important; }
+    .tt-shell { max-width: var(--tool-max); margin: auto; padding: var(--s-7) var(--safe-padding) var(--s-9); }
+    .topbar, .tt-panel-head, .actions, .summary-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--s-2) var(--s-3); }
+    .topbar { margin-bottom: var(--s-6); }
+    .topbar a, .hint, .meta { font-size: var(--fs-small); color: var(--fg-2); }
+    .tool-header { margin-bottom: var(--s-5); }
+    .tool-header .t-tool-title { display: block; }
+    .tool-header p { margin: var(--s-3) 0 0; }
+    .tt-banner, .tt-about { border: var(--bw-1) solid var(--ready-border); border-radius: var(--r-3); background: var(--ready-bg); color: var(--ready); padding: var(--s-3) var(--s-4); }
+    .tt-banner { margin-bottom: var(--s-5); overflow-wrap: anywhere; }
+    .tt-banner[data-state="error"] { background: var(--error-bg); color: var(--error); border-color: var(--error-border); }
+    .tt-banner[data-state="success"] { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+    .workspace { display: grid; grid-template-columns: minmax(0, 23rem) minmax(0, 1fr); align-items: start; gap: var(--s-5); }
+    .workspace[data-player-view="true"] { grid-template-columns: minmax(0, 1fr); }
+    .workspace[data-player-view="true"] #encounter { max-width: 54rem; }
+    .tt-panel { min-width: 0; border: var(--border); border-radius: var(--r-3); background: var(--bg-card); }
+    .tt-panel + .tt-panel { margin-top: var(--s-5); }
+    .tt-panel-head { padding: var(--s-3) var(--s-4); border-bottom: var(--border); }
+    .tt-panel-head h2 { margin: 0; font-size: var(--fs-h3); }
+    .tt-panel-body { padding: var(--s-4); }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); }
+    .wide { grid-column: 1 / -1; }
+    label, .label { display: block; color: var(--fg-2); font-weight: var(--fw-semibold); font-size: var(--fs-small); }
+    label > :is(input, select, textarea) { margin-top: var(--s-1); }
+    input, textarea, select, button { font: inherit; border-radius: var(--r-2); }
+    :is(input:not([type="checkbox"]):not([type="file"]), select, textarea) { width: 100%; box-sizing: border-box; color: var(--fg); background: var(--bg-inset); border: var(--border); min-height: calc(var(--s-7) + var(--s-2)); padding: var(--s-2) var(--s-3); }
+    input[type="number"], textarea, #seed { font-family: var(--font-mono); }
+    textarea { resize: vertical; min-height: var(--s-9); }
+    [aria-invalid="true"] { outline: var(--bw-2) solid var(--error); }
+    button, .button { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-1); background: transparent; color: var(--copper); border: var(--bw-1) solid var(--copper); border-radius: var(--r-2); min-height: calc(var(--s-7) + var(--s-2)); padding: var(--s-2) var(--s-3); cursor: pointer; font-weight: var(--fw-semibold); text-decoration: none; }
+    button:hover, .button:hover { background: var(--copper-tint); }
+    .primary { color: var(--fg-on-accent); border-color: var(--accent); background: var(--accent); }
+    .primary:hover { background: var(--accent-active); }
+    .quiet { border-color: var(--rule); color: var(--fg-2); }
+    .quiet:hover { color: var(--fg); background: var(--bg-hover); }
+    .compact { font-size: var(--fs-small); min-height: var(--s-7); }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible { outline: var(--bw-2) solid var(--link); outline-offset: var(--s-1); }
+    .actions { justify-content: flex-start; }
+    .generation-actions { margin: var(--s-4) 0; }
+    .field-notes { margin: var(--s-2) 0 0; }
+    .species-plate { display: flex; align-items: flex-start; gap: var(--s-3); margin: 0; }
+    .species-plate img { flex: none; width: 4.5rem; height: auto; aspect-ratio: 1; object-fit: contain; border: var(--border); border-radius: var(--r-2); }
+    .species-plate figcaption { min-width: 0; color: var(--fg-2); font-size: var(--fs-small); line-height: var(--lh-normal); }
+    .species-plate figcaption span { display: block; margin-top: var(--s-1); }
+    .encounter-plate { margin: var(--s-4) 0 0; }
+    .encounter-plate img { width: clamp(5.25rem, 14vw, 8rem); }
+    .species-reference .species-plate { margin-top: var(--s-2); }
+    .species-reference li { margin: var(--s-2) 0; }
+    details.group { border-top: var(--border-soft); margin-top: var(--s-3); }
+    details.group summary { padding: var(--s-3) 0; cursor: pointer; font-weight: var(--fw-semibold); }
+    details.group > div { padding-bottom: var(--s-2); }
+    .referee > summary { padding: var(--s-4); font-size: var(--fs-h3); font-weight: var(--fw-semibold); cursor: pointer; }
+    .referee[open] > summary { border-bottom: var(--border); }
+    .referee .group:first-child { margin-top: 0; border-top: 0; }
+    .card-body { padding: var(--s-5); }
+    .card-body h3 { font: var(--fw-bold) var(--fs-display)/var(--lh-tight) var(--font-display); margin: 0 0 var(--s-2); letter-spacing: var(--tracking-tight); overflow-wrap: anywhere; }
+    .card-body p { color: var(--fg-2); font-size: var(--fs-body-lg); margin: var(--s-3) 0; max-width: 64ch; }
+    .card-body .card-role { font: var(--fw-medium) var(--fs-small)/var(--lh-normal) var(--font-mono); color: var(--copper); margin: 0 0 var(--s-4); }
+    .card-body .actions { border-top: var(--border-soft); margin-top: var(--s-5); padding-top: var(--s-3); }
+    .characteristics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--s-2); margin: var(--s-3) 0; }
+    .stat { background: var(--bg-inset); border: var(--border-soft); border-radius: var(--r-2); padding: var(--s-2); text-align: center; }
+    .stat dt { color: var(--fg-2); font: var(--fs-small)/var(--lh-normal) var(--font-mono); }
+    .stat dd { margin: 0; }
+    .stat .score { font: var(--fw-bold) var(--fs-h2)/var(--lh-normal) var(--font-mono); }
+    .stat .dm { font: var(--fs-small)/var(--lh-normal) var(--font-mono); color: var(--fg-2); }
+    .status-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-2); margin: 0 0 var(--s-4); }
+    .status-grid div { padding: var(--s-2); border: var(--border-soft); border-radius: var(--r-2); }
+    .status-grid dt { font-size: var(--fs-small); color: var(--fg-2); }
+    .status-grid dd { margin: var(--s-1) 0 0; font-weight: var(--fw-semibold); overflow-wrap: anywhere; }
+    .status-grid [data-warning="true"] dd { color: var(--warn); }
+    .values { display: grid; grid-template-columns: minmax(7rem, 28%) minmax(0, 1fr); gap: var(--s-2) var(--s-3); margin: var(--s-3) 0; }
+    .values dt { color: var(--fg-2); }
+    .values dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+    .group h3, .tt-about h2 { font-size: var(--fs-h3); margin: var(--s-4) 0 var(--s-2); }
+    .scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+    th, td { padding: var(--s-2); text-align: left; border-bottom: var(--border-soft); vertical-align: top; }
+    th { color: var(--fg-2); }
+    .rolls td:nth-child(3), .number { font-family: var(--font-mono); }
+    .rolls { max-height: 24rem; overflow: auto; }
+    .rolls th { position: sticky; top: 0; background: var(--bg-card); }
+    .check-line { display: flex; align-items: center; gap: var(--s-2); margin: var(--s-1) 0; }
+    input[type="checkbox"] { min-width: var(--s-4); min-height: var(--s-4); accent-color: var(--accent); }
+    .lock-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); padding: var(--s-1) 0; }
+    .lock-group { margin-bottom: var(--s-4); }
+    pre { overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; font-size: var(--fs-small); }
+    .tt-about { margin-top: var(--s-5); }
+    .tt-about p, .tt-about a { color: inherit; }
+    .tt-about p:last-child { margin-bottom: 0; }
+    .tt-about details { margin-top: var(--s-3); }
+    .tt-about summary { cursor: pointer; font-weight: var(--fw-semibold); }
+    :root[data-theme="light"] .tt-shell { --copper: color-mix(in srgb, var(--plt-copper-600) 57%, var(--fg) 43%); }
+    @media (max-width: 56rem) { .tt-shell { padding: var(--s-5) var(--s-4) var(--s-8); } .workspace { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 32rem) {
+      .characteristics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .status-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .card-body h3 { font-size: var(--fs-h1); }
+      .values { grid-template-columns: minmax(6rem, 35%) minmax(0, 1fr); }
+    }
+    @media print {
+      #settings, .topbar, .tt-banner, .tt-about, .actions, #lock-section, #check-section, #roll-section, .tt-catalog-return, tedt-global-header { display: none; }
+      .workspace { display: block; }
+      .tt-shell { padding: 0; }
+      .tt-panel { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<main class="tt-shell" data-clarity-mask="true">
+  <nav class="topbar" aria-label="Tool navigation">
+    <a href="./">← Ted’s Tools</a>
+    <a href="#encounter">Jump to NPC</a>
+  </nav>
+  <header class="tool-header">
+    <h1 class="t-tool-title">Traveller <mark>NPC</mark> Generator</h1>
+    <p class="t-tagline">Roll a ready-to-play encounter, a crew candidate, or a patron for Mongoose Traveller Second Edition.</p>
+  </header>
+  <div id="status" class="tt-banner" role="status" aria-live="polite" aria-atomic="true">Preparing your first NPC.</div>
+  <noscript><p>Enable JavaScript to generate NPCs in this browser.</p></noscript>
+  <div class="workspace" id="workspace">
+    <section id="settings" class="tt-panel" aria-labelledby="settings-title">
+      <header class="tt-panel-head"><h2 id="settings-title">Generation settings</h2></header>
+      <form class="tt-panel-body" id="config-form">
+        <div class="field-grid">
+          <label class="wide">Encounter context <select id="context"></select></label>
+          <label class="wide">Species profile <select id="species"></select></label>
+          <figure id="settings-plate" class="species-plate wide" hidden></figure>
+          <div class="wide hint"><a id="field-guide-link" href="#species-guide">Species field guide</a></div>
+          <label class="wide" id="adult-label" hidden>Adult form or caste <select id="adult-form"></select></label>
+          <label class="wide">Occupation <select id="occupation"></select></label>
+          <label class="wide" id="specialty-label" hidden>Primary specialty <select id="specialty"></select></label>
+          <label>Competence <select id="competence"></select></label>
+          <label>Culture <select id="culture"></select></label>
+          <label class="wide">Seed <input id="seed" type="text" maxlength="256" required spellcheck="false" autocomplete="off"></label>
+        </div>
+        <div class="actions generation-actions">
+          <button type="submit" class="primary">Apply settings</button>
+          <button type="button" id="next-npc">Next NPC</button>
+          <button type="button" id="new-seed" class="quiet compact">New seed</button>
+        </div>
+        <details class="group">
+          <summary>Required skills and characteristics</summary>
+          <div class="field-grid">
+            <label class="wide">Skill minimums <textarea id="required-skills" rows="2" placeholder="Medic = 2" spellcheck="false" aria-describedby="requirements-help"></textarea></label>
+            <p class="wide hint field-notes" id="requirements-help">One per line. Use the specific specialty where needed, such as Engineer (j-drive) = 1. Level 0 requires familiarity.</p>
+            <label class="wide">Current characteristic minimums <textarea id="stat-minimums" rows="2" placeholder="END = 8" spellcheck="false"></textarea></label>
+            <label class="wide">Companion Boon on characteristics <input type="text" id="characteristic-boons" placeholder="STR, END" spellcheck="false" aria-describedby="boon-help"></label>
+            <p class="wide hint field-notes" id="boon-help">Optional. List ordinary 2D characteristics to roll 3D and keep the highest two.</p>
+            <div class="wide actions"><button type="button" class="compact quiet" id="medic-preset">Medic 2 hiring</button><button type="button" class="compact quiet" id="pilot-preset">Pilot and astrogator hiring</button></div>
+          </div>
+        </details>
+        <details class="group">
+          <summary>Campaign, age and identity</summary>
+          <div class="field-grid">
+            <label class="wide">Current location <input id="current-location" type="text" maxlength="500"></label>
+            <label class="wide">Last known location <input id="last-location" type="text" maxlength="500"></label>
+            <label class="wide">Environment <select id="medium">
+              <option value="unknown">Unspecified</option><option value="breathable">Breathable atmosphere</option>
+              <option value="water">Suitable water</option><option value="vacuum">Vacuum</option>
+              <option value="unbreathable">Unbreathable atmosphere</option>
+            </select></label>
+            <label>Local TL <input type="number" id="local-tl" min="0" max="99" placeholder="Unknown"></label>
+            <label>Law level <input type="number" id="law" min="0" max="99" placeholder="Unknown"></label>
+            <label class="wide">Fixed homeworld <input id="homeworld" type="text" maxlength="500"></label>
+            <label class="wide">Weighted homeworlds <textarea id="worlds" rows="2" placeholder="Regina | 3" aria-describedby="world-help"></textarea></label>
+            <p class="wide hint field-notes" id="world-help">One per line. Optionally add weight and a supplied UWP, separated by |.</p>
+            <label>Age <select id="age-mode"><option value="random">Roll adult age</option><option value="unknown">Unspecified</option><option value="fixed">Set years</option></select></label>
+            <label id="age-label" hidden>Years <input type="number" id="age-years" min="0" max="99999"></label>
+            <label class="wide">Naming style <select id="name-style" aria-describedby="name-style-note"></select></label>
+            <p class="wide hint field-notes" id="name-style-note"></p>
+            <label class="wide">Common name <input id="common-name" type="text" maxlength="500" placeholder="Roll a name"></label>
+            <label class="wide">Native name <input id="native-name" type="text" maxlength="500" placeholder="Use naming style"></label>
+            <label class="wide">Pronouns <input id="pronouns" type="text" maxlength="500"></label>
+          </div>
+        </details>
+        <details class="group">
+          <summary>Cross-training and psionics</summary>
+          <div class="field-grid">
+            <label class="wide">Secondary occupation <select id="secondary"></select></label>
+            <label class="wide" id="secondary-specialty-label" hidden>Secondary specialty <select id="secondary-specialty"></select></label>
+            <label class="wide">Psionics <select id="psi-mode">
+              <option value="auto">Profile default</option><option value="off">Off</option>
+              <option value="latent">Latent potential</option><option value="trained">Trained snapshot specialist</option>
+            </select></label>
+            <label class="wide" id="talent-label" hidden>Primary talent <select id="talent"></select></label>
+            <label id="potential-label" hidden>Latent PSI <input id="potential" type="number" min="0" max="12" placeholder="Roll 2D"></label>
+            <label id="psi-current-label" hidden>Current PSI <input id="psi-current" type="number" min="0" max="12" placeholder="Maximum"></label>
+            <label id="wings-label" hidden>Wings <select id="wings"><option value="random">Roll wing size</option><option>vestigial</option><option>small</option><option>large</option></select></label>
+            <label id="territory-label" hidden>Personal Territory <input id="territory" type="number" min="0" max="99999" placeholder="0"></label>
+            <label id="ascondi-soc-label" hidden>Base Ascondi SOC <input id="ascondi-soc" type="number" min="3" max="10" placeholder="Roll for adult phase"></label>
+            <label id="zhodani-psi-label" class="wide check-line" hidden><input id="zhodani-high-psi" type="checkbox"> Use the Zhodani 1D+6 PSI option</label>
+          </div>
+        </details>
+        <details class="group" id="equipment-settings">
+          <summary>Assign catalogue equipment</summary>
+          <div class="field-grid">
+            <label class="wide">Catalogue item <select id="gear-item"></select></label>
+            <label>Fitted body <select id="gear-fit"></select></label>
+            <label>Owner <select id="gear-owner"><option>Personal</option><option>Employer</option><option>Ship</option><option>Borrowed</option></select></label>
+            <label>Location <select id="gear-location"><option>carried</option><option>worn</option><option>lodging</option><option>vehicle</option><option>ship</option><option>facility</option></select></label>
+            <label>Access <select id="gear-access"><option>immediate</option><option>permission required</option><option>conditional</option><option>unavailable</option></select></label>
+            <label>Ammunition <input id="gear-ammo" type="number" min="0" max="100000" placeholder="Unspecified"></label>
+            <label>Local legality <select id="gear-legality"><option>unknown</option><option>permitted</option><option>restricted</option><option>illegal</option></select></label>
+            <button type="button" id="add-gear" class="wide quiet">Add item to settings</button>
+            <div id="gear-list" class="wide hint"></div>
+          </div>
+        </details>
+        <details class="group" id="advanced-settings">
+          <summary>Advanced referee facts</summary>
+          <div>
+            <label>Campaign options in JSON <textarea id="advanced" rows="8" spellcheck="false" placeholder="{}" aria-describedby="advanced-help"></textarea></label>
+            <p class="hint field-notes" id="advanced-help">Set population weights, accommodations, existing relationships, explicit skill grants, sourced equipment, and biological exceptions.</p>
+            <details class="group"><summary>Option formats and examples</summary><div id="option-docs"></div></details>
+          </div>
+        </details>
+        <details class="group">
+          <summary>Open a saved referee record</summary>
+          <div><label>Referee JSON file <input type="file" id="import-npc" accept=".json,application/json"></label></div>
+        </details>
+      </form>
+    </section>
+    <div id="results" aria-label="Generated NPC">
+      <section id="encounter" class="tt-panel" aria-labelledby="encounter-title" tabindex="-1">
+        <header class="tt-panel-head">
+          <h2 id="encounter-title">Encounter card</h2>
+          <button type="button" id="player-view" class="quiet compact" aria-pressed="false" disabled>Player view</button>
+        </header>
+        <div class="card-body">
+          <h3 id="npc-name">Your NPC</h3>
+          <p class="card-role" id="npc-role" hidden></p>
+          <p id="npc-intro">The encounter introduction appears here.</p>
+          <figure id="encounter-plate" class="species-plate encounter-plate" hidden></figure>
+          <div class="actions">
+            <button type="button" id="copy-card" disabled>Copy introduction</button>
+            <button type="button" id="player-export" class="quiet" disabled>Player card · TXT</button>
+            <button type="button" id="ref-export" class="quiet" disabled>Referee record · JSON</button>
+            <button type="button" id="reroll-name" class="quiet" disabled>Reroll name</button>
+          </div>
+        </div>
+      </section>
+      <details id="referee" class="referee tt-panel" open hidden>
+        <summary>Referee record</summary>
+        <div class="tt-panel-body">
+          <dl class="status-grid" id="validity"></dl>
+          <details class="group" open><summary>Characteristics and traits</summary><div id="characteristics"></div></details>
+          <details class="group" open><summary>Skills and qualifications</summary><div id="skills"></div></details>
+          <details class="group" id="check-section"><summary>Task check</summary>
+            <div class="field-grid">
+              <label class="wide">Skill or talent <input list="skill-options" id="check-skill" type="text" autocomplete="off"></label>
+              <datalist id="skill-options"></datalist>
+              <label>Characteristic <select id="check-stat"></select></label>
+              <label>Other DM <input id="check-other" type="number" min="-99" max="99" value="0"></label>
+              <label class="check-line"><input id="check-dark" type="checkbox"> Sight-dependent in darkness</label>
+              <label class="check-line"><input id="check-unarmed" type="checkbox"> Unarmed attack</label>
+              <label class="check-line"><input id="check-lowg" type="checkbox"> Physical task in low gravity</label>
+              <label class="check-line"><input id="check-swim" type="checkbox"> Swimming</label>
+              <label class="check-line"><input id="check-help" type="checkbox"> Requesting assistance</label>
+              <label class="check-line" id="check-hearing-label" hidden><input id="check-hearing" type="checkbox"> Relies on hearing</label>
+              <label class="check-line" id="check-scent-label" hidden><input id="check-scent" type="checkbox"> Relies on smell</label>
+              <label class="check-line" id="check-decay-label" hidden><input id="check-decay" type="checkbox"> Sensing decay</label>
+              <label id="check-lure-label" hidden>Susceptible target <select id="check-lure"><option value="">None</option><option value="human">Human</option><option value="other">Other</option></select></label>
+              <label>Task medium <select id="check-medium"><option value="">Unspecified</option><option value="water">Underwater</option><option value="breathable">Out of water</option></select></label>
+              <p id="check-result" class="wide" aria-live="polite"></p>
+            </div>
+          </details>
+          <details class="group"><summary>Identity, history and employment</summary><div id="identity-record"></div></details>
+          <details class="group"><summary>Equipment, environment and access</summary><div id="equipment-record"></div></details>
+          <details class="group"><summary>Story, relationships and secrets</summary><div id="story"></div></details>
+          <details class="group" id="lock-section"><summary>Locks and rerolls</summary><div id="locks"></div></details>
+          <details class="group" id="roll-section"><summary>Seed, versions and roll record</summary><div id="rolls"></div></details>
+        </div>
+      </details>
+    </div>
+  </div>
+  <footer class="tt-about" id="about">
+    <p><strong>Traveller NPC Generator.</strong> Unofficial house rules for adult biological sophonts. Generation and saved records stay in your browser.</p>
+    <details id="rules"><summary>Rules, worked example and sources</summary><div id="rules-content"></div></details>
+  </footer>
+</main>
+<!-- traveller-npc-script -->
+</body>
+</html>

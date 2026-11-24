@@ -5,6 +5,7 @@ import yaml from 'js-yaml';
 import { marked } from 'marked';
 import { Liquid } from 'liquidjs';
 import * as sass from 'sass';
+import { build as bundle } from 'esbuild';
 import { renderPreview } from '../worker/src/perplexity/preview.mjs';
 import { defaultView, sharePath } from '../tool-src/tools/perplexity-projections/model.mjs';
 
@@ -74,7 +75,9 @@ for (const file of (await fs.readdir(path.join(source, '_tools'))).sort()) {
   // Relative live links in imported prose must point to the intended site.
   record.html = record.html.replace(/(href|src)="(\/[^"#]*)/g, (_, a, p) => `${a}="${p.startsWith('/img/') ? p : relocate(p)}`);
   catalog.push(record);
-  if (!launch.startsWith('https://tedt.org/RPG/Traveller/')) docRedirects.push({from: '/tools/' + slug + '/', to: '/about/' + slug + '/'});
+  if (data.legacy_redirect !== false && !launch.startsWith('https://tedt.org/RPG/Traveller/')) {
+    docRedirects.push({from: '/tools/' + slug + '/', to: '/about/' + slug + '/'});
+  }
 }
 const existing = new Set(catalog.map(t => canonicalPath(new URL(t.launch).pathname)));
 const htmlFiles = inventory.importedFiles.filter(f => f.source.startsWith('tools/') && f.source.endsWith('.html'));
@@ -129,6 +132,14 @@ async function writeStatic(original, dest) {
         text = text.replace(/(<body\b[^>]*>)/i, '$1' + sharedHeader.slice(sharedHeader.indexOf('<tedt-global-header')) + returnLink);
         if (!/<link[^>]+rel=["']canonical/.test(text)) text = text.replace('</head>', `<link rel="canonical" href="${site}${canonicalPath('/' + dest)}"></head>`);
       }
+      if (original === 'tools/traveller-npc-generator.html') {
+        const { outputFiles: [browser] } = await bundle({
+          entryPoints: [path.join(source, 'tools/traveller-npc-generator/ui.mjs')],
+          bundle: true, format: 'iife', target: 'es2022', write: false,
+        });
+        text = text.replace('<!-- traveller-npc-script -->', () =>
+          '<script>\n' + browser.text.replace(/<\/script/gi, '<\\/script') + '</script>');
+      }
     } else text = rebase(text);
     if (original === 'tools/image-tools/image-tools.js') text = text.replace('scope: "./"', 'scope: "./image-tools"').replace('Offline cache enabled for /.', 'Offline cache enabled for Image Tools.');
     await fs.writeFile(target, text);
@@ -157,6 +168,12 @@ for (const tool of catalog) {
 await fs.writeFile(path.join(out, 'lib/tedt-org-tools-loader.js'), `(function(){if(document.querySelector('link[data-tedt-org-tools-css="true"]'))return;var link=document.createElement('link');link.rel='stylesheet';link.dataset.tedtOrgToolsCss='true';link.href=new URL(location.protocol==='file:'?'tedt-org-tools-local.css':'tedt-org-tools.css',document.currentScript.src).href;document.head.appendChild(link);}());\n`);
 await writeStatic('tools/perplexity-projections/model.mjs', 'perplexity-projections/model.mjs');
 staticFiles.push('/perplexity-projections/model.mjs');
+for (const name of (await fs.readdir(path.join(source, 'img/traveller-npc'))).sort()) {
+  if (!name.endsWith('.webp')) continue;
+  const file = 'img/traveller-npc/' + name;
+  await writeStatic(file, file);
+  staticFiles.push('/' + file);
+}
 const shareFallback = path.join(out, sharePath, 'index.html');
 await fs.mkdir(path.dirname(shareFallback), { recursive: true });
 const defaultProjectionPage = await fs.readFile(path.join(out, 'perplexity-projections.html'), 'utf8');
