@@ -19,6 +19,8 @@ links:
   repo: null
   docs: "/tools/social-bot-check/"
   download: null
+hero_image: "/img/2026-11/social-bot-check-hero.webp"
+image-alt: "A fictional account report showing behavior checks, an hourly activity chart, and the mix of posts and replies."
 features:
   - "Bluesky handles, DIDs, profile URLs, and post URLs"
   - "Mastodon account addresses and profile URLs"

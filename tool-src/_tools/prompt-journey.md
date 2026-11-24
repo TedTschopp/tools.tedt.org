@@ -12,6 +12,8 @@ tech: [JavaScript, HTML, CSS]
 links:
   live: "/tools/prompt-journey.html"
   repo: null
+hero_image: "/img/2026-11/prompt-journey-hero.webp"
+image-alt: "A fictional factory-report walkthrough beside a diagram of the request from the device to the model host."
 features:
   - "Step through the request and the answer's return journey"
   - "Play the journey automatically while the diagram follows the current step"
