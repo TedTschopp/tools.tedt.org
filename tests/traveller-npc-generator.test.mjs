@@ -1,0 +1,288 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { access } from 'node:fs/promises';
+import { generateNpc, rerollNpc, restoreNpc, setLock } from '../tool-src/tools/traveller-npc-generator/generator.mjs';
+import { dm, rating, taskCheck } from '../tool-src/tools/traveller-npc-generator/mechanics.mjs';
+import { imperialNameCounts, nameStyles } from '../tool-src/tools/traveller-npc-generator/names.mjs';
+import { streams } from '../tool-src/tools/traveller-npc-generator/random.mjs';
+import { portraitFor } from '../tool-src/tools/traveller-npc-generator/species-art.mjs';
+import { referenceGroups } from '../tool-src/tools/traveller-npc-generator/species-reference.mjs';
+import { species } from '../tool-src/tools/traveller-npc-generator/species.mjs';
+import { occupationTable, packs, version } from '../tool-src/tools/traveller-npc-generator/tables.mjs';
+import { fieldsFor } from '../tool-src/tools/traveller-npc-generator/work.mjs';
+
+const make = (config = {}, state = {}) => generateNpc(config, { seed: 'sketch-82', ...state });
+
+test('the name pack keeps old saved names and isolates a new NPC name reroll', async () => {
+  const legacy = await make({}, { namingPack: 'imperial-common/1' });
+  assert.equal(legacy.identity.commonName, 'Kessa Dane');
+  assert.equal(legacy.story.network.target.name, 'Aven Marr');
+  assert.equal(legacy.controls.config.nameStyle, undefined);
+  assert.deepEqual(await restoreNpc(JSON.parse(JSON.stringify(legacy))), legacy);
+  const modern = await make();
+  assert.deepEqual(modern.mechanics, legacy.mechanics);
+  assert.equal(modern.story.network.target.occupation, legacy.story.network.target.occupation);
+  assert.equal(modern.player.name, modern.identity.commonName);
+  assert.ok(imperialNameCounts.personal > 144 && imperialNameCounts.family > 144);
+  const rerolled = await rerollNpc(modern, ['name']);
+  assert.notEqual(rerolled.player.name, modern.player.name);
+  assert.deepEqual(rerolled.story.network, modern.story.network);
+  assert.deepEqual(rerolled.mechanics, modern.mechanics);
+});
+
+test('name styles follow the profile and protect native names in player data', async () => {
+  const hiver = await make({ species: 'hiver' });
+  assert.equal(hiver.identity.naming.id, 'hiver');
+  assert.match(hiver.identity.nativeName, /^\[Nest sign:/);
+  assert.ok(!JSON.stringify(hiver.player).includes(hiver.identity.nativeName));
+  const imperial = await make({ species: 'hiver', nameStyle: 'imperial', identity: { commonName: 'Ellis Vale', nativeName: 'Saved Sign' } });
+  assert.equal(imperial.identity.commonName, 'Ellis Vale');
+  assert.equal(imperial.identity.nativeName, 'Saved Sign');
+  const zhodani = await make({ culture: 'zhodani', species: 'human', requiredCharacteristics: { SOC: 12 } });
+  assert.equal(zhodani.identity.naming.id, 'zhodani');
+  assert.match(zhodani.player.name, /(?:stebr|tlas|tlasche’|iashav)$/u);
+  const adopted = await make({ nameStyle: 'zhodani', species: 'human', requiredCharacteristics: { SOC: 12 } });
+  assert.match(adopted.player.name, / /);
+  for (const key of Object.keys(nameStyles)) assert.ok((await make({ nameStyle: key })).player.name, key);
+});
+
+test('every built-in profile and illustrated reference has its own plate data and a shipped image', async () => {
+  const artIds = [...Object.keys(species), ...referenceGroups.flatMap(group => group.entries.map(entry => entry.art).filter(Boolean))];
+  for (const id of artIds) {
+    const plate = portraitFor(id);
+    assert.ok(plate?.description && plate?.source && plate?.comparison, id);
+    await access(new URL('../tool-src/img/traveller-npc/' + plate.asset + '.webp', import.meta.url));
+  }
+});
+
+test('expanded profiles apply book-based characteristics and aquatic needs', async () => {
+  const orca = await make({ species: 'orca', placement: { medium: 'water' } });
+  assert.equal(orca.mechanics.characteristics.STR.adjustment, 8);
+  assert.equal(orca.mechanics.characteristics.END.adjustment, 4);
+  assert.ok(orca.validity.environment.missing.some(item => item.includes('surface')));
+  const tenipal = await make({ species: 'tenipal' });
+  assert.equal(tenipal.mechanics.characteristics.EDU.adjustment, -3);
+  assert.equal(tenipal.derived.attacks[0].damage, '1D+2');
+  const ithklur = await make({ species: 'ithklur' });
+  assert.match(ithklur.mechanics.order.join(','), /RES$/);
+  assert.equal(ithklur.derived.attacks[1].check.modifiers.at(-1).value, -2);
+});
+
+test('named streams follow the documented SHA-256 draw contract', async () => {
+  const record = [];
+  const rng = streams('pocket-universe', 3, { name: 2 }, record)('name', 'names');
+  for (let i = 0; i < 2; i++) {
+    const bytes = createHash('sha256')
+      .update(JSON.stringify([version, 'pocket-universe', 3, 'name', packs.names, 2, i, 0])).digest();
+    assert.equal(await rng.draw(6, 'Name die'), bytes.readUInt32BE() % 6 + 1);
+    assert.equal(record[i].draw, i);
+  }
+});
+
+test('every d66 row yields the intended role and a resolved specialty', async () => {
+  assert.equal(new Set(occupationTable.map(row => row.id)).size, 36);
+  for (const row of occupationTable) {
+    const npc = await make({ species: 'human', occupation: row.id, competence: 'elite' });
+    assert.equal(npc.work.occupation.title, row.title);
+    if (row.field) assert.equal(npc.work.occupation.field, row.field);
+    assert.equal(npc.work.occupation.slots.length, 4);
+    assert.ok(npc.mechanics.skillTotal <= 8);
+    assert.ok(npc.mechanics.grants.every(grant => !grant.skill.includes('(field)')));
+  }
+  assert.equal(fieldsFor(occupationTable.find(row => row.id === '52')).length, 5);
+});
+
+test('the draft worked example applies adjustments, specialties, and DMs once', async () => {
+  const locks = Object.fromEntries([6, 9, 7, 9, 10, 6].map((score, i) =>
+    ['stat.' + ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC'][i], score]));
+  const npc = await make({
+    species: 'vargr', occupation: '13', competence: 'experienced', age: 38,
+    identity: { commonName: 'Kessa Varr' }, homeworld: 'Regina', funds: 700,
+  }, { locks: { ...locks, upbringing: 2, background: ['Athletics', 'Electronics'] } });
+  assert.equal(npc.mechanics.upp, '6979A6');
+  assert.deepEqual(Object.values(npc.mechanics.characteristics).map(stat => stat.raw), [7, 8, 8, 9, 10, 6]);
+  assert.equal(rating(npc.mechanics.skills, 'Engineer (j-drive)'), 2);
+  assert.equal(rating(npc.mechanics.skills, 'Engineer (power)'), 1);
+  assert.equal(rating(npc.mechanics.skills, 'Engineer (life support)'), 0);
+  assert.equal(rating(npc.mechanics.skills, 'Electronics'), 0);
+  assert.equal(taskCheck(npc, 'Engineer (j-drive)', 'EDU').total, 3);
+  assert.equal(npc.derived.attacks[0].check.skillDM, -3);
+  assert.equal(taskCheck(npc, 'Recon', 'INT', { dark: true }).modifiers.reduce((sum, value) => sum + value.value, 0), 0);
+  assert.deepEqual(npc.places.homeworld, { name: 'Regina', uwp: null, source: 'Referee' });
+});
+
+test('hiring conditions occupation, background familiarity and competence without promotion', async () => {
+  for (const seed of ['applicant-a', 'applicant-b', 'applicant-c', 'applicant-d']) {
+    const npc = await make({ context: 'hiring', requiredSkills: [{ skill: 'Medic', level: 2 }] }, { seed });
+    assert.equal(npc.work.occupation.profile, 'medic');
+    assert.ok(['experienced', 'elite'].includes(npc.work.competence.id));
+    assert.equal(npc.work.employment.seeking, true);
+    assert.equal(npc.validity.job.status, 'qualified');
+    assert.ok(npc.provenance.rolls.some(roll => roll.field === 'competence' && roll.method === 'conditioned dice'));
+  }
+  const npc = await make({
+    occupation: '42', competence: 'green', requiredSkills: [{ skill: 'Language', level: 0 }],
+  });
+  assert.ok(npc.culture.upbringing.skills.includes('Language'));
+  assert.equal(rating(npc.mechanics.skills, 'Language'), 0);
+  assert.equal(rating(npc.mechanics.skills, 'Medic'), 0);
+  assert.equal(rating(npc.mechanics.skills, 'Astrogation'), null);
+  await assert.rejects(() => make({ occupation: '42', requiredSkills: [{ skill: 'Medic', level: 3 }] }), /Medic 3\+/);
+  await assert.rejects(() => make({ requiredSkills: [{ skill: 'Pilot', level: 1 }] }), /specialty/);
+});
+
+test('cross-training replaces support 3 and keeps the assigned rating', async () => {
+  const config = { species: 'human', occupation: '13', secondary: '15' };
+  const competent = await make({ ...config, competence: 'competent' });
+  assert.equal(competent.work.secondary.rating, 0);
+  assert.equal(rating(competent.mechanics.skills, 'Medic'), 0);
+  assert.ok(!competent.mechanics.grants.some(grant => grant.skill === 'Mechanic' && grant.source.startsWith('Occupation')));
+  const elite = await make({ ...config, competence: 'elite', requiredSkills: [{ skill: 'Medic', level: 1 }] });
+  assert.equal(elite.work.secondary.rating, 1);
+  assert.equal(rating(elite.mechanics.skills, 'Medic'), 1);
+  await assert.rejects(() => make({ occupation: '13', secondary: 'engineer-power' }), /differ/);
+});
+
+test('each library adapter generates a living adult and round-trips at matching versions', async () => {
+  for (const id of Object.keys(species)) {
+    const npc = await make({ species: id });
+    assert.equal(npc.biology.profileId, id);
+    assert.equal(npc.biology.sophont, true);
+    assert.equal(npc.biology.adult, true);
+    assert.equal(npc.biology.living, true);
+    assert.equal(npc.validity.mechanical.status, 'valid');
+    assert.deepEqual(await restoreNpc(JSON.parse(JSON.stringify(npc))), npc);
+  }
+  const hiver = await make({ species: 'hiver' });
+  assert.equal(hiver.mechanics.upp, null);
+  assert.ok(hiver.mechanics.characteristics.RES.raw >= 7);
+  assert.equal(taskCheck(hiver, 'Leadership', 'RES').available, false);
+  const droyne = await make({ species: 'droyne', profileOptions: { adultForm: 'Drone', wings: 'large' } });
+  assert.equal(droyne.mechanics.order.includes('SOC'), false);
+  assert.equal(droyne.mechanics.characteristics.INT.adjustment, 3);
+  assert.equal(rating(droyne.mechanics.skills, 'Flight'), 0);
+  assert.deepEqual(droyne.abilities.innate.map(ability => ability.name), ['Invisibility', 'Homing', 'Link']);
+  assert.ok(droyne.biology.age.years >= 12);
+  await assert.rejects(() => make({ species: 'droyne', psion: { mode: 'off' } }), /requires PSI/);
+  assert.equal(rating((await make({ species: 'whistler' })).mechanics.skills, 'Stealth'), 2);
+});
+
+test('population and wing rolls account for species grants before conditioning an occupation', async () => {
+  const npc = await make({ occupation: '13', competence: 'green',
+    population: { human: 100, aslan: 0, vargr: 0, droyne: 1 }, requiredSkills: [{ skill: 'Flight', level: 0 }] });
+  assert.equal(npc.biology.profileId, 'droyne');
+  assert.ok(['small', 'large'].includes(npc.biology.wings));
+  assert.equal(rating(npc.mechanics.skills, 'Flight'), 0);
+});
+
+test('stat locks and age constraints keep their values or give a specific conflict', async () => {
+  assert.equal(dm(25), 3);
+  const npc = await make({ species: 'aslan', requiredCharacteristics: { STR: 14 } });
+  assert.equal(npc.mechanics.characteristics.STR.raw, 12);
+  assert.equal(npc.mechanics.characteristics.STR.current, 14);
+  const lock = setLock(npc, 'stat.STR', true);
+  await assert.rejects(() => make({ species: 'vargr' }, { locks: lock }), /STR locked at 14/);
+  await assert.rejects(() => make({ species: 'human', age: 11 }), /adult profile/);
+  const exact = await make({ species: 'human', requiredCharacteristics: { STR: 12 }, age: null, funds: 0 });
+  assert.equal(exact.biology.age.years, null);
+  assert.equal(exact.places.homeworld, null);
+  assert.equal(exact.resources.portableFunds, 0);
+});
+
+test('saving with new locks and rerolling a cosmetic field preserve the earlier mechanics', async () => {
+  const config = { requiredSkills: [{ skill: 'Language', level: 0 }] };
+  const npc = await make(config);
+  npc.controls.locks = setLock(npc, 'occupation', true);
+  const restored = await restoreNpc(JSON.parse(JSON.stringify(npc)));
+  assert.deepEqual(restored, npc);
+  const changed = await rerollNpc(npc, ['name']);
+  assert.equal(changed.id, npc.id);
+  assert.deepEqual(changed.mechanics, npc.mechanics);
+  assert.deepEqual(changed.culture, npc.culture);
+  assert.deepEqual(changed.provenance.rerollCounters, { name: 1 });
+  assert.deepEqual(changed.controls.locks, npc.controls.locks);
+  assert.deepEqual(await restoreNpc(JSON.parse(JSON.stringify(changed))), changed);
+});
+
+test('optional abilities and sourced gear never create skill grants indirectly', async () => {
+  const psion = await make({ occupation: 'psion', psion: { talent: 'Telepathy', current: 0 } });
+  assert.equal(psion.abilities.psion.current, 0);
+  assert.notEqual(psion.work.competence.id, 'green');
+  assert.ok(rating(psion.mechanics.skills, 'Telepathy') > 0);
+  assert.equal(taskCheck(psion, 'Teleportation', 'PSI').available, false);
+  await assert.rejects(() => make({ occupation: 'psion', competence: 'green' }), /Competent or better/);
+  const config = {
+    species: 'human', occupation: '54', competence: 'green',
+    placement: { current: 'Hull exterior', medium: 'vacuum', tl: 8 },
+    gear: [{ catalogueId: 'he-vacc-9', owner: 'Borrowed', location: 'worn', access: 'immediate', fit: ['human'] }],
+  };
+  const equipped = await make(config);
+  assert.equal(equipped.validity.environment.status, 'ready');
+  assert.equal(equipped.equipment.at(-1).protection, 8);
+  assert.equal(equipped.equipment.at(-1).trainingShortfall, 2);
+  assert.equal(rating(equipped.mechanics.skills, 'Vacc Suit'), null);
+  const changed = await make({ ...config, species: 'aslan' });
+  assert.equal(changed.validity.environment.status, 'missing support');
+  assert.equal(changed.equipment.at(-1).fitted, false);
+  assert.equal(changed.validity.combat.status, 'incomplete');
+});
+
+test('clone details and active condition and augmentation effects remain independent', async () => {
+  const npc = await make({
+    species: 'human', occupation: '31', competence: 'green', lifeform: 'clone',
+    clone: { donorId: 'donor', chronologicalAge: 23, biologicalAge: 33, memoryHistory: 'Partial memories' },
+    augmentations: [{ id: '01', name: 'Reflex implant', source: 'Campaign', modifiers: { DEX: 2 } }],
+    conditions: [{ id: '02', name: 'Wound', source: 'Prior session', characteristic: 'DEX', loss: 1 }],
+  });
+  const dex = npc.mechanics.characteristics.DEX;
+  assert.equal(dex.current, dex.raw + 1);
+  assert.equal(npc.biology.age.years, 23);
+  assert.equal(npc.biology.clone.biologicalAge, 33);
+  assert.equal(npc.mechanics.skillTotal, 0);
+});
+
+test('a patron mission and a reference to the party stay in the referee record', async () => {
+  const npc = await make({
+    context: 'patron', identity: { commonName: 'Kessa Varr' },
+    partyRelationship: { role: 'Rival', target: { id: 'pc-1', name: 'Referee-only person' },
+      cause: 'Shared contract', consequence: 'They know the port captain', status: 'proposed' },
+  });
+  assert.equal(npc.story.party.from, 'pc-1');
+  assert.equal(npc.story.party.to, npc.id);
+  assert.ok(npc.story.mission.outsideHelp);
+  assert.equal(npc.story.party.status, 'proposed');
+  assert.doesNotMatch(JSON.stringify(npc.player), /Referee-only|Shared contract|complication|provenance|portableFunds/);
+});
+
+test('Companion Boons keep the best two dice and respect incompatible profile models', async () => {
+  const npc = await make({ species: 'human', characteristicBoons: ['STR'] });
+  const rolls = npc.provenance.rolls.filter(roll => roll.field === 'stat.STR' && roll.dice === 'd6').map(roll => roll.result);
+  assert.equal(rolls.length, 3);
+  assert.equal(npc.mechanics.characteristics.STR.raw, rolls.reduce((a, b) => a + b, 0) - Math.min(...rolls));
+  await assert.rejects(() => make({ species: 'hiver', characteristicBoons: ['RES'] }), /ordinary 2D for RES/);
+});
+
+test('referee-defined profiles carry their own biology, characteristic model and definition lock', async () => {
+  const order = ['STR', 'DEX', 'END', 'INT', 'EDU', 'RES'];
+  const customProfile = {
+    name: 'Campaign sophont', source: 'Referee rules v1', living: true, sophont: true, order,
+    body: 'Aquatic biped', movement: 'Swims', senses: 'Sonar', manipulators: 'Fins',
+    communication: 'Acoustic signaling', needs: ['water'], age: { adult: 25, scale: 2 }, psionics: 'prohibited',
+    characteristics: { ...Object.fromEntries(order.map(stat => [stat, { count: 2, sides: 6 }])),
+      RES: { count: 1, sides: 3, add: 5, adjustment: 2, maximum: 9 } },
+  };
+  const config = { species: 'custom', customProfile, placement: { current: 'Dock', medium: 'breathable' } };
+  const npc = await make(config);
+  assert.deepEqual(npc.mechanics.order, order);
+  assert.equal(npc.biology.source, customProfile.source);
+  assert.equal(npc.culture.nativeCommunication, 'Acoustic signaling');
+  assert.equal(npc.validity.environment.status, 'missing support');
+  assert.equal(npc.mechanics.upp, null);
+  assert.ok(npc.mechanics.characteristics.RES.current <= 9);
+  assert.ok(npc.biology.age.years >= 25);
+  npc.controls.locks = setLock(npc, 'species', true);
+  assert.deepEqual(await restoreNpc(JSON.parse(JSON.stringify(npc))), npc);
+  await assert.rejects(() => make({ ...config, customProfile: { ...customProfile, name: 'Another species' } },
+    { locks: npc.controls.locks }), /locked referee species definition/);
+});
