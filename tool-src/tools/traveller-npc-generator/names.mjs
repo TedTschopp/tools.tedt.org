@@ -116,7 +116,7 @@ export const fanNameSources = [
 const cultureStyles = {
   hierate: 'aslan', extents: 'vargr', herd: 'kkree', oytrip: 'droyne', nest: 'hiver',
   solomani: 'solomani', vilani: 'vilani', 'sword-worlds': 'sword-worlds', zhodani: 'zhodani',
-  darrian: 'darrian', luriani: 'luriani', gurungan: 'gurungan', vegan: 'vegan', ithklur: 'ithklur', tenipal: 'tenipal',
+  darrian: 'darrian', luriani: 'luriani', gurungan: 'gurungan', vegan: 'vegan', ithklur: 'ithklur', tenipal: 'tenipal', hiidamo: 'vilani',
   ssienjhiovla: 'ssienjhiovla', yont: 'yont', ascondi: 'ascondi', florian: 'florian', whistler: 'whistler',
 };
 const speciesStyles = {

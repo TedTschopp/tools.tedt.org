@@ -5,12 +5,6 @@ const mongoose = slug => 'https://www.mongoosepublishing.com/products/' + slug;
 // Page locators are printed pages, except where "PDF" is stated.
 export const referenceGroups = [
   {
-    book: 'The Solomani Front',
-    entries: [
-      notes('Weeven', 'pp. 12–13', 'Uses a Hits block and a much slower activity scale than the adult NPC generator.', 'weeven'),
-    ],
-  },
-  {
     book: 'The Great Rift, Book 1',
     entries: [
       notes('Kursae', 'pp. 11–12', 'The remains suggest an insectoid species. Living individuals and their anatomy are unconfirmed.'),
@@ -21,21 +15,11 @@ export const referenceGroups = [
     url: mongoose('aliens-of-charted-space-vol-2'),
     entries: [
       notes('Chirper', 'pp. 143, 150, 191', 'Wild relative of the Droyne. The casted Droyne model requires a different developmental history.', 'chirper'),
-      notes('Uncast Droyne', 'p. 148', 'An adult who matured without the Iskyar ritual has no caste adjustments. The adult casted plate shows the general body plan.', 'droyne'),
     ],
   },
   {
-    book: 'The Third Imperium',
-    entries: [
-      notes('Bhu’oovaakaylaa', 'pp. 168–169', 'The book supplies a large amphibious encounter with a Hits block.', 'bhuoovaakaylaa'),
-      notes('Ganmeid', 'p. 167', 'A human-sized aquatic filter feeder and scavenger. Communicates by high-pitched calls and close-range gestures. The book supplies a Hits block.'),
-    ],
-  },
-  {
-    book: 'Castrobancla, The City of Aliens',
-    entries: [
-      notes('The Host (free form)', 'PDF pp. 64–65', 'A colony in water. Choose Cheval for an individual joined to a human host.', 'cheval'),
-    ],
+    book: 'Spinward Marches 1: The Bowman Arm',
+    entries: [notes('Otarri', 'p. 9', 'An amphibious sophont dependent on wet conditions. This entry documents habitat and population.')],
   },
   {
     book: 'Aliens of Charted Space Vol. 3',
@@ -104,7 +88,7 @@ export const referenceGroups = [
     book: 'Journal of the Travellers’ Aid Society (Mongoose 2E)',
     entries: entries([
       ['Dynchia', 'Vol. 1, p. 49'], ['Girug’kagh', 'Vol. 1, p. 112'], ['Githiaskio', 'Vol. 2, p. 38'],
-      ['Ael Yael', 'Vol. 3, p. 47'], ['Hlanssai', 'Vol. 4, p. 44'], ['Amindii', 'Vol. 9, p. 62'],
+      ['Ael Yael', 'Vol. 3, p. 47'], ['Hlanssai', 'Vol. 4, p. 44'], ['Halkans', 'Vol. 8, p. 98'], ['Amindii', 'Vol. 9, p. 62'],
       ['Nenlat', 'Vol. 10, p. 61'], ['Aezorgh', 'Vol. 11, p. 61'], ['Caprisaps', 'Vol. 12, p. 19'],
       ['Hhkar', 'Vol. 12, p. 90'], ['Mewey', 'Vol. 13, p. 11'], ['Krotan', 'Vol. 15, p. 2'],
       ['Lhshana', 'Vol. 16, p. 36'], ['Weregre', 'Vol. 16, p. 80'], ['Bosaki', 'Vol. 17, p. 106'],

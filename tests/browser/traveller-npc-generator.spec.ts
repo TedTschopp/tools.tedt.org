@@ -28,9 +28,30 @@ test('book-sourced plates track the selected and committed species', async ({ pa
   await expect(page.locator('#referee')).toBeHidden();
   await page.getByRole('button', { name: 'Return to referee view' }).click();
   await page.getByRole('link', { name: 'Species field guide', exact: true }).click();
-  await page.getByLabel('Find a species or source').fill('Weeven');
+  await page.getByLabel('Find a species or source').fill('Chirper');
   await expect(page.locator('#species-guide')).toContainText('1 entry found');
-  await expect(page.locator('#species-guide').getByRole('img', { name: /Weeven/ })).toBeVisible();
+  await expect(page.locator('#species-guide').getByRole('img', { name: /Chirper/ })).toBeVisible();
+});
+
+test('published encounters render native rules and can be saved and restored', async ({ page }) => {
+  await page.goto(url);
+  await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  await page.getByLabel('Species profile').selectOption('ganmeid');
+  await expect(page.getByRole('combobox', { name: 'Occupation', exact: true })).toBeHidden();
+  await expect(page.locator('#settings-plate').getByRole('img', { name: /Ganmeid/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Apply settings' }).click();
+  await expect(page.locator('#encounter-plate')).toContainText('The Third Imperium, p. 166');
+  await expect(page.locator('#source-encounter-record')).toContainText('Hits24');
+  await expect(page.locator('#source-encounter-record')).toContainText('Bite (1D+3)');
+  await expect(page.getByText('Skills and qualifications', { exact: true })).toBeHidden();
+  await page.reload();
+  await expect(page.locator('#status')).toContainText('Restored NPC 1');
+  await expect(page.locator('#source-encounter-record')).toBeVisible();
+  await page.getByLabel('Species profile').selectOption('human');
+  await expect(page.getByRole('combobox', { name: 'Occupation', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Apply settings' }).click();
+  await expect(page.locator('#characteristics')).toBeVisible();
+  await expect(page.locator('#source-encounter-record')).toBeHidden();
 });
 
 test('catalog launches the new Traveller tool and conditions a hiring search', async ({ page }) => {

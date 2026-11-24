@@ -1,5 +1,6 @@
 import { has, normalizeConfig, object, requireRule, skillName } from './config.mjs';
 import { fieldGroups, generateNpc, rerollNpc, restoreNpc, setLock } from './generator.mjs';
+import { encounterSpecies } from './encounter-species.mjs';
 import { isTalent, taskCheck } from './mechanics.mjs';
 import { fanNameSources, imperialNameCounts, nameStyleFor, nameStyles } from './names.mjs';
 import { freshSeed } from './random.mjs';
@@ -87,6 +88,9 @@ function roleOptions(secondary = false) {
 
 function updateProfileControls(config) {
   const profileId = field('species');
+  const isEncounter = has(encounterSpecies, profileId);
+  hidden('source-encounter-note', !isEncounter);
+  for (const node of document.querySelectorAll('[data-character-setting]')) node.hidden = isEncounter;
   const profile = species[profileId];
   const selected = profileId === 'random' ? npc?.biology.profileId : profileId;
   const customPlate = (config ?? npc?.controls.config)?.customProfile?.appearance;
@@ -94,7 +98,8 @@ function updateProfileControls(config) {
   const explicitStyle = field('name-style');
   const candidate = profile ? { ...profile, id: profileId, culture: field('culture') === 'auto' ? profile.culture : field('culture') } : null;
   const naming = nameStyles[explicitStyle === 'auto' && candidate ? nameStyleFor('auto', candidate) : explicitStyle];
-  $('name-style-note').textContent = naming ? naming.label + ' · ' + naming.basis : 'Follows the NPC’s species and culture.';
+  $('name-style-note').textContent = naming ? naming.label + ' · ' + naming.basis
+    : isEncounter ? 'Automatic uses a field contact name.' : 'Follows the NPC’s species and culture.';
   const options = profile?.adultOptions ?? [];
   const form = config?.profileOptions.adultForm ?? field('adult-form');
   hidden('adult-label', !options.length);
@@ -109,7 +114,7 @@ function updateProfileControls(config) {
   const specialtyOptions = (slot, id) => {
     const row = occupationChoices.find(row => row.id === field(slot));
     const fields = row && row.profile !== 'psion' ? fieldsFor(row) : [];
-    hidden(id + '-label', !fields.length);
+    hidden(id + '-label', isEncounter || !fields.length);
     select(id, [['', 'Roll for this occupation'], ...fields.map(value => [value, value])],
       id === 'specialty' ? config?.specialty : config?.secondarySpecialty);
   };
@@ -212,14 +217,26 @@ function pairs(id) {
 }
 
 function readSettings() {
-  const advanced = advancedOptions();
+  const isEncounter = has(encounterSpecies, field('species'));
+  const advanced = isEncounter ? {} : advancedOptions();
   const ageMode = field('age-mode');
   const age = ageMode === 'random' ? 'random' : ageMode === 'unknown' ? null : integerField('age-years');
   requireRule(ageMode !== 'fixed' || age !== null, 'Enter the NPC’s age in years.');
+  const common = {
+    species: field('species'), nameStyle: field('name-style'), age,
+    identity: { ...advanced.identity, commonName: field('common-name'),
+      nativeName: field('native-name') || advanced.identity?.nativeName, pronouns: field('pronouns') },
+    placement: {
+      ...advanced.placement, current: field('current-location'), last: field('last-location'),
+      medium: field('medium'), tl: integerField('local-tl'), law: integerField('law'),
+    },
+    homeworld: field('homeworld'),
+  };
+  if (isEncounter) return common;
   return {
-    ...advanced,
-    context: field('context'), species: field('species'), culture: field('culture'), nameStyle: field('name-style'),
-    occupation: field('occupation'), competence: field('competence'), secondary: field('secondary'), age,
+    ...advanced, ...common,
+    context: field('context'), culture: field('culture'),
+    occupation: field('occupation'), competence: field('competence'), secondary: field('secondary'),
     specialty: field('specialty') || advanced.specialty,
     secondarySpecialty: field('secondary-specialty') || advanced.secondarySpecialty,
     requiredSkills: pairs('required-skills').map(([skill, level]) => ({ skill, level })),
@@ -232,18 +249,11 @@ function readSettings() {
       ascondiSoc: $('ascondi-soc-label').hidden ? null : integerField('ascondi-soc'),
       zhodaniHighPsi: !$('zhodani-psi-label').hidden && $('zhodani-high-psi').checked,
     },
-    identity: { ...advanced.identity, commonName: field('common-name'),
-      nativeName: field('native-name') || advanced.identity?.nativeName, pronouns: field('pronouns') },
-    placement: {
-      ...advanced.placement, current: field('current-location'), last: field('last-location'),
-      medium: field('medium'), tl: integerField('local-tl'), law: integerField('law'),
-    },
     psion: {
       ...advanced.psion, mode: field('psi-mode'), talent: $('talent-label').hidden ? 'random' : field('talent'),
       potential: $('potential-label').hidden ? null : integerField('potential'),
       current: $('psi-current-label').hidden ? null : integerField('psi-current'),
     },
-    homeworld: field('homeworld'),
     homeworlds: field('worlds').split(/\r?\n/).filter(line => line.trim()).map(line => {
       const [name, weight, uwp, ...extra] = line.split('|').map(part => part.trim());
       requireRule(!extra.length, 'Enter one homeworld per line as name | weight | UWP.');
@@ -291,8 +301,10 @@ function generation(next = false, seedChange = false) {
     const previous = npc?.provenance;
     const sameSeed = seed === previous?.seed;
     const index = sameSeed ? previous.index + Number(next) : 1;
-    const counters = sameSeed && !next ? previous.rerollCounters : {};
-    return generateNpc(readSettings(), { seed, index, counters, locks: npc?.controls.locks });
+    const settings = readSettings();
+    const sameModel = has(encounterSpecies, settings.species) === Boolean(npc?.encounter);
+    const counters = sameSeed && sameModel && !next ? previous.rerollCounters : {};
+    return generateNpc(settings, { seed, index, counters, locks: npc?.controls.locks });
   }, record => 'NPC ' + record.provenance.index + ' ready · ' + record.player.name + '.', { fill: true });
 }
 
@@ -493,9 +505,10 @@ function renderRolls() {
 }
 
 function renderLocks() {
-  const groups = Object.entries(fieldGroups).map(([name, fields]) => [name, fields.filter(([key]) =>
-    key !== 'wings' || npc.biology.wings).filter(([key]) => key !== 'form' || npc.biology.form)]);
-  groups.splice(3, 0, ['Characteristics', npc.mechanics.order.map(stat => ['stat.' + stat, stat])]);
+  const groups = npc.encounter ? [['Identity', [['name', 'Common name']]]]
+    : Object.entries(fieldGroups).map(([name, fields]) => [name, fields.filter(([key]) =>
+      key !== 'wings' || npc.biology.wings).filter(([key]) => key !== 'form' || npc.biology.form)]);
+  if (!npc.encounter) groups.splice(3, 0, ['Characteristics', npc.mechanics.order.map(stat => ['stat.' + stat, stat])]);
   $('locks').replaceChildren(
     p('Lock the current value before applying new settings or rolling again. Derived values recalculate.', 'hint'),
     ...groups.map(([group, fields]) => element('div', [
@@ -514,6 +527,21 @@ function renderLocks() {
   );
 }
 
+function renderSourceEncounter() {
+  const { encounter, biology, identity, places } = npc;
+  const { placement } = npc.controls.config;
+  const facts = [
+    ['Source', biology.source], ['Hits', encounter.hits], ['Protection', encounter.protection],
+    ['Movement', encounter.movement], ['Habitat', encounter.habitat], ['Communication', encounter.communication],
+    ['Skills', encounter.skills.join(', ') || null], ['Natural attacks', encounter.attacks.join(', ') || null],
+    ['Age', biology.age.years], ['Native name', identity.nativeName], ['Naming', identity.naming.label],
+    ['Current location', places.current], ['Last known location', places.lastKnown], ['Homeworld', places.homeworld?.name],
+    ['Environment', placement.medium === 'unknown' ? null : cap(placement.medium)],
+    ['Local TL', placement.tl], ['Law level', placement.law],
+  ].filter(([, value]) => value != null);
+  $('source-encounter-record').replaceChildren(h('Published encounter'), definition(facts), list(encounter.traits));
+}
+
 function renderRecord() {
   $('npc-name').textContent = npc.player.name;
   $('npc-role').textContent = npc.player.species + ' · ' + npc.player.role;
@@ -524,12 +552,18 @@ function renderRecord() {
   hidden('npc-role', false);
   for (const id of ['player-view', 'copy-card', 'player-export', 'ref-export']) $(id).disabled = false;
   $('reroll-name').disabled = has(npc.controls.locks, 'name');
-  renderValidity();
-  renderCharacteristics();
-  renderSkills();
-  renderIdentity();
-  renderEquipment();
-  renderStory();
+  const isEncounter = Boolean(npc.encounter);
+  hidden('source-encounter-record', !isEncounter);
+  for (const node of document.querySelectorAll('[data-character-record]')) node.hidden = isEncounter;
+  if (isEncounter) renderSourceEncounter();
+  else {
+    renderValidity();
+    renderCharacteristics();
+    renderSkills();
+    renderIdentity();
+    renderEquipment();
+    renderStory();
+  }
   renderRolls();
   renderLocks();
   updatePlayerView();
@@ -591,6 +625,10 @@ function renderRules() {
     h('Worked example from the draft'),
     p('Kessa Varr is a standard Vargr jump engineer. The example’s raw scores 7, 8, 8, 9, 10, and 6 become UPP 6979A6 after species adjustments. Experienced gives Engineer (j-drive) 2, Engineer (power) 1, Engineer (m-drive) 1, and Mechanic 1. The EDU-based jump-drive check starts at 2D + 3.'),
     h('Species profiles'), table(['Profile', 'Population key', 'Source', 'Age model'], sourceRows, { label: 'Enabled species sources' }),
+    h('Published encounters'),
+    table(['Profile', 'Source', 'Rules'], Object.values(encounterSpecies).map(profile =>
+      [profile.name, profile.source, profile.hits == null ? 'Encounter traits' : 'Encounter Hits']),
+    { label: 'Published encounter sources' }),
     h('Names and naming sources'),
     p('Automatic naming follows culture and species. The Imperial Galanglic pool has ' + imperialNameCounts.personal
       + ' given names and ' + imperialNameCounts.family + ' family names. Native names and formal variants appear in the referee record.'),
@@ -690,6 +728,7 @@ async function initialize() {
     ['Library species and variants', Object.entries(species).filter(([key, value]) =>
       !starter.includes(key) && !value.setting).map(([key, value]) => [key, value.name])],
     ['Castrobancla campaign', Object.entries(species).filter(([, value]) => value.setting === 'castrobancla').map(([key, value]) => [key, value.name])],
+    ['Published encounters', Object.entries(encounterSpecies).map(([key, value]) => [key, value.name])],
     ['custom', 'Referee-defined species']]);
   select('name-style', [['auto', 'Automatic · species and culture'],
     ...Object.entries(nameStyles).map(([key, value]) => [key, value.label])]);

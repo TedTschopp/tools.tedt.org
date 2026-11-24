@@ -133,15 +133,16 @@
       <header class="tt-panel-head"><h2 id="settings-title">Generation settings</h2></header>
       <form class="tt-panel-body" id="config-form">
         <div class="field-grid">
-          <label class="wide">Encounter context <select id="context"></select></label>
+          <label class="wide" data-character-setting>Encounter context <select id="context"></select></label>
           <label class="wide">Species profile <select id="species"></select></label>
           <figure id="settings-plate" class="species-plate wide" hidden></figure>
+          <p id="source-encounter-note" class="wide hint field-notes" hidden>Uses the book’s encounter rules. You can set a name and scene location.</p>
           <div class="wide hint"><a id="field-guide-link" href="#species-guide">Species field guide</a></div>
           <label class="wide" id="adult-label" hidden>Adult form or caste <select id="adult-form"></select></label>
-          <label class="wide">Occupation <select id="occupation"></select></label>
+          <label class="wide" data-character-setting>Occupation <select id="occupation"></select></label>
           <label class="wide" id="specialty-label" hidden>Primary specialty <select id="specialty"></select></label>
-          <label>Competence <select id="competence"></select></label>
-          <label>Culture <select id="culture"></select></label>
+          <label data-character-setting>Competence <select id="competence"></select></label>
+          <label data-character-setting>Culture <select id="culture"></select></label>
           <label class="wide">Seed <input id="seed" type="text" maxlength="256" required spellcheck="false" autocomplete="off"></label>
         </div>
         <div class="actions generation-actions">
@@ -149,7 +150,7 @@
           <button type="button" id="next-npc">Next NPC</button>
           <button type="button" id="new-seed" class="quiet compact">New seed</button>
         </div>
-        <details class="group">
+        <details class="group" data-character-setting>
           <summary>Required skills and characteristics</summary>
           <div class="field-grid">
             <label class="wide">Skill minimums <textarea id="required-skills" rows="2" placeholder="Medic = 2" spellcheck="false" aria-describedby="requirements-help"></textarea></label>
@@ -173,8 +174,8 @@
             <label>Local TL <input type="number" id="local-tl" min="0" max="99" placeholder="Unknown"></label>
             <label>Law level <input type="number" id="law" min="0" max="99" placeholder="Unknown"></label>
             <label class="wide">Fixed homeworld <input id="homeworld" type="text" maxlength="500"></label>
-            <label class="wide">Weighted homeworlds <textarea id="worlds" rows="2" placeholder="Regina | 3" aria-describedby="world-help"></textarea></label>
-            <p class="wide hint field-notes" id="world-help">One per line. Optionally add weight and a supplied UWP, separated by |.</p>
+            <label class="wide" data-character-setting>Weighted homeworlds <textarea id="worlds" rows="2" placeholder="Regina | 3" aria-describedby="world-help"></textarea></label>
+            <p class="wide hint field-notes" id="world-help" data-character-setting>One per line. Optionally add weight and a supplied UWP, separated by |.</p>
             <label>Age <select id="age-mode"><option value="random">Roll adult age</option><option value="unknown">Unspecified</option><option value="fixed">Set years</option></select></label>
             <label id="age-label" hidden>Years <input type="number" id="age-years" min="0" max="99999"></label>
             <label class="wide">Naming style <select id="name-style" aria-describedby="name-style-note"></select></label>
@@ -184,7 +185,7 @@
             <label class="wide">Pronouns <input id="pronouns" type="text" maxlength="500"></label>
           </div>
         </details>
-        <details class="group">
+        <details class="group" data-character-setting>
           <summary>Cross-training and psionics</summary>
           <div class="field-grid">
             <label class="wide">Secondary occupation <select id="secondary"></select></label>
@@ -202,7 +203,7 @@
             <label id="zhodani-psi-label" class="wide check-line" hidden><input id="zhodani-high-psi" type="checkbox"> Use the Zhodani 1D+6 PSI option</label>
           </div>
         </details>
-        <details class="group" id="equipment-settings">
+        <details class="group" id="equipment-settings" data-character-setting>
           <summary>Assign catalogue equipment</summary>
           <div class="field-grid">
             <label class="wide">Catalogue item <select id="gear-item"></select></label>
@@ -216,7 +217,7 @@
             <div id="gear-list" class="wide hint"></div>
           </div>
         </details>
-        <details class="group" id="advanced-settings">
+        <details class="group" id="advanced-settings" data-character-setting>
           <summary>Advanced referee facts</summary>
           <div>
             <label>Campaign options in JSON <textarea id="advanced" rows="8" spellcheck="false" placeholder="{}" aria-describedby="advanced-help"></textarea></label>
@@ -252,10 +253,11 @@
       <details id="referee" class="referee tt-panel" open hidden>
         <summary>Referee record</summary>
         <div class="tt-panel-body">
-          <dl class="status-grid" id="validity"></dl>
-          <details class="group" open><summary>Characteristics and traits</summary><div id="characteristics"></div></details>
-          <details class="group" open><summary>Skills and qualifications</summary><div id="skills"></div></details>
-          <details class="group" id="check-section"><summary>Task check</summary>
+          <dl class="status-grid" id="validity" data-character-record></dl>
+          <div id="source-encounter-record" hidden></div>
+          <details class="group" open data-character-record><summary>Characteristics and traits</summary><div id="characteristics"></div></details>
+          <details class="group" open data-character-record><summary>Skills and qualifications</summary><div id="skills"></div></details>
+          <details class="group" id="check-section" data-character-record><summary>Task check</summary>
             <div class="field-grid">
               <label class="wide">Skill or talent <input list="skill-options" id="check-skill" type="text" autocomplete="off"></label>
               <datalist id="skill-options"></datalist>
@@ -274,9 +276,9 @@
               <p id="check-result" class="wide" aria-live="polite"></p>
             </div>
           </details>
-          <details class="group"><summary>Identity, history and employment</summary><div id="identity-record"></div></details>
-          <details class="group"><summary>Equipment, environment and access</summary><div id="equipment-record"></div></details>
-          <details class="group"><summary>Story, relationships and secrets</summary><div id="story"></div></details>
+          <details class="group" data-character-record><summary>Identity, history and employment</summary><div id="identity-record"></div></details>
+          <details class="group" data-character-record><summary>Equipment, environment and access</summary><div id="equipment-record"></div></details>
+          <details class="group" data-character-record><summary>Story, relationships and secrets</summary><div id="story"></div></details>
           <details class="group" id="lock-section"><summary>Locks and rerolls</summary><div id="locks"></div></details>
           <details class="group" id="roll-section"><summary>Seed, versions and roll record</summary><div id="rolls"></div></details>
         </div>

@@ -1,5 +1,6 @@
 import { has, integer, normalizeConfig, object, requireRule, text } from './config.mjs';
 import { resolveEquipment } from './equipment.mjs';
+import { encounterSpecies } from './encounter-species.mjs';
 import { chooseBiology, isTalent, prepareMechanics, rollCharacteristics, upp } from './mechanics.mjs';
 import { generateName, nameStyleFor } from './names.mjs';
 import { diceOutcomes, pickDice, stableId, streams, sum } from './random.mjs';
@@ -33,6 +34,7 @@ const relationshipValue = edge => edge && ({
 
 function lockValues(npc) {
   const { identity, biology, story, places, work, resources } = npc;
+  if (npc.encounter) return { name: identity.commonName, species: biology.profileId };
   return {
     name: identity.commonName, detail: identity.visibleDetail,
     species: biology.profileId === 'custom' ? { id: 'custom', definition: npc.controls.config.customProfile } : biology.profileId,
@@ -315,6 +317,8 @@ async function storyFor(id, config, locks, work, resources, rng, namingStyle) {
 
 export function publicCard(npc) {
   const { identity, biology, work, story } = npc;
+  if (npc.encounter) return { name: identity.commonName, species: biology.name, role: 'Encounter',
+    introduction: identity.commonName + ' · ' + biology.name + '. ' + npc.encounter.scene };
   const species = biology.name.split(' · ')[0];
   const role = work.competence.id === 'green' ? 'trainee ' + work.occupation.title.toLowerCase() : work.occupation.title.toLowerCase();
   const article = /^[aeiou]/i.test(role) ? 'an ' : 'a ';
@@ -324,6 +328,51 @@ export function publicCard(npc) {
     + 'They ' + identity.visibleDetail.replace(/^(has|wears|is)\b/, match => ({ has: 'have', wears: 'wear', is: 'are' })[match]) + ' and '
     + story.manner.replace(/^(speaks|checks|uses|watches|tells)\b/, match => match.replace(/(?:es|s)$/, ending => match === 'uses' ? 'e' : '')) + '.';
   return { name: identity.commonName, species, role: stateTitle(role), introduction };
+}
+
+async function generateSourceEncounter(config, profile, { id, provenance, locks, rng }) {
+  requireRule(config.context === 'mixed' && config.occupation === 'random' && config.competence === 'random'
+    && config.secondary === 'none' && config.culture === 'auto' && config.lifeform === 'standard'
+    && ['auto', 'off'].includes(config.psion.mode)
+    && ![config.requiredSkills, config.skillGrants, Object.keys(config.requiredCharacteristics), config.characteristicBoons,
+      config.conditions, config.augmentations, config.gear].some(values => values.length),
+  'This species uses a published encounter block. Clear the applied character requirements or choose a characteristic profile.');
+  requireRule(Object.keys(locks).every(key => ['name', 'species'].includes(key))
+    && (!locks.species || locks.species === config.species), 'Unlock the earlier character fields to use this encounter profile.');
+  const knownName = config.identity.commonName ?? locks.name;
+  requireRule(!locks.name || locks.name === knownName, 'The common name is locked to ' + locks.name + '.');
+  const naming = config.nameStyle && config.nameStyle !== 'auto'
+    ? await generateName(config.nameStyle, rng('name', 'names'), {
+      sex: config.identity.sex, commonName: knownName, nativeName: config.identity.nativeName,
+    })
+    : {
+      commonName: knownName ?? profile.labels[(await rng('name', 'names').draw(profile.labels.length, 'Contact label')) - 1],
+      nativeName: config.identity.nativeName,
+      naming: { id: 'encounter-contact', label: 'Contact label', basis: 'House field label', source: profile.source, formalName: null },
+    };
+  const scene = profile.scenes[(await rng('encounter', 'narrative').draw(profile.scenes.length, 'Encounter situation')) - 1];
+  const hits = typeof profile.hits === 'object'
+    ? (await rng('encounter.hits', 'species').dice(profile.hits.count, 'Adult Hits')).total + profile.hits.add
+    : profile.hits ?? null;
+  const encounter = {
+    scene, hits, movement: profile.movement ?? null, protection: profile.protection ?? null,
+    habitat: profile.habitat, communication: config.identity.communication ?? profile.communication,
+    traits: profile.traits, skills: profile.skills ?? [], attacks: profile.attacks ?? [],
+  };
+  const npc = {
+    schema, id, provenance, encounter, identity: { ...config.identity, ...naming },
+    biology: {
+      adult: true, living: true, sophont: true, name: profile.name, profileId: config.species, source: profile.source,
+      age: { years: typeof config.age === 'number' ? config.age : null },
+    },
+    places: {
+      current: config.placement.current, lastKnown: config.placement.last,
+      homeworld: config.homeworld ? { name: config.homeworld } : null,
+    },
+    controls: { config, locks, rollLocks: structuredClone(locks) },
+  };
+  npc.player = publicCard(npc);
+  return npc;
 }
 
 export async function generateNpc(input = {}, state = {}) {
@@ -347,6 +396,9 @@ export async function generateNpc(input = {}, state = {}) {
   const rolls = [];
   const rng = streams(seed, index, { ...counters, 'network.name': counters.network }, rolls, tablePacks);
   const id = await stableId(seed, index);
+  const provenance = { version, ruleProfile, packs: tablePacks, seed, index, rerollCounters: counters, rolls };
+  const sourceProfile = has(encounterSpecies, config.species) && encounterSpecies[config.species];
+  if (sourceProfile) return generateSourceEncounter(config, sourceProfile, { id, provenance, locks, rng });
   const checkWork = config.requiredSkills.length || config.skillGrants.length || has(locks, 'skills');
   const profile = await chooseBiology(config, locks, rng, checkWork ? (candidate, ceiling) =>
     checkWorkPool(config, locks, candidate, ceiling) : null);
@@ -373,11 +425,11 @@ export async function generateNpc(input = {}, state = {}) {
     skill: stat, minimum, actual: characteristics[stat].current, met: true,
   }))];
   const psi = prepared.psi && { ...prepared.psi, talents: work.skills.filter(entry => isTalent(entry.skill)) };
-  const innate = (profile.special === 'droyne' ? ['Invisibility', 'Homing', 'Link']
+  const innate = (profile.special === 'droyne' && !profile.uncast ? ['Invisibility', 'Homing', 'Link']
     : profile.special === 'dvora' ? ['Unconscious Clairvoyance'] : []).map(name =>
     ({ name, source: profile.source, consciousUse: profile.special !== 'dvora' }));
   const npc = {
-    schema, id, provenance: { version, ruleProfile, packs: tablePacks, seed, index, rerollCounters: counters, rolls },
+    schema, id, provenance,
     ...identity,
     biology: {
       profileId: profile.id, name: profile.name, variant: profile.variant, form: profile.form,

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { access } from 'node:fs/promises';
+import { encounterSpecies } from '../tool-src/tools/traveller-npc-generator/encounter-species.mjs';
 import { generateNpc, rerollNpc, restoreNpc, setLock } from '../tool-src/tools/traveller-npc-generator/generator.mjs';
 import { dm, rating, taskCheck } from '../tool-src/tools/traveller-npc-generator/mechanics.mjs';
 import { imperialNameCounts, nameStyles } from '../tool-src/tools/traveller-npc-generator/names.mjs';
@@ -48,12 +49,45 @@ test('name styles follow the profile and protect native names in player data', a
 });
 
 test('every built-in profile and illustrated reference has its own plate data and a shipped image', async () => {
-  const artIds = [...Object.keys(species), ...referenceGroups.flatMap(group => group.entries.map(entry => entry.art).filter(Boolean))];
+  const artIds = [...Object.keys(species), ...Object.keys(encounterSpecies),
+    ...referenceGroups.flatMap(group => group.entries.map(entry => entry.art).filter(Boolean))];
   for (const id of artIds) {
     const plate = portraitFor(id);
     assert.ok(plate?.description && plate?.source && plate?.comparison, id);
     await access(new URL('../tool-src/img/traveller-npc/' + plate.asset + '.webp', import.meta.url));
   }
+});
+
+test('published encounter blocks roll and restore without invented characteristics', async () => {
+  const weeven = await make({ species: 'weeven', identity: { nativeName: 'Referee label' } });
+  assert.equal(weeven.biology.profileId, 'weeven');
+  const hitRolls = weeven.provenance.rolls.filter(roll => roll.field === 'encounter.hits').map(roll => roll.result);
+  assert.equal(hitRolls.length, 3);
+  assert.equal(weeven.encounter.hits, 30 + hitRolls.reduce((a, b) => a + b, 0));
+  assert.equal(weeven.encounter.protection, 10);
+  assert.equal(weeven.mechanics, undefined);
+  assert.doesNotMatch(weeven.player.introduction, /Referee label/);
+  const locked = { ...weeven, controls: { ...weeven.controls, locks: setLock(weeven, 'name', true) } };
+  assert.deepEqual(await restoreNpc(JSON.parse(JSON.stringify(locked))), locked);
+  await assert.rejects(() => make({ species: 'weeven', requiredCharacteristics: { INT: 3 } }), /published encounter block/);
+  for (const [species, hits] of [['ganmeid', 24], ['bhuoovaakaylaa', 70], ['host-colony', null]]) {
+    const profile = await make({ species });
+    assert.equal(profile.encounter.hits, hits);
+    assert.deepEqual((await rerollNpc(profile, ['name'])).encounter, profile.encounter);
+  }
+});
+
+test('uncast Droyne use pre-casting dice while retaining wings and PSI', async () => {
+  const npc = await make({ species: 'droyne-uncast', profileOptions: { wings: 'large' } });
+  const { characteristics } = npc.mechanics;
+  for (const stat of ['STR', 'DEX', 'END', 'INT', 'EDU']) {
+    assert.ok(characteristics[stat].raw >= 2 && characteristics[stat].raw <= 7);
+    assert.equal(characteristics[stat].adjustment, 0);
+  }
+  assert.ok(characteristics.PSI);
+  assert.equal(npc.biology.wings, 'large');
+  assert.equal(npc.abilities.innate.length, 0);
+  assert.equal(rating(npc.mechanics.skills, 'Flight'), 0);
 });
 
 test('expanded profiles apply book-based characteristics and aquatic needs', async () => {

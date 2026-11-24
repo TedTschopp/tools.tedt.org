@@ -319,6 +319,27 @@ export const species = {
       trait('Unfamiliar concepts', 'DM−2 when a check requires a wholly new idea or an imaginative leap.'),
     ],
   }),
+  hiidamo: profile('Hiidamo human', 'human', imperium + ', pp. 217–218 (anatomy); Core Rulebook (human characteristics)', {
+    culture: 'hiidamo', ancestry: 'Hiidamo', variant: 'Hiilev ancestry · standard Human characteristics',
+    body: 'Dark, leathery skin and enlarged lungs',
+    traits: [
+      trait('Hiilev adaptation', 'Can breathe Hiilev’s very thin, sulphurous atmosphere. Check local air conditions before applying this elsewhere.'),
+    ],
+  }),
+  kifnell: profile('Kifnell human', 'human', 'The Great Rift, Book 3: Touchstone and Afawahisa, p. 68; Core Rulebook (human characteristics)', {
+    culture: 'kifnell', ancestry: 'Kifnell', variant: 'Transplanted Humaniti · standard Human characteristics',
+  }),
+  'droyne-uncast': profile('Uncast adult Droyne', 'droyne', volume2 + ', pp. 138, 148–150, 191', {
+    culture: 'oytrip', variant: 'Adult without an Iskyar casting', age: unknownAge,
+    order: characteristicOrder.slice(0, 5), special: 'droyne', uncast: true,
+    dice: Object.fromEntries(characteristicOrder.slice(0, 5).map(stat => [stat, { count: 1, add: 1 }])),
+    body: 'Small winged, reptile-and-bird-like body', movement: 'Ground movement and wing-dependent flight',
+    manipulators: 'Four-digit hands', senses: 'Wide field of view from compound eyes',
+    traits: [
+      trait('Uncast characteristics', 'Uses the book’s pre-casting dice and unmodified PSI as a snapshot of an uncast adult.'),
+      trait('Flight', 'Wing size determines Flight familiarity. Check gravity, atmosphere and clearance in play.'),
+    ],
+  }),
 };
 export const cultures = {
   imperial: { name: 'Imperial cosmopolitan', communication: 'Galanglic speech or a compatible interface' },
@@ -335,6 +356,8 @@ export const cultures = {
   nest: { name: 'Hive Federation', communication: 'Hiver tactile signs; voder for mixed-species speech', fits: ['hiver'] },
   ithklur: { name: 'Hive Federation · Ithklur', communication: 'Ithklur speech or a Federation trade language', fits: ['ithklur'] },
   tenipal: { name: 'Tenipal community', communication: 'Local Tenipal speech or interpretation', fits: ['tenipal'], source: nearSide },
+  hiidamo: { name: 'Hiilev · Hiidamo', communication: 'Local language or a trade language', profiles: ['hiidamo'], source: imperium + ', pp. 217–218' },
+  kifnell: { name: 'Kifnell', communication: 'Local language or interpretation', profiles: ['kifnell'], source: 'The Great Rift, Book 3, p. 68' },
   gurungan: { name: 'Gurungan enclave', communication: 'Aquatic signaling; a fitted speech or sign interface with outsiders', fits: ['gurungan'] },
   vegan: { name: 'Vegan Autonomous District', communication: 'Vegan language', fits: ['vegan'] },
   ssienjhiovla: { name: 'Ssienjhiovla community', communication: 'Pheromones, gesture and voice interface', fits: ['ssienjhiovla'] },

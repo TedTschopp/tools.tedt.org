@@ -1,0 +1,58 @@
+export const encounterSpecies = {
+  weeven: {
+    name: 'Weeven', source: 'The Solomani Front, pp. 12–13',
+    habitat: 'Regolith on low-gravity worlds. Vacuum and trace atmospheres are suitable.',
+    communication: 'Use a radio interpreter. A reply can take weeks or months.',
+    hits: { count: 3, add: 30 }, protection: 10,
+    movement: 'Slow crawl. Organic rocket bursts allow jumps up to 250 m in homeworld gravity.',
+    traits: ['Vacuum-adapted', 'Flexible shell', 'Feeds on loose rock and regolith'],
+    labels: ['Basalt Shelf', 'Dusk Ladder', 'Slow Horizon', 'Old Crater', 'Copper Drift', 'Quiet Scarp'],
+    scenes: [
+      'A repeating radio signal comes from a conical shape beside a strip of freshly worked regolith.',
+      'A low ridge marks a Weeven’s route between two mineral patches. Its interpreter is ready to receive a message.',
+      'A plume of gas lifts the Weeven across a shallow rift. It settles slowly on the opposite bank.',
+    ],
+  },
+  bhuoovaakaylaa: {
+    name: 'Bhu’oovaakaylaa', source: 'The Third Imperium, pp. 168–170',
+    habitat: 'Amphibious. Allow room for an adult weighing about four tonnes.',
+    communication: 'The inhabitants of Khiinra Ash are usually willing to talk to visitors.',
+    hits: 70, protection: 2, movement: '6 m swimming or 4 m flying',
+    traits: ['Amphibious', 'Heightened senses', 'Large (+2)', 'Omnivore'],
+    skills: ['Athletics (dexterity) 2', 'Flyer (natural) 2', 'Melee (natural) 1', 'Recon 2', 'Survival 1'],
+    attacks: ['Bite (2D)'],
+    labels: ['Shoal-Watcher', 'Warm Current', 'Four Glances', 'Shellbank', 'Reed Passage', 'Upstream Keeper'],
+    scenes: [
+      'A broad carapace breaks the surface. The Bhu’oovaakaylaa raises two grasping limbs into view.',
+      'The Bhu’oovaakaylaa floats the last short distance to the landing. Four eyes turn toward the visitors.',
+      'The Bhu’oovaakaylaa paddles out from the shallows to see who has arrived.',
+    ],
+  },
+  ganmeid: {
+    name: 'Ganmeid', source: 'The Third Imperium, p. 166',
+    habitat: 'Breathes water. Ganmeids build around submerged escarpments and sea mounts.',
+    communication: 'Uses high-pitched calls at a distance and gestures at close range.',
+    hits: 24, protection: 4, movement: '12 m swimming',
+    traits: ['Aquatic', 'Camouflaged', 'Echolocation', 'Heightened senses', 'Filter feeder and scavenger'],
+    skills: ['Athletics (dexterity) 1', 'Melee (natural) 1', 'Recon 1', 'Survival 2'],
+    attacks: ['Bite (1D+3)'],
+    labels: ['Blue Kelp', 'Gully Echo', 'Silt-Fan', 'Soft Undertow', 'Coral Ledge', 'Two Ripples'],
+    scenes: [
+      'A high call echoes across the reef. A long fin emerges from camouflage near the cavern mouth.',
+      'A Ganmeid beneath the escarpment watches the visitors and gestures from just beyond arm’s reach.',
+      'The current carries the Ganmeid past a sea mount. It turns to see whether the newcomers will follow.',
+    ],
+  },
+  'host-colony': {
+    name: 'Host colony', source: 'Castrobancla, The City of Aliens, PDF pp. 64–65',
+    habitat: 'Free-living colonies remain suspended in untreated water. They can persist dormant in dry sediment.',
+    communication: 'The colony can signal by directing local fauna to make shapes or marks.',
+    traits: ['Detects life at Long range', 'Shares memories within the colony', 'Forms a symbiosis with a willing sophont'],
+    labels: ['Still Pool', 'Circle of Reeds', 'Rain’s Memory', 'Pattern in Silt', 'Spring Below', 'Open Well'],
+    scenes: [
+      'Something at the edge of the pool leaves three deliberate marks in the silt.',
+      'A small animal draws shapes beside a pool and pauses as if waiting for an answer.',
+      'Water collects in a shallow stone basin. Tracks lead from the basin to a pattern of stones.',
+    ],
+  },
+};
