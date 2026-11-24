@@ -45,7 +45,7 @@ function profileForm(id, base, form, culture, config) {
     profile.modifiers = kkreeForms[form];
     if (form === 'Patriarch') profile.grants.push(...['Patriarchy', 'Melee', 'Recon', 'Survival'].map(skill => ({ skill, level: 0 })));
   }
-  if (base.special === 'droyne') profile.modifiers = droyneForms[form];
+  if (base.special === 'droyne' && !base.uncast) profile.modifiers = droyneForms[form];
   if (base.special === 'hierate') {
     profile.minimums.SOC = 0;
     if (form === 'Male') {

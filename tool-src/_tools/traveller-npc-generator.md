@@ -17,6 +17,7 @@ features:
   - "Set exact skill and characteristic minimums for professional or crew hiring"
   - "Reproduce each NPC from its seed, lock values, and reroll fields independently"
   - "Show a player encounter card and save a private referee record with full roll provenance"
+  - "Roll species such as Ganmeids and Weeven with their published encounter rules"
 ---
 
 ## Roll an encounter
@@ -37,6 +38,10 @@ original weights. The referee record shows each rating and the underlying grant.
 Show the **Player view** at the table. Open the **Referee record** for mechanical
 details, motives, secrets, and the roll history. Save the referee JSON to reopen
 the same NPC with its seed and locks. The player TXT contains the introduction.
+
+Choose a species under **Published encounters** to roll from its 2E encounter
+block. The referee record shows the source and the species’ published Hits,
+movement, attacks, or encounter traits where available.
 
 This uses original, unofficial NPC generation rules with source references for
 the enabled Mongoose Traveller profiles. Traveller is a registered trademark of

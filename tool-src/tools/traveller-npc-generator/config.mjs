@@ -2,6 +2,7 @@ import { contexts, characteristicOrder, occupationChoices, occupationTable, spec
 import { cultures, needs, species } from './species.mjs';
 import { nameStyles } from './names.mjs';
 import { portraits } from './species-art.mjs';
+import { encounterSpecies } from './encounter-species.mjs';
 
 export class RuleConflict extends Error {
   constructor(message) {
@@ -201,7 +202,8 @@ export function normalizeConfig(input = {}, { legacyNames = false } = {}) {
   const contextsKeys = Object.keys(contexts);
   const context = option(input.context ?? 'mixed', contextsKeys, 'Encounter context');
   const customProfile = refereeProfile(input.customProfile);
-  const speciesId = option(input.species ?? 'random', ['random', 'custom', ...Object.keys(species)], 'Species profile');
+  const speciesId = option(input.species ?? 'random',
+    ['random', 'custom', ...Object.keys(species), ...Object.keys(encounterSpecies)], 'Species profile');
   requireRule(speciesId !== 'custom' || customProfile, 'Add a customProfile object under Advanced referee facts to use this species.');
   const culture = option(input.culture ?? 'auto', ['auto', ...Object.keys(cultures)], 'Culture');
   const occupation = option(input.occupation ?? 'random', ['random', ...roleIds], 'Occupation');
