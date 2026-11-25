@@ -12,6 +12,8 @@ tags: [rpg, traveller, npc, sci-fi, generator]
 tech: [HTML, CSS, JavaScript]
 links:
   live: "/tools/traveller-npc-generator.html"
+hero_image: "/img/2026-11/traveller-npc-generator-hero.webp"
+image-alt: "A mixed-species crew reviews a cargo manifest in an orbital freight hangar."
 features:
   - "Choose Imperial starter profiles, options from the Traveller library, or a sourced referee-defined species"
   - "Set exact skill and characteristic minimums for professional or crew hiring"
