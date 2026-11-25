@@ -816,7 +816,7 @@ function renderNpcRecord() {
 function openCharacterSheet(member, containingGroup) {
   const record = containingGroup ?? member;
   if (!record || playerView || busy || activeRecord() !== record) return;
-  editCharacterSheet($('character-sheet'), element, member, data => {
+  editCharacterSheet($('character-sheet'), member, data => {
     if (containingGroup) setMemberSheet(containingGroup, member, data);
     else setCharacterSheet(member, data);
     clearRefereeLink();

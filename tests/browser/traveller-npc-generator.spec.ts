@@ -439,34 +439,43 @@ test('an editable Traveller sheet fits a phone and keeps its saved data private'
   const trigger = page.getByRole('button', { name: 'Character sheet', exact: true });
   await trigger.click();
   const dialog = page.getByRole('dialog', { name: 'Character sheet' });
-  await expect(dialog.getByRole('spinbutton', { name: 'Strength current', exact: true })).toHaveValue(/\d/);
+  const generated = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-npc-v1')!));
+  await expect(dialog.getByRole('textbox', { name: 'Character name', exact: true })).toHaveValue(generated.player.name);
+  await expect(dialog.getByRole('textbox', { name: 'Role or title', exact: true })).toHaveValue(generated.player.role);
+  await expect(dialog.getByRole('spinbutton', { name: 'Strength current', exact: true }))
+    .toHaveValue(String(generated.mechanics.characteristics.STR.current));
+  await expect(dialog.getByRole('button', { name: 'New character', exact: true })).toBeHidden();
+  const reminder = dialog.getByRole('button', { name: 'Rules reminder for Strength', exact: true });
+  await reminder.focus();
+  await expect(dialog.getByRole('tooltip')).toContainText('force a hatch');
+  await page.keyboard.press('Escape');
+  await expect(dialog.getByRole('tooltip')).toBeHidden();
+  await expect(dialog).toBeVisible();
   await expect(dialog.locator('.tt-panel-head')).toHaveCSS('background-color', 'rgb(17, 17, 17)');
   expect(await dialog.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
-  await dialog.getByText('Additional characteristics', { exact: true }).click();
+  await expect(dialog.getByRole('heading', { name: 'Additional characteristics', exact: true })).toBeVisible();
   const luck = dialog.getByRole('spinbutton', { name: 'Luck current', exact: true });
   await expect(luck).toHaveValue('');
   await luck.fill('10');
   await expect(dialog.getByRole('group', { name: 'Luck', exact: true }).locator('output.current')).toHaveText('+1');
-  await dialog.getByText('Finances', { exact: true }).click();
   await dialog.locator('#sheet-wlt-current').fill('0');
-  await expect(dialog.locator('output.sheet-cash[for="sheet-wlt-current"]')).toHaveText('Cr 0');
-  await dialog.getByText('Education and careers', { exact: true }).click();
-  const careers = dialog.getByRole('region', { name: 'Careers', exact: true });
-  await careers.getByRole('button', { name: 'Add row to Careers', exact: true }).click();
+  await expect(dialog.getByLabel('Obtainable cash', { exact: true })).toHaveText('Cr 0');
+  await dialog.getByRole('tab', { name: 'Lifepath' }).click();
+  const careers = dialog.getByRole('tabpanel', { name: 'Lifepath', exact: true });
+  await careers.getByRole('button', { name: 'Add career', exact: true }).click();
   await careers.getByLabel('Career', { exact: true }).fill('Merchant');
-  await careers.getByLabel('Rank and title', { exact: true }).fill('First Officer');
-  await dialog.getByText('Notes', { exact: true }).click();
+  await careers.getByLabel('Rank or title', { exact: true }).fill('First Officer');
+  await dialog.getByRole('tab', { name: 'Notes', exact: true }).click();
   const privateNote = 'Referee-only sheet entry';
-  await dialog.getByLabel('Character notes', { exact: true }).fill(privateNote);
+  await dialog.getByLabel('Character and session notes', { exact: true }).fill(privateNote);
   await dialog.getByRole('button', { name: 'Save sheet' }).click();
   await expect(page.locator('#card-feedback')).toHaveText('Character sheet saved.');
   await page.reload();
   await trigger.click();
-  await dialog.getByText('Additional characteristics', { exact: true }).click();
+  await expect(dialog.getByRole('heading', { name: 'Additional characteristics', exact: true })).toBeVisible();
   await expect(luck).toHaveValue('10');
-  await dialog.getByText('Education and careers', { exact: true }).click();
-  await careers.getByText('Merchant', { exact: true }).click();
-  await expect(careers.getByLabel('Rank and title', { exact: true })).toHaveValue('First Officer');
+  await dialog.getByRole('tab', { name: 'Lifepath' }).click();
+  await expect(careers.getByLabel('Rank or title', { exact: true })).toHaveValue('First Officer');
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await useEncounterAction(page, 'Referee link');
   const href = await page.getByLabel('Encounter URL').inputValue();
@@ -478,8 +487,8 @@ test('an editable Traveller sheet fits a phone and keeps its saved data private'
     await receiver.goto(href);
     await receiver.getByRole('button', { name: 'Character sheet', exact: true }).click();
     const restored = receiver.getByRole('dialog', { name: 'Character sheet' });
-    await restored.getByText('Notes', { exact: true }).click();
-    await expect(restored.getByLabel('Character notes')).toHaveValue(privateNote);
+    await restored.getByRole('tab', { name: 'Notes', exact: true }).click();
+    await expect(restored.getByLabel('Character and session notes')).toHaveValue(privateNote);
   } finally { await context.close(); }
   expect(JSON.stringify(handoutPayload(await copyPlayerLink(page)))).not.toContain(privateNote);
   await page.getByRole('button', { name: 'Player view' }).click();
@@ -488,7 +497,7 @@ test('an editable Traveller sheet fits a phone and keeps its saved data private'
   await page.getByRole('button', { name: 'Next NPC' }).click();
   await expect(page.locator('#status')).toContainText('NPC 2 ready');
   await trigger.click();
-  await dialog.getByText('Additional characteristics', { exact: true }).click();
+  await expect(dialog.getByRole('heading', { name: 'Additional characteristics', exact: true })).toBeVisible();
   await expect(luck).toHaveValue('');
 });
 
@@ -521,7 +530,7 @@ test('rolled additional scores appear on the NPC card and character sheet', asyn
   await page.getByRole('button', { name: 'Return to referee view' }).click();
   await page.getByRole('button', { name: 'Character sheet', exact: true }).click();
   const sheet = page.getByRole('dialog', { name: 'Character sheet' });
-  await sheet.getByText('Additional characteristics', { exact: true }).click();
+  await expect(sheet.getByRole('heading', { name: 'Additional characteristics', exact: true })).toBeVisible();
   const morale = sheet.getByRole('spinbutton', { name: 'Morale current' });
   await expect(morale).toHaveValue(/^(?:[4-9]|1[0-4])$/);
   await expect(sheet.getByRole('spinbutton', { name: 'Luck current' })).toHaveValue(/\d/);
@@ -529,7 +538,6 @@ test('rolled additional scores appear on the NPC card and character sheet', asyn
   await expect(sheet.getByRole('spinbutton', { name: 'Psionics current' })).toHaveValue('0');
   const soc = await sheet.getByRole('spinbutton', { name: 'Social Standing baseline' }).inputValue();
   await expect(sheet.getByRole('spinbutton', { name: 'Standing current', exact: true })).toHaveValue(soc);
-  await sheet.getByText('Finances', { exact: true }).click();
   await expect(sheet.locator('#sheet-wlt-current')).toHaveValue(soc);
   await sheet.getByRole('button', { name: 'Cancel', exact: true }).click();
   await useEncounterAction(page, 'Referee link');
@@ -553,7 +561,7 @@ test('rolled additional scores appear on the NPC card and character sheet', asyn
   await expect(page.locator('#settings-options')).toHaveJSProperty('open', false);
   await expect(cardScores.locator('dt')).toHaveText(['Luck', 'Psionics', 'Standing', 'Wealth Level']);
   await page.getByRole('button', { name: 'Character sheet', exact: true }).click();
-  await sheet.getByText('Additional characteristics', { exact: true }).click();
+  await expect(sheet.getByRole('heading', { name: 'Additional characteristics', exact: true })).toBeVisible();
   await expect(morale).toHaveValue('');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
@@ -675,10 +683,10 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
 
   await page.getByRole('button', { name: 'Character sheet for ' + lead, exact: true }).click();
   const sheet = page.getByRole('dialog', { name: 'Character sheet' });
-  await sheet.getByText('Additional characteristics', { exact: true }).click();
+  await expect(sheet.getByRole('heading', { name: 'Additional characteristics', exact: true })).toBeVisible();
   await expect(sheet.getByRole('spinbutton', { name: 'Luck current' })).toHaveValue(String(group.members[0].npc.mechanics.characteristics.LCK.current));
-  await sheet.getByText('Notes', { exact: true }).click();
-  await sheet.getByLabel('Character notes').fill('Leader sheet entry');
+  await sheet.getByRole('tab', { name: 'Notes', exact: true }).click();
+  await sheet.getByLabel('Character and session notes').fill('Leader sheet entry');
   await sheet.getByRole('button', { name: 'Save sheet' }).click();
   await expect(page.locator('#card-feedback')).toHaveText('Character sheet saved.');
   group = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-group-v1')!));

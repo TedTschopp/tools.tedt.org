@@ -156,6 +156,8 @@ for (const f of inventory.importedFiles) {
   await writeStatic(p, dest);
   staticFiles.push('/' + dest);
 }
+await writeStatic('assets/traveller-sheet.js', 'assets/traveller-sheet.js');
+staticFiles.push('/assets/traveller-sheet.js');
 // The migration inventory is historical. Explicitly registered new standalone
 // tools belong to maintained source without rewriting that original snapshot.
 for (const tool of catalog) {
