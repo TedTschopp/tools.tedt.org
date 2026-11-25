@@ -343,8 +343,8 @@
     "featured": false,
     "launch": "https://tools.tedt.org/traveller-npc-generator.html",
     "migrated": true,
-    "image": "",
-    "imageAlt": "Traveller NPC Generator",
+    "image": "/img/2026-11/traveller-npc-generator-hero.webp",
+    "imageAlt": "A mixed-species crew reviews a cargo manifest in an orbital freight hangar.",
     "screenshots": [],
     "features": [
       "Choose Imperial starter profiles, options from the Traveller library, or a sourced referee-defined species",
