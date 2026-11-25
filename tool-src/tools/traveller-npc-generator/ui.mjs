@@ -1,14 +1,19 @@
 import { has, normalizeConfig, object, requireRule, skillName } from './config.mjs';
 import { fieldGroups, generateNpc, rerollNpc, restoreNpc, setLock } from './generator.mjs';
 import { encounterSpecies } from './encounter-species.mjs';
+import { generateGroup, groupsForScene, isGroupEncounter, normalizeGroupConfig, restoreGroup } from './group-encounters.mjs';
+import { groupScenes } from './group-types.mjs';
 import { isTalent, taskCheck } from './mechanics.mjs';
 import { fanNameSources, imperialNameCounts, nameStyleFor, nameStyles } from './names.mjs';
 import { freshSeed } from './random.mjs';
+import { readRefereeLink, refereeLink, refereeLinkPrefix } from './record-links.mjs';
 import { portraitFor } from './species-art.mjs';
 import { referenceGroups } from './species-reference.mjs';
 import { cultures, needs, species } from './species.mjs';
 import { contexts, coreUrl, equipmentCatalogue, errataUrl, occupationChoices, occupationTable, packs, specialties, tiers, version } from './tables.mjs';
 import { fieldsFor } from './work.mjs';
+import { handoutPrefix, handoutUrl, portraitId, qualificationsFor, readHandout } from './handout.mjs';
+import { keepInRoster, readRoster, removeFromRoster } from './roster.mjs';
 
 const $ = id => document.getElementById(id);
 const field = id => $(id).value.trim();
@@ -18,10 +23,21 @@ const currency = amount => 'Cr' + amount.toLocaleString('en-US');
 const signed = value => value < 0 ? '−' + Math.abs(value) : '+' + value;
 const shown = value => value == null || value === '' ? 'Unspecified' : String(value);
 const cap = string => string ? string[0].toUpperCase() + string.slice(1) : '';
-const storageKey = 'tedt-traveller-npc-v1';
+const storageKeys = { npc: 'tedt-traveller-npc-v1', group: 'tedt-traveller-group-v1' };
+const playerViewKey = 'tedt-traveller-player-view-v1';
+const encounterModeKey = 'tedt-traveller-mode-v1';
+const compactLayout = matchMedia('(max-width: 56rem)');
 let npc = null;
+let group = null;
+let mode = 'npc';
 let busy = false;
 let playerView = false;
+
+const activeRecord = () => mode === 'group' ? group : npc;
+const recordMode = record => isGroupEncounter(record) ? 'group' : 'npc';
+const recordName = record => isGroupEncounter(record) ? record.type : record.player.name;
+const playerSubtitle = ({ species, role }) => [species, role].filter(Boolean).join(' · ');
+const restoreEncounter = record => isGroupEncounter(record) ? restoreGroup(record) : restoreNpc(record);
 
 function element(tag, content, attrs = {}) {
   const node = document.createElement(tag);
@@ -37,6 +53,15 @@ const h = value => element('h3', value);
 const code = value => element('code', value);
 const link = (label, href) => element('a', label, { href });
 const list = entries => element('ul', entries.map(entry => element('li', entry)));
+function portraitImage(plate, lazy = false) {
+  return element('img', null, { src: 'img/traveller-npc/' + plate.asset + '.webp', width: '384', height: '384',
+    alt: 'Vitruvian anatomy study of ' + plate.title, decoding: 'async', ...(lazy && { loading: 'lazy' }) });
+}
+
+function portraitCaption(plate) {
+  return element('figcaption', [plate.description, element('span', plate.comparison), element('span', plate.source)], { class: 'hint' });
+}
+
 function renderPortrait(figure, profileId, { lazy = false } = {}) {
   const plate = portraitFor(profileId);
   figure.hidden = !plate;
@@ -46,15 +71,15 @@ function renderPortrait(figure, profileId, { lazy = false } = {}) {
   }
   if (figure.dataset.profile === profileId && figure.firstChild) return;
   figure.dataset.profile = profileId;
-  figure.replaceChildren(
-    element('img', null, { src: 'img/traveller-npc/' + plate.asset + '.webp', width: '384', height: '384',
-      alt: 'Vitruvian anatomy study of ' + plate.title, decoding: 'async', ...(lazy && { loading: 'lazy' }) }),
-    element('figcaption', [
-      plate.description,
-      element('span', plate.comparison),
-      element('span', plate.source),
-    ]),
-  );
+  const trigger = element('button', [portraitImage(plate, lazy), element('span', '+', { 'aria-hidden': 'true' })], {
+    type: 'button', class: 'portrait-trigger', 'aria-label': 'Enlarge ' + plate.title + ' portrait', 'aria-haspopup': 'dialog',
+  });
+  trigger.addEventListener('click', () => {
+    $('portrait-viewer-title').textContent = plate.title;
+    $('portrait-viewer-figure').replaceChildren(portraitImage(plate), portraitCaption(plate));
+    $('portrait-viewer').showModal();
+  });
+  figure.replaceChildren(trigger, portraitCaption(plate));
 }
 
 function definition(entries, classes = 'values') {
@@ -84,6 +109,12 @@ function roleOptions(secondary = false) {
     ['Other variants', occupationChoices.filter(row => !occupationTable.includes(row) && (!secondary || row.id !== 'psion'))
       .map(row => [row.id, row.title])],
   ];
+}
+
+function renderSkillMinimums() {
+  const minimums = field('required-skills');
+  hidden('active-skill-minimums', !minimums || has(encounterSpecies, field('species')));
+  $('skill-minimums-summary').textContent = 'Skill minimums · ' + minimums.replace(/\s*\n\s*/g, ', ');
 }
 
 function updateProfileControls(config) {
@@ -125,6 +156,7 @@ function updateProfileControls(config) {
   hidden('potential-label', field('psi-mode') !== 'latent' || droyne || zhodani);
   hidden('psi-current-label', !trained && !droyne && !zhodani && field('psi-mode') !== 'latent');
   hidden('age-label', field('age-mode') !== 'fixed');
+  renderSkillMinimums();
 }
 
 function advancedFrom(config) {
@@ -189,6 +221,20 @@ function fillSettings(config, seed) {
   $('advanced').value = Object.keys(advanced).length ? JSON.stringify(advanced, null, 2) : '';
   updateProfileControls(config);
   renderAssignedGear(config.gear);
+  showSettingsFeedback('', '', 'npc');
+}
+
+function updateGroupTypes(selected) {
+  select('group-type', [['random', 'Roll for group type'], ...groupsForScene(field('group-scene'))
+    .map(([id, type]) => [id, type.name])], selected);
+}
+
+function fillGroupSettings(config, seed) {
+  $('group-scene').value = config.scene;
+  updateGroupTypes(config.type);
+  $('group-species').value = config.species;
+  $('group-seed').value = seed;
+  showSettingsFeedback('', '', 'group');
 }
 
 function advancedOptions() {
@@ -267,45 +313,158 @@ function status(message, state = 'ready') {
   $('status').dataset.state = state;
 }
 
-function remember() {
-  try { localStorage.setItem(storageKey, JSON.stringify(npc)); return true; }
+function feedback(id, message = '') {
+  $(id).textContent = message;
+}
+
+const settingsFeedback = type => $(type === 'group' ? 'group-settings-feedback' : 'settings-feedback');
+
+function showSettingsFeedback(state, message, type = mode) {
+  const note = settingsFeedback(type);
+  note.dataset.state = state;
+  note.textContent = message;
+  note.hidden = !message;
+  updateRetainedRecord();
+}
+
+function updateRetainedRecord() {
+  const note = settingsFeedback(mode);
+  const retained = $('retained-record');
+  const noun = mode === 'group' ? 'a group' : 'an NPC';
+  const action = mode === 'group' ? 'Roll group' : 'Apply settings';
+  retained.textContent = note.dataset.state === 'error'
+    ? 'Last successful roll. The current settings could not generate ' + noun + '.'
+    : 'Last successful roll. Use ' + action + ' to update this card.';
+  retained.hidden = !note.textContent || !activeRecord();
+}
+
+function settingsChanged(message = 'Settings changed. Apply settings or roll the next NPC.') {
+  if (settingsFeedback(mode).textContent === message) return;
+  showSettingsFeedback('pending', message);
+  status(message);
+}
+
+function remember(record) {
+  try { localStorage.setItem(storageKeys[recordMode(record)], JSON.stringify(record)); return true; }
   catch { return false; }
 }
 
-async function setRecord(action, message, { fill = false, report = true } = {}) {
+function setMode(value) {
+  mode = value;
+  try { sessionStorage.setItem(encounterModeKey, mode); }
+  catch { /* The mode selector works without storage. */ }
+}
+
+function readyMessage(record, verb = '') {
+  const label = isGroupEncounter(record) ? 'Group' : 'NPC';
+  return verb + label + ' ' + record.provenance.index + (verb ? '' : ' ready') + ' · ' + recordName(record) + '.';
+}
+
+function clearRefereeLink() {
+  if (!location.hash.startsWith(refereeLinkPrefix)) return;
+  const url = new URL(location.href);
+  url.hash = '';
+  try { history.replaceState(history.state, '', url.href); }
+  catch { location.hash = ''; }
+}
+
+async function setRecord(action, message, { fill = false, report = true, persist = true, onError } = {}) {
   if (busy) return;
   busy = true;
-  $('config-form').setAttribute('aria-busy', 'true');
-  $('results').setAttribute('aria-busy', 'true');
+  const busyRegions = ['config-form', 'group-form', 'results'].map($);
+  for (const region of busyRegions) region.setAttribute('aria-busy', 'true');
   try {
     const record = await action();
-    if (fill) fillSettings(record.controls.config, record.provenance.seed);
-    npc = record;
-    const saveResult = remember();
+    setMode(recordMode(record));
+    if (mode === 'group') group = record;
+    else npc = record;
+    if (fill) {
+      const fillForm = mode === 'group' ? fillGroupSettings : fillSettings;
+      fillForm(record.controls.config, record.provenance.seed);
+    }
+    if (persist) clearRefereeLink();
+    const saveResult = !persist || remember(record);
     renderRecord();
     const label = typeof message === 'function' ? message(record) : message;
     status(label + (saveResult ? '' : ' Local storage is unavailable. Export JSON to keep this record.'), 'success');
+    return record;
   } catch (error) {
-    if (report) status(error.message || 'Generation failed.', 'error');
-    else throw error;
+    if (!report) throw error;
+    const problem = error.message || 'Generation failed.';
+    status(problem, 'error');
+    onError?.(problem);
   } finally {
     busy = false;
-    $('config-form').removeAttribute('aria-busy');
-    $('results').removeAttribute('aria-busy');
+    for (const region of busyRegions) region.removeAttribute('aria-busy');
   }
 }
 
-function generation(next = false, seedChange = false) {
-  return setRecord(() => {
-    const seed = seedChange ? freshSeed() : field('seed');
-    const previous = npc?.provenance;
+async function openEncounterMode(target) {
+  if (busy) return;
+  if (mode !== target) clearRefereeLink();
+  setMode(target);
+  renderRecord();
+  const record = activeRecord();
+  if (record) {
+    status(readyMessage(record), 'success');
+    return;
+  }
+  status(mode === 'group' ? 'Preparing your first group.' : 'Preparing your first NPC.');
+  try {
+    const saved = localStorage.getItem(storageKeys[target]);
+    if (saved) {
+      await setRecord(() => restoreEncounter(JSON.parse(saved)), record => readyMessage(record, 'Restored '),
+        { fill: true, report: false });
+      return;
+    }
+  } catch {
+    // A saved record that cannot be restored does not block a new roll.
+  }
+  await generation({ reveal: false });
+}
+
+function revealEncounter() {
+  if (compactLayout.matches) $(mode === 'group' ? 'group-options' : 'settings-options').open = false;
+  $('encounter').focus({ preventScroll: true });
+  $('encounter').scrollIntoView({ block: 'start' });
+}
+
+async function generation({ next = false, seedChange = false, reveal = compactLayout.matches } = {}) {
+  if (busy) return;
+  const rollingGroup = mode === 'group';
+  const record = await setRecord(() => {
+    const seed = seedChange ? freshSeed() : field(rollingGroup ? 'group-seed' : 'seed');
+    const previous = activeRecord()?.provenance;
     const sameSeed = seed === previous?.seed;
     const index = sameSeed ? previous.index + Number(next) : 1;
+    if (rollingGroup) {
+      return generateGroup({ scene: field('group-scene'), type: field('group-type'), species: field('group-species') }, { seed, index });
+    }
     const settings = readSettings();
     const sameModel = has(encounterSpecies, settings.species) === Boolean(npc?.encounter);
     const counters = sameSeed && sameModel && !next ? previous.rerollCounters : {};
     return generateNpc(settings, { seed, index, counters, locks: npc?.controls.locks });
-  }, record => 'NPC ' + record.provenance.index + ' ready · ' + record.player.name + '.', { fill: true });
+  }, readyMessage, {
+    fill: true,
+    onError: message => showSettingsFeedback('error', message),
+  });
+  if (reveal && record) revealEncounter();
+  else if (reveal) {
+    $(rollingGroup ? 'group-options' : 'settings-options').open = true;
+    $(rollingGroup ? 'apply-group' : 'apply-settings').focus();
+  }
+}
+
+function applyHiringPreset(context, roleIds, minimums) {
+  if (busy) return;
+  if (!roleIds.includes(field('occupation'))) {
+    $('occupation').value = 'random';
+    if (field('psi-mode') === 'trained') $('psi-mode').value = 'auto';
+  }
+  $('context').value = context;
+  $('required-skills').value = minimums;
+  updateProfileControls();
+  return generation();
 }
 
 function reroll(fields) {
@@ -492,15 +651,19 @@ function renderStory() {
   );
 }
 
+function rollTable(rolls, label) {
+  return table(['Field', 'Roll or selection', 'Result', 'Method'], rolls.map(roll =>
+    [roll.field, roll.label, Array.isArray(roll.result) ? roll.result.join(', ') : shown(roll.result),
+      roll.dice ?? roll.method ?? 'Recorded result']), { label, classes: 'rolls scroll' });
+}
+
 function renderRolls() {
   const prov = npc.provenance;
   $('rolls').replaceChildren(
     definition([['NPC ID', code(npc.id)], ['Seed', code(prov.seed)], ['NPC index', prov.index], ['Generator', prov.version],
       ['Rules profile', prov.ruleProfile], ['Table versions', Object.entries(prov.packs).map(([key, value]) => key + ' ' + value).join(' · ')],
       ['Reroll counters', Object.entries(prov.rerollCounters).map(([key, value]) => key + ' ' + value).join(', ') || 'None']]),
-    table(['Field', 'Roll or selection', 'Result', 'Method'], prov.rolls.map(roll =>
-      [roll.field, roll.label, Array.isArray(roll.result) ? roll.result.join(', ') : shown(roll.result),
-        roll.dice ?? roll.method ?? 'Recorded result']), { label: 'Ordered roll record', classes: 'rolls scroll' }),
+    rollTable(prov.rolls, 'Ordered roll record'),
   );
 }
 
@@ -542,15 +705,27 @@ function renderSourceEncounter() {
   $('source-encounter-record').replaceChildren(h('Published encounter'), definition(facts), list(encounter.traits));
 }
 
-function renderRecord() {
-  $('npc-name').textContent = npc.player.name;
-  $('npc-role').textContent = npc.player.species + ' · ' + npc.player.role;
-  $('npc-intro').textContent = npc.player.introduction;
-  const plate = npc.biology.profileId === 'custom' ? npc.controls.config.customProfile?.appearance : npc.biology.profileId;
-  renderPortrait($('encounter-plate'), plate);
-  if (field('species') === 'random') renderPortrait($('settings-plate'), plate);
-  hidden('npc-role', false);
-  for (const id of ['player-view', 'copy-card', 'player-export', 'ref-export']) $(id).disabled = false;
+const qualificationText = npc => qualificationsFor(npc).map(([skill, level]) => skill + ' ' + level).join(' · ');
+
+function renderRefereeBrief() {
+  let facts;
+  if (npc.encounter) {
+    const { hits, protection, movement, habitat, attacks } = npc.encounter;
+    facts = [['Hits', hits], ['Protection', protection], ['Movement', movement],
+      ['Natural attacks', attacks.join(', ') || null], ['Habitat', habitat]];
+  } else if (npc.story.mission) {
+    const { request, offer, complication } = npc.story.mission;
+    facts = [['Request', request], ['Offer', offer], ['Complication', complication]];
+  } else if (contexts[npc.controls.config.context].hiring) {
+    facts = [['Qualifications', qualificationText(npc)], ['Availability', npc.work.employment.status]];
+  } else {
+    facts = [['Encounter hook', npc.story.hook], ['Attitude', npc.story.attitude], ['UPP', npc.mechanics.upp]];
+  }
+  $('brief-content').replaceChildren(definition(facts.filter(([, value]) => value != null && value !== '')));
+}
+
+function renderNpcRecord() {
+  if (field('species') === 'random') renderPortrait($('settings-plate'), portraitId(npc));
   $('reroll-name').disabled = has(npc.controls.locks, 'name');
   const isEncounter = Boolean(npc.encounter);
   hidden('source-encounter-record', !isEncounter);
@@ -566,23 +741,185 @@ function renderRecord() {
   }
   renderRolls();
   renderLocks();
+  renderRefereeBrief();
+}
+
+function renderGroupRecord() {
+  const { type, scene, size, purpose, affiliation, reaction, members, others, provenance } = group;
+  $('brief-content').replaceChildren(definition([
+    ['Encounter type', type], ['Scene', groupScenes[scene]], ['People present', size],
+    ['Purpose', purpose], ['Affiliation', affiliation],
+    ['Initial reaction', reaction.attitude + ' · 2D = ' + reaction.total],
+  ]));
+  const entries = members.map(({ position, leader, npc: member }) => {
+    const { characteristics, order, upp } = member.mechanics;
+    const stats = upp ? 'UPP ' + upp : order.map(stat => stat + ' ' + characteristics[stat].current).join(' · ');
+    const details = element('button', 'Open NPC record', { type: 'button', class: 'quiet compact',
+      'aria-label': 'Open NPC record for ' + member.player.name });
+    details.addEventListener('click', async () => {
+      if (playerView) return;
+      const opened = await setRecord(() => structuredClone(member), member => 'Opened ' + member.player.name + ' from the group.', { fill: true });
+      if (opened) revealEncounter();
+    });
+    return element('li', [
+      h(member.player.name),
+      p((leader ? 'Leader · ' : '') + position + ' · ' + member.player.species),
+      p([code(stats), ' · ' + member.work.competence.name], 'hint'),
+      p(qualificationText(member), 'hint'),
+      element('div', details, { class: 'actions' }),
+    ], { 'data-group-member': leader ? 'leader' : 'specialist' });
+  });
+  $('group-members').replaceChildren(
+    element('ol', entries, { class: 'group-member-list', 'aria-label': 'Leader and specialists', role: 'list' }),
+    others.count ? p('Also present · ' + others.count + ' ' + others.description + '.', 'hint') : null,
+  );
+  $('group-rolls').replaceChildren(
+    definition([['Seed', code(provenance.seed)], ['Group index', provenance.index], ['Group tables', provenance.packs.group],
+      ['NPC generator', provenance.npcVersion]]),
+    rollTable(provenance.rolls, 'Ordered group rolls'),
+  );
+}
+
+function renderRecord() {
+  const record = activeRecord();
+  const player = record?.player;
+  $('npc-name').textContent = player?.name ?? (mode === 'group' ? 'Your group' : 'Your NPC');
+  $('npc-role').textContent = player ? playerSubtitle(player) : '';
+  $('npc-intro').textContent = player?.introduction ?? 'The encounter introduction appears here.';
+  renderPortrait($('encounter-plate'), record ? portraitId(record) : null);
+  hidden('npc-role', !record);
+  for (const id of ['next-npc', 'player-view', 'share-handout', 'keep-npc', 'copy-card', 'player-export', 'save-referee-link', 'ref-export']) $(id).disabled = !record;
+  if (record) {
+    if (mode === 'group') renderGroupRecord();
+    else renderNpcRecord();
+  }
+  feedback('card-feedback');
+  updateRetainedRecord();
   updatePlayerView();
 }
 
 function updatePlayerView() {
-  $('workspace').dataset.playerView = String(playerView);
+  const showingGroup = mode === 'group';
+  const record = activeRecord();
+  $('generator').dataset.playerView = String(playerView);
+  $('single-mode').setAttribute('aria-pressed', String(!showingGroup));
+  $('group-mode').setAttribute('aria-pressed', String(showingGroup));
   $('player-view').setAttribute('aria-pressed', String(playerView));
   $('player-view').textContent = playerView ? 'Return to referee view' : 'Player view';
-  hidden('settings', playerView);
-  hidden('referee', playerView || !npc);
-  hidden('ref-export', playerView);
-  hidden('reroll-name', playerView);
+  $('next-npc').textContent = showingGroup ? 'Next group' : 'Next NPC';
+  $('keep-npc').textContent = showingGroup ? 'Keep group' : 'Keep NPC';
+  for (const id of ['status', 'encounter-mode', 'next-npc', 'open-roster', 'keep-npc', 'save-referee-link', 'ref-export']) hidden(id, playerView);
+  hidden('settings', playerView || showingGroup);
+  hidden('group-settings', playerView || !showingGroup);
+  hidden('reroll-name', playerView || showingGroup || !record);
+  hidden('referee', playerView || showingGroup || !record);
+  hidden('group-referee', playerView || !showingGroup || !record);
+  hidden('referee-brief', playerView || !record);
 }
 
-function file(content, type, suffix) {
-  const base = npc.player.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'traveller-npc';
+function updateHandoutLink() {
+  const shareHiring = !$('handout-disclosures').hidden;
+  const href = handoutUrl(location.href, activeRecord(), {
+    qualifications: shareHiring && $('handout-qualifications').checked,
+    availability: shareHiring && $('handout-availability').checked,
+    pay: shareHiring ? field('handout-pay') : '',
+  });
+  $('open-handout').href = href;
+  $('handout-link').value = href;
+}
+
+function openHandoutDialog() {
+  if (!activeRecord() || busy) return;
+  const hiring = mode === 'npc' && !playerView && !npc.encounter && contexts[npc.controls.config.context].hiring;
+  hidden('handout-disclosures', !hiring);
+  $('handout-qualifications').checked = false;
+  $('handout-availability').checked = false;
+  $('handout-pay').value = '';
+  if (hiring) {
+    $('handout-qualifications-preview').textContent = qualificationText(npc);
+    $('handout-availability-preview').textContent = npc.work.employment.status;
+  }
+  const localFile = location.protocol === 'file:';
+  hidden('copy-handout-link', localFile);
+  hidden('handout-link-label', true);
+  feedback('handout-share-status', localFile ? 'Open the handout to print it or save it as a PDF.' : '');
+  updateHandoutLink();
+  $('handout-dialog').showModal();
+}
+
+function openRefereeLinkDialog() {
+  const record = activeRecord();
+  if (busy || playerView || !record) return;
+  try {
+    $('referee-link-url').value = refereeLink(location.href, record);
+    feedback('referee-link-status');
+    $('referee-link-dialog').showModal();
+  } catch (error) { feedback('card-feedback', error.message); }
+}
+
+function renderSharedHandout() {
+  document.documentElement.dataset.travellerHandout = '';
+  hidden('generator', true);
+  hidden('shared-handout', false);
+  const handout = readHandout(location.hash);
+  hidden('handout-error', !!handout);
+  if (!handout) return;
+  document.title = 'Traveller player handout';
+  $('handout-name').textContent = handout.name;
+  $('handout-role').textContent = playerSubtitle(handout);
+  $('handout-intro').textContent = handout.introduction;
+  renderPortrait($('handout-plate'), handout.portrait);
+  const facts = [
+    ['Qualifications', handout.qualifications?.map(([skill, level]) => skill + ' ' + level).join(' · ')],
+    ['Availability', handout.availability], ['Pay offer', handout.pay],
+  ].filter(([, value]) => value);
+  $('handout-facts').replaceChildren(definition(facts));
+  hidden('handout-facts', !facts.length);
+  $('print-handout').addEventListener('click', () => window.print());
+  hidden('handout-card', false);
+}
+
+function renderRoster() {
+  try {
+    const { entries, unreadable } = readRoster(localStorage);
+    $('roster-list').replaceChildren(...entries.map(({ key, record }) => {
+      const { name, role, lead } = record.player;
+      const rosterName = lead ? name + ' led by ' + lead : name;
+      const open = element('button', 'Open', { type: 'button', class: 'quiet compact', 'aria-label': 'Open ' + rosterName });
+      open.addEventListener('click', async () => {
+        const opened = await setRecord(() => restoreEncounter(record), record => 'Opened ' + recordName(record) + ' from the roster.', {
+          fill: true, onError: message => feedback('roster-feedback', message),
+        });
+        if (!opened) return;
+        $('campaign-roster').close();
+        revealEncounter();
+      });
+      const remove = element('button', 'Remove', { type: 'button', class: 'quiet compact', 'aria-label': 'Remove ' + rosterName });
+      remove.addEventListener('click', () => {
+        if (!window.confirm('Remove ' + rosterName + ' from the campaign roster?')) return;
+        try {
+          removeFromRoster(localStorage, key);
+          renderRoster();
+          $('campaign-roster').querySelector('form button').focus();
+        } catch {
+          feedback('roster-feedback', 'The browser could not remove this record.');
+        }
+      });
+      return element('li', [element('div', [h(name), p(lead ? role + ' · Lead ' + lead : playerSubtitle(record.player), 'hint')]),
+        element('div', [open, remove], { class: 'actions' })], { class: 'summary-row' });
+    }));
+    feedback('roster-feedback', unreadable ? 'Some saved records could not be read.'
+      : entries.length ? '' : 'Use Keep NPC or Keep group on the Encounter card.');
+  } catch {
+    $('roster-list').replaceChildren();
+    feedback('roster-feedback', 'The browser could not open the local roster.');
+  }
+}
+
+function file(content, type, suffix, record = activeRecord()) {
+  const base = record.player.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'traveller-encounter';
   const url = URL.createObjectURL(new Blob([content], { type }));
-  const anchor = element('a', null, { href: url, download: base + '-' + npc.provenance.index + '-' + suffix });
+  const anchor = element('a', null, { href: url, download: base + '-' + record.provenance.index + '-' + suffix });
   document.body.append(anchor);
   anchor.click();
   anchor.remove();
@@ -606,7 +943,7 @@ function updateGear(change) {
     else delete advanced.gear;
     $('advanced').value = Object.keys(advanced).length ? JSON.stringify(advanced, null, 2) : '';
     renderAssignedGear(gear);
-    status('Equipment settings updated. Apply settings to resolve access and fit.');
+    settingsChanged('Equipment settings updated. Apply settings to resolve access and fit.');
   } catch (error) { status(error.message, 'error'); }
 }
 
@@ -621,6 +958,9 @@ function renderRules() {
     ]), { label: 'Competence roll table' }),
     p('The Vegan age scale follows the source’s longer terms. Ascondi standing uses a house adult-phase draw unless you supply it.'),
     p('A seed, NPC index, settings, data versions, and individual counters reproduce a roll. Ability requirements sample the eligible distribution.'),
+    h('Group encounters'),
+    p('House encounter tables roll the size, purpose, affiliation and shared 2D reaction. Then the 2E NPC generator builds an experienced leader and competent specialists. The headcount includes unnamed participants.'),
+    p('The single reaction for the whole group draws on Classic Traveller Book 3, pp. 24–27. Group types and roles draw on the original Mongoose 2E Core Rulebook, pp. 85–90, High Guard, pp. 20–21, and Referee’s Briefing 4, pp. 7–8.'),
     p('The optional characteristic Boon uses the highest two of three dice where the profile uses ordinary 2D. Source · Traveller Companion, p. 11.'),
     h('Worked example from the draft'),
     p('Kessa Varr is a standard Vargr jump engineer. The example’s raw scores 7, 8, 8, 9, 10, and 6 become UPP 6979A6 after species adjustments. Experienced gives Engineer (j-drive) 2, Engineer (power) 1, Engineer (m-drive) 1, and Mechanic 1. The EDU-based jump-drive check starts at 2D + 3.'),
@@ -638,7 +978,6 @@ function renderRules() {
           element('span', [' · ', link(label, href)]))])]), { label: 'Naming rules and sources' }),
       p(fanNameSources.flatMap(([label, href], index) => [index ? ' · ' : null, link(label, href)])),
     ]),
-    h('Species field guide'), renderSpeciesReferences(),
     p([link('Core Rulebook Update 2022', coreUrl), ' · ', link('August 2024 FAQ and errata', errataUrl), ' · ',
       link('Traveller Character Sheet', 'https://tedt.org/RPG/Traveller/Character-Sheet.html'), ' · ',
       link('Traveller Ship Sheet', 'https://tedt.org/RPG/Traveller/Ship-Sheet.html')]),
@@ -679,48 +1018,82 @@ function renderRules() {
   );
 }
 
-function renderSpeciesReferences() {
-  const entries = referenceGroups.map(({ book, url, entries }) => {
-    const items = entries.map(entry => {
-      const figure = entry.art ? element('figure', null, { class: 'species-plate' }) : null;
-      if (figure) renderPortrait(figure, entry.art, { lazy: true });
-      const item = element('li', [element('strong', entry.name), ' · ' + entry.page,
-        ...(entry.art ? [' · Plate ', code(entry.art)] : []),
-        entry.note ? p(entry.note, 'hint field-notes') : null, figure]);
-      return { node: item, query: [entry.name, entry.page, book].join(' ').toLowerCase() };
-    });
-    return { items, node: element('details', [
-      element('summary', book), url ? p(link('Publisher’s book page', url)) : null, element('ul', items.map(item => item.node)),
-    ]) };
-  });
+const searchText = value => value.normalize('NFD').replace(/\p{M}|['’‘]/gu, '').toLowerCase();
+
+function guideEntry({ name, source, portrait, note, profileId, action }) {
+  const plate = portraitFor(portrait);
+  const figure = plate ? element('figure', null, { class: 'species-plate' }) : null;
+  if (figure) renderPortrait(figure, portrait, { lazy: true });
+  const roll = action ? element('button', action, { type: 'button', class: 'quiet compact guide-roll',
+    'data-roll-profile': profileId, 'aria-label': action + ' for ' + name }) : null;
+  const node = element('li', [
+    element('div', [element('div', [h(name), p(source, 'hint')]), roll], { class: 'summary-row' }),
+    note ? p(note, 'hint') : null,
+    portrait && !action ? p(['Plate ', code(portrait)], 'hint') : null,
+    figure,
+  ]);
+  const query = searchText([name, source, profileId, plate?.title, plate?.source].filter(Boolean).join(' '));
+  return { node, query };
+}
+
+function guideGroup(label, items, url) {
+  return { items, node: element('details', [
+    element('summary', label), url ? p(link('Publisher’s book page', url), 'hint') : null,
+    element('ul', items.map(item => item.node), { class: 'guide-list', role: 'list' }),
+  ], { class: 'group' }) };
+}
+
+function renderSpeciesGuide() {
+  const profiles = (data, action) => Object.entries(data).sort((a, b) => a[1].name.localeCompare(b[1].name))
+    .map(([profileId, profile]) => guideEntry({ name: profile.name, source: profile.source, portrait: profileId, profileId, action }));
+  const rollable = [guideGroup('NPC profiles', profiles(species, 'Roll NPC')),
+    guideGroup('Published encounters', profiles(encounterSpecies, 'Roll encounter'))];
+  const books = referenceGroups.map(({ book, url, entries }) => guideGroup(book, entries.map(entry => guideEntry({
+    name: entry.name, source: book + ', ' + entry.page, portrait: entry.art, note: entry.note,
+  })), url));
+  const references = element('details', [element('summary', 'Book references'),
+    element('div', books.map(group => group.node))], { class: 'group' });
   const search = element('input', null, { id: 'search-species', type: 'search', placeholder: 'Species or sourcebook',
     autocomplete: 'off', 'aria-controls': 'reference-results' });
-  const status = p('', 'hint');
-  status.setAttribute('role', 'status');
-  search.addEventListener('input', () => {
-    const term = search.value.trim().toLowerCase();
+  const matches = element('p', '', { class: 'hint feedback', role: 'status' });
+  function filterGroups(groups, terms) {
     let count = 0;
-    for (const { node, items } of entries) {
+    for (const { node, items } of groups) {
       let visible = 0;
       for (const item of items) {
-        item.node.hidden = !item.query.includes(term);
+        item.node.hidden = !terms.every(term => item.query.includes(term));
         if (!item.node.hidden) visible++;
       }
       node.hidden = !visible;
-      node.open = Boolean(term && visible);
+      node.open = Boolean(terms.length && visible);
       count += visible;
     }
-    status.textContent = term ? count + (count === 1 ? ' entry found' : ' entries found') : '';
+    return count;
+  }
+  search.addEventListener('input', () => {
+    const terms = searchText(search.value.trim()).split(/\s+/).filter(Boolean);
+    const bookCount = filterGroups(books, terms);
+    references.hidden = !bookCount;
+    references.open = Boolean(terms.length && bookCount);
+    const count = filterGroups(rollable, terms) + bookCount;
+    matches.textContent = terms.length ? count + (count === 1 ? ' entry found' : ' entries found') : '';
   });
-  return element('div', [
-    p('These 2E book entries can guide a referee-defined profile. Some use encounter Hits or other rules beyond this adult generator.'),
-    p(['Set a referee-defined profile’s ', code('appearance'), ' to a plate ID to use that illustration for the NPC.'], 'hint'),
-    element('label', ['Find a species or source', search], { for: 'search-species' }), status,
-    element('div', entries.map(entry => entry.node), { id: 'reference-results' }),
-  ], { id: 'species-guide', class: 'species-reference' });
+  $('guide-content').replaceChildren(
+    element('label', ['Find a species or source', search], { for: 'search-species' }), matches,
+    element('div', [...rollable.map(group => group.node), references], { id: 'reference-results' }),
+  );
 }
 
 async function initialize() {
+  let initialMode = 'npc';
+  try {
+    playerView = sessionStorage.getItem(playerViewKey) === 'true';
+    if (sessionStorage.getItem(encounterModeKey) === 'group') initialMode = 'group';
+  }
+  catch { /* Storage can be unavailable when the document is opened locally. */ }
+  $('settings-options').open = !compactLayout.matches;
+  $('group-options').open = !compactLayout.matches;
+  updatePlayerView();
   select('context', Object.entries(contexts).map(([key, value]) => [key, value.name]));
   const starter = ['human', 'vargr', 'aslan'];
   select('species', [['random', 'Roll from campaign population'],
@@ -730,6 +1103,9 @@ async function initialize() {
     ['Castrobancla campaign', Object.entries(species).filter(([, value]) => value.setting === 'castrobancla').map(([key, value]) => [key, value.name])],
     ['Published encounters', Object.entries(encounterSpecies).map(([key, value]) => [key, value.name])],
     ['custom', 'Referee-defined species']]);
+  select('group-scene', Object.entries(groupScenes));
+  select('group-species', [['random', 'Roll from the Imperial starter pool'],
+    ...Object.entries(species).map(([id, entry]) => [id, entry.name])]);
   select('name-style', [['auto', 'Automatic · species and culture'],
     ...Object.entries(nameStyles).map(([key, value]) => [key, value.label])]);
   select('culture', [['auto', 'Species default'], ...Object.entries(cultures).map(([key, value]) => [key, value.name])]);
@@ -742,10 +1118,44 @@ async function initialize() {
     .map(profile => [profile.fit, profile.name]))).sort((a, b) => a[1].localeCompare(b[1])).map(([key, label]) => [key, label])], 'human');
   updateProfileControls();
   renderRules();
-  $('field-guide-link').addEventListener('click', () => { $('rules').open = true; });
+  renderSpeciesGuide();
+  for (const entry of document.querySelectorAll('a[href="#species-guide"]')) {
+    entry.addEventListener('click', () => $('search-species').focus({ preventScroll: true }));
+  }
+  $('guide-content').addEventListener('click', async event => {
+    const profile = event.target.closest('[data-roll-profile]')?.dataset.rollProfile;
+    if (!profile || busy || playerView) return;
+    if (mode === 'group') await openEncounterMode('npc');
+    $('species').value = profile;
+    updateProfileControls();
+    void generation({ next: true, reveal: true });
+  });
   $('config-form').addEventListener('submit', event => { event.preventDefault(); void generation(); });
-  $('next-npc').addEventListener('click', () => void generation(true));
-  $('new-seed').addEventListener('click', () => void generation(false, true));
+  $('group-form').addEventListener('submit', event => { event.preventDefault(); void generation(); });
+  $('single-mode').addEventListener('click', () => void openEncounterMode('npc'));
+  $('group-mode').addEventListener('click', () => void openEncounterMode('group'));
+  $('seed').addEventListener('invalid', () => { $('seed-settings').open = true; });
+  $('group-seed').addEventListener('invalid', () => { $('group-seed-settings').open = true; });
+  $('group-scene').addEventListener('change', () => updateGroupTypes());
+  $('group-form').addEventListener('input', ({ target }) => {
+    if (target.id !== 'import-group') settingsChanged('Settings changed. Roll group to update the encounter.');
+  });
+  $('config-form').addEventListener('input', ({ target }) => {
+    if (target.id === 'import-npc' || target.id.startsWith('gear-')) return;
+    if (target.id === 'required-skills') renderSkillMinimums();
+    settingsChanged();
+  });
+  $('clear-skill-minimums').addEventListener('click', () => {
+    if (busy) return;
+    $('required-skills').value = '';
+    renderSkillMinimums();
+    settingsChanged();
+    $('apply-settings').focus();
+    $('config-form').requestSubmit($('apply-settings'));
+  });
+  $('next-npc').addEventListener('click', () => void generation({ next: true }));
+  $('new-seed').addEventListener('click', () => void generation({ seedChange: true }));
+  $('group-new-seed').addEventListener('click', () => void generation({ seedChange: true }));
   for (const id of ['species', 'culture', 'name-style', 'occupation', 'secondary', 'adult-form', 'age-mode', 'psi-mode']) {
     $(id).addEventListener('change', () => {
       if (id === 'psi-mode' && field('psi-mode') === 'trained') $('occupation').value = 'psion';
@@ -753,12 +1163,8 @@ async function initialize() {
       updateProfileControls();
     });
   }
-  $('medic-preset').addEventListener('click', () => {
-    $('context').value = 'hiring'; $('required-skills').value = 'Medic = 2'; void generation();
-  });
-  $('pilot-preset').addEventListener('click', () => {
-    $('context').value = 'crew'; $('required-skills').value = 'Pilot (spacecraft) = 1\nAstrogation = 1'; void generation();
-  });
+  $('medic-preset').addEventListener('click', () => void applyHiringPreset('hiring', ['random', '15', '53'], 'Medic = 2'));
+  $('pilot-preset').addEventListener('click', () => void applyHiringPreset('crew', ['random', '11', '12'], 'Pilot (spacecraft) = 1\nAstrogation = 1'));
   $('add-gear').addEventListener('click', () => updateGear(gear => gear.push({
     catalogueId: field('gear-item'), fit: [field('gear-fit')], owner: field('gear-owner'), access: field('gear-access'),
     location: field('gear-location'), legality: field('gear-legality'), ammunition: integerField('gear-ammo'),
@@ -767,24 +1173,27 @@ async function initialize() {
     const index = event.target.dataset.removeGear;
     if (index !== undefined) updateGear(gear => gear.splice(Number(index), 1));
   });
-  $('import-npc').addEventListener('change', event => {
+  const importRecord = async event => {
     const selected = event.target.files[0];
     if (!selected) return;
     event.target.value = '';
-    void setRecord(async () => {
+    const opened = await setRecord(async () => {
       requireRule(selected.size <= 2_000_000, 'Choose a referee JSON record under 2 MB.');
       let saved;
       try { saved = JSON.parse(await selected.text()); }
       catch { throw new Error('The selected referee record is not valid JSON.'); }
-      return restoreNpc(saved);
-    }, record => 'Opened ' + record.player.name + '.', { fill: true });
-  });
+      return restoreEncounter(saved);
+    }, record => 'Opened ' + recordName(record) + '.', { fill: true });
+    if (opened && compactLayout.matches) revealEncounter();
+  };
+  for (const id of ['import-npc', 'import-group']) $(id).addEventListener('change', importRecord);
   $('locks').addEventListener('change', event => {
     if (busy || !npc || !event.target.dataset.lock) return;
     const key = event.target.dataset.lock;
     const checked = event.target.checked;
     npc.controls.locks = setLock(npc, key, checked);
-    remember();
+    clearRefereeLink();
+    remember(npc);
     $('reroll-name').disabled = has(npc.controls.locks, 'name');
     const button = event.target.closest('.lock-row').querySelector('button');
     if (button) button.disabled = checked;
@@ -795,33 +1204,96 @@ async function initialize() {
     if (fields) void reroll(fields.split(','));
   });
   $('reroll-name').addEventListener('click', () => void reroll(['name']));
-  $('player-view').addEventListener('click', () => { playerView = !playerView; updatePlayerView(); });
-  $('copy-card').addEventListener('click', async () => {
+  $('player-view').addEventListener('click', () => {
+    playerView = !playerView;
+    try { sessionStorage.setItem(playerViewKey, String(playerView)); }
+    catch { /* The separate handout can still be opened without storage. */ }
+    feedback('card-feedback');
+    updatePlayerView();
+  });
+  $('share-handout').addEventListener('click', openHandoutDialog);
+  $('handout-disclosures').addEventListener('input', () => {
+    updateHandoutLink();
+    if (location.protocol !== 'file:') feedback('handout-share-status');
+  });
+  $('copy-handout-link').addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(npc.player.introduction);
-      status('Player introduction copied.');
+      await navigator.clipboard.writeText($('handout-link').value);
+      feedback('handout-share-status', 'Handout link copied.');
     } catch {
-      file(npc.player.introduction + '\n', 'text/plain', 'player.txt');
-      status('Downloaded the player introduction.');
+      hidden('handout-link-label', false);
+      $('handout-link').focus();
+      $('handout-link').select();
+      feedback('handout-share-status', 'Copy the selected handout link.');
     }
   });
-  $('player-export').addEventListener('click', () => file(npc.player.introduction + '\n', 'text/plain', 'player.txt'));
-  $('ref-export').addEventListener('click', () => file(JSON.stringify(npc, null, 2) + '\n', 'application/json', 'referee.json'));
+  $('save-referee-link').addEventListener('click', openRefereeLinkDialog);
+  $('copy-referee-link').addEventListener('click', async () => {
+    const input = $('referee-link-url');
+    try {
+      await navigator.clipboard.writeText(input.value);
+      feedback('referee-link-status', 'Referee link copied.');
+    } catch {
+      input.focus();
+      input.select();
+      feedback('referee-link-status', 'Copy the selected referee link.');
+    }
+  });
+  $('bookmark-address').addEventListener('click', () => {
+    try {
+      history.replaceState(history.state, '', $('referee-link-url').value);
+      feedback('referee-link-status', 'The referee link is in the address bar. You can bookmark this page.');
+    } catch {
+      $('referee-link-url').focus();
+      $('referee-link-url').select();
+      feedback('referee-link-status', 'Copy the selected link to bookmark this encounter.');
+    }
+  });
+  $('keep-npc').addEventListener('click', async () => {
+    const record = activeRecord();
+    if (!record || playerView || busy) return;
+    const name = recordName(record);
+    try {
+      await keepInRoster(localStorage, record);
+      if (!playerView) feedback('card-feedback', name + ' is in the campaign roster.');
+    } catch {
+      if (!playerView) feedback('card-feedback', 'The browser could not save this encounter. Export the referee JSON to keep it.');
+    }
+  });
+  $('open-roster').addEventListener('click', () => {
+    if (playerView) return;
+    renderRoster();
+    $('campaign-roster').showModal();
+  });
+  $('copy-card').addEventListener('click', async () => {
+    const record = activeRecord();
+    try {
+      await navigator.clipboard.writeText(record.player.introduction);
+      feedback('card-feedback', 'Player introduction copied.');
+    } catch {
+      file(record.player.introduction + '\n', 'text/plain', 'player.txt', record);
+      feedback('card-feedback', 'Downloaded the player introduction.');
+    }
+  });
+  $('player-export').addEventListener('click', () => file(activeRecord().player.introduction + '\n', 'text/plain', 'player.txt'));
+  $('ref-export').addEventListener('click', () => file(JSON.stringify(activeRecord(), null, 2) + '\n', 'application/json', 'referee.json'));
   $('check-section').addEventListener('input', renderCheck);
   $('check-section').addEventListener('change', renderCheck);
 
-  try {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      await setRecord(() => restoreNpc(JSON.parse(saved)), record => 'Restored NPC ' + record.provenance.index + ' · ' + record.player.name + '.',
-        { fill: true, report: false });
-      return;
-    }
-  } catch {
-    // An unreadable browser save still leaves the import and generator controls usable.
-  }
   fillSettings(normalizeConfig(), freshSeed());
-  await generation();
+  fillGroupSettings(normalizeGroupConfig(), freshSeed());
+  let linkProblem;
+  if (location.hash.startsWith(refereeLinkPrefix)) {
+    const opened = await setRecord(() => restoreEncounter(readRefereeLink(location.hash)),
+      record => readyMessage(record, 'Restored '), { fill: true, persist: false, onError: error => { linkProblem = error; } });
+    if (opened) return;
+  }
+  await openEncounterMode(initialMode);
+  if (linkProblem) status('Could not open the referee link. ' + linkProblem, 'error');
 }
 
-void initialize().catch(error => status(error.message || 'The generator failed to initialize.', 'error'));
+window.addEventListener('hashchange', () => {
+  if (location.hash.startsWith(handoutPrefix) || location.hash.startsWith(refereeLinkPrefix) || !$('shared-handout').hidden) location.reload();
+});
+if (location.hash.startsWith(handoutPrefix)) renderSharedHandout();
+else void initialize().catch(error => status(error.message || 'The generator failed to initialize.', 'error'));

@@ -4,9 +4,12 @@ import { createHash } from 'node:crypto';
 import { access } from 'node:fs/promises';
 import { encounterSpecies } from '../tool-src/tools/traveller-npc-generator/encounter-species.mjs';
 import { generateNpc, rerollNpc, restoreNpc, setLock } from '../tool-src/tools/traveller-npc-generator/generator.mjs';
+import { generateGroup, restoreGroup } from '../tool-src/tools/traveller-npc-generator/group-encounters.mjs';
+import { groupTypes } from '../tool-src/tools/traveller-npc-generator/group-types.mjs';
 import { dm, rating, taskCheck } from '../tool-src/tools/traveller-npc-generator/mechanics.mjs';
 import { imperialNameCounts, nameStyles } from '../tool-src/tools/traveller-npc-generator/names.mjs';
 import { streams } from '../tool-src/tools/traveller-npc-generator/random.mjs';
+import { readRefereeLink, refereeLink } from '../tool-src/tools/traveller-npc-generator/record-links.mjs';
 import { portraitFor } from '../tool-src/tools/traveller-npc-generator/species-art.mjs';
 import { referenceGroups } from '../tool-src/tools/traveller-npc-generator/species-reference.mjs';
 import { species } from '../tool-src/tools/traveller-npc-generator/species.mjs';
@@ -14,6 +17,70 @@ import { occupationTable, packs, version } from '../tool-src/tools/traveller-npc
 import { fieldsFor } from '../tool-src/tools/traveller-npc-generator/work.mjs';
 
 const make = (config = {}, state = {}) => generateNpc(config, { seed: 'sketch-82', ...state });
+
+test('group templates roll the shared encounter before building all named roles with 2E profiles', async () => {
+  assert.equal(Object.keys(groupTypes).length, 18);
+  for (const [type, template] of Object.entries(groupTypes)) {
+    const group = await generateGroup({ type }, { seed: 'group-template-check' });
+    assert.equal(group.type, template.name);
+    assert.ok(group.size >= template.size[0] && group.size <= template.size[1]);
+    assert.ok(template.purposes.includes(group.purpose));
+    assert.ok(template.affiliations.includes(group.affiliation));
+    assert.deepEqual([...new Set(group.provenance.rolls.map(roll => roll.field))].slice(-4),
+      ['group.size', 'group.purpose', 'group.affiliation', 'group.reaction']);
+    assert.equal(group.reaction.dice.length, 2);
+    assert.equal(group.reaction.total, group.reaction.dice[0] + group.reaction.dice[1]);
+    assert.equal(group.members[0].leader, true);
+    assert.equal(group.members.filter(member => member.leader).length, 1);
+    assert.equal(group.members.length, Math.min(group.size, template.roles.length));
+    assert.equal(group.members.length + group.others.count, group.size);
+    assert.equal(new Set(group.members.map(({ npc }) => npc.id)).size, group.members.length);
+    for (const { npc, position } of group.members) {
+      assert.equal(npc.validity.mechanical.status, 'valid');
+      assert.equal(npc.work.employment.affiliation, group.affiliation);
+      assert.equal(npc.story.attitude, group.reaction.attitude);
+      assert.equal(npc.work.occupation.id, template.roles.find(role => role[0] === position)[1]);
+    }
+  }
+});
+
+test('group rolls replay exactly, filter by scene and respect species restrictions', async () => {
+  const input = { scene: 'space', type: 'naval', species: 'hiver' };
+  const state = { seed: 'group-replay', index: 3 };
+  const group = await generateGroup(input, state);
+  assert.ok(group.members.every(member => member.npc.biology.profileId === 'hiver'));
+  assert.equal(group.members[0].npc.work.occupation.id, '44');
+  assert.ok(group.members.every(({ npc }) => rating(npc.mechanics.skills, 'Leadership') === null));
+  assert.deepEqual(await restoreGroup(JSON.parse(JSON.stringify(group))), group);
+  assert.deepEqual(await generateGroup(input, state), group);
+  assert.notEqual((await generateGroup(input, { ...state, index: 4 })).id, group.id);
+  for (let index = 1; index <= 8; index++) {
+    const frontier = await generateGroup({ scene: 'frontier' }, { seed: 'group-scenes', index });
+    assert.equal(frontier.scene, 'frontier');
+    assert.ok(groupTypes[frontier.typeId].scenes.includes('frontier'));
+  }
+  await assert.rejects(generateGroup({ scene: 'urban', type: 'hunt' }, state), /Group type has an unsupported value/);
+});
+
+test('referee URLs round-trip full records through versioned variables', async () => {
+  const npc = await make({ species: 'human', occupation: '12', identity: { commonName: 'Éla & Vár' } },
+    { seed: 'Rain + shift / 3', index: 7 });
+  const rerolled = await rerollNpc(npc, ['detail']);
+  rerolled.controls.locks = setLock(rerolled, 'stat.STR', true);
+  const group = await generateGroup({ scene: 'starport', type: 'dock' }, { seed: 'Saved group', index: 2 });
+  const legacy = await make({}, { namingPack: 'imperial-common/1' });
+  for (const [record, restore, kind] of [[rerolled, restoreNpc, 'npc'], [group, restoreGroup, 'group'], [legacy, restoreNpc, 'npc']]) {
+    const url = new URL(refereeLink('https://tools.tedt.org/traveller-npc-generator.html?old=1#species-guide', record));
+    const variables = new URLSearchParams(url.hash.slice(1));
+    assert.equal(url.search, '');
+    assert.equal(variables.get('record'), kind);
+    assert.equal(variables.get('seed'), record.provenance.seed);
+    assert.equal(variables.get('index'), String(record.provenance.index));
+    assert.deepEqual(await restore(readRefereeLink(url.hash)), record);
+  }
+  assert.throws(() => readRefereeLink('#record=invalid'), /unknown record type/);
+  assert.throws(() => readRefereeLink('#record=npc&settings=%7B'), /invalid settings/);
+});
 
 test('the name pack keeps old saved names and isolates a new NPC name reroll', async () => {
   const legacy = await make({}, { namingPack: 'imperial-common/1' });
