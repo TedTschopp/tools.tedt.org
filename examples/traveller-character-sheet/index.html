@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A reusable character sheet for Mongoose Traveller 2e with a dice roller and portable character data.">
+  <title>Traveller Character Sheet</title>
+  <link rel="stylesheet" href="./traveller-sheet-fonts.css">
+  <script src="../../tool-src/assets/traveller-sheet.js" defer></script>
+  <style>
+    html { min-height: 100%; background: #f0f0f0; }
+    body { margin: 0; }
+    main { max-width: 1320px; margin-inline: auto; padding: clamp(.5rem, 2.5vw, 2rem); }
+    [hidden] { display: none !important; }
+    .view-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-block-end: .75rem;
+    }
+    .view-picker button {
+      min-height: 2.5rem;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: .45rem .8rem;
+      background: #fff;
+      color: #333;
+      font: 700 .86rem/1.2 Roboto, Arial, sans-serif;
+      cursor: pointer;
+    }
+    .view-picker button:hover { border-color: #b00; }
+    .view-picker button:focus-visible { outline: 2px solid #b00; outline-offset: 2px; }
+    .view-picker button[aria-pressed="true"] { background: #111; border-color: #111; color: #fff; }
+    .adventure {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(14rem, 19rem);
+      align-items: start;
+      gap: 1rem;
+      max-width: 70rem;
+      margin-inline: auto;
+    }
+    .adventure[data-context="inline"] { display: block; max-width: 48rem; }
+    .book-prose {
+      min-width: 0;
+      padding: clamp(1rem, 4vw, 2.65rem);
+      border: 1px solid #ddd;
+      border-block-start: 4px solid #b00;
+      border-radius: 3px;
+      background: #fff;
+      color: #333;
+      font: 400 1.03rem/1.7 Arimo, Arial, sans-serif;
+    }
+    .book-prose h1 {
+      margin: 0 0 .85rem;
+      font: 400 clamp(1.7rem, 5vw, 2.65rem)/1.13 Marcellus, Georgia, serif;
+    }
+    .book-prose h2 { margin: 1.4rem 0 .45rem; font: 700 1.25rem/1.2 Arsenal, Arial, sans-serif; }
+    .book-prose p { margin: 0; overflow-wrap: anywhere; }
+    .book-prose p + p { margin-block-start: .8rem; }
+    .encounter-contact {
+      padding: .6rem .7rem;
+      border-inline-start: 3px solid #b00;
+      background: #f5f5f5;
+      font-size: .94rem;
+    }
+    .encounter-contact > strong { margin-inline-end: .35em; color: #595959; font-family: Arsenal, Arial, sans-serif; }
+    noscript { display: block; padding: 1rem; font-family: system-ui, sans-serif; }
+    @media (max-width: 690px) { .adventure { grid-template-columns: minmax(0, 1fr); } }
+    @media print {
+      html { background: white; }
+      main { max-width: none; padding: 0; }
+      .view-picker { display: none; }
+      .book-prose { padding: .5rem; }
+      @page { margin: 12mm; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="view-picker" role="group" aria-label="Character display" hidden>
+      <button type="button" data-preview="full" aria-pressed="true" aria-controls="full-preview">Full sheet</button>
+      <button type="button" data-preview="sidebar" aria-pressed="false" aria-controls="adventure-preview">Sidebar</button>
+      <button type="button" data-preview="inline" aria-pressed="false" aria-controls="adventure-preview">Inline</button>
+    </div>
+    <traveller-sheet id="full-preview" storage-key="standalone">
+      <script type="application/json">
+        {
+          "charName": "Iona Voss",
+          "role": "Survey pilot",
+          "species": "Human",
+          "age": 34,
+          "homeworld": "Nacre",
+          "homeworldUWP": "B646663-A",
+          "traits": "Carries an old ceramic survey tag stamped with her first ship’s call sign.",
+          "rads": 12,
+          "characteristics": {
+            "str": {"baseline": 7},
+            "dex": {"baseline": 10},
+            "end": {"baseline": 8, "current": 6},
+            "int": {"baseline": 9},
+            "edu": {"baseline": 8},
+            "soc": {"baseline": 6}
+          },
+          "skills": [
+            {"name": "Pilot", "specialization": "Spacecraft", "level": 2},
+            {"name": "Astrogation", "level": 1},
+            {"name": "Electronics", "specialization": "Sensors", "level": 1},
+            {"name": "Engineer", "specialization": "Jump Drive", "level": 0},
+            {"name": "Medic", "level": 0},
+            {"name": "Jack of All Trades", "level": 1}
+          ],
+          "trainingSkills": [
+            {"skill": "Mechanic", "weeksSpent": 3, "weeksTotal": 8}
+          ],
+          "careers": [
+            {"career": "Scout", "assignment": "Survey", "rank": "Senior surveyor", "terms": 4,
+              "benefits": "Kept the route logs from her last survey assignment."}
+          ],
+          "equipment": [
+            {"name": "Atmosphere sampler", "mass": "1.2", "state": {"quantity": 1, "carried": true}},
+            {"name": "Emergency beacon", "mass": "0.4", "state": {"quantity": 2, "carried": true}},
+            {"name": "Portable survey stand", "mass": "3", "state": {"quantity": 1, "carried": false}}
+          ],
+          "armor": [
+            {"name": "Padded flight suit", "rating": "2", "weight": "1", "state": {"quantity": 1, "carried": true, "equipped": true}}
+          ],
+          "cashOnHand": 2400,
+          "credits": 7200,
+          "livingCosts": 800,
+          "background": "Iona charted unmarked approaches for fourteen years. Now she takes independent survey jobs and keeps a copy of every distress call she answers.",
+          "notes": "Find out who has been reactivating the old weather beacons along the Nacre approach.",
+          "relationships": [
+            {"name": "Sera Dain", "type": "Contact", "notes": "A station dispatcher who trades spare bay time for updated charts."}
+          ]
+        }
+      </script>
+    </traveller-sheet>
+    <div class="adventure" id="adventure-preview" hidden>
+      <article class="book-prose">
+        <h1>The Last Weather Beacon</h1>
+        <p>A beacon on the Nacre approach has started broadcasting after six years of silence. Its old coordinates put the signal inside a restricted landing corridor.</p>
+        <p>The survey pilot at the flight desk offers to guide the crew through the corridor in exchange for a copy of the beacon log.</p>
+        <p class="encounter-contact" id="inline-contact" hidden><strong>Contact</strong> </p>
+        <h2>At the beacon</h2>
+        <p>The landing lights sweep across a pad with room for one ship. A maintenance terminal inside the relay hut shows that someone reset the clock just before the first broadcast.</p>
+      </article>
+      <aside id="sidebar-contact" aria-label="Character sidebar" hidden></aside>
+    </div>
+    <noscript>Turn on JavaScript to fill in the character sheet and roll checks.</noscript>
+  </main>
+  <script>
+    customElements.whenDefined("traveller-sheet").then(() => {
+      const picker = document.querySelector(".view-picker");
+      const full = document.querySelector("#full-preview");
+      const adventure = document.querySelector("#adventure-preview");
+      const sidebar = document.querySelector("#sidebar-contact");
+      const inline = document.querySelector("#inline-contact");
+      const previews = { sidebar, inline };
+      const compact = document.createElement("traveller-sheet");
+      const buttons = picker.querySelectorAll("button");
+      for (const button of buttons) {
+        button.addEventListener("click", () => {
+          const view = button.dataset.preview;
+          for (const option of buttons) option.setAttribute("aria-pressed", String(option === button));
+          full.hidden = view !== "full";
+          adventure.hidden = view === "full";
+          adventure.dataset.context = view;
+          sidebar.hidden = view !== "sidebar";
+          inline.hidden = view !== "inline";
+          if (previews[view]) {
+            compact.view = view;
+            compact.character = full.character;
+            previews[view].append(compact);
+          }
+        });
+      }
+      picker.hidden = false;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+/* Latin webfonts from the TedT.org Traveller sheet. Licenses are in fonts/. */
+@font-face {
+  font-family: "Arimo";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./fonts/arimo.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Arsenal";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/arsenal-bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Marcellus";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/marcellus.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./fonts/roboto.woff2") format("woff2");
+}

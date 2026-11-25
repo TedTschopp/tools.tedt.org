@@ -392,6 +392,98 @@
     return list;
   }
 
+  function summaryScores(record) {
+    return Object.entries(characteristics).flatMap(([key, label]) => {
+      const stat = record.characteristics[key];
+      const current = effectiveScore(stat);
+      return current === null ? [] : [{ key, label, current, baseline: integer(stat.baseline) }];
+    });
+  }
+
+  function summarySkills(record) {
+    return (record.skills ?? []).filter(skill => string(skill.name).trim()).map(skill => ({
+      name: skillName(skill).trim(), level: integer(skill.level) ?? "Untrained",
+    }));
+  }
+
+  function summaryIdentity(record, fields) {
+    return fields.map(key => string(record[key]).trim()).filter(Boolean).join(" · ");
+  }
+
+  function summaryUpp(upp) {
+    const code = element("span", "mini-upp");
+    const abbreviation = element("abbr", "", "UPP");
+    abbreviation.title = "Universal Personality Profile";
+    code.append(abbreviation, " ", element("strong", "", upp));
+    return code;
+  }
+
+  function characterSidebar(record) {
+    const sidebar = element("article", "mini mini-sidebar");
+    sidebar.part.add("sidebar");
+    const header = element("header", "mini-header");
+    const identity = summaryIdentity(record, ["role", "species", "homeworld"]);
+    const upp = uppOf(record);
+    header.append(element("h2", "mini-name", nameOf(record)));
+    if (identity) header.append(element("p", "mini-identity", identity));
+    if (upp !== "—") header.append(summaryUpp(upp));
+    sidebar.append(header);
+
+    const body = element("div", "mini-body");
+    const scores = summaryScores(record);
+    for (const [definitions, label] of [[core, "Characteristics"], [optional, "Additional characteristics"]]) {
+      const group = scores.filter(({ key }) => Object.hasOwn(definitions, key));
+      if (!group.length) continue;
+      const grid = element("div", "mini-score-grid");
+      for (const { key, label, current, baseline } of group) {
+        const tile = element("div", "mini-score");
+        tile.setAttribute("role", "group");
+        tile.setAttribute("aria-label", label);
+        if (baseline !== null && current < baseline) tile.classList.add("reduced");
+        const top = element("div", "stat-top");
+        top.append(element("span", "stat-code", key.toUpperCase()), addRuleReminder(tile, key, "mini"));
+        const values = element("p", "mini-values");
+        values.append(element("strong", "", String(current)), element("span", "mini-dm", "DM " + signed(modifier(current))));
+        tile.append(top, values);
+        grid.append(tile);
+      }
+      body.append(element("h3", "mini-label", label), grid);
+    }
+
+    const skills = summarySkills(record);
+    if (skills.length) {
+      const list = element("dl", "mini-skills");
+      for (const { name, level } of skills) {
+        const row = element("div");
+        row.append(element("dt", "", name), element("dd", "", String(level)));
+        list.append(row);
+      }
+      body.append(element("h3", "mini-label", "Skills"), list);
+    }
+    if (body.childElementCount) sidebar.append(body);
+    return sidebar;
+  }
+
+  function characterInline(record) {
+    const line = element("span", "mini mini-inline");
+    line.part.add("inline");
+    line.append(element("strong", "inline-name", nameOf(record)));
+    const upp = uppOf(record);
+    const scores = summaryScores(record).filter(({ key, current, baseline }) =>
+      upp === "—" || !Object.hasOwn(core, key) || current !== baseline);
+    const skills = summarySkills(record);
+    const segments = [
+      summaryIdentity(record, ["role", "species"]),
+      upp === "—" ? null : summaryUpp(upp),
+      scores.map(({ key, current }) => key.toUpperCase() + " " + current).join(", "),
+      skills.length ? "Skills " + skills.map(({ name, level }) => name + " " + level).join(", ") : null,
+    ];
+    for (const segment of segments) {
+      if (segment) line.append(" · ", segment);
+    }
+    return line;
+  }
+
   function download(record) {
     const slug = nameOf(record).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const url = URL.createObjectURL(new Blob([JSON.stringify(record, null, 2) + "\n"], { type: "application/json" }));
@@ -487,7 +579,7 @@
   `;
 
   class TravellerSheet extends HTMLElement {
-    static observedAttributes = ["readonly"];
+    static observedAttributes = ["readonly", "view"];
 
     #root;
     #roster;
@@ -498,7 +590,9 @@
     #removed = new Set();
     #tab = "overview";
     #rolls = [];
-    #beforePrint = () => this.#renderRecord();
+    #beforePrint = () => {
+      if (this.view === "full") this.#renderRecord();
+    };
 
     constructor() {
       super();
@@ -518,8 +612,18 @@
       this.#active.data = data;
       this.#dirty.add(this.#active.id);
       this.#save();
-      this.#resetRoller();
+      if (this.#get(".screen")) this.#resetRoller();
       this.#render();
+    }
+
+    get view() {
+      const view = this.getAttribute("view");
+      return view === "sidebar" || view === "inline" ? view : "full";
+    }
+
+    set view(value) {
+      if (value === "sidebar" || value === "inline") this.setAttribute("view", value);
+      else this.removeAttribute("view");
     }
 
     get #active() {
@@ -541,11 +645,13 @@
       const style = element("style");
       if (styleNonce) style.nonce = styleNonce;
       style.textContent = styles;
-      const template = element("template");
-      template.innerHTML = layout;
-      this.#root.append(style, template.content.cloneNode(true));
-      this.#buildTabs();
-      this.#bindActions();
+      this.#root.append(style);
+
+      if (Object.hasOwn(this, "view")) {
+        const assigned = this.view;
+        delete this.view;
+        this.view = assigned;
+      }
 
       let seedProblem = "";
       let data = this.#seed ?? blankCharacter();
@@ -564,7 +670,7 @@
       }
 
       const key = this.getAttribute("storage-key")?.trim();
-      if (key && !this.hasAttribute("readonly") && !this.hasAttribute("embedded")) {
+      if (key && this.view === "full" && !this.hasAttribute("readonly") && !this.hasAttribute("embedded")) {
         this.#storageKey = "traveller-sheet-v1:" + key;
         try {
           this.#roster = readRoster(this.#storageKey);
@@ -580,7 +686,7 @@
         this.#roster.activeId = this.#roster.characters[0].id;
       }
       this.#render();
-      if (seedProblem) this.#notice(seedProblem, true);
+      if (seedProblem && this.#get(".screen")) this.#notice(seedProblem, true);
     }
 
     disconnectedCallback() {
@@ -589,6 +695,15 @@
 
     attributeChangedCallback() {
       if (this.#roster) this.#render();
+    }
+
+    #initFull() {
+      if (this.#get(".screen")) return;
+      const template = element("template");
+      template.innerHTML = layout;
+      this.#root.append(template.content.cloneNode(true));
+      this.#buildTabs();
+      this.#bindActions();
     }
 
     #buildTabs() {
@@ -709,11 +824,11 @@
       this.#dirty.add(id);
       this.#select(id);
       this.#notice(message);
-      this.#get('#panel-overview [name="charName"]').focus();
+      this.#get('#panel-overview [name="charName"]')?.focus();
     }
 
     #save() {
-      if (!this.#storageKey || this.hasAttribute("readonly")) return;
+      if (!this.#storageKey || this.view !== "full" || this.hasAttribute("readonly")) return;
       try {
         // Merge changes to the active record with any other records saved in a second tab.
         const stored = readRoster(this.#storageKey);
@@ -770,6 +885,13 @@
     }
 
     #render() {
+      this.#get(".mini")?.remove();
+      const view = this.view;
+      if (view !== "full") {
+        this.#root.append(view === "sidebar" ? characterSidebar(this.#data) : characterInline(this.#data));
+        return;
+      }
+      this.#initFull();
       this.#storageStatus();
       if (this.hasAttribute("readonly")) {
         this.#renderRecord();
@@ -1571,6 +1693,85 @@
     .muted { color: var(--muted); font-size: .78rem; margin-block-end: .4rem; }
     .readout + .readout { margin-block-start: .65rem; }
     .readout dd { white-space: pre-wrap; overflow-wrap: anywhere; }
+    :host([view="sidebar"]) :is(.screen, .record),
+    :host([view="inline"]) :is(.screen, .record) { display: none !important; }
+    :host([view="inline"]) {
+      display: inline;
+      container-type: normal;
+      color: inherit;
+      font: inherit;
+    }
+    .mini-inline { display: inline; overflow-wrap: anywhere; }
+    .mini-inline .mini-upp { font-family: var(--mono); font-size: .86em; }
+    .mini-upp abbr { text-decoration: none; }
+    .mini-sidebar {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow-wrap: anywhere;
+    }
+    .mini-header {
+      padding: .85rem .9rem;
+      border-radius: var(--radius) var(--radius) 0 0;
+      border-block-end: 3px solid var(--accent);
+      background: var(--mast);
+      color: var(--mast-ink);
+    }
+    .mini-name { font: 400 1.55rem/1.15 var(--title-font); }
+    .mini-identity { margin-block-start: .28rem; font-size: .84rem; }
+    .mini-header .mini-upp {
+      display: inline-block;
+      margin-block-start: .58rem;
+      padding: .23rem .4rem;
+      border: 1px solid #fff6;
+      border-radius: var(--radius);
+      font: .79rem/1.3 var(--mono);
+    }
+    .mini-body { padding: .85rem .9rem; }
+    .mini-label {
+      margin: 0 0 .46rem;
+      font: 700 .9rem/1.25 var(--heading-font);
+      letter-spacing: .035em;
+    }
+    .mini-body > :is(.mini-score-grid, .mini-skills) + .mini-label {
+      padding-block-start: .72rem;
+      margin-block-start: .72rem;
+      border-block-start: 1px solid var(--line);
+    }
+    .mini-score-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+    .mini-score {
+      position: relative;
+      min-inline-size: 0;
+      padding: .34rem .4rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--soft);
+    }
+    .mini-score .rule-trigger { min-inline-size: 24px; min-block-size: 24px; padding: 0 .18rem; font-size: .73rem; }
+    .mini-score.reduced { border-color: color-mix(in srgb, var(--alert) 55%, var(--line)); }
+    .mini-values {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: .1rem .34rem;
+      margin-block-start: .2rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .mini-values strong { font: 700 1.1rem/1.15 var(--ui-font); }
+    .mini-dm { color: var(--muted); font: .65rem/1.25 var(--mono); }
+    .reduced .mini-dm { color: var(--alert); }
+    .mini-skills { display: grid; gap: .3rem; }
+    .mini-skills > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .45rem; }
+    .mini-skills dt { color: var(--ink); font-size: .84rem; font-weight: 400; }
+    .mini-skills dd { color: var(--muted); font: .79rem/1.4 var(--mono); text-align: end; }
+    @container (max-width: 245px) {
+      .mini-score-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @container (max-width: 145px) {
+      .mini-score-grid { grid-template-columns: minmax(0, 1fr); }
+      .mini-skills > div { grid-template-columns: minmax(0, 1fr); gap: .15rem; }
+      .mini-skills dd { text-align: start; }
+    }
     @container (max-width: 1000px) {
       .stat-grid, .stat-grid.additional { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .entry.skills { grid-template-columns: minmax(0, 1fr); }
@@ -1620,6 +1821,9 @@
       .screen { display: none !important; }
       .record { display: block !important; }
       .rule-trigger, .rule-tip { display: none !important; }
+      .mini-sidebar { break-inside: avoid; }
+      .mini-header { background: white; color: #171717; border-color: #777; }
+      .mini-header .mini-upp { border-color: #aaa; }
       .record-header { border-block-end: 1px solid #777; border-radius: 0; background: #fff; color: #171717; padding: 0 0 .4rem; }
       .record-header h1 { font-size: 22pt; }
       .record .card { padding: .5rem 0; border: 0; border-radius: 0; }
