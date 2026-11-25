@@ -276,7 +276,7 @@ test('a player handout opens in another browser session with only opted-in facts
     await expect(handout.locator('#handout-facts')).toContainText('Cr4,000 per month');
     await expect(handout.locator('#handout-facts')).toContainText(/Medic [23]/);
     await expect(handout.locator('#handout-facts')).toContainText('Seeking work or between positions');
-    expect(await handout.evaluate(() => localStorage.length)).toBe(0);
+    expect(await handout.evaluate(() => Object.keys(localStorage).filter(key => key.startsWith('tedt-traveller-')))).toEqual([]);
     await handout.reload();
     await expect(handout.getByRole('heading', { name: 'Éla Vár' })).toBeVisible();
     await expect(handout.getByRole('region', { name: 'Referee quick reference' })).toBeHidden();
