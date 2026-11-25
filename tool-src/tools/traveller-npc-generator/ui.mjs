@@ -123,9 +123,8 @@ function updateProfileControls(config) {
   hidden('source-encounter-note', !isEncounter);
   for (const node of document.querySelectorAll('[data-character-setting]')) node.hidden = isEncounter;
   const profile = species[profileId];
-  const selected = profileId === 'random' ? npc?.biology.profileId : profileId;
   const customPlate = (config ?? npc?.controls.config)?.customProfile?.appearance;
-  renderPortrait($('settings-plate'), selected === 'custom' ? customPlate : selected);
+  renderPortrait($('settings-plate'), profileId === 'custom' ? customPlate : profileId);
   const explicitStyle = field('name-style');
   const candidate = profile ? { ...profile, id: profileId, culture: field('culture') === 'auto' ? profile.culture : field('culture') } : null;
   const naming = nameStyles[explicitStyle === 'auto' && candidate ? nameStyleFor('auto', candidate) : explicitStyle];
@@ -341,7 +340,6 @@ function updateRetainedRecord() {
 function settingsChanged(message = 'Settings changed. Apply settings or roll the next NPC.') {
   if (settingsFeedback(mode).textContent === message) return;
   showSettingsFeedback('pending', message);
-  status(message);
 }
 
 function remember(record) {
@@ -725,7 +723,6 @@ function renderRefereeBrief() {
 }
 
 function renderNpcRecord() {
-  if (field('species') === 'random') renderPortrait($('settings-plate'), portraitId(npc));
   $('reroll-name').disabled = has(npc.controls.locks, 'name');
   const isEncounter = Boolean(npc.encounter);
   hidden('source-encounter-record', !isEncounter);
@@ -762,11 +759,10 @@ function renderGroupRecord() {
       if (opened) revealEncounter();
     });
     return element('li', [
-      h(member.player.name),
+      element('div', [h(member.player.name), details], { class: 'summary-row' }),
       p((leader ? 'Leader · ' : '') + position + ' · ' + member.player.species),
       p([code(stats), ' · ' + member.work.competence.name], 'hint'),
       p(qualificationText(member), 'hint'),
-      element('div', details, { class: 'actions' }),
     ], { 'data-group-member': leader ? 'leader' : 'specialist' });
   });
   $('group-members').replaceChildren(
@@ -788,7 +784,7 @@ function renderRecord() {
   $('npc-intro').textContent = player?.introduction ?? 'The encounter introduction appears here.';
   renderPortrait($('encounter-plate'), record ? portraitId(record) : null);
   hidden('npc-role', !record);
-  for (const id of ['next-npc', 'player-view', 'copy-player-link', 'share-handout', 'keep-npc', 'copy-card', 'player-export', 'save-referee-link', 'ref-export']) $(id).disabled = !record;
+  for (const id of ['next-npc', 'player-view', 'copy-player-link', 'open-encounter-actions', 'share-handout', 'keep-npc', 'copy-card', 'player-export', 'save-referee-link', 'ref-export']) $(id).disabled = !record;
   if (record) {
     if (mode === 'group') renderGroupRecord();
     else renderNpcRecord();
@@ -811,6 +807,7 @@ function updatePlayerView() {
   for (const id of ['status', 'encounter-mode', 'next-npc', 'open-roster', 'keep-npc', 'save-referee-link', 'ref-export']) hidden(id, playerView);
   hidden('settings', playerView || showingGroup);
   hidden('group-settings', playerView || !showingGroup);
+  hidden('referee-actions', playerView);
   hidden('reroll-name', playerView || showingGroup || !record);
   hidden('referee', playerView || showingGroup || !record);
   hidden('group-referee', playerView || !showingGroup || !record);
@@ -1144,8 +1141,12 @@ async function initialize() {
   updateProfileControls();
   renderRules();
   renderSpeciesGuide();
+  if (location.hash === '#species-guide') $('guide-options').open = true;
   for (const entry of document.querySelectorAll('a[href="#species-guide"]')) {
-    entry.addEventListener('click', () => $('search-species').focus({ preventScroll: true }));
+    entry.addEventListener('click', () => {
+      $('guide-options').open = true;
+      $('search-species').focus({ preventScroll: true });
+    });
   }
   $('guide-content').addEventListener('click', async event => {
     const profile = event.target.closest('[data-roll-profile]')?.dataset.rollProfile;
@@ -1159,8 +1160,13 @@ async function initialize() {
   $('group-form').addEventListener('submit', event => { event.preventDefault(); void generation(); });
   $('single-mode').addEventListener('click', () => void openEncounterMode('npc'));
   $('group-mode').addEventListener('click', () => void openEncounterMode('group'));
-  $('seed').addEventListener('invalid', () => { $('seed-settings').open = true; });
-  $('group-seed').addEventListener('invalid', () => { $('group-seed-settings').open = true; });
+  for (const id of ['config-form', 'group-form']) {
+    $(id).addEventListener('invalid', ({ target }) => {
+      for (let section = target.closest('details'); section; section = section.parentElement.closest('details')) {
+        section.open = true;
+      }
+    }, true);
+  }
   $('group-scene').addEventListener('change', () => updateGroupTypes());
   $('group-form').addEventListener('input', ({ target }) => {
     if (target.id !== 'import-group') settingsChanged('Settings changed. Roll group to update the encounter.');
@@ -1237,6 +1243,13 @@ async function initialize() {
     updatePlayerView();
   });
   $('copy-player-link').addEventListener('click', copyPlayerLink);
+  const actions = $('encounter-actions-dialog');
+  $('open-encounter-actions').addEventListener('click', () => {
+    if (activeRecord() && !busy) actions.showModal();
+  });
+  actions.addEventListener('click', ({ target }) => {
+    if (target.closest('.action-list button')) actions.close();
+  }, true);
   $('share-handout').addEventListener('click', openHandoutDialog);
   $('handout-disclosures').addEventListener('input', () => {
     updateHandoutLink();
@@ -1317,6 +1330,7 @@ async function initialize() {
 
 window.addEventListener('hashchange', () => {
   if (isHandoutLink(location.hash) || isRefereeLink(location.hash) || !$('shared-handout').hidden) location.reload();
+  else if (location.hash === '#species-guide') $('guide-options').open = true;
 });
 if (isHandoutLink(location.hash)) renderSharedHandout();
 else void initialize().catch(error => status(error.message || 'The generator failed to initialize.', 'error'));

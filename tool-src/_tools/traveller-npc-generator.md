@@ -26,7 +26,8 @@ features:
 ## Roll an encounter
 
 Open **Generation settings** to choose a species, occupation, and level of
-competence. Use **Next NPC** on the Encounter card to make another roll. The
+competence. Open **More settings** for skill minimums, equipment, identity,
+and seeds. Use **Next NPC** on the Encounter card to make another roll. The
 **Species field guide** searches sourcebooks and species names and can roll
 directly from eligible entries.
 
@@ -55,9 +56,10 @@ Use the **Referee quick reference** for the facts you need in the scene. The
 **Referee record** holds the full mechanical details, motives, secrets, and
 roll history. Switch to **Player view** to show the introduction and portrait.
 
-Use **Share handout** to open a separate player card or copy its link. For a
-hiring roll, you can include qualifications, availability, and a pay offer.
-From a local file, open the handout and choose **Print or save as PDF**.
+Use **Copy Player Link** to share the current encounter. Under **More actions**,
+**Share handout** opens a separate player card or copies its link. For a hiring
+roll, it can include qualifications, availability, and a pay offer. Open the
+handout and choose **Print or save as PDF** for a printable copy.
 
 Choose a species under **Published encounters** to roll from its 2E encounter
 block. The referee record shows the source and the species’ published Hits,
@@ -66,7 +68,8 @@ movement, attacks, or encounter traits where available.
 ## Keep a campaign roster
 
 Use **Keep NPC** or **Keep group** on the Encounter card, then **Campaign
-roster** to reopen a saved encounter. Choose **Referee link** to copy the
+roster** to reopen a saved encounter. Under **More actions**, choose
+**Referee link** to copy the
 exact roll or put its link in the address bar for bookmarking. The link stores
 the seed, roll number, and settings in the URL fragment. It reopens the full
 record, including any locks. You can also export the referee JSON.
