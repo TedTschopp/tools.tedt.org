@@ -765,6 +765,15 @@ function renderSourceEncounter() {
 
 const qualificationText = npc => qualificationsFor(npc).map(([skill, level]) => skill + ' ' + level).join(' · ');
 
+function rolledAdditionalScores(record) {
+  const characteristics = record.mechanics?.characteristics;
+  const scores = Object.entries(optionalCharacteristics).flatMap(([stat, { name }]) => {
+    const score = characteristics?.[stat]?.current;
+    return Number.isFinite(score) ? [element('div', [element('dt', name), element('dd', score)])] : [];
+  });
+  return scores.length ? element('dl', scores, { class: 'rolled-scores', 'aria-label': 'Rolled additional characteristics' }) : null;
+}
+
 function renderRefereeBrief() {
   let facts;
   if (npc.encounter) {
@@ -779,7 +788,10 @@ function renderRefereeBrief() {
   } else {
     facts = [['Encounter hook', npc.story.hook], ['Attitude', npc.story.attitude], ['UPP', npc.mechanics.upp]];
   }
-  $('brief-content').replaceChildren(definition(facts.filter(([, value]) => value != null && value !== '')));
+  const brief = $('brief-content');
+  brief.replaceChildren(definition(facts.filter(([, value]) => value != null && value !== '')));
+  const scores = rolledAdditionalScores(npc);
+  if (scores) brief.prepend(scores);
 }
 
 function renderNpcRecord() {
@@ -822,7 +834,8 @@ function renderGroupRecord() {
   ]));
   const entries = members.map(({ position, leader, npc: member }) => {
     const { characteristics, order, upp } = member.mechanics;
-    const stats = upp ? 'UPP ' + upp : order.map(stat => stat + ' ' + characteristics[stat].current).join(' · ');
+    const stats = upp ? 'UPP ' + upp : order.filter(stat => !has(optionalCharacteristics, stat))
+      .map(stat => stat + ' ' + characteristics[stat].current).join(' · ');
     const details = element('button', 'Open NPC record', { type: 'button', class: 'quiet compact',
       'aria-label': 'Open NPC record for ' + member.player.name });
     const sheet = element('button', 'Character sheet', { type: 'button', class: 'quiet compact',
@@ -837,6 +850,7 @@ function renderGroupRecord() {
       element('div', [h(member.player.name), element('div', [sheet, details], { class: 'actions' })], { class: 'summary-row' }),
       p((leader ? 'Leader · ' : '') + position + ' · ' + member.player.species),
       p([code(stats), ' · ' + member.work.competence.name], 'hint'),
+      rolledAdditionalScores(member),
       p(qualificationText(member), 'hint'),
     ], { 'data-group-member': leader ? 'leader' : 'specialist' });
   });
