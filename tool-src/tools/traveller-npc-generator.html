@@ -14,9 +14,10 @@
     .topbar { margin-bottom: var(--s-6); }
     .topbar a, .hint, .meta { font-size: var(--fs-small); color: var(--fg-2); }
     .topbar-links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); }
-    .tool-header { margin-bottom: var(--s-5); }
+    .tool-header { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); align-items: center; gap: var(--s-6); margin-bottom: var(--s-5); }
     .tool-header .t-tool-title { display: block; }
     .tool-header p { margin: var(--s-3) 0 0; }
+    .tool-hero { display: block; inline-size: 100%; block-size: clamp(8rem, 17vw, 14rem); object-fit: cover; object-position: center 40%; border: var(--border); border-radius: var(--r-3); background: var(--bg-inset); }
     .tt-banner, .tt-about { border: var(--bw-1) solid var(--ready-border); border-radius: var(--r-3); background: var(--ready-bg); color: var(--ready); padding: var(--s-3) var(--s-4); }
     .tt-banner { margin-bottom: var(--s-5); overflow-wrap: anywhere; }
     .tt-banner[data-state="error"] { background: var(--error-bg); color: var(--error); border-color: var(--error-border); }
@@ -140,14 +141,22 @@
     :root[data-theme="light"] .tt-shell { --copper: color-mix(in srgb, var(--plt-copper-600) 57%, var(--fg) 43%); }
     @media (max-width: 56rem) { .tt-shell { padding: var(--s-5) var(--s-4) var(--s-8); } .workspace { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 32rem) {
+      #generator :is(.topbar, .tool-header, .mode-selector, .tt-banner) { margin-bottom: var(--s-3); }
+      #generator .topbar { justify-content: flex-start; }
+      .topbar-links { display: contents; }
+      #generator .tt-banner { padding-block: var(--s-2); }
+      .tool-header { grid-template-columns: minmax(0, 1fr); gap: var(--s-2); }
+      .tool-header .t-tool-title { font-size: var(--fs-h1); }
+      .tool-header p { margin-top: var(--s-2); }
+      .tool-hero { block-size: clamp(var(--s-9), 22vw, calc(var(--s-9) + var(--s-5))); object-position: center 35%; }
       .characteristics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .status-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .card-body :is(h1, h3) { font-size: var(--fs-h1); }
       .values { grid-template-columns: minmax(6rem, 35%) minmax(0, 1fr); }
     }
     @media print {
-      #settings, #group-settings, #species-guide, .topbar, .tt-banner, .tt-about, .actions, .retained-record, .portrait-trigger span, .modal, #card-feedback, #lock-section, #check-section, #roll-section, #group-roll-section, .tt-catalog-return, tedt-global-header { display: none; }
-      .workspace { display: block; }
+      #settings, #group-settings, #species-guide, .topbar, .tool-hero, .tt-banner, .tt-about, .actions, .retained-record, .portrait-trigger span, .modal, #card-feedback, #lock-section, #check-section, #roll-section, #group-roll-section, .tt-catalog-return, tedt-global-header { display: none; }
+      .tool-header, .workspace { display: block; }
       .tt-shell { padding: 0; }
       .tt-panel { break-inside: avoid; }
       html[data-traveller-handout] { color-scheme: light; --bg: var(--plt-paper-50); }
@@ -168,8 +177,12 @@
     </div>
   </nav>
   <header class="tool-header">
-    <h1 class="t-tool-title">Traveller <mark>NPC</mark> Generator</h1>
-    <p class="t-tagline">Roll a single NPC, a crew candidate, or a group encounter for Mongoose Traveller Second Edition.</p>
+    <div>
+      <h1 class="t-tool-title">Traveller <mark>NPC</mark> Generator</h1>
+      <p class="t-tagline">Roll a single NPC, a crew candidate, or a group encounter for Mongoose Traveller Second Edition.</p>
+    </div>
+    <img class="tool-hero" src="img/2026-11/traveller-npc-generator-hero.webp" width="1440" height="810" loading="lazy" decoding="async"
+      alt="A mixed-species crew reviews a cargo manifest in an orbital freight hangar.">
   </header>
   <div class="actions mode-selector" id="encounter-mode" role="group" aria-label="Encounter mode">
     <button type="button" id="single-mode" class="quiet compact" aria-pressed="true">Single NPC</button>
