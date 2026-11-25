@@ -1,4 +1,5 @@
 import { isGroupEncounter } from './group-encounters.mjs';
+import { isLocation } from './location-populator.mjs';
 import { stableId } from './random.mjs';
 import { recordInputs } from './record-links.mjs';
 
@@ -6,7 +7,8 @@ const prefix = 'tedt-traveller-roster-v1:';
 
 export async function keepInRoster(storage, record) {
   const { name, species, role } = record.player;
-  const summary = isGroupEncounter(record) ? { name: record.type, role, lead: record.members[0].npc.player.name } : { name, species, role };
+  const summary = isGroupEncounter(record) ? { name: record.type, role, lead: record.members[0].npc.player.name }
+    : isLocation(record) ? { name, role } : { name, species, role };
   // The restore functions rebuild dossiers and roll logs from these inputs.
   const snapshot = JSON.stringify({ ...recordInputs(record), player: summary });
   // Different saved builds can share an NPC ID when they use the same seed and index.
@@ -22,8 +24,9 @@ export function readRoster(storage) {
     if (!key?.startsWith(prefix)) continue;
     try {
       const record = JSON.parse(storage.getItem(key));
-      if (!record || !['name', 'role', isGroupEncounter(record) ? 'lead' : 'species']
-        .every(field => typeof record.player?.[field] === 'string')) {
+      const fields = ['name', 'role'];
+      if (!isLocation(record)) fields.push(isGroupEncounter(record) ? 'lead' : 'species');
+      if (!record || !fields.every(field => typeof record.player?.[field] === 'string')) {
         unreadable++;
         continue;
       }

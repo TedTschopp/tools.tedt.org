@@ -9,6 +9,8 @@ import { generateGroup, restoreGroup, setMemberSheet } from '../tool-src/tools/t
 import { groupTypes } from '../tool-src/tools/traveller-npc-generator/group-types.mjs';
 import { handoutUrl, readHandout } from '../tool-src/tools/traveller-npc-generator/handout.mjs';
 import { decodeLinkPayload, encodeLinkPayload } from '../tool-src/tools/traveller-npc-generator/link-payload.mjs';
+import { populateLocation, restoreLocation } from '../tool-src/tools/traveller-npc-generator/location-populator.mjs';
+import { locationCategories, locationScales, locationTypes } from '../tool-src/tools/traveller-npc-generator/location-types.mjs';
 import { dm, rating, taskCheck } from '../tool-src/tools/traveller-npc-generator/mechanics.mjs';
 import { imperialNameCounts, nameStyles } from '../tool-src/tools/traveller-npc-generator/names.mjs';
 import { streams } from '../tool-src/tools/traveller-npc-generator/random.mjs';
@@ -20,6 +22,43 @@ import { occupationTable, packs, version } from '../tool-src/tools/traveller-npc
 import { fieldsFor } from '../tool-src/tools/traveller-npc-generator/work.mjs';
 
 const make = (config = {}, state = {}) => generateNpc(config, { seed: 'sketch-82', ...state });
+
+test('every location template populates usable contacts and supporting cast', async () => {
+  assert.deepEqual(new Set(Object.values(locationTypes).map(type => type.category)), new Set(Object.keys(locationCategories)));
+  const [minimum, maximum] = locationScales.compact.supporting;
+  for (const [type, template] of Object.entries(locationTypes)) {
+    const location = await populateLocation({ type, scale: 'compact', species: 'hiver' }, { seed: 'catalogue' });
+    assert.deepEqual(location.areas.map(area => area.id), template.areas);
+    assert.ok(location.members.slice(0, template.areas.length).every(member => member.important));
+    assert.ok(location.members.slice(template.areas.length).every(member => !member.important));
+    for (const area of location.areas) {
+      const cast = location.members.filter(member => member.area === area.id);
+      assert.equal(cast.filter(member => member.important).length, 1);
+      assert.equal(cast.length, area.supporting + 1);
+      assert.ok(area.supporting >= minimum && area.supporting <= maximum);
+      assert.ok(cast.every(member => member.npc.places.current === location.name + ' · ' + area.name));
+    }
+    assert.equal(new Set(location.members.map(member => member.npc.id)).size, location.members.length);
+    assert.ok(location.members.every(member => member.npc.biology.profileId === 'hiver'));
+    assert.ok(location.situation.contacts.every(id => location.members.some(member => member.important && member.npc.id === id)));
+  }
+});
+
+test('location links restore the entire cast and keep its situation and sheets private', async () => {
+  const input = { type: 'ruins', name: 'Basalt Marker', scale: 'busy', additionalCharacteristics: ['MRL', 'STY'] };
+  const location = await populateLocation(input, { seed: 'location-links' });
+  const lead = location.members[0].npc;
+  assert.ok(location.members.every(({ npc }) => npc.mechanics.characteristics.STY.current > 0));
+  setMemberSheet(location, lead, { notes: 'Referee-only dig notes' });
+  const url = new URL(refereeLink('https://tools.tedt.org/traveller-npc-generator.html', location));
+  assert.ok(url.href.length < 650);
+  assert.deepEqual(await restoreLocation(readRefereeLink(url.hash)), location);
+  assert.deepEqual(await restoreLocation(JSON.parse(JSON.stringify(location))), location);
+  const handout = new URL(handoutUrl(url.href, location, { qualifications: true, availability: true, pay: 'Cr500' }));
+  const payload = decodeLinkPayload(handout.hash.slice('#h1='.length), 150_000);
+  assert.deepEqual(payload, { version: 1, kind: 'location', name: location.name, role: location.type, introduction: location.player.introduction });
+  assert.equal(readHandout(handout.hash).name, location.name);
+});
 
 test('the character sheet projects the roll and preserves tracking edits through referee links', async () => {
   const npc = await make({

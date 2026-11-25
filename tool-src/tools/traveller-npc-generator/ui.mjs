@@ -1,14 +1,16 @@
-import { setCharacterSheet } from './character-sheet.mjs';
+import { applyMemberSheets, setCharacterSheet, setMemberSheet } from './character-sheet.mjs';
 import { has, normalizeConfig, object, requireRule, skillName } from './config.mjs';
 import { fieldGroups, generateNpc, rerollNpc, restoreNpc, setLock } from './generator.mjs';
 import { encounterSpecies } from './encounter-species.mjs';
-import { applyMemberSheets, generateGroup, groupsForScene, isGroupEncounter, normalizeGroupConfig, restoreGroup, setMemberSheet } from './group-encounters.mjs';
+import { generateGroup, groupsForScene, isGroupEncounter, normalizeGroupConfig, restoreGroup } from './group-encounters.mjs';
 import { groupScenes } from './group-types.mjs';
+import { isLocation, normalizeLocationConfig, populateLocation, restoreLocation } from './location-populator.mjs';
+import { locationCategories, locationScales, locationTypes } from './location-types.mjs';
 import { isTalent, taskCheck } from './mechanics.mjs';
 import { fanNameSources, imperialNameCounts, nameStyleFor, nameStyles } from './names.mjs';
 import { careerAdjustmentFields, optionalCharacteristics, psionMode } from './optional-characteristics.mjs';
 import { freshSeed } from './random.mjs';
-import { isRefereeLink, readRefereeLink, refereeLink } from './record-links.mjs';
+import { isRefereeLink, readRefereeLink, recordInputs, refereeLink } from './record-links.mjs';
 import { portraitFor } from './species-art.mjs';
 import { referenceGroups } from './species-reference.mjs';
 import { cultures, needs, species } from './species.mjs';
@@ -26,21 +28,31 @@ const currency = amount => 'Cr' + amount.toLocaleString('en-US');
 const signed = value => value < 0 ? '−' + Math.abs(value) : '+' + value;
 const shown = value => value == null || value === '' ? 'Unspecified' : String(value);
 const cap = string => string ? string[0].toUpperCase() + string.slice(1) : '';
-const storageKeys = { npc: 'tedt-traveller-npc-v1', group: 'tedt-traveller-group-v1' };
+const storageKey = kind => 'tedt-traveller-' + kind + '-v1';
+const modeSettings = {
+  npc: { label: 'NPC', action: 'Apply settings', options: 'settings-options', form: 'config-form',
+    seed: 'seed', apply: 'apply-settings', feedback: 'settings-feedback' },
+  group: { label: 'Group', action: 'Roll group', options: 'group-options', form: 'group-form',
+    seed: 'group-seed', apply: 'apply-group', feedback: 'group-settings-feedback' },
+  location: { label: 'Location', action: 'Populate location', options: 'location-options', form: 'location-form',
+    seed: 'location-seed', apply: 'apply-location', feedback: 'location-settings-feedback' },
+};
 const playerViewKey = 'tedt-traveller-player-view-v1';
 const encounterModeKey = 'tedt-traveller-mode-v1';
 const compactLayout = matchMedia('(max-width: 56rem)');
 let npc = null;
 let group = null;
+let populatedLocation = null;
 let mode = 'npc';
 let busy = false;
 let playerView = false;
 
-const activeRecord = () => mode === 'group' ? group : npc;
-const recordMode = record => isGroupEncounter(record) ? 'group' : 'npc';
+const activeRecord = () => mode === 'location' ? populatedLocation : mode === 'group' ? group : npc;
+const recordMode = record => isLocation(record) ? 'location' : isGroupEncounter(record) ? 'group' : 'npc';
 const recordName = record => isGroupEncounter(record) ? record.type : record.player.name;
 const playerSubtitle = ({ species, role }) => [species, role].filter(Boolean).join(' · ');
-const restoreEncounter = record => isGroupEncounter(record) ? restoreGroup(record) : restoreNpc(record);
+const restoreEncounter = record => isLocation(record) ? restoreLocation(record)
+  : isGroupEncounter(record) ? restoreGroup(record) : restoreNpc(record);
 
 function element(tag, content, attrs = {}) {
   const node = document.createElement(tag);
@@ -125,7 +137,7 @@ const selectedOptionalScores = kind => optionalScoreInputs(kind).filter(input =>
 const careerInput = key => $('career-' + key);
 
 function renderOptionalSettings() {
-  for (const kind of ['npc', 'group']) {
+  for (const kind of Object.keys(modeSettings)) {
     $(kind + '-optional-scores').replaceChildren(...Object.entries(optionalCharacteristics).map(([stat, { name, source }]) =>
       element('label', [element('input', null, { type: 'checkbox', value: stat }), stat === 'PSI' ? 'PSI test' : name],
         { class: 'check-line', title: source })));
@@ -139,7 +151,7 @@ function renderOptionalSettings() {
 
 function fillOptionalSettings(kind, config) {
   for (const input of optionalScoreInputs(kind)) input.checked = config.additionalCharacteristics?.includes(input.value) ?? false;
-  if (kind === 'group') return;
+  if (kind !== 'npc') return;
   for (const { key, checkbox } of careerAdjustmentFields) {
     const value = config.careerAdjustments?.[key];
     if (checkbox) careerInput(key).checked = value === true;
@@ -279,6 +291,22 @@ function fillGroupSettings(config, seed) {
   showSettingsFeedback('', '', 'group');
 }
 
+function fillLocationSettings(config, seed) {
+  $('location-type').value = config.type;
+  $('location-scale').value = config.scale;
+  $('location-species').value = config.species;
+  $('location-name').value = config.name ?? '';
+  $('location-seed').value = seed;
+  fillOptionalSettings('location', config);
+  updateLocationScale();
+  showSettingsFeedback('', '', 'location');
+}
+
+function updateLocationScale() {
+  const [minimum, maximum] = locationScales[field('location-scale')].supporting;
+  $('location-scale-note').textContent = 'One important NPC and ' + minimum + '–' + maximum + ' supporting characters per area.';
+}
+
 function advancedOptions() {
   const input = field('advanced');
   let advanced = {};
@@ -362,7 +390,7 @@ function feedback(id, message = '') {
   $(id).textContent = message;
 }
 
-const settingsFeedback = type => $(type === 'group' ? 'group-settings-feedback' : 'settings-feedback');
+const settingsFeedback = type => $(modeSettings[type].feedback);
 
 function showSettingsFeedback(state, message, type = mode) {
   const note = settingsFeedback(type);
@@ -375,8 +403,8 @@ function showSettingsFeedback(state, message, type = mode) {
 function updateRetainedRecord() {
   const note = settingsFeedback(mode);
   const retained = $('retained-record');
-  const noun = mode === 'group' ? 'a group' : 'an NPC';
-  const action = mode === 'group' ? 'Roll group' : 'Apply settings';
+  const noun = mode === 'npc' ? 'an NPC' : 'a ' + mode;
+  const action = modeSettings[mode].action;
   retained.textContent = note.dataset.state === 'error'
     ? 'Last successful roll. The current settings could not generate ' + noun + '.'
     : 'Last successful roll. Use ' + action + ' to update this card.';
@@ -389,7 +417,10 @@ function settingsChanged(message = 'Settings changed. Apply settings or roll the
 }
 
 function remember(record) {
-  try { localStorage.setItem(storageKeys[recordMode(record)], JSON.stringify(record)); return true; }
+  try {
+    localStorage.setItem(storageKey(recordMode(record)), JSON.stringify(isLocation(record) ? recordInputs(record) : record));
+    return true;
+  }
   catch { return false; }
 }
 
@@ -400,7 +431,7 @@ function setMode(value) {
 }
 
 function readyMessage(record, verb = '') {
-  const label = isGroupEncounter(record) ? 'Group' : 'NPC';
+  const { label } = modeSettings[recordMode(record)];
   return verb + label + ' ' + record.provenance.index + (verb ? '' : ' ready') + ' · ' + recordName(record) + '.';
 }
 
@@ -415,15 +446,16 @@ function clearRefereeLink() {
 async function setRecord(action, message, { fill = false, report = true, persist = true, onError } = {}) {
   if (busy) return;
   busy = true;
-  const busyRegions = ['config-form', 'group-form', 'results'].map($);
+  const busyRegions = [...Object.values(modeSettings).map(settings => settings.form), 'results'].map($);
   for (const region of busyRegions) region.setAttribute('aria-busy', 'true');
   try {
     const record = await action();
     setMode(recordMode(record));
-    if (mode === 'group') group = record;
+    if (mode === 'location') populatedLocation = record;
+    else if (mode === 'group') group = record;
     else npc = record;
     if (fill) {
-      const fillForm = mode === 'group' ? fillGroupSettings : fillSettings;
+      const fillForm = { npc: fillSettings, group: fillGroupSettings, location: fillLocationSettings }[mode];
       fillForm(record.controls.config, record.provenance.seed);
     }
     if (persist) clearRefereeLink();
@@ -453,9 +485,9 @@ async function openEncounterMode(target) {
     status(readyMessage(record), 'success');
     return;
   }
-  status(mode === 'group' ? 'Preparing your first group.' : 'Preparing your first NPC.');
+  status('Preparing your first ' + (mode === 'npc' ? 'NPC' : mode) + '.');
   try {
-    const saved = localStorage.getItem(storageKeys[target]);
+    const saved = localStorage.getItem(storageKey(target));
     if (saved) {
       await setRecord(() => restoreEncounter(JSON.parse(saved)), record => readyMessage(record, 'Restored '),
         { fill: true, report: false });
@@ -468,21 +500,32 @@ async function openEncounterMode(target) {
 }
 
 function revealEncounter() {
-  if (compactLayout.matches) $(mode === 'group' ? 'group-options' : 'settings-options').open = false;
+  if (compactLayout.matches) $(modeSettings[mode].options).open = false;
   $('encounter').focus({ preventScroll: true });
   $('encounter').scrollIntoView({ block: 'start' });
 }
 
 async function generation({ next = false, seedChange = false, reveal = compactLayout.matches } = {}) {
   if (busy) return;
-  const rollingGroup = mode === 'group';
+  const controls = modeSettings[mode];
   const record = await setRecord(async () => {
-    const seed = seedChange ? freshSeed() : field(rollingGroup ? 'group-seed' : 'seed');
-    const previous = activeRecord()?.provenance;
-    const sameSeed = seed === previous?.seed;
+    const seed = seedChange ? freshSeed() : field(controls.seed);
+    const previous = activeRecord();
+    const sameSeed = seed === previous?.provenance.seed;
     const sameRoll = sameSeed && !next;
-    const index = sameSeed ? previous.index + Number(next) : 1;
-    if (rollingGroup) {
+    const index = sameSeed ? previous.provenance.index + Number(next) : 1;
+    if (mode === 'location') {
+      const rolled = await populateLocation({ type: field('location-type'), scale: field('location-scale'),
+        name: field('location-name'), species: field('location-species'),
+        additionalCharacteristics: selectedOptionalScores('location') }, { seed, index });
+      if (sameRoll && previous.typeId === rolled.typeId && previous.controls.config.species === rolled.controls.config.species) {
+        const memberIds = new Set(rolled.members.map(({ npc }) => npc.id));
+        applyMemberSheets(rolled, Object.fromEntries(Object.entries(previous.controls.memberSheets ?? {})
+          .filter(([id]) => memberIds.has(id))));
+      }
+      return rolled;
+    }
+    if (mode === 'group') {
       const rolled = await generateGroup({ scene: field('group-scene'), type: field('group-type'),
         species: field('group-species'), additionalCharacteristics: selectedOptionalScores('group') }, { seed, index });
       if (sameRoll && ['scene', 'type', 'species'].every(key => group.controls.config[key] === rolled.controls.config[key])) {
@@ -492,7 +535,7 @@ async function generation({ next = false, seedChange = false, reveal = compactLa
     }
     const settings = readSettings();
     const sameModel = has(encounterSpecies, settings.species) === Boolean(npc?.encounter);
-    const counters = sameRoll && sameModel ? previous.rerollCounters : {};
+    const counters = sameRoll && sameModel ? previous.provenance.rerollCounters : {};
     const rolled = await generateNpc(settings, { seed, index, counters, locks: npc?.controls.locks });
     if (sameRoll && npc.biology.profileId === rolled.biology.profileId) setCharacterSheet(rolled, npc.controls.characterSheet);
     return rolled;
@@ -502,8 +545,8 @@ async function generation({ next = false, seedChange = false, reveal = compactLa
   });
   if (reveal && record) revealEncounter();
   else if (reveal) {
-    $(rollingGroup ? 'group-options' : 'settings-options').open = true;
-    $(rollingGroup ? 'apply-group' : 'apply-settings').focus();
+    $(controls.options).open = true;
+    $(controls.apply).focus();
   }
 }
 
@@ -813,16 +856,42 @@ function renderNpcRecord() {
   renderRefereeBrief();
 }
 
-function openCharacterSheet(member, containingGroup) {
-  const record = containingGroup ?? member;
+function openCharacterSheet(member, containingRecord) {
+  const record = containingRecord ?? member;
   if (!record || playerView || busy || activeRecord() !== record) return;
   editCharacterSheet($('character-sheet'), member, data => {
-    if (containingGroup) setMemberSheet(containingGroup, member, data);
+    if (containingRecord) setMemberSheet(containingRecord, member, data);
     else setCharacterSheet(member, data);
     clearRefereeLink();
     if (remember(record)) feedback('card-feedback', 'Character sheet saved.');
     else feedback('card-feedback', 'Character sheet updated. Use a referee link or export JSON to keep it.');
   });
+}
+
+function npcScoreText(member) {
+  const { characteristics, order, upp } = member.mechanics;
+  return upp ? 'UPP ' + upp : order.filter(stat => !has(optionalCharacteristics, stat))
+    .map(stat => stat + ' ' + characteristics[stat].current).join(' · ');
+}
+
+function memberRecordButton(member, containingRecord, label = 'Open NPC record') {
+  const button = element('button', label, { type: 'button', class: 'quiet compact',
+    'aria-label': 'Open NPC record for ' + member.player.name });
+  button.addEventListener('click', async () => {
+    if (playerView || activeRecord() !== containingRecord) return;
+    const origin = isLocation(containingRecord) ? 'location' : 'group';
+    const opened = await setRecord(() => structuredClone(member),
+      npc => 'Opened ' + npc.player.name + ' from the ' + origin + '.', { fill: true });
+    if (opened) revealEncounter();
+  });
+  return button;
+}
+
+function memberSheetButton(member, containingRecord) {
+  const button = element('button', 'Character sheet', { type: 'button', class: 'quiet compact',
+    'aria-label': 'Character sheet for ' + member.player.name, 'aria-haspopup': 'dialog' });
+  button.addEventListener('click', () => openCharacterSheet(member, containingRecord));
+  return button;
 }
 
 function renderGroupRecord() {
@@ -833,23 +902,11 @@ function renderGroupRecord() {
     ['Initial reaction', reaction.attitude + ' · 2D = ' + reaction.total],
   ]));
   const entries = members.map(({ position, leader, npc: member }) => {
-    const { characteristics, order, upp } = member.mechanics;
-    const stats = upp ? 'UPP ' + upp : order.filter(stat => !has(optionalCharacteristics, stat))
-      .map(stat => stat + ' ' + characteristics[stat].current).join(' · ');
-    const details = element('button', 'Open NPC record', { type: 'button', class: 'quiet compact',
-      'aria-label': 'Open NPC record for ' + member.player.name });
-    const sheet = element('button', 'Character sheet', { type: 'button', class: 'quiet compact',
-      'aria-label': 'Character sheet for ' + member.player.name, 'aria-haspopup': 'dialog' });
-    sheet.addEventListener('click', () => openCharacterSheet(member, group));
-    details.addEventListener('click', async () => {
-      if (playerView) return;
-      const opened = await setRecord(() => structuredClone(member), member => 'Opened ' + member.player.name + ' from the group.', { fill: true });
-      if (opened) revealEncounter();
-    });
+    const actions = element('div', [memberSheetButton(member, group), memberRecordButton(member, group)], { class: 'actions' });
     return element('li', [
-      element('div', [h(member.player.name), element('div', [sheet, details], { class: 'actions' })], { class: 'summary-row' }),
+      element('div', [h(member.player.name), actions], { class: 'summary-row' }),
       p((leader ? 'Leader · ' : '') + position + ' · ' + member.player.species),
-      p([code(stats), ' · ' + member.work.competence.name], 'hint'),
+      p([code(npcScoreText(member)), ' · ' + member.work.competence.name], 'hint'),
       rolledAdditionalScores(member),
       p(qualificationText(member), 'hint'),
     ], { 'data-group-member': leader ? 'leader' : 'specialist' });
@@ -865,17 +922,62 @@ function renderGroupRecord() {
   );
 }
 
+function renderLocationRecord() {
+  const record = populatedLocation;
+  const { areas, type, operator, situation, members, provenance } = record;
+  const contacts = members.filter(member => member.important);
+  const contactsByArea = new Map(contacts.map(member => [member.area, member]));
+  const areasById = new Map(areas.map(area => [area.id, area.name]));
+  $('brief-content').replaceChildren(definition([
+    ['Location type', type], ['Operator', operator],
+    ['Cast', contacts.length + ' important · ' + (members.length - contacts.length) + ' supporting'],
+    ['Current situation', situation.description],
+    ['Start with', situation.contacts.map(id => {
+      const contact = contacts.find(member => member.npc.id === id);
+      return contact.npc.player.name + ' (' + contact.position + ')';
+    }).join(' and ')],
+  ]));
+  $('location-important').replaceChildren(...contacts.map(({ area, position, npc }) =>
+    element('li', [
+      element('div', [element('h4', npc.player.name),
+        element('div', [memberSheetButton(npc, record), memberRecordButton(npc, record)], { class: 'actions' })], { class: 'summary-row' }),
+      p(position + ' · ' + areasById.get(area) + ' · ' + npc.player.species),
+      p(npc.resources.authority),
+      p([code(npcScoreText(npc)), ' · ' + qualificationText(npc)], 'hint'),
+      rolledAdditionalScores(npc),
+    ])));
+  $('location-supporting').replaceChildren(...areas.map((area, index) => {
+    const entries = members.filter(member => !member.important && member.area === area.id);
+    const details = element('details', [
+      element('summary', area.name + ' · ' + entries.length),
+      p('Area contact · ' + contactsByArea.get(area.id).npc.player.name, 'hint'),
+      element('ul', entries.map(({ position, npc }) => element('li', [
+        element('div', [memberRecordButton(npc, record, npc.player.name), p(position + ' · ' + npc.player.species, 'hint')],
+          { class: 'location-support-person' }),
+        rolledAdditionalScores(npc),
+      ])), { class: 'location-people', role: 'list', 'aria-label': area.name + ' supporting cast' }),
+    ], { class: 'group location-area' });
+    details.open = index === 0 || (!compactLayout.matches && record.controls.config.scale !== 'busy');
+    return details;
+  }));
+  $('location-rolls').replaceChildren(
+    definition([['Seed', code(provenance.seed)], ['Location index', provenance.index], ['Location tables', provenance.packs.location]]),
+    rollTable(provenance.rolls, 'Ordered location rolls'),
+  );
+}
+
 function renderRecord() {
   const record = activeRecord();
   const player = record?.player;
-  $('npc-name').textContent = player?.name ?? (mode === 'group' ? 'Your group' : 'Your NPC');
+  $('npc-name').textContent = player?.name ?? 'Your ' + (mode === 'npc' ? 'NPC' : mode);
   $('npc-role').textContent = player ? playerSubtitle(player) : '';
   $('npc-intro').textContent = player?.introduction ?? 'The encounter introduction appears here.';
   renderPortrait($('encounter-plate'), record ? portraitId(record) : null);
   hidden('npc-role', !record);
   for (const id of ['next-npc', 'player-view', 'copy-player-link', 'open-encounter-actions', 'share-handout', 'keep-npc', 'copy-card', 'player-export', 'save-referee-link', 'ref-export']) $(id).disabled = !record;
   if (record) {
-    if (mode === 'group') renderGroupRecord();
+    if (mode === 'location') renderLocationRecord();
+    else if (mode === 'group') renderGroupRecord();
     else renderNpcRecord();
   }
   feedback('card-feedback');
@@ -885,22 +987,29 @@ function renderRecord() {
 
 function updatePlayerView() {
   const showingGroup = mode === 'group';
+  const showingLocation = mode === 'location';
+  const showingNpc = mode === 'npc';
   const record = activeRecord();
   $('generator').dataset.playerView = String(playerView);
-  $('single-mode').setAttribute('aria-pressed', String(!showingGroup));
+  $('single-mode').setAttribute('aria-pressed', String(showingNpc));
   $('group-mode').setAttribute('aria-pressed', String(showingGroup));
+  $('location-mode').setAttribute('aria-pressed', String(showingLocation));
   $('player-view').setAttribute('aria-pressed', String(playerView));
   $('player-view').textContent = playerView ? 'Return to referee view' : 'Player view';
-  $('next-npc').textContent = showingGroup ? 'Next group' : 'Next NPC';
-  $('keep-npc').textContent = showingGroup ? 'Keep group' : 'Keep NPC';
+  const noun = showingNpc ? 'NPC' : mode;
+  $('next-npc').textContent = 'Next ' + noun;
+  $('keep-npc').textContent = 'Keep ' + noun;
   for (const id of ['status', 'encounter-mode', 'next-npc', 'open-roster', 'keep-npc', 'save-referee-link', 'ref-export']) hidden(id, playerView);
-  hidden('settings', playerView || showingGroup);
+  hidden('settings', playerView || !showingNpc);
   hidden('group-settings', playerView || !showingGroup);
+  hidden('location-settings', playerView || !showingLocation);
   hidden('referee-actions', playerView);
-  hidden('open-character-sheet', playerView || showingGroup || !record);
-  hidden('reroll-name', playerView || showingGroup || !record);
-  hidden('referee', playerView || showingGroup || !record);
+  hidden('open-character-sheet', playerView || !showingNpc || !record);
+  hidden('view-location-cast', playerView || !showingLocation || !record);
+  hidden('reroll-name', playerView || !showingNpc || !record);
+  hidden('referee', playerView || !showingNpc || !record);
   hidden('group-referee', playerView || !showingGroup || !record);
+  hidden('location-referee', playerView || !showingLocation || !record);
   hidden('referee-brief', playerView || !record);
 }
 
@@ -1021,7 +1130,7 @@ function renderRoster() {
         element('div', [open, remove], { class: 'actions' })], { class: 'summary-row' });
     }));
     feedback('roster-feedback', unreadable ? 'Some saved records could not be read.'
-      : entries.length ? '' : 'Use Keep NPC or Keep group on the Encounter card.');
+      : entries.length ? '' : 'Use the Keep button on the Encounter card to save an NPC, group or location.');
   } catch {
     $('roster-list').replaceChildren();
     feedback('roster-feedback', 'The browser could not open the local roster.');
@@ -1200,11 +1309,11 @@ async function initialize() {
   let initialMode = 'npc';
   try {
     playerView = sessionStorage.getItem(playerViewKey) === 'true';
-    if (sessionStorage.getItem(encounterModeKey) === 'group') initialMode = 'group';
+    const savedMode = sessionStorage.getItem(encounterModeKey);
+    if (has(modeSettings, savedMode)) initialMode = savedMode;
   }
   catch { /* Storage can be unavailable when the document is opened locally. */ }
-  $('settings-options').open = !compactLayout.matches;
-  $('group-options').open = !compactLayout.matches;
+  for (const { options } of Object.values(modeSettings)) $(options).open = !compactLayout.matches;
   updatePlayerView();
   select('context', Object.entries(contexts).map(([key, value]) => [key, value.name]));
   const starter = ['human', 'vargr', 'aslan'];
@@ -1216,8 +1325,13 @@ async function initialize() {
     ['Published encounters', Object.entries(encounterSpecies).map(([key, value]) => [key, value.name])],
     ['custom', 'Referee-defined species']]);
   select('group-scene', Object.entries(groupScenes));
-  select('group-species', [['random', 'Roll from the Imperial starter pool'],
-    ...Object.entries(species).map(([id, entry]) => [id, entry.name])]);
+  const memberSpecies = [['random', 'Roll from the Imperial starter pool'], ...Object.entries(species).map(([id, entry]) => [id, entry.name])];
+  select('group-species', memberSpecies);
+  select('location-species', memberSpecies);
+  select('location-type', [['random', 'Roll a location type'],
+    ...Object.entries(locationCategories).map(([category, label]) => [label,
+      Object.entries(locationTypes).filter(([, type]) => type.category === category).map(([key, type]) => [key, type.name])])]);
+  select('location-scale', Object.entries(locationScales).map(([key, scale]) => [key, scale.label]));
   select('name-style', [['auto', 'Automatic · species and culture'],
     ...Object.entries(nameStyles).map(([key, value]) => [key, value.label])]);
   select('culture', [['auto', 'Species default'], ...Object.entries(cultures).map(([key, value]) => [key, value.name])]);
@@ -1242,29 +1356,31 @@ async function initialize() {
   $('guide-content').addEventListener('click', async event => {
     const profile = event.target.closest('[data-roll-profile]')?.dataset.rollProfile;
     if (!profile || busy || playerView) return;
-    if (mode === 'group') await openEncounterMode('npc');
+    if (mode !== 'npc') await openEncounterMode('npc');
     $('species').value = profile;
     updateProfileControls();
     void generation({ next: true, reveal: true });
   });
-  $('config-form').addEventListener('submit', event => { event.preventDefault(); void generation(); });
-  $('group-form').addEventListener('submit', event => { event.preventDefault(); void generation(); });
-  $('single-mode').addEventListener('click', () => void openEncounterMode('npc'));
-  $('group-mode').addEventListener('click', () => void openEncounterMode('group'));
-  for (const id of ['config-form', 'group-form']) {
-    $(id).addEventListener('invalid', ({ target }) => {
+  for (const [kind, { form }] of Object.entries(modeSettings)) {
+    $(kind === 'npc' ? 'single-mode' : kind + '-mode').addEventListener('click', () => void openEncounterMode(kind));
+    $(form).addEventListener('submit', event => { event.preventDefault(); void generation(); });
+    $(form).addEventListener('invalid', ({ target }) => {
       for (let section = target.closest('details'); section; section = section.parentElement.closest('details')) {
         section.open = true;
       }
     }, true);
   }
   $('group-scene').addEventListener('change', () => updateGroupTypes());
+  $('location-scale').addEventListener('change', updateLocationScale);
   $('npc-optional-scores').addEventListener('change', ({ target }) => {
     if (target.value === 'PSI' && target.checked && field('psi-mode') === 'off') $('psi-mode').value = 'auto';
     updateProfileControls();
   });
   $('group-form').addEventListener('input', ({ target }) => {
     if (target.id !== 'import-group') settingsChanged('Settings changed. Roll group to update the encounter.');
+  });
+  $('location-form').addEventListener('input', ({ target }) => {
+    if (target.id !== 'import-location') settingsChanged('Settings changed. Populate location to update the cast.');
   });
   $('config-form').addEventListener('input', ({ target }) => {
     if (target.id === 'import-npc' || target.id.startsWith('gear-')) return;
@@ -1282,6 +1398,7 @@ async function initialize() {
   $('next-npc').addEventListener('click', () => void generation({ next: true }));
   $('new-seed').addEventListener('click', () => void generation({ seedChange: true }));
   $('group-new-seed').addEventListener('click', () => void generation({ seedChange: true }));
+  $('location-new-seed').addEventListener('click', () => void generation({ seedChange: true }));
   for (const id of ['species', 'culture', 'name-style', 'occupation', 'secondary', 'adult-form', 'age-mode', 'psi-mode']) {
     $(id).addEventListener('change', () => {
       if (id === 'psi-mode' && field('psi-mode') === 'trained') $('occupation').value = 'psion';
@@ -1315,7 +1432,7 @@ async function initialize() {
     }, record => 'Opened ' + recordName(record) + '.', { fill: true });
     if (opened && compactLayout.matches) revealEncounter();
   };
-  for (const id of ['import-npc', 'import-group']) $(id).addEventListener('change', importRecord);
+  for (const kind of Object.keys(modeSettings)) $('import-' + kind).addEventListener('change', importRecord);
   $('locks').addEventListener('change', event => {
     if (busy || !npc || !event.target.dataset.lock) return;
     const key = event.target.dataset.lock;
@@ -1342,6 +1459,12 @@ async function initialize() {
   });
   $('copy-player-link').addEventListener('click', copyPlayerLink);
   $('open-character-sheet').addEventListener('click', () => openCharacterSheet(npc));
+  $('view-location-cast').addEventListener('click', () => {
+    const cast = $('location-referee');
+    cast.open = true;
+    cast.querySelector('summary').focus({ preventScroll: true });
+    cast.scrollIntoView({ block: 'start' });
+  });
   $('cancel-sheet').addEventListener('click', () => $('character-sheet').close());
   const actions = $('encounter-actions-dialog');
   $('open-encounter-actions').addEventListener('click', () => {
@@ -1418,6 +1541,7 @@ async function initialize() {
 
   fillSettings(normalizeConfig(), freshSeed());
   fillGroupSettings(normalizeGroupConfig(), freshSeed());
+  fillLocationSettings(normalizeLocationConfig(), freshSeed());
   let linkProblem;
   if (isRefereeLink(location.hash)) {
     const opened = await setRecord(() => restoreEncounter(readRefereeLink(location.hash)),

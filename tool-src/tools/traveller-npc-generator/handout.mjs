@@ -1,5 +1,6 @@
 import { isGroupEncounter } from './group-encounters.mjs';
 import { decodeLinkPayload, encodeLinkPayload } from './link-payload.mjs';
+import { isLocation } from './location-populator.mjs';
 import { rating } from './mechanics.mjs';
 import { portraitFor } from './species-art.mjs';
 
@@ -10,6 +11,7 @@ const maxHandoutLinkLength = 150_000;
 export const isHandoutLink = hash => hash.startsWith(handoutPrefix) || hash.startsWith(legacyHandoutPrefix);
 
 export function portraitId(record) {
+  if (isLocation(record)) return null;
   const npc = isGroupEncounter(record) ? record.members[0].npc : record;
   return npc.biology.profileId === 'custom' ? npc.controls.config.customProfile?.appearance : npc.biology.profileId;
 }
@@ -28,6 +30,7 @@ export function handoutUrl(location, record, { qualifications, availability, pay
   const handout = { version: 1, name, species, role, introduction };
   if (portraitFor(portrait)) handout.portrait = portrait;
   if (isGroupEncounter(record)) handout.kind = 'group';
+  else if (isLocation(record)) handout.kind = 'location';
   else {
     if (qualifications) handout.qualifications = qualificationsFor(record);
     if (availability && record.work) handout.availability = record.work.employment.status;
@@ -48,7 +51,9 @@ export function readHandout(hash) {
     const { version, kind, name, species, role, introduction, portrait, qualifications, availability, pay } = payload;
     const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
     if (version !== 1 || !text(name, 500) || !text(role, 500) || !text(introduction, 3000)) return null;
-    if (kind === 'group' ? species !== undefined : kind !== undefined || !text(species, 500)) return null;
+    if (kind === 'group' || kind === 'location') {
+      if (species !== undefined) return null;
+    } else if (kind !== undefined || !text(species, 500)) return null;
     if (qualifications !== undefined && (!Array.isArray(qualifications) || qualifications.length > 80
       || !qualifications.every(entry => Array.isArray(entry) && entry.length === 2 && text(entry[0], 120)
         && Number.isInteger(entry[1]) && entry[1] >= -99 && entry[1] <= 999))) return null;

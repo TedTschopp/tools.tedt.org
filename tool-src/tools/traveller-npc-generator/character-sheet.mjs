@@ -212,3 +212,21 @@ export function setCharacterSheet(npc, data) {
   if (Object.keys(sheet).length) npc.controls.characterSheet = sheet;
   else delete npc.controls.characterSheet;
 }
+
+export function setMemberSheet(record, member, data) {
+  setCharacterSheet(member, data);
+  const sheets = Object.fromEntries(record.members.filter(({ npc }) => npc.controls.characterSheet)
+    .map(({ npc }) => [npc.id, npc.controls.characterSheet]));
+  if (Object.keys(sheets).length) record.controls.memberSheets = sheets;
+  else delete record.controls.memberSheets;
+}
+
+export function applyMemberSheets(record, sheets) {
+  if (sheets == null) return;
+  requireRule(object(sheets) && Object.keys(sheets).length <= record.members.length, 'Invalid saved member sheets.');
+  for (const [id, sheet] of Object.entries(sheets)) {
+    const member = record.members.find(({ npc }) => npc.id === id);
+    requireRule(member, 'A character sheet refers to a missing member.');
+    setMemberSheet(record, member.npc, sheet);
+  }
+}
