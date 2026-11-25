@@ -492,7 +492,7 @@ test('an editable Traveller sheet fits a phone and keeps its saved data private'
   await expect(luck).toHaveValue('');
 });
 
-test('Generation settings choose which extra scores appear on the character sheet', async ({ page, browser }) => {
+test('rolled additional scores appear on the NPC card and character sheet', async ({ page, browser }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
@@ -510,6 +510,15 @@ test('Generation settings choose which extra scores appear on the character shee
   await settings.getByRole('button', { name: 'Apply settings', exact: true }).click();
   await expect(page.locator('#settings-options')).toHaveJSProperty('open', false);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  const scores = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-npc-v1')!).mechanics.characteristics);
+  const cardScores = page.getByRole('region', { name: 'Encounter card' }).locator('.rolled-scores');
+  await expect(cardScores).toBeVisible();
+  await expect(cardScores.locator('dt')).toHaveText(['Morale', 'Luck', 'Psionics', 'Standing', 'Wealth Level']);
+  await expect(cardScores.locator('dd')).toHaveText(['MRL', 'LCK', 'PSI', 'STD', 'WLT'].map(stat => String(scores[stat].current)));
+  await expect(cardScores.locator('dd').nth(2)).toHaveText('0');
+  await page.getByRole('button', { name: 'Player view', exact: true }).click();
+  await expect(cardScores).toBeHidden();
+  await page.getByRole('button', { name: 'Return to referee view' }).click();
   await page.getByRole('button', { name: 'Character sheet', exact: true }).click();
   const sheet = page.getByRole('dialog', { name: 'Character sheet' });
   await sheet.getByText('Additional characteristics', { exact: true }).click();
@@ -542,6 +551,7 @@ test('Generation settings choose which extra scores appear on the character shee
   await choices.getByRole('checkbox', { name: 'Morale', exact: true }).uncheck();
   await settings.getByRole('button', { name: 'Apply settings', exact: true }).click();
   await expect(page.locator('#settings-options')).toHaveJSProperty('open', false);
+  await expect(cardScores.locator('dt')).toHaveText(['Luck', 'Psionics', 'Standing', 'Wealth Level']);
   await page.getByRole('button', { name: 'Character sheet', exact: true }).click();
   await sheet.getByText('Additional characteristics', { exact: true }).click();
   await expect(morale).toHaveValue('');
@@ -655,6 +665,12 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   await expect(members.locator('[data-group-member="leader"]')).toContainText('Detail officer');
   expect(group.size).toBe(group.members.length + group.others.count);
   expect(group.controls.config.additionalCharacteristics).toEqual(['LCK']);
+  const shownScores = members.locator('.rolled-scores');
+  await expect(shownScores.locator('dt')).toHaveText(group.members.map(() => 'Luck'));
+  await expect(shownScores.locator('dd')).toHaveText(group.members.map(({ npc }) => String(npc.mechanics.characteristics.LCK.current)));
+  await page.getByRole('button', { name: 'Player view', exact: true }).click();
+  await expect(members).toBeHidden();
+  await page.getByRole('button', { name: 'Return to referee view' }).click();
   const lead = group.members[0].npc.player.name;
 
   await page.getByRole('button', { name: 'Character sheet for ' + lead, exact: true }).click();
