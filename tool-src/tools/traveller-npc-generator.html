@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Traveller NPC Generator — Ted’s Tools</title>
-  <meta name="description" content="Roll reproducible NPCs and group encounters for Mongoose Traveller 2E. Share a player handout or keep a referee record and its roll history.">
+  <meta name="description" content="Roll NPCs, group encounters, and casts for ships, buildings and other locations in Mongoose Traveller 2E.">
   <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="colors_and_type.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -126,7 +126,7 @@
     .actions { justify-content: flex-start; }
     .generation-actions { margin: var(--s-4) 0; }
     #active-skill-minimums { margin: var(--s-4) 0; overflow-wrap: anywhere; }
-    :is(#settings-feedback, #group-settings-feedback)[data-state="error"] { color: var(--error); }
+    .settings-footer [data-state="error"] { color: var(--error); }
     .mode-selector { gap: var(--s-1); }
     .mode-selector button[aria-pressed="true"] { color: #fff; background: var(--traveller-black); border-color: var(--traveller-black); box-shadow: inset 0 -3px var(--traveller-red); }
     .settings-more { border-block-start: var(--border-soft); margin-block-start: var(--s-4); }
@@ -226,6 +226,17 @@
     .group-member-list h3 { font-size: var(--fs-h3); margin: 0 0 var(--s-1); }
     .group-member-list p { margin: var(--s-1) 0; }
     .group-member-list .summary-row { align-items: baseline; }
+    #location-referee { scroll-margin-block-start: calc(var(--s-9) + var(--s-2)); }
+    .location-cast h3 { font-family: var(--traveller-heading); font-size: var(--fs-h3); margin: 0 0 var(--s-2); }
+    .location-cast section + section { margin-block-start: var(--s-5); }
+    .location-people { list-style: none; margin: 0; padding: 0; }
+    .location-people li { padding: var(--s-3) 0; border-block-start: var(--border-soft); overflow-wrap: anywhere; }
+    .location-people h4 { margin: 0; font: 700 var(--fs-h3)/1.25 var(--traveller-heading); }
+    .location-people p { margin: 0; }
+    .location-people .actions button { padding-inline: var(--s-2); }
+    .location-people p + p { margin-block-start: var(--s-1); }
+    .location-area > .hint { margin: 0 0 var(--s-2); }
+    .location-support-person { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--s-1) var(--s-3); }
     .characteristics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--s-2); margin: var(--s-3) 0; }
     .stat { background: var(--bg-inset); border: var(--border); border-block-start: 3px solid var(--traveller-red); border-radius: var(--r-2); padding: var(--s-2); text-align: center; }
     .stat dt { color: var(--fg-2); font: var(--fs-small)/var(--lh-normal) var(--font-mono); }
@@ -282,7 +293,7 @@
       .values { grid-template-columns: minmax(6rem, 35%) minmax(0, 1fr); }
     }
     @media print {
-      #settings, #group-settings, #species-guide, .topbar, .tool-toolbar, .tool-hero, .tt-banner, .tt-about, .actions, .retained-record, .portrait-trigger span, .modal, #card-feedback, #lock-section, #check-section, #roll-section, #group-roll-section, .tt-catalog-return, tedt-global-header { display: none; }
+      #settings, #group-settings, #location-settings, #species-guide, .topbar, .tool-toolbar, .tool-hero, .tt-banner, .tt-about, .actions, .retained-record, .portrait-trigger span, .modal, #card-feedback, #lock-section, #check-section, #roll-section, #group-roll-section, #location-roll-section, .tt-catalog-return, tedt-global-header { display: none; }
       .tool-header, .workspace { display: block; }
       .tt-shell { padding: 0; }
       .tt-panel { break-inside: avoid; }
@@ -298,7 +309,7 @@
   <header class="tool-header">
     <div>
       <h1 class="t-tool-title">Traveller NPC Generator</h1>
-      <p class="t-tagline">Roll NPCs, crew candidates, and group encounters for Mongoose Traveller 2E.</p>
+      <p class="t-tagline">Roll NPCs, groups, and location casts for Mongoose Traveller 2E.</p>
     </div>
     <img class="tool-hero" src="img/2026-11/traveller-npc-generator-hero.webp" width="1440" height="810" loading="lazy" decoding="async"
       alt="A mixed-species crew reviews a cargo manifest in an orbital freight hangar.">
@@ -307,6 +318,7 @@
     <div class="actions mode-selector" id="encounter-mode" role="group" aria-label="Encounter mode">
       <button type="button" id="single-mode" class="quiet compact" aria-pressed="true">Single NPC</button>
       <button type="button" id="group-mode" class="quiet compact" aria-pressed="false">Group Encounter</button>
+      <button type="button" id="location-mode" class="quiet compact" aria-pressed="false">Location Populator</button>
     </div>
     <nav class="tool-nav" aria-label="Tool navigation">
       <a href="#encounter">Jump to encounter</a>
@@ -481,6 +493,42 @@
         </form>
       </details>
     </section>
+    <section id="location-settings" class="tt-panel" aria-labelledby="location-settings-title" hidden>
+      <details id="location-options" class="generation-settings" open>
+        <summary><span id="location-settings-title">Location settings</span></summary>
+        <form class="tt-panel-body" id="location-form">
+          <div class="field-grid">
+            <label class="wide">Location type <select id="location-type"></select></label>
+            <label class="wide">Location name (optional) <input id="location-name" type="text" maxlength="120" placeholder="Roll a name"></label>
+            <label class="wide">Cast size <select id="location-scale" aria-describedby="location-scale-note"></select></label>
+            <p id="location-scale-note" class="wide hint field-notes"></p>
+            <label class="wide">Cast species <select id="location-species"></select></label>
+          </div>
+          <details class="group" id="location-additional-options">
+            <summary>Additional characteristics</summary>
+            <div id="location-optional-scores" class="field-grid optional-scores" role="group" aria-label="Additional characteristics"></div>
+          </details>
+          <details class="settings-more" id="location-more-settings">
+            <summary>More settings</summary>
+            <details class="group" id="location-seed-settings">
+              <summary>Seed</summary>
+              <div class="field-grid">
+                <label class="wide">Location seed <input id="location-seed" type="text" maxlength="256" required spellcheck="false" autocomplete="off"></label>
+                <div class="wide actions"><button type="button" id="location-new-seed" class="quiet compact">New location seed</button></div>
+              </div>
+            </details>
+            <details class="group">
+              <summary>Open a saved location</summary>
+              <div><label>Saved location JSON <input type="file" id="import-location" accept=".json,application/json"></label></div>
+            </details>
+          </details>
+          <div class="settings-footer">
+            <p class="hint" id="location-settings-feedback" role="status" hidden></p>
+            <button type="submit" class="primary" id="apply-location" aria-describedby="location-settings-feedback">Populate location</button>
+          </div>
+        </form>
+      </details>
+    </section>
     <div id="results" aria-label="Generated encounter">
       <section id="encounter" class="tt-panel" aria-labelledby="encounter-title" tabindex="-1">
         <header class="tt-panel-head">
@@ -510,6 +558,7 @@
             <div class="summary-row brief-head">
               <h3 id="brief-title">Referee quick reference</h3>
               <button type="button" id="open-character-sheet" class="quiet compact" aria-haspopup="dialog" hidden>Character sheet</button>
+              <button type="button" id="view-location-cast" class="quiet compact" hidden>View cast</button>
             </div>
             <div id="brief-content"></div>
           </section>
@@ -553,6 +602,20 @@
         <div class="tt-panel-body">
           <div id="group-members"></div>
           <details class="group" id="group-roll-section"><summary>Group seed, versions and roll record</summary><div id="group-rolls"></div></details>
+        </div>
+      </details>
+      <details id="location-referee" class="referee tt-panel" open hidden>
+        <summary>Location cast</summary>
+        <div class="tt-panel-body location-cast">
+          <section aria-labelledby="location-important-title">
+            <h3 id="location-important-title">Important NPCs</h3>
+            <ol id="location-important" class="location-people" role="list" aria-label="Important NPCs"></ol>
+          </section>
+          <section aria-labelledby="location-supporting-title">
+            <h3 id="location-supporting-title">Supporting cast</h3>
+            <div id="location-supporting"></div>
+          </section>
+          <details class="group" id="location-roll-section"><summary>Location seed and roll record</summary><div id="location-rolls"></div></details>
         </div>
       </details>
     </div>

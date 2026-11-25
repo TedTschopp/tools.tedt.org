@@ -1,7 +1,7 @@
 ---
 title: "Traveller NPC Generator"
-summary: "Roll individual NPCs and group encounters for Mongoose Traveller 2E. Hire crew by specialty, meet a patron, or generate a group with a leader and specialists."
-subtitle: "Reproducible NPCs, crews and encounters"
+summary: "Roll NPCs, group encounters, and casts for ships, buildings and exterior sites in Mongoose Traveller 2E."
+subtitle: "Reproducible NPCs, groups and location casts"
 status: active
 tool_type: webapp
 date: 2026-11-24
@@ -18,6 +18,7 @@ features:
   - "Choose Imperial starter profiles, options from the Traveller library, or a sourced referee-defined species"
   - "Set exact skill and characteristic minimums for professional or crew hiring"
   - "Roll 18 types of group encounters with a shared purpose, affiliation and reaction"
+  - "Populate 44 types of Traveller locations with important NPCs and named supporting casts by area"
   - "Reproduce each NPC from its seed, lock values, and reroll fields independently"
   - "Track characteristics, training, careers, gear, finances, and notes on each NPC’s editable character sheet"
   - "Choose which Traveller 2E optional characteristics to generate for an NPC or group"
@@ -46,11 +47,27 @@ The group templates are house rules informed by the published encounter and
 crew tables. Use **Keep group** to save the full encounter in the campaign
 roster, or **Share handout** to show the group’s visible introduction.
 
+## Populate a location
+
+Choose **Location Populator** and select a type, cast size, and species mix.
+The 44 types cover ships and vehicles, starports and orbital facilities,
+public and commercial buildings, institutions and secured sites, settlements
+and industrial sites, and exterior or expedition sites. Use the location’s
+own name if you have one in mind.
+
+The referee card gives the operator, the current situation, and the people to
+ask about it. **Location cast** lists the important NPCs first, with their
+areas and responsibilities, followed by named supporting characters by area.
+Each named character opens as an individual 2E NPC. Cast sizes describe the
+people available in the scene. The location templates are house tables,
+including backcountry approaches, survey camps, and rescue sites familiar
+from the [Marches Adventures](https://www.mongoosepublishing.com/products/the-marches-adventures-1-5).
+
 ## Track a character
 
 Under **Additional characteristics**, choose Morale, Luck, Sanity, Charm,
-a PSI test, Standing, or Wealth Level. The same choices in **Group encounter
-settings** apply to each named member. Morale, Luck, and Sanity use 2D from
+a PSI test, Standing, or Wealth Level. In Group Encounter and Location
+Populator, those choices apply to each named member. Morale, Luck, and Sanity use 2D from
 the *Traveller Companion*, pp. 4–7. Charm uses an ordinary 2D characteristic
 roll for the Companion’s optional Charm score (p. 10).
 
@@ -96,8 +113,8 @@ movement, attacks, or encounter traits where available.
 
 ## Keep a campaign roster
 
-Use **Keep NPC** or **Keep group** on the Encounter card, then **Campaign
-roster** to reopen a saved encounter. Under **More actions**, choose
+Use the **Keep** button on the Encounter card, then **Campaign roster** to
+reopen the saved NPC, group, or location. Under **More actions**, choose
 **Referee link** to copy the
 exact roll or put its link in the address bar for bookmarking. The link stores
 the seed, roll number, and settings in the URL fragment. It reopens the full

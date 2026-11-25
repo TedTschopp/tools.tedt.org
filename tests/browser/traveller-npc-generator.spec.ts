@@ -727,6 +727,92 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
+test('Location Populator builds a named cast by area and restores it from a referee link', async ({ page, browser }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await captureClipboard(page);
+  await page.goto(url);
+  await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  const mode = page.getByRole('button', { name: 'Location Populator', exact: true });
+  await mode.click();
+  await expect(page.locator('#status')).toContainText('Location 1 ready');
+  await openDisclosure(page, 'location-options');
+  const settings = page.getByRole('region', { name: 'Location settings', exact: true });
+  const types = settings.getByRole('combobox', { name: 'Location type', exact: true });
+  await expect(types.locator('optgroup')).toHaveCount(6);
+  await expect(types.locator('option[value="crash-site"]')).toHaveText('Crash or emergency landing site');
+  await types.selectOption('crash-site');
+  await settings.getByLabel('Location name (optional)', { exact: true }).fill('Basalt Landing');
+  await settings.getByRole('combobox', { name: 'Cast size', exact: true }).selectOption('compact');
+  await settings.getByRole('combobox', { name: 'Cast species', exact: true }).selectOption('human');
+  await openDisclosure(page, 'location-additional-options');
+  await settings.getByRole('checkbox', { name: 'Luck', exact: true }).check();
+  await settings.getByRole('button', { name: 'Populate location', exact: true }).click();
+  await expect(page.locator('#status')).toContainText('Location 1 ready · Basalt Landing');
+  const card = page.getByRole('region', { name: 'Encounter card' });
+  await expect(card).toContainText('Current situation');
+  await expect(card).toContainText('Start with');
+  await card.getByRole('button', { name: 'View cast', exact: true }).click();
+  await expect(page.locator('#location-referee > summary')).toBeFocused();
+  const contacts = page.getByRole('list', { name: 'Important NPCs', exact: true });
+  await expect(contacts.getByRole('listitem')).toHaveCount(3);
+  await expect(contacts).toContainText('Rescue coordinator');
+  await expect(contacts.locator('.rolled-scores dt')).toHaveText(['Luck', 'Luck', 'Luck']);
+  const contactNames = await contacts.getByRole('heading').allTextContents();
+  const supporting = page.getByRole('region', { name: 'Supporting cast', exact: true });
+  const firstArea = supporting.getByRole('list', { name: 'Wreck and recovery zone supporting cast' });
+  await expect(firstArea).toBeVisible();
+  const member = firstArea.getByRole('button', { name: /^Open NPC record for / }).first();
+  const memberName = await member.innerText();
+  await member.click();
+  await expect(page.locator('#npc-name')).toHaveText(memberName);
+  await mode.click();
+  await expect(page.locator('#npc-name')).toHaveText('Basalt Landing');
+
+  await contacts.getByRole('button', { name: 'Character sheet for ' + contactNames[0], exact: true }).click();
+  const sheet = page.getByRole('dialog', { name: 'Character sheet' });
+  await expect(sheet.locator('traveller-sheet')).toBeVisible();
+  await expect(sheet.getByRole('textbox', { name: 'Character name', exact: true })).toHaveValue(contactNames[0]);
+  await sheet.getByRole('tab', { name: 'Notes', exact: true }).click();
+  await sheet.getByLabel('Character and session notes').fill('Recovery team roster note');
+  await sheet.getByRole('button', { name: 'Save sheet' }).click();
+  await expect(page.locator('#card-feedback')).toHaveText('Character sheet saved.');
+  await page.getByRole('button', { name: 'Keep location', exact: true }).click();
+  await expect(page.locator('#card-feedback')).toHaveText('Basalt Landing is in the campaign roster.');
+  await useEncounterAction(page, 'Referee link');
+  const href = await page.getByLabel('Encounter URL').inputValue();
+  await page.getByRole('dialog', { name: 'Referee link' }).getByRole('button', { name: 'Close' }).click();
+
+  const playerLink = handoutPayload(await copyPlayerLink(page));
+  expect(playerLink).toMatchObject({ kind: 'location', name: 'Basalt Landing' });
+  for (const name of contactNames) expect(JSON.stringify(playerLink)).not.toContain(name);
+  expect(JSON.stringify(playerLink)).not.toContain('Recovery team roster note');
+  await card.getByRole('button', { name: 'Player view', exact: true }).click();
+  await expect(contacts).toBeHidden();
+  await expect(supporting).toBeHidden();
+  await card.getByRole('button', { name: 'Return to referee view', exact: true }).click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+
+  const recipient = await browser.newContext();
+  try {
+    const receiver = await recipient.newPage();
+    await routeHeaderAssets(receiver);
+    await receiver.goto(href);
+    await expect(receiver.locator('#status')).toContainText('Restored Location 1 · Basalt Landing');
+    await expect(receiver.getByRole('list', { name: 'Important NPCs' }).getByRole('heading')).toHaveText(contactNames);
+    await receiver.getByRole('button', { name: 'Character sheet for ' + contactNames[0], exact: true }).click();
+    const restored = receiver.getByRole('dialog', { name: 'Character sheet' });
+    await restored.getByRole('tab', { name: 'Notes', exact: true }).click();
+    await expect(restored.getByLabel('Character and session notes')).toHaveValue('Recovery team roster note');
+  } finally { await recipient.close(); }
+
+  await page.getByRole('button', { name: 'Next location', exact: true }).click();
+  await expect(page.locator('#status')).toContainText('Location 2 ready');
+  await page.getByRole('button', { name: 'Campaign roster', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Campaign roster' }).getByRole('button', { name: 'Open Basalt Landing', exact: true }).click();
+  await expect(page.locator('#status')).toHaveText('Opened Basalt Landing from the roster.');
+  await expect(contacts.getByRole('heading')).toHaveText(contactNames);
+});
+
 test('group handouts preserve the visible encounter and leave the referee facts private', async ({ page, browser }) => {
   await captureClipboard(page);
   await page.goto(url);
