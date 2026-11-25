@@ -1,5 +1,4 @@
 import { has, integer, object, requireRule, text } from './config.mjs';
-import { dm } from './mechanics.mjs';
 import { optionalCharacteristics } from './optional-characteristics.mjs';
 
 export const coreCharacteristics = {
@@ -11,7 +10,6 @@ export const speciesCharacteristics = { cha: 'Charisma (CHA)', res: 'Resolve (RE
 const characteristicNames = { ...coreCharacteristics, ...additionalCharacteristics, ...speciesCharacteristics, wlt: 'Wealth Level' };
 export const scoreFields = ['current', 'baseline'];
 export const scoreLimits = key => key === 'wlt' ? [0, 15] : [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
-export const scoreDM = value => value == null ? null : dm(Math.max(0, value));
 // Traveller Companion, p. 3. WLT 0 supplies no spending cash.
 const wealth = [0, 100, 200, 400, 800, 1200, 1500, 2000, 3000, 5000, 7500, 10000, 12500, 15000, 17500, 20000];
 export function obtainableCash(score) {
@@ -21,6 +19,7 @@ export function obtainableCash(score) {
 export const personalFields = [
   ['charName', 'Character name'], ['species', 'Species'], ['age', 'Age', 'count'],
   ['homeworld', 'Homeworld'], ['homeworldUWP', 'Homeworld UWP'], ['rads', 'Radiation dose (rads)', 'count'], ['upp', 'UPP'],
+  ['playerName', 'Player name'], ['role', 'Role or title'], ['traits', 'Traits', 'notes'], ['condition', 'Conditions'],
 ];
 export const financialFields = [
   ['credits', 'Credits (Cr)', 'money'], ['cashOnHand', 'Cash on hand (Cr)', 'money'], ['pension', 'Pension (Cr)', 'money'],
@@ -28,33 +27,38 @@ export const financialFields = [
   ['shipCosts', 'Ship costs (Cr)', 'money'], ['debt', 'Debt (Cr)', 'money'], ['financialNotes', 'Financial notes', 'notes'],
 ];
 export const notesField = ['notes', 'Character notes', 'notes'];
-const singleFields = [...personalFields, ...financialFields, notesField];
+const singleFields = [...personalFields, ...financialFields, notesField, ['background', 'Background', 'notes']];
 
 const gearFields = [
   ['quantity', 'Quantity', 'quantity'], ['equipped', 'Equipped', 'equipped'], ['catalogueId', 'Catalog reference'],
-  ['gearNotes', 'Item notes', 'notes'],
+  ['gearNotes', 'Item notes', 'notes'], ['carried', 'Carried', 'equipped'],
 ];
 export const sheetSections = [
   ['Skills and training', [
-    ['skills', 'Skills', [['name', 'Skill'], ['specialization', 'Specialization'], ['level', 'Level', 'integer']]],
+    ['skills', 'Skills', [['name', 'Skill'], ['specialization', 'Specialization'], ['level', 'Level', 'integer'], ['modifier', 'Other DM', 'integer']]],
     ['trainingSkills', 'Training', [['skill', 'Skill'], ['specialization', 'Specialization'],
       ['weeksSpent', 'Weeks spent', 'count'], ['weeksTotal', 'Total weeks', 'count']]],
+    ['psionics', 'Psionics and special abilities', [['name', 'Ability'], ['level', 'Level', 'integer'],
+      ['cost', 'PSI cost', 'count'], ['target', 'Target', 'integer'], ['time', 'Time'], ['notes', 'Description', 'notes']]],
   ]],
   ['Education and careers', [
     ['preCareerOptions', 'Pre-career education', [['type', 'Option'], ['years', 'Years', 'count'],
       ['outcome', 'Outcome'], ['benefits', 'Benefits', 'notes']]],
     ['careers', 'Careers', [['career', 'Career'], ['assignment', 'Assignment'], ['promotions', 'Promotions received', 'count'],
-      ['years', 'Years in career', 'count'], ['rank', 'Rank and title'], ['benefits', 'Benefits', 'notes']]],
+      ['years', 'Years in career', 'count'], ['rank', 'Rank and title'], ['benefits', 'Benefits', 'notes'], ['terms', 'Terms', 'count']]],
   ]],
   ['Weapons, armour and equipment', [
     ['weapons', 'Weapons and attacks', [['name', 'Weapon or attack'], ['tl', 'TL'], ['skill', 'Skill'],
-      ['damage', 'Damage'], ['range', 'Range'], ['weight', 'Weight'], ['magazine', 'Magazine'], ...gearFields]],
-    ['armor', 'Armour', [['name', 'Armour'], ['rating', 'Protection'], ['tl', 'TL'], ['radiation', 'Rad protection'], ...gearFields]],
+      ['damage', 'Damage'], ['range', 'Range'], ['weight', 'Weight'], ['magazine', 'Magazine'], ['ammo', 'Rounds left', 'count'], ...gearFields]],
+    ['armor', 'Armour', [['name', 'Armour'], ['rating', 'Protection'], ['tl', 'TL'], ['radiation', 'Rad protection'], ['weight', 'Weight'], ['options', 'Options'], ...gearFields]],
     ['augments', 'Augments', [['type', 'Type'], ['tl', 'TL'], ['improvement', 'Improvement'], ...gearFields]],
     ['equipment', 'Equipment', [['name', 'Equipment'], ['tl', 'TL'], ['mass', 'Mass'], ['cost', 'Cost (Cr)'], ...gearFields]],
   ]],
 ];
-const collections = sheetSections.flatMap(([, groups]) => groups);
+const collections = [...sheetSections.flatMap(([, groups]) => groups),
+  ['wounds', 'Wounds', [['type', 'Injury'], ['location', 'Location'], ['recovery', 'Recovery'], ['notes', 'Notes', 'notes']]],
+  ['relationships', 'Relationships', [['name', 'Name'], ['type', 'Relationship'], ['notes', 'Notes', 'notes']]],
+];
 export const sheetRowLimit = 100;
 
 export const fieldLimit = type => type === 'notes' ? 8000 : 500;
@@ -114,7 +118,7 @@ function sheetSkill(skill, level) {
 }
 
 export function rolledCharacterSheet(npc) {
-  const { identity, biology, places, mechanics, encounter, resources, abilities } = npc;
+  const { identity, biology, places, mechanics, encounter, resources, abilities, player } = npc;
   const gear = npc.equipment ?? [];
   const gearDetails = item => ({
     name: item.name, ...(item.tl != null && { tl: String(item.tl) }), quantity: '1',
@@ -133,6 +137,10 @@ export function rolledCharacterSheet(npc) {
     });
   return {
     charName: identity.commonName,
+    role: player?.role ?? '',
+    traits: [identity.visibleDetail, ...(biology.traits ?? []).map(trait => trait.name)].filter(Boolean).join(' · '),
+    background: identity.history?.text ?? '',
+    condition: mechanics?.condition?.status ?? '',
     species: biology.name,
     age: String(biology.age.years ?? ''),
     homeworld: places.homeworld?.name ?? '',
@@ -143,6 +151,12 @@ export function rolledCharacterSheet(npc) {
       [key.toLowerCase(), { current, baseline }])),
     skills: mechanics?.skills.map(({ skill, level }) => sheetSkill(skill, level)) ?? publishedSkills,
     trainingSkills: [],
+    psionics: [
+      ...(abilities?.psion?.talents ?? []).map(({ skill, level }) => ({ name: skill, level: String(level) })),
+      ...(abilities?.innate ?? []).map(({ name }) => ({ name, notes: 'Innate ability' })),
+    ],
+    wounds: [],
+    relationships: [],
     preCareerOptions: [],
     careers: [],
     weapons: [...gear.filter(item => item.kind === 'weapon').map(item =>
