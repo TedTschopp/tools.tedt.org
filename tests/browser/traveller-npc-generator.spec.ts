@@ -352,7 +352,13 @@ test('the generator hero leaves controls within reach on a short phone', async (
   await hero.evaluate((image: HTMLImageElement) => image.decode());
   expect((await hero.boundingBox())!.height).toBeLessThanOrEqual(84);
   await expect(page.getByRole('group', { name: 'Encounter mode' })).toBeInViewport({ ratio: 1 });
-  await expect(page.getByText('Generation settings', { exact: true })).toBeInViewport({ ratio: 1 });
+  const settings = page.getByText('Generation settings', { exact: true });
+  await expect(settings).toBeInViewport({ ratio: 1 });
+  expect(await settings.evaluate(label => {
+    const bounds = label.getBoundingClientRect();
+    const hit = document.elementFromPoint(bounds.left + 2, bounds.bottom - 2);
+    return label.closest('summary')?.contains(hit);
+  })).toBe(true);
 
   await page.getByRole('link', { name: 'Jump to encounter', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Next NPC', exact: true })).toBeInViewport({ ratio: 1 });

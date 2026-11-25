@@ -141,14 +141,15 @@
     :root[data-theme="light"] .tt-shell { --copper: color-mix(in srgb, var(--plt-copper-600) 57%, var(--fg) 43%); }
     @media (max-width: 56rem) { .tt-shell { padding: var(--s-5) var(--s-4) var(--s-8); } .workspace { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 32rem) {
-      #generator :is(.topbar, .tool-header, .mode-selector, .tt-banner) { margin-bottom: var(--s-3); }
+      #generator { padding-block-start: var(--s-3); }
+      #generator :is(.topbar, .tool-header, .mode-selector, .tt-banner) { margin-bottom: var(--s-2); }
       #generator .topbar { justify-content: flex-start; }
       .topbar-links { display: contents; }
-      #generator .tt-banner { padding-block: var(--s-2); }
+      #generator .tt-banner { padding-block: var(--s-1); }
       .tool-header { grid-template-columns: minmax(0, 1fr); gap: var(--s-2); }
       .tool-header .t-tool-title { font-size: var(--fs-h1); }
       .tool-header p { margin-top: var(--s-2); }
-      .tool-hero { block-size: clamp(var(--s-9), 22vw, calc(var(--s-9) + var(--s-5))); object-position: center 35%; }
+      .tool-hero { block-size: clamp(var(--s-9), 20vw, calc(var(--s-9) + var(--s-5))); object-position: center 35%; }
       .characteristics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .status-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .card-body :is(h1, h3) { font-size: var(--fs-h1); }
