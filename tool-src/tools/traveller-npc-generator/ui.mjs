@@ -788,7 +788,7 @@ function renderRecord() {
   $('npc-intro').textContent = player?.introduction ?? 'The encounter introduction appears here.';
   renderPortrait($('encounter-plate'), record ? portraitId(record) : null);
   hidden('npc-role', !record);
-  for (const id of ['next-npc', 'player-view', 'share-handout', 'keep-npc', 'copy-card', 'player-export', 'save-referee-link', 'ref-export']) $(id).disabled = !record;
+  for (const id of ['next-npc', 'player-view', 'copy-player-link', 'share-handout', 'keep-npc', 'copy-card', 'player-export', 'save-referee-link', 'ref-export']) $(id).disabled = !record;
   if (record) {
     if (mode === 'group') renderGroupRecord();
     else renderNpcRecord();
@@ -817,6 +817,12 @@ function updatePlayerView() {
   hidden('referee-brief', playerView || !record);
 }
 
+function shareableHandoutUrl(href) {
+  if (location.protocol !== 'file:') return href;
+  const canonical = document.querySelector('link[rel="canonical"]').href;
+  return new URL(new URL(href).hash, canonical).href;
+}
+
 function updateHandoutLink() {
   const shareHiring = !$('handout-disclosures').hidden;
   const href = handoutUrl(location.href, activeRecord(), {
@@ -825,7 +831,7 @@ function updateHandoutLink() {
     pay: shareHiring ? field('handout-pay') : '',
   });
   $('open-handout').href = href;
-  $('handout-link').value = href;
+  $('handout-link').value = shareableHandoutUrl(href);
 }
 
 function openHandoutDialog() {
@@ -839,12 +845,31 @@ function openHandoutDialog() {
     $('handout-qualifications-preview').textContent = qualificationText(npc);
     $('handout-availability-preview').textContent = npc.work.employment.status;
   }
-  const localFile = location.protocol === 'file:';
-  hidden('copy-handout-link', localFile);
   hidden('handout-link-label', true);
-  feedback('handout-share-status', localFile ? 'Open the handout to print it or save it as a PDF.' : '');
+  feedback('handout-share-status');
   updateHandoutLink();
   $('handout-dialog').showModal();
+}
+
+function selectHandoutLink() {
+  hidden('handout-link-label', false);
+  $('handout-link').focus();
+  $('handout-link').select();
+  feedback('handout-share-status', 'Copy the selected handout link.');
+}
+
+async function copyPlayerLink() {
+  const record = activeRecord();
+  if (!record || busy) return;
+  const link = shareableHandoutUrl(handoutUrl(location.href, record));
+  try {
+    await navigator.clipboard.writeText(link);
+    if (activeRecord() === record) feedback('card-feedback', 'Player link copied.');
+  } catch {
+    if (activeRecord() !== record || busy || $('handout-dialog').open) return;
+    openHandoutDialog();
+    selectHandoutLink();
+  }
 }
 
 function openRefereeLinkDialog() {
@@ -1211,20 +1236,18 @@ async function initialize() {
     feedback('card-feedback');
     updatePlayerView();
   });
+  $('copy-player-link').addEventListener('click', copyPlayerLink);
   $('share-handout').addEventListener('click', openHandoutDialog);
   $('handout-disclosures').addEventListener('input', () => {
     updateHandoutLink();
-    if (location.protocol !== 'file:') feedback('handout-share-status');
+    feedback('handout-share-status');
   });
   $('copy-handout-link').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText($('handout-link').value);
       feedback('handout-share-status', 'Handout link copied.');
     } catch {
-      hidden('handout-link-label', false);
-      $('handout-link').focus();
-      $('handout-link').select();
-      feedback('handout-share-status', 'Copy the selected handout link.');
+      selectHandoutLink();
     }
   });
   $('save-referee-link').addEventListener('click', openRefereeLinkDialog);

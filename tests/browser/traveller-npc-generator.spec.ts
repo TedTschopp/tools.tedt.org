@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { decodeLinkPayload } from '../../tool-src/tools/traveller-npc-generator/link-payload.mjs';
 import { routeHeaderAssets } from '../shared-header.mjs';
 
@@ -10,6 +10,28 @@ function handoutPayload(href: string) {
   const { hash } = new URL(href);
   expect(hash).toMatch(/^#h1=[A-Za-z0-9_-]+$/);
   return decodeLinkPayload(hash.slice('#h1='.length), 150_000);
+}
+
+async function captureClipboard(page: Page) {
+  await page.addInitScript(() => {
+    let copied = '';
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: async (value: string) => { copied = value; },
+        readText: async () => copied,
+      },
+    });
+  });
+}
+
+async function copyPlayerLink(page: Page) {
+  const card = page.getByRole('region', { name: 'Encounter card' });
+  await card.getByRole('button', { name: 'Copy Player Link', exact: true }).click();
+  await expect(card.getByRole('status')).toHaveText('Player link copied.');
+  await expect(page.getByRole('dialog', { name: 'Player handout' })).toBeHidden();
+  const link = await page.evaluate(() => navigator.clipboard.readText());
+  expect(new URL(link).pathname).toBe(url);
+  return link;
 }
 
 test.beforeEach(async ({ page }) => { await routeHeaderAssets(page); });
@@ -244,6 +266,7 @@ test('player view and player export omit referee-only material and fit a narrow 
 });
 
 test('a player handout opens in another browser session with only opted-in facts', async ({ page, browser }) => {
+  await captureClipboard(page);
   await page.goto(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
   await page.getByLabel('Species profile').selectOption('human');
@@ -260,9 +283,11 @@ test('a player handout opens in another browser session with only opted-in facts
   await expect(brief).toContainText(/Medic [23]/);
   await expect(brief).toContainText('Seeking work or between positions');
 
+  const quickLink = await copyPlayerLink(page);
   await page.getByRole('button', { name: 'Share handout' }).click();
   const share = page.getByRole('dialog', { name: 'Player handout' });
   const open = share.getByRole('link', { name: 'Open handout' });
+  await expect(open).toHaveAttribute('href', quickLink);
   const handoutData = async () => handoutPayload((await open.getAttribute('href'))!);
   expect(Object.keys(await handoutData()).sort()).toEqual(['introduction', 'name', 'portrait', 'role', 'species', 'version']);
   await share.getByLabel('Qualifications', { exact: true }).check();
@@ -272,12 +297,15 @@ test('a player handout opens in another browser session with only opted-in facts
   expect(Object.keys(data).sort()).toEqual(['availability', 'introduction', 'name', 'pay', 'portrait', 'qualifications', 'role', 'species', 'version']);
   expect(data.qualifications).toEqual([['Medic', expect.any(Number)]]);
   expect(JSON.stringify(data)).not.toMatch(/Referee-only relationship|private favor|seed/i);
+  const optedInLink = (await open.getAttribute('href'))!;
+  await share.getByRole('button', { name: 'Close' }).click();
+  expect(await copyPlayerLink(page)).toBe(quickLink);
 
   const recipient = await browser.newContext({ viewport: { width: 390, height: 844 } });
   try {
     const handout = await recipient.newPage();
     await routeHeaderAssets(handout);
-    await handout.goto((await open.getAttribute('href'))!);
+    await handout.goto(optedInLink);
     await expect(handout.getByRole('heading', { name: 'Éla Vár' })).toBeVisible();
     await expect(handout.locator('#handout-plate img')).toBeVisible();
     await expect(handout.locator('#handout-facts')).toContainText('Cr4,000 per month');
@@ -295,6 +323,24 @@ test('a player handout opens in another browser session with only opted-in facts
     await expect(handout.getByRole('heading', { name: 'Handout link is incomplete or invalid.' })).toBeVisible();
     await expect(handout.locator('#generator')).toBeHidden();
   } finally { await recipient.close(); }
+});
+
+test('Copy Player Link selects the short handout URL when clipboard access is denied', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: async () => { throw new DOMException('Denied', 'NotAllowedError'); } },
+    });
+  });
+  await page.goto(url);
+  await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  await page.getByRole('button', { name: 'Copy Player Link', exact: true }).click();
+
+  const dialog = page.getByRole('dialog', { name: 'Player handout' });
+  await expect(dialog.getByRole('status')).toHaveText('Copy the selected handout link.');
+  const link = dialog.getByRole('textbox', { name: 'Handout link' });
+  await expect(link).toBeFocused();
+  expect(await link.evaluate((input: HTMLInputElement) => input.selectionStart === 0 && input.selectionEnd === input.value.length)).toBe(true);
+  expect(handoutPayload(await link.inputValue()).introduction).toBe(await page.locator('#npc-intro').innerText());
 });
 
 test('mobile rolls keep the card in view and show the patron job above the dossier', async ({ page }) => {
@@ -455,6 +501,7 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
 });
 
 test('group handouts preserve the visible encounter and leave the referee facts private', async ({ page, browser }) => {
+  await captureClipboard(page);
   await page.goto(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
   await page.getByRole('button', { name: 'Group Encounter', exact: true }).click();
@@ -472,12 +519,13 @@ test('group handouts preserve the visible encounter and leave the referee facts 
   await page.getByRole('button', { name: 'Share handout' }).click();
   const handoutDialog = page.getByRole('dialog', { name: 'Player handout' });
   const href = (await handoutDialog.getByRole('link', { name: 'Open handout' }).getAttribute('href'))!;
+  await handoutDialog.getByRole('button', { name: 'Close' }).click();
+  expect(await copyPlayerLink(page)).toBe(href);
   const data = handoutPayload(href);
   expect(Object.keys(data).sort()).toEqual(['introduction', 'kind', 'name', 'portrait', 'role', 'version']);
   expect(data.introduction).toBe(group.player.introduction);
   expect(JSON.stringify(data)).not.toContain(group.affiliation);
   expect(JSON.stringify(data)).not.toContain(group.purpose);
-  await handoutDialog.getByRole('button', { name: 'Close' }).click();
   await page.getByRole('button', { name: 'Player view', exact: true }).click();
   await page.reload();
   await expect(page.locator('#npc-name')).toHaveText('Portside associates');
