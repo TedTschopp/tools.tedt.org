@@ -343,6 +343,27 @@ test('Copy Player Link selects the short handout URL when clipboard access is de
   expect(handoutPayload(await link.inputValue()).introduction).toBe(await page.locator('#npc-intro').innerText());
 });
 
+test('the generator hero leaves controls within reach on a short phone', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto(url);
+  await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  const hero = page.getByRole('img', { name: 'A mixed-species crew reviews a cargo manifest in an orbital freight hangar.' });
+  await expect(hero).toBeInViewport({ ratio: 1 });
+  await hero.evaluate((image: HTMLImageElement) => image.decode());
+  expect((await hero.boundingBox())!.height).toBeLessThanOrEqual(84);
+  await expect(page.getByRole('group', { name: 'Encounter mode' })).toBeInViewport({ ratio: 1 });
+  const settings = page.getByText('Generation settings', { exact: true });
+  await expect(settings).toBeInViewport({ ratio: 1 });
+  expect(await settings.evaluate(label => {
+    const bounds = label.getBoundingClientRect();
+    const hit = document.elementFromPoint(bounds.left + 2, bounds.bottom - 2);
+    return label.closest('summary')?.contains(hit);
+  })).toBe(true);
+
+  await page.getByRole('link', { name: 'Jump to encounter', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Next NPC', exact: true })).toBeInViewport({ ratio: 1 });
+});
+
 test('mobile rolls keep the card in view and show the patron job above the dossier', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(url);
