@@ -6,7 +6,7 @@ import { generateName, nameStyleFor } from './names.mjs';
 import { diceOutcomes, pickDice, stableId, streams, sum } from './random.mjs';
 import { cultures } from './species.mjs';
 import {
-  accessTable, affiliations, boundaries, contexts, employments, goals, legacyNamePack, looks, manner, names,
+  accessTable, affiliations, attitudeFor, boundaries, contexts, employments, goals, legacyNamePack, looks, manner, names,
   occupationTable, packs, possessions, pressureConsequences, pressures, relationshipRoles,
   requests, risks, ruleProfile, schema, secrets, transition, version,
 } from './tables.mjs';
@@ -251,8 +251,7 @@ async function storyFor(id, config, locks, work, resources, rng, namingStyle) {
   let attitude = locks.attitude;
   if (!attitude) {
     const score = (await rng('attitude', 'narrative').dice(2, 'Initial attitude')).total;
-    attitude = score === 2 ? 'Hostile' : score <= 5 ? 'Guarded' : score <= 8 ? 'Neutral'
-      : score <= 11 ? 'Welcoming' : 'Actively helpful';
+    attitude = attitudeFor(score);
   }
   const goalIndex = await orDie(locks, 'goal', rng, 'Immediate goal');
   const process = rng('pressure', 'narrative');

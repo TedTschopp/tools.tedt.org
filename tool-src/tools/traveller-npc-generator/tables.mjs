@@ -18,6 +18,10 @@ export const contexts = {
   crew: { name: 'Crew hiring', hiring: true },
   patron: { name: 'Party patron', patron: true },
 };
+export function attitudeFor(score) {
+  return score === 2 ? 'Hostile' : score <= 5 ? 'Guarded' : score <= 8 ? 'Neutral'
+    : score <= 11 ? 'Welcoming' : 'Actively helpful';
+}
 export const tiers = [
   { id: 'green', name: 'Green', high: 4, ratings: [0, 0, 0, 0], ageDice: 1, ageOffset: -1 },
   { id: 'competent', name: 'Competent', high: 9, ratings: [1, 1, 1, 0], ageDice: 3, ageOffset: 0 },
