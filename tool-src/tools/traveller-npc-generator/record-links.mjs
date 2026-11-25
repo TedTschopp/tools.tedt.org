@@ -12,10 +12,10 @@ export const isRefereeLink = hash => hash.startsWith(refereeLinkPrefix) || hash.
 export function recordInputs(record) {
   const { schema, id, provenance, controls } = record;
   const { version, packs, seed, index, rerollCounters, npcVersion } = provenance;
-  const { config, locks, rollLocks } = controls;
+  const { config, locks, rollLocks, characterSheet, memberSheets } = controls;
   return {
     schema, id, provenance: { version, packs, seed, index, rerollCounters, npcVersion },
-    controls: { config, locks, rollLocks },
+    controls: { config, locks, rollLocks, ...(characterSheet && { characterSheet }), ...(memberSheets && { memberSheets }) },
   };
 }
 

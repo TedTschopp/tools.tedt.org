@@ -34,6 +34,16 @@ async function copyPlayerLink(page: Page) {
   return link;
 }
 
+async function openDisclosure(page: Page, id: string) {
+  const section = page.locator('#' + id);
+  if ((await section.getAttribute('open')) === null) await section.locator(':scope > summary').click();
+}
+
+async function useEncounterAction(page: Page, name: string) {
+  await page.getByRole('button', { name: 'More actions', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Encounter actions' }).getByRole('button', { name, exact: true }).click();
+}
+
 test.beforeEach(async ({ page }) => { await routeHeaderAssets(page); });
 
 test('species portraits enlarge in settings, player view, and the field guide', async ({ page }) => {
@@ -65,7 +75,7 @@ test('species portraits enlarge in settings, player view, and the field guide', 
 
   await page.getByRole('button', { name: 'Return to referee view' }).click();
   await page.setViewportSize({ width: 320, height: 600 });
-  await page.getByRole('link', { name: 'Species field guide', exact: true }).click();
+  await page.getByRole('link', { name: 'Species guide', exact: true }).click();
   await page.getByLabel('Find a species or source').fill('Chirper');
   await page.locator('#species-guide').getByRole('button', { name: 'Enlarge Chirper portrait' }).click();
   const mobileViewer = page.getByRole('dialog', { name: 'Chirper' });
@@ -95,7 +105,7 @@ test('book-sourced plates track the selected and committed species', async ({ pa
   await expect(image).toBeVisible();
   await expect(page.locator('#referee')).toBeHidden();
   await page.getByRole('button', { name: 'Return to referee view' }).click();
-  await page.getByRole('link', { name: 'Species field guide', exact: true }).click();
+  await page.getByRole('link', { name: 'Species guide', exact: true }).click();
   await page.getByLabel('Find a species or source').fill('Chirper');
   await expect(page.locator('#species-guide')).toContainText('1 entry found');
   await expect(page.locator('#species-guide').getByRole('img', { name: /Chirper/ })).toBeVisible();
@@ -109,11 +119,13 @@ test('published encounters render native rules and can be saved and restored', a
   await expect(page.locator('#settings-plate').getByRole('img', { name: /Ganmeid/ })).toBeVisible();
   await page.getByRole('button', { name: 'Apply settings' }).click();
   await expect(page.locator('#encounter-plate')).toContainText('The Third Imperium, p. 166');
+  await openDisclosure(page, 'referee');
   await expect(page.locator('#source-encounter-record')).toContainText('Hits24');
   await expect(page.locator('#source-encounter-record')).toContainText('Bite (1D+3)');
   await expect(page.getByText('Skills and qualifications', { exact: true })).toBeHidden();
   await page.reload();
   await expect(page.locator('#status')).toContainText('Restored NPC 1');
+  await openDisclosure(page, 'referee');
   await expect(page.locator('#source-encounter-record')).toBeVisible();
   await page.getByLabel('Species profile').selectOption('human');
   await expect(page.getByRole('combobox', { name: 'Occupation', exact: true })).toBeVisible();
@@ -132,8 +144,10 @@ test('catalog launches the new Traveller tool and conditions a hiring search', a
   await page.goto(new URL((await launch.getAttribute('href'))!).pathname);
   await expect(page).toHaveURL(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  await openDisclosure(page, 'npc-more-settings');
   await page.getByText('Required skills and characteristics', { exact: true }).click();
   await page.getByRole('button', { name: 'Medic 2 hiring' }).click();
+  await openDisclosure(page, 'referee');
   const ratings = page.getByRole('region', { name: 'Job and crew qualifications' });
   await expect(ratings.getByRole('row', { name: /Medic 2 [23]/ })).toBeVisible();
   await expect(page.locator('#validity')).toContainText('Qualified');
@@ -155,6 +169,7 @@ test('switches from a ship’s medic to crew roles and labels a retained roll', 
 
   await expect(status).toContainText('NPC 1 ready');
   await page.getByLabel('Species profile').selectOption('human');
+  await openDisclosure(page, 'npc-more-settings');
   await page.getByText('Seed and rerolls', { exact: true }).click();
   await page.getByLabel('Seed', { exact: true }).fill('role-switch-reproduction');
   await page.getByText('Required skills and characteristics', { exact: true }).click();
@@ -166,6 +181,7 @@ test('switches from a ship’s medic to crew roles and labels a retained roll', 
   await crew.click();
   await expect(role).toHaveText(/Human · (jump navigator|merchant pilot)/i);
   await expect(occupation).toHaveValue('random');
+  await openDisclosure(page, 'referee');
   const qualifications = page.getByRole('region', { name: 'Job and crew qualifications' });
   await expect(qualifications).toContainText('Pilot (spacecraft)');
   await expect(qualifications).toContainText('Astrogation');
@@ -199,21 +215,24 @@ test('locks, candidate rerolls and saved records work through the real browser e
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
   await page.getByLabel('Species profile').selectOption('droyne');
   await page.getByLabel('Adult form or caste').selectOption('Technician');
+  await openDisclosure(page, 'npc-more-settings');
   await page.getByText('Cross-training and psionics', { exact: true }).click();
   await page.getByLabel('Wings').selectOption('large');
   await page.getByRole('button', { name: 'Apply settings' }).click();
+  await openDisclosure(page, 'referee');
   await expect(page.locator('#characteristics')).toContainText('Technician');
   await expect(page.getByRole('region', { name: 'Resolved skills' })).toContainText('Flight');
   const characteristics = await page.locator('.characteristics').innerText();
+  await openDisclosure(page, 'referee');
   await page.getByText('Locks and rerolls', { exact: true }).click();
   await page.getByLabel('Lock STR', { exact: true }).check();
-  await page.getByRole('button', { name: 'Reroll name', exact: true }).first().click();
+  await useEncounterAction(page, 'Reroll name');
   await expect(page.locator('#status')).toContainText('Rerolled the selected fields');
   await expect(page.locator('.characteristics')).toHaveText(characteristics, { useInnerText: true });
   await page.getByText('Seed, versions and roll record', { exact: true }).click();
   await expect(page.locator('#rolls')).toContainText('name 1');
   const waiting = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Referee record · JSON' }).click();
+  await useEncounterAction(page, 'Referee record · JSON');
   const download = await waiting;
   const json = await readFile(await download.path());
   const exported = JSON.parse(json.toString());
@@ -234,6 +253,7 @@ test('player view and player export omit referee-only material and fit a narrow 
   await page.goto(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
   await page.getByText('Generation settings', { exact: true }).click();
+  await openDisclosure(page, 'npc-more-settings');
   await page.getByText('Advanced referee facts', { exact: true }).click();
   await page.getByLabel('Campaign options in JSON').fill(JSON.stringify({
     partyRelationship: {
@@ -241,13 +261,18 @@ test('player view and player export omit referee-only material and fit a narrow 
     },
   }));
   await page.getByRole('button', { name: 'Apply settings' }).click();
+  await openDisclosure(page, 'referee');
   await page.getByText('Story, relationships and secrets', { exact: true }).click();
   await expect(page.locator('#story')).toContainText(savedFixture);
   await page.getByRole('button', { name: 'Player view', exact: true }).click();
   await expect(page.getByLabel('Generation settings')).toBeHidden();
   await expect(page.locator('#referee')).toBeHidden();
   await expect(page.locator('#referee-brief')).toBeHidden();
-  await expect(page.getByRole('button', { name: 'Referee record · JSON' })).toBeHidden();
+  await page.getByRole('button', { name: 'More actions', exact: true }).click();
+  const actions = page.getByRole('dialog', { name: 'Encounter actions' });
+  await expect(actions.getByRole('button', { name: 'Referee record · JSON' })).toBeHidden();
+  await expect(actions.getByRole('button', { name: 'Share handout', exact: true })).toBeVisible();
+  await actions.getByRole('button', { name: 'Close', exact: true }).click();
   const name = await page.locator('#npc-name').innerText();
   await page.reload();
   await expect(page.locator('#npc-name')).toHaveText(name);
@@ -256,7 +281,7 @@ test('player view and player export omit referee-only material and fit a narrow 
   await expect(page.locator('#referee-brief')).toBeHidden();
   await expect(page.getByRole('button', { name: 'Keep NPC' })).toBeHidden();
   const waiting = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Introduction · TXT' }).click();
+  await useEncounterAction(page, 'Introduction · TXT');
   const intro = await readFile(await (await waiting).path(), 'utf8');
   expect(intro.trim()).toBe(await page.locator('#npc-intro').innerText());
   expect(intro).not.toMatch(/Referee-only relationship|private favor|seed/i);
@@ -270,6 +295,7 @@ test('a player handout opens in another browser session with only opted-in facts
   await page.goto(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
   await page.getByLabel('Species profile').selectOption('human');
+  await openDisclosure(page, 'npc-more-settings');
   await page.getByText('Campaign, age and identity', { exact: true }).click();
   await page.getByLabel('Common name', { exact: true }).fill('Éla Vár');
   await page.getByText('Advanced referee facts', { exact: true }).click();
@@ -284,7 +310,7 @@ test('a player handout opens in another browser session with only opted-in facts
   await expect(brief).toContainText('Seeking work or between positions');
 
   const quickLink = await copyPlayerLink(page);
-  await page.getByRole('button', { name: 'Share handout' }).click();
+  await useEncounterAction(page, 'Share handout');
   const share = page.getByRole('dialog', { name: 'Player handout' });
   const open = share.getByRole('link', { name: 'Open handout' });
   await expect(open).toHaveAttribute('href', quickLink);
@@ -343,6 +369,27 @@ test('Copy Player Link selects the short handout URL when clipboard access is de
   expect(handoutPayload(await link.inputValue()).introduction).toBe(await page.locator('#npc-intro').innerText());
 });
 
+test('hidden settings stay reachable when a field needs correction', async ({ page }) => {
+  await page.goto(url);
+  await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  const extra = page.locator('#npc-more-settings');
+  await expect(extra).not.toHaveAttribute('open', '');
+  await expect(page.locator('#referee')).not.toHaveAttribute('open', '');
+  await expect(page.locator('#guide-options')).not.toHaveAttribute('open', '');
+  await openDisclosure(page, 'npc-more-settings');
+  await openDisclosure(page, 'seed-settings');
+  const seed = page.getByLabel('Seed', { exact: true });
+  await seed.fill('');
+  await extra.locator(':scope > summary').click();
+  await expect(seed).toBeHidden();
+
+  await page.getByRole('button', { name: 'Apply settings', exact: true }).click();
+  await expect(seed).toBeFocused();
+  await seed.fill('corrected seed');
+  await page.getByRole('button', { name: 'Apply settings', exact: true }).click();
+  await expect(page.locator('#settings-feedback')).toBeHidden();
+});
+
 test('the generator hero leaves controls within reach on a short phone', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await page.goto(url);
@@ -384,6 +431,66 @@ test('mobile rolls keep the card in view and show the patron job above the dossi
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
+test('an editable Traveller sheet fits a phone and keeps its saved data private', async ({ page, browser }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await captureClipboard(page);
+  await page.goto(url);
+  const trigger = page.getByRole('button', { name: 'Character sheet', exact: true });
+  await trigger.click();
+  const dialog = page.getByRole('dialog', { name: 'Character sheet' });
+  await expect(dialog.getByRole('spinbutton', { name: 'Strength current', exact: true })).toHaveValue(/\d/);
+  await expect(dialog.locator('.tt-panel-head')).toHaveCSS('background-color', 'rgb(17, 17, 17)');
+  expect(await dialog.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
+  await dialog.getByText('Additional characteristics', { exact: true }).click();
+  const luck = dialog.getByRole('spinbutton', { name: 'Luck current', exact: true });
+  await expect(luck).toHaveValue('');
+  await luck.fill('10');
+  await expect(dialog.getByRole('group', { name: 'Luck', exact: true }).locator('output.current')).toHaveText('+1');
+  await dialog.getByText('Finances', { exact: true }).click();
+  await dialog.locator('#sheet-wlt-current').fill('0');
+  await expect(dialog.locator('output.sheet-cash[for="sheet-wlt-current"]')).toHaveText('Cr 0');
+  await dialog.getByText('Education and careers', { exact: true }).click();
+  const careers = dialog.getByRole('region', { name: 'Careers', exact: true });
+  await careers.getByRole('button', { name: 'Add row to Careers', exact: true }).click();
+  await careers.getByLabel('Career', { exact: true }).fill('Merchant');
+  await careers.getByLabel('Rank and title', { exact: true }).fill('First Officer');
+  await dialog.getByText('Notes', { exact: true }).click();
+  const privateNote = 'Referee-only sheet entry';
+  await dialog.getByLabel('Character notes', { exact: true }).fill(privateNote);
+  await dialog.getByRole('button', { name: 'Save sheet' }).click();
+  await expect(page.locator('#card-feedback')).toHaveText('Character sheet saved.');
+  await page.reload();
+  await trigger.click();
+  await dialog.getByText('Additional characteristics', { exact: true }).click();
+  await expect(luck).toHaveValue('10');
+  await dialog.getByText('Education and careers', { exact: true }).click();
+  await careers.getByText('Merchant', { exact: true }).click();
+  await expect(careers.getByLabel('Rank and title', { exact: true })).toHaveValue('First Officer');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await useEncounterAction(page, 'Referee link');
+  const href = await page.getByLabel('Encounter URL').inputValue();
+  await page.getByRole('dialog', { name: 'Referee link' }).getByRole('button', { name: 'Close' }).click();
+  const context = await browser.newContext();
+  try {
+    const receiver = await context.newPage();
+    await routeHeaderAssets(receiver);
+    await receiver.goto(href);
+    await receiver.getByRole('button', { name: 'Character sheet', exact: true }).click();
+    const restored = receiver.getByRole('dialog', { name: 'Character sheet' });
+    await restored.getByText('Notes', { exact: true }).click();
+    await expect(restored.getByLabel('Character notes')).toHaveValue(privateNote);
+  } finally { await context.close(); }
+  expect(JSON.stringify(handoutPayload(await copyPlayerLink(page)))).not.toContain(privateNote);
+  await page.getByRole('button', { name: 'Player view' }).click();
+  await expect(trigger).toBeHidden();
+  await page.getByRole('button', { name: 'Return to referee view' }).click();
+  await page.getByRole('button', { name: 'Next NPC' }).click();
+  await expect(page.locator('#status')).toContainText('NPC 2 ready');
+  await trigger.click();
+  await dialog.getByText('Additional characteristics', { exact: true }).click();
+  await expect(luck).toHaveValue('');
+});
+
 test('the field guide searches all profiles and rolls from both generator rulesets', async ({ page }) => {
   await page.goto(url + '#species-guide');
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
@@ -416,6 +523,7 @@ test('the campaign roster recalls exact rolls and keeps distinct builds at the s
   await page.goto(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
   await page.getByLabel('Species profile').selectOption('human');
+  await openDisclosure(page, 'npc-more-settings');
   await page.getByText('Campaign, age and identity', { exact: true }).click();
   const name = page.getByLabel('Common name', { exact: true });
   const occupation = page.getByRole('combobox', { name: 'Occupation', exact: true });
@@ -425,6 +533,7 @@ test('the campaign roster recalls exact rolls and keeps distinct builds at the s
   await occupation.selectOption('12');
   await page.getByRole('button', { name: 'Apply settings' }).click();
   await expect(page.locator('#npc-name')).toHaveText('Veda Pike');
+  await openDisclosure(page, 'referee');
   await page.getByText('Locks and rerolls', { exact: true }).click();
   await page.getByLabel('Lock STR', { exact: true }).check();
   const navigator = await activeRecord();
@@ -477,7 +586,7 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   await expect(status).toContainText('Naval inspection or boarding detail');
   await expect(page.locator('#encounter')).toBeFocused();
   await expect(types).toBeHidden();
-  const group = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-group-v1')!));
+  let group = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-group-v1')!));
   const brief = page.getByRole('region', { name: 'Referee quick reference' });
   await expect(brief).toContainText(group.purpose);
   await expect(brief).toContainText(group.affiliation);
@@ -488,6 +597,15 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   expect(group.size).toBe(group.members.length + group.others.count);
   const lead = group.members[0].npc.player.name;
 
+  await page.getByRole('button', { name: 'Character sheet for ' + lead, exact: true }).click();
+  const sheet = page.getByRole('dialog', { name: 'Character sheet' });
+  await sheet.getByText('Notes', { exact: true }).click();
+  await sheet.getByLabel('Character notes').fill('Leader sheet entry');
+  await sheet.getByRole('button', { name: 'Save sheet' }).click();
+  await expect(page.locator('#card-feedback')).toHaveText('Character sheet saved.');
+  group = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-group-v1')!));
+  expect(group.controls.memberSheets[group.members[0].npc.id].notes).toBe('Leader sheet entry');
+
   await page.getByRole('button', { name: 'Keep group' }).click();
   await expect(page.locator('#card-feedback')).toContainText('is in the campaign roster');
   await page.getByRole('button', { name: 'Single NPC', exact: true }).click();
@@ -496,12 +614,13 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   await page.getByRole('button', { name: 'Open NPC record for ' + lead, exact: true }).click();
   await expect(page.locator('#npc-name')).toHaveText(lead);
   await expect(page.locator('#referee')).toBeVisible();
+  await openDisclosure(page, 'referee');
   await page.getByText('Locks and rerolls', { exact: true }).click();
   await page.getByLabel('Lock STR', { exact: true }).check();
   await groupMode.click();
 
   const waiting = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Referee record · JSON' }).click();
+  await useEncounterAction(page, 'Referee record · JSON');
   const saved = await readFile(await (await waiting).path());
   expect(JSON.parse(saved.toString())).toEqual(group);
   await page.getByRole('button', { name: 'Next group' }).click();
@@ -514,6 +633,7 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   await page.getByRole('button', { name: 'Next group' }).click();
   await expect(status).toContainText('Group 2 ready');
   await settings.getByText('Group encounter settings', { exact: true }).click();
+  await openDisclosure(page, 'group-more-settings');
   await settings.getByText('Open a saved group', { exact: true }).click();
   await settings.getByLabel('Saved group JSON').setInputFiles({ name: 'referee.json', mimeType: 'application/json', buffer: saved });
   await expect(status).toHaveText('Opened Naval inspection or boarding detail.');
@@ -531,13 +651,13 @@ test('group handouts preserve the visible encounter and leave the referee facts 
   await page.getByRole('button', { name: 'Roll group' }).click();
   await expect(page.locator('#npc-name')).toHaveText('Portside associates');
   const group = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-group-v1')!));
-  await page.getByRole('button', { name: 'Referee link', exact: true }).click();
+  await useEncounterAction(page, 'Referee link');
   const refereeDialog = page.getByRole('dialog', { name: 'Referee link' });
   const refereeHref = await refereeDialog.getByLabel('Encounter URL').inputValue();
   expect(new URL(refereeHref).hash).toMatch(/^#r1=[A-Za-z0-9_-]+$/);
   expect(refereeHref.length).toBeLessThan(300);
   await refereeDialog.getByRole('button', { name: 'Close' }).click();
-  await page.getByRole('button', { name: 'Share handout' }).click();
+  await useEncounterAction(page, 'Share handout');
   const handoutDialog = page.getByRole('dialog', { name: 'Player handout' });
   const href = (await handoutDialog.getByRole('link', { name: 'Open handout' }).getAttribute('href'))!;
   await handoutDialog.getByRole('button', { name: 'Close' }).click();
@@ -552,7 +672,10 @@ test('group handouts preserve the visible encounter and leave the referee facts 
   await expect(page.locator('#npc-name')).toHaveText('Portside associates');
   await expect(page.locator('#group-referee')).toBeHidden();
   await expect(page.locator('#referee-brief')).toBeHidden();
-  await expect(page.getByRole('button', { name: 'Referee link', exact: true })).toBeHidden();
+  await page.getByRole('button', { name: 'More actions', exact: true }).click();
+  const actions = page.getByRole('dialog', { name: 'Encounter actions' });
+  await expect(actions.getByRole('button', { name: 'Referee link', exact: true })).toBeHidden();
+  await actions.getByRole('button', { name: 'Close', exact: true }).click();
 
   const recipient = await browser.newContext();
   try {
@@ -575,13 +698,15 @@ test('group handouts preserve the visible encounter and leave the referee facts 
 test('referee links restore a character in a fresh browser without making it the default save', async ({ page, browser }) => {
   await page.goto(url);
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  await openDisclosure(page, 'npc-more-settings');
   await page.getByText('Campaign, age and identity', { exact: true }).click();
   await page.getByLabel('Common name', { exact: true }).fill('Éla & Vár');
   await page.getByRole('button', { name: 'Apply settings' }).click();
   await expect(page.locator('#npc-name')).toHaveText('Éla & Vár');
+  await openDisclosure(page, 'referee');
   await page.getByText('Locks and rerolls', { exact: true }).click();
   await page.getByLabel('Lock STR', { exact: true }).check();
-  await page.getByRole('button', { name: 'Referee link', exact: true }).click();
+  await useEncounterAction(page, 'Referee link');
   const dialog = page.getByRole('dialog', { name: 'Referee link' });
   const href = await dialog.getByLabel('Encounter URL').inputValue();
   expect(new URL(href).hash).toMatch(/^#r1=[A-Za-z0-9_-]+$/);
@@ -597,6 +722,7 @@ test('referee links restore a character in a fresh browser without making it the
     await receiver.goto(href);
     await expect(receiver.locator('#status')).toContainText('Restored NPC 1 · Éla & Vár');
     await expect(receiver.locator('#npc-name')).toHaveText('Éla & Vár');
+    await openDisclosure(receiver, 'referee');
     await receiver.getByText('Locks and rerolls', { exact: true }).click();
     await expect(receiver.getByLabel('Lock STR', { exact: true })).toBeChecked();
     expect(await receiver.evaluate(() => localStorage.getItem('tedt-traveller-npc-v1'))).toBeNull();

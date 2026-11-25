@@ -19,6 +19,7 @@ features:
   - "Set exact skill and characteristic minimums for professional or crew hiring"
   - "Roll 18 types of group encounters with a shared purpose, affiliation and reaction"
   - "Reproduce each NPC from its seed, lock values, and reroll fields independently"
+  - "Track characteristics, training, careers, gear, finances, and notes on each NPC’s editable character sheet"
   - "Share player handouts, bookmark referee records, and keep a local campaign roster"
   - "Roll species such as Ganmeids and Weeven with their published encounter rules"
 ---
@@ -26,7 +27,8 @@ features:
 ## Roll an encounter
 
 Open **Generation settings** to choose a species, occupation, and level of
-competence. Use **Next NPC** on the Encounter card to make another roll. The
+competence. Open **More settings** for skill minimums, equipment, identity,
+and seeds. Use **Next NPC** on the Encounter card to make another roll. The
 **Species field guide** searches sourcebooks and species names and can roll
 directly from eligible entries.
 
@@ -42,6 +44,19 @@ The group templates are house rules informed by the published encounter and
 crew tables. Use **Keep group** to save the full encounter in the campaign
 roster, or **Share handout** to show the group’s visible introduction.
 
+## Track a character
+
+Open **Character sheet** on the Encounter card or beside any named group
+member. The layout follows the [Traveller 2E character sheet](https://tedt.org/RPG/Traveller/Character-Sheet.html).
+The roll fills in known personal data, characteristic scores, skills, gear,
+and cash. Open the sections to record radiation dose, additional
+characteristics, education and careers, training, weapons and armour,
+augments, finances, and notes. Both Current and Baseline scores show their
+dice modifiers. Wealth Level also shows cash obtainable.
+
+Use **Save sheet** to keep updates with the current encounter. The campaign
+roster, referee link, and referee JSON carry the sheet with the roll.
+
 ## Find a crew candidate
 
 Set the required skill and specialty in **Required skills and characteristics**.
@@ -55,9 +70,10 @@ Use the **Referee quick reference** for the facts you need in the scene. The
 **Referee record** holds the full mechanical details, motives, secrets, and
 roll history. Switch to **Player view** to show the introduction and portrait.
 
-Use **Share handout** to open a separate player card or copy its link. For a
-hiring roll, you can include qualifications, availability, and a pay offer.
-From a local file, open the handout and choose **Print or save as PDF**.
+Use **Copy Player Link** to share the current encounter. Under **More actions**,
+**Share handout** opens a separate player card or copies its link. For a hiring
+roll, it can include qualifications, availability, and a pay offer. Open the
+handout and choose **Print or save as PDF** for a printable copy.
 
 Choose a species under **Published encounters** to roll from its 2E encounter
 block. The referee record shows the source and the species’ published Hits,
@@ -66,7 +82,8 @@ movement, attacks, or encounter traits where available.
 ## Keep a campaign roster
 
 Use **Keep NPC** or **Keep group** on the Encounter card, then **Campaign
-roster** to reopen a saved encounter. Choose **Referee link** to copy the
+roster** to reopen a saved encounter. Under **More actions**, choose
+**Referee link** to copy the
 exact roll or put its link in the address bar for bookmarking. The link stores
 the seed, roll number, and settings in the URL fragment. It reopens the full
 record, including any locks. You can also export the referee JSON.

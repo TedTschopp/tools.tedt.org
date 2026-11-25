@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,22 +7,81 @@
   <meta name="description" content="Roll reproducible NPCs and group encounters for Mongoose Traveller 2E. Share a player handout or keep a referee record and its roll history.">
   <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="colors_and_type.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&amp;family=Arsenal:wght@400;700&amp;family=Marcellus&amp;family=Roboto:wght@400;500;700&amp;display=swap">
   <style>
     [hidden] { display: none !important; }
-    .tt-shell { max-width: var(--tool-max); margin: auto; padding: var(--s-7) var(--safe-padding) var(--s-9); }
+    :root {
+      --traveller-page: #f0f0f0;
+      --traveller-paper: #fff;
+      --traveller-inset: #f5f5f5;
+      --traveller-ink: #333;
+      --traveller-muted: #505050;
+      --traveller-rule: #ced4da;
+      --traveller-soft-rule: #ddd;
+      --traveller-black: #111;
+      --traveller-red: #b00;
+      --traveller-link: #a00000;
+      --traveller-primary-hover: #920000;
+      --traveller-heading: Arsenal, "Arial Narrow", Arial, sans-serif;
+      --traveller-title: Marcellus, Georgia, serif;
+    }
+    :root[data-theme="dark"] {
+      --traveller-page: #151515;
+      --traveller-paper: #202020;
+      --traveller-inset: #292929;
+      --traveller-ink: #f0f0f0;
+      --traveller-muted: #c5c5c5;
+      --traveller-rule: #767676;
+      --traveller-soft-rule: #414141;
+      --traveller-link: #ff9292;
+      --traveller-primary-hover: #a20000;
+    }
+    body { background: var(--traveller-page); }
+    .tt-shell, .portrait-viewer {
+      --bg-card: var(--traveller-paper);
+      --bg-inset: var(--traveller-inset);
+      --bg-hover: var(--traveller-inset);
+      --fg: var(--traveller-ink);
+      --fg-strong: var(--traveller-ink);
+      --fg-2: var(--traveller-muted);
+      --rule: var(--traveller-rule);
+      --border: var(--bw-1) solid var(--rule);
+      --border-soft: var(--bw-1) solid var(--traveller-soft-rule);
+      --accent: var(--traveller-red);
+      --accent-active: var(--traveller-primary-hover);
+      --fg-on-accent: #fff;
+      --link: var(--traveller-link);
+      --copper: var(--traveller-link);
+      --copper-tint: color-mix(in srgb, var(--traveller-red) 8%, var(--traveller-paper));
+      --font-display: var(--traveller-title);
+      --r-1: 3px;
+      --r-2: 3px;
+      --r-3: 3px;
+      color: var(--fg);
+      font-family: Arimo, Arial, sans-serif;
+    }
+    .tt-shell a:not(.button) { color: var(--link); }
+    .tt-shell { max-width: var(--tool-max); margin: auto; padding: var(--s-6) var(--safe-padding) var(--s-9); }
     .topbar, .tt-panel-head, .actions, .summary-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--s-2) var(--s-3); }
     .topbar { margin-bottom: var(--s-6); }
     .topbar a, .hint, .meta { font-size: var(--fs-small); color: var(--fg-2); }
-    .topbar-links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); }
-    .tool-header { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); align-items: center; gap: var(--s-6); margin-bottom: var(--s-5); }
-    .tool-header .t-tool-title { display: block; }
-    .tool-header p { margin: var(--s-3) 0 0; }
-    .tool-hero { display: block; inline-size: 100%; block-size: clamp(8rem, 17vw, 14rem); object-fit: cover; object-position: center 40%; border: var(--border); border-radius: var(--r-3); background: var(--bg-inset); }
-    .tt-banner, .tt-about { border: var(--bw-1) solid var(--ready-border); border-radius: var(--r-3); background: var(--ready-bg); color: var(--ready); padding: var(--s-3) var(--s-4); }
-    .tt-banner { margin-bottom: var(--s-5); overflow-wrap: anywhere; }
+    .tool-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--s-2) var(--s-4); padding-block-end: var(--s-3); margin-block-end: var(--s-2); border-block-end: var(--border-soft); }
+    .tool-nav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-1) var(--s-3); }
+    .tool-nav :is(a, button) { font-size: var(--fs-small); }
+    .tool-nav a { color: var(--fg-2); padding-block: var(--s-1); }
+    .tool-nav button { padding-inline: var(--s-2); }
+    body > .tt-catalog-return { display: none; }
+    .tool-header { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); align-items: center; overflow: hidden; margin-bottom: var(--s-4); border-block-end: 4px solid var(--traveller-red); border-radius: var(--r-3); background: var(--traveller-black); color: #fff; }
+    .tool-header > div { padding: var(--s-4) var(--s-5); }
+    .tool-header .t-tool-title { display: block; font: 400 clamp(1.45rem, 2.8vw, 2.2rem)/1.15 var(--traveller-title); letter-spacing: .045em; text-transform: uppercase; color: inherit; }
+    .tool-header p { margin: var(--s-2) 0 0; color: #ddd; }
+    .tool-hero { display: block; inline-size: 100%; block-size: clamp(7rem, 13vw, 11rem); object-fit: cover; object-position: center 40%; background: var(--traveller-black); }
+    .tt-banner, .tt-about { border: var(--border); border-radius: var(--r-3); background: var(--bg-card); color: var(--fg-2); padding: var(--s-3) var(--s-4); }
+    .tt-banner { margin-bottom: var(--s-4); padding: var(--s-1) var(--s-3); background: var(--bg-inset); border: var(--border-soft); color: var(--fg-2); font-size: var(--fs-small); overflow-wrap: anywhere; }
     .tt-banner[data-state="error"] { background: var(--error-bg); color: var(--error); border-color: var(--error-border); }
-    .tt-banner[data-state="success"] { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
-    .workspace { display: grid; grid-template-columns: minmax(0, 23rem) minmax(0, 1fr); align-items: start; gap: var(--s-5); }
+    .workspace { display: grid; grid-template-columns: minmax(0, 21rem) minmax(0, 1fr); align-items: start; gap: var(--s-5); }
     #generator[data-player-view="true"] .workspace { grid-template-columns: minmax(0, 1fr); }
     #generator[data-player-view="true"] :is(.retained-record, .guide-roll) { display: none; }
     #generator[data-player-view="true"] #encounter, .handout-shell { max-width: 54rem; }
@@ -30,8 +89,20 @@
     .tt-panel { min-width: 0; border: var(--border); border-radius: var(--r-3); background: var(--bg-card); }
     .tt-panel + .tt-panel { margin-top: var(--s-5); }
     .workspace > .tt-panel { margin-top: 0; }
-    .tt-panel-head { padding: var(--s-3) var(--s-4); border-bottom: var(--border); }
-    .tt-panel-head h2 { margin: 0; font-size: var(--fs-h3); }
+    .tt-panel-head, :is(.generation-settings, .referee, .species-reference) > summary, .sheet-heading {
+      --link: #fff;
+      padding: var(--s-3) var(--s-4);
+      border-inline-start: 4px solid var(--traveller-red);
+      border-radius: var(--r-3) var(--r-3) 0 0;
+      background: var(--traveller-black);
+      color: #fff;
+      font: 700 var(--fs-h3)/1.25 var(--traveller-heading);
+      letter-spacing: .035em;
+      text-transform: uppercase;
+    }
+    .tt-panel-head h2 { margin: 0; font: inherit; color: inherit; }
+    .tt-panel-head button.quiet { border-color: #888; color: #fff; }
+    .tt-panel-head button.quiet:hover { background: #2d2d2d; }
     .tt-panel-body { padding: var(--s-4); }
     .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); }
     .wide { grid-column: 1 / -1; }
@@ -43,6 +114,7 @@
     textarea { resize: vertical; min-height: var(--s-9); }
     [aria-invalid="true"] { outline: var(--bw-2) solid var(--error); }
     button, .button { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-1); background: transparent; color: var(--copper); border: var(--bw-1) solid var(--copper); border-radius: var(--r-2); min-height: calc(var(--s-7) + var(--s-2)); padding: var(--s-2) var(--s-3); cursor: pointer; font-weight: var(--fw-semibold); text-decoration: none; }
+    button, .button, label, .label { font-family: Roboto, Arial, sans-serif; }
     button:hover, .button:hover { background: var(--copper-tint); }
     .primary { color: var(--fg-on-accent); border-color: var(--accent); background: var(--accent); }
     .primary:hover { background: var(--accent-active); }
@@ -55,8 +127,15 @@
     .generation-actions { margin: var(--s-4) 0; }
     #active-skill-minimums { margin: var(--s-4) 0; overflow-wrap: anywhere; }
     :is(#settings-feedback, #group-settings-feedback)[data-state="error"] { color: var(--error); }
-    .mode-selector { margin: 0 0 var(--s-4); }
-    .mode-selector button[aria-pressed="true"] { color: var(--fg-on-accent); background: var(--accent); border-color: var(--accent); }
+    .mode-selector { gap: var(--s-1); }
+    .mode-selector button[aria-pressed="true"] { color: #fff; background: var(--traveller-black); border-color: var(--traveller-black); box-shadow: inset 0 -3px var(--traveller-red); }
+    .settings-more { border-block-start: var(--border-soft); margin-block-start: var(--s-4); }
+    .settings-more > summary { padding-block: var(--s-3) var(--s-1); font-weight: var(--fw-semibold); cursor: pointer; }
+    .settings-footer { background: var(--bg-card); border-block-start: var(--border-soft); margin-block-start: var(--s-4); padding-block-start: var(--s-3); }
+    .settings-more[open] + .settings-footer { position: sticky; inset-block-end: 0; z-index: 1; padding-block-end: var(--s-2); }
+    .settings-footer .hint { margin: 0 0 var(--s-2); overflow-wrap: anywhere; }
+    .settings-footer > button { inline-size: 100%; }
+    .settings-more :is(summary, input, select, textarea, button) { scroll-margin-block-end: var(--s-9); }
     .field-notes { margin: var(--s-2) 0 0; }
     .species-plate { display: flex; align-items: flex-start; gap: var(--s-3); margin: 0; }
     .portrait-trigger { position: relative; display: block; flex: none; min-height: 0; padding: 0; border: var(--border); cursor: zoom-in; }
@@ -67,12 +146,55 @@
     .species-plate figcaption span, .portrait-viewer figcaption span { display: block; margin-top: var(--s-1); }
     .encounter-plate { margin: var(--s-4) 0 0; }
     .encounter-plate img { width: clamp(5.25rem, 14vw, 8rem); }
+    #settings-plate img { width: 3.25rem; }
+    #settings-plate figcaption > span { display: none; }
+    .encounter-identity { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); }
+    .encounter-identity > div { min-inline-size: 0; }
+    #encounter-plate { flex: none; margin: 0; }
+    #encounter-plate img { width: clamp(3.5rem, 8vw, 6rem); }
+    #encounter-plate figcaption { display: none; }
     .modal { box-sizing: border-box; inline-size: min(27rem, calc(100% - var(--s-6))); max-block-size: calc(100% - var(--s-6)); overflow: auto; overscroll-behavior: contain; padding: 0; border: var(--border); border-radius: var(--r-3); background: var(--bg-card); color: var(--fg); box-shadow: var(--shadow-3); }
-    .modal::backdrop { background: color-mix(in srgb, var(--plt-bg-900) 76%, transparent); }
+    .modal::backdrop { background: rgb(17 17 17 / .74); }
+    .sheet-modal { inline-size: min(63rem, calc(100% - var(--s-5))); }
+    .sheet-modal[open], .sheet-modal form { display: flex; flex-direction: column; overflow: hidden; }
+    .sheet-modal .tt-panel-head { flex-shrink: 0; }
+    .sheet-content { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scroll-padding-block: var(--s-2); }
+    .sheet-content > .hint { margin: 0 0 var(--s-3); }
+    .sheet-heading { margin: 0 0 var(--s-3); }
+    .sheet-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(8.5rem, 100%), 1fr)); gap: var(--s-2); }
+    .sheet-stat { min-inline-size: 0; margin: var(--s-2) 0 0; padding: var(--s-3) var(--s-2) var(--s-2); border: 1px solid var(--rule); border-block-start: 3px solid var(--traveller-red); border-radius: var(--r-2); background: var(--bg-inset); }
+    .sheet-stat legend { float: inline-start; width: 100%; padding: 0; margin: 0 0 var(--s-2); color: var(--fg); text-align: center; font: 700 1rem/1.1 var(--traveller-heading); }
+    .sheet-score-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); clear: both; }
+    .sheet-score { display: grid; justify-items: center; align-content: start; gap: var(--s-1); }
+    .sheet-score label { font-size: .75rem; }
+    .sheet-score input[type="number"] { background: var(--bg-card); min-height: 2rem; padding: var(--s-1); text-align: center; appearance: textfield; }
+    .sheet-score input::-webkit-inner-spin-button { appearance: none; }
+    .sheet-dm, .sheet-cash { font: var(--fs-small) / 1.25 var(--font-mono); }
+    .sheet-dm { min-inline-size: 2.25rem; padding: 2px 4px; border-radius: var(--r-1); background: var(--traveller-muted); color: var(--traveller-paper); text-align: center; }
+    .sheet-dm.current { background: var(--traveller-red); color: #fff; }
+    .sheet-section { border-block-start: var(--border-soft); margin-block-start: var(--s-3); }
+    .sheet-section > summary, .sheet-row > summary { padding: var(--s-2) 0; cursor: pointer; font-weight: var(--fw-semibold); overflow-wrap: anywhere; }
+    .sheet-section > summary { font-family: var(--traveller-heading); font-size: var(--fs-h3); }
+    .sheet-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr)); gap: var(--s-3); }
+    .sheet-fields :is(input, select, textarea) { min-height: 2.25rem; background: var(--bg-card); }
+    .sheet-fields textarea { font-family: inherit; }
+    .sheet-content .sheet-stats + .sheet-fields { margin-block-start: var(--s-3); }
+    .sheet-table h4 { margin: 0 0 var(--s-2); font: 700 1.06rem/1.2 var(--traveller-heading); color: var(--fg); }
+    .sheet-table + .sheet-table { margin-block-start: var(--s-4); }
+    .sheet-rows:not(:empty) { margin-block-end: var(--s-2); }
+    .sheet-row { border-block-end: var(--border-soft); }
+    .sheet-row[open] { padding: 0 var(--s-3) var(--s-2); background: var(--bg-inset); }
+    .sheet-row button { margin-block-start: var(--s-2); }
+    .sheet-footer { flex-shrink: 0; border-block-start: var(--border-soft); padding: var(--s-2) var(--s-4); }
+    .sheet-footer .feedback { color: var(--error); }
+    .sheet-footer .feedback:empty { display: none; }
     .portrait-viewer figure { margin: 0; display: grid; gap: var(--s-3); }
     .portrait-viewer img { display: block; max-inline-size: 100%; block-size: auto; margin-inline: auto; border-radius: var(--r-2); }
     #encounter, #species-guide { scroll-margin-block-start: var(--s-4); }
     #species-guide { margin-block-start: var(--s-5); }
+    .species-reference > summary { cursor: pointer; }
+    .species-reference[open] > summary { border-block-end: var(--border); }
+    .guide-navigation { margin: 0 0 var(--s-3); font-size: var(--fs-small); }
     .species-reference .species-plate { margin-top: var(--s-2); }
     .guide-list, .roster-list { list-style: none; margin: 0; padding: 0; }
     .guide-list li, .roster-list li { padding: var(--s-3) 0; border-block-start: var(--border-soft); overflow-wrap: anywhere; }
@@ -88,26 +210,35 @@
     details.group { border-top: var(--border-soft); margin-top: var(--s-3); }
     details.group summary { padding: var(--s-3) 0; cursor: pointer; font-weight: var(--fw-semibold); }
     details.group > div { padding-bottom: var(--s-2); }
-    :is(.referee, .generation-settings) > summary { padding: var(--s-4); font-size: var(--fs-h3); font-weight: var(--fw-semibold); cursor: pointer; }
+    :is(.referee, .generation-settings) > summary { cursor: pointer; }
     :is(.referee, .generation-settings)[open] > summary { border-bottom: var(--border); }
     .referee .group:first-child { margin-top: 0; border-top: 0; }
     .card-body { padding: var(--s-5); }
-    .card-body :is(h1, h3) { font: var(--fw-bold) var(--fs-display)/var(--lh-tight) var(--font-display); margin: 0 0 var(--s-2); letter-spacing: var(--tracking-tight); overflow-wrap: anywhere; }
+    .card-body > h1, .encounter-identity h3 { font: 400 var(--fs-display)/var(--lh-tight) var(--font-display); margin: 0 0 var(--s-2); overflow-wrap: anywhere; }
     .card-body p { color: var(--fg-2); font-size: var(--fs-body-lg); margin: var(--s-3) 0; max-width: 64ch; }
     .card-body .retained-record { color: var(--warn); font-size: var(--fs-small); margin: 0 0 var(--s-3); }
-    .card-body .card-role { font: var(--fw-medium) var(--fs-small)/var(--lh-normal) var(--font-mono); color: var(--copper); margin: 0 0 var(--s-4); }
-    .card-body .actions { border-top: var(--border-soft); margin-top: var(--s-5); padding-top: var(--s-3); }
+    .card-body .card-role { font: var(--fw-medium) var(--fs-small)/var(--lh-normal) var(--font-mono); color: var(--copper); margin: 0; overflow-wrap: anywhere; }
+    .card-actions { margin-block-start: var(--s-4); }
+    #referee-brief { border-block-start: var(--border-soft); margin-block-start: var(--s-4); padding-block-start: var(--s-3); }
+    .brief-head { margin: 0 0 var(--s-2); }
+    #referee-brief h3 { font: 700 var(--fs-h3)/1.25 var(--traveller-heading); margin: 0; }
+    #card-feedback { margin-block: var(--s-2) 0; }
+    #card-feedback:empty { margin: 0; }
+    .action-group + .action-group { border-block-start: var(--border-soft); margin-block-start: var(--s-4); padding-block-start: var(--s-3); }
+    .action-group h3 { font-size: var(--fs-small); margin: 0 0 var(--s-2); color: var(--fg-2); }
+    .action-list { display: grid; gap: var(--s-2); }
+    .action-list button { justify-content: flex-start; text-align: left; }
     .card-body .hint { font-size: var(--fs-small); }
     .handout-plate .portrait-trigger img { width: clamp(5.25rem, 22vw, 11rem); }
-    #referee-brief .values { margin: 0; }
+    #referee-brief .values { grid-template-columns: minmax(6.5rem, 22%) minmax(0, 1fr); margin: 0; }
     .group-member-list { list-style: none; margin: 0; padding: 0; }
     .group-member-list li { padding: var(--s-3) 0; border-block-start: var(--border-soft); overflow-wrap: anywhere; }
     .group-member-list li:first-child { padding-block-start: 0; border-block-start: 0; }
     .group-member-list h3 { font-size: var(--fs-h3); margin: 0 0 var(--s-1); }
     .group-member-list p { margin: var(--s-1) 0; }
-    .group-member-list .actions { margin-block-start: var(--s-2); }
+    .group-member-list .summary-row { align-items: baseline; }
     .characteristics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--s-2); margin: var(--s-3) 0; }
-    .stat { background: var(--bg-inset); border: var(--border-soft); border-radius: var(--r-2); padding: var(--s-2); text-align: center; }
+    .stat { background: var(--bg-inset); border: var(--border); border-block-start: 3px solid var(--traveller-red); border-radius: var(--r-2); padding: var(--s-2); text-align: center; }
     .stat dt { color: var(--fg-2); font: var(--fs-small)/var(--lh-normal) var(--font-mono); }
     .stat dd { margin: 0; }
     .stat .score { font: var(--fw-bold) var(--fs-h2)/var(--lh-normal) var(--font-mono); }
@@ -138,25 +269,30 @@
     .tt-about p:last-child { margin-bottom: 0; }
     .tt-about details { margin-top: var(--s-3); }
     .tt-about summary { cursor: pointer; font-weight: var(--fw-semibold); }
-    :root[data-theme="light"] .tt-shell { --copper: color-mix(in srgb, var(--plt-copper-600) 57%, var(--fg) 43%); }
     @media (max-width: 56rem) { .tt-shell { padding: var(--s-5) var(--s-4) var(--s-8); } .workspace { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 32rem) {
       #generator { padding-block-start: var(--s-3); }
-      #generator :is(.topbar, .tool-header, .mode-selector, .tt-banner) { margin-bottom: var(--s-2); }
-      #generator .topbar { justify-content: flex-start; }
-      .topbar-links { display: contents; }
-      #generator .tt-banner { padding-block: var(--s-1); }
-      .tool-header { grid-template-columns: minmax(0, 1fr); gap: var(--s-2); }
-      .tool-header .t-tool-title { font-size: var(--fs-h1); }
-      .tool-header p { margin-top: var(--s-2); }
+      #generator :is(.tool-header, .tt-banner) { margin-bottom: var(--s-2); }
+      .tool-toolbar { padding-block-end: var(--s-2); }
+      .tool-nav { gap: var(--s-1) var(--s-2); }
+      #encounter > .tt-panel-head, #encounter .actions { gap: var(--s-2); }
+      #encounter :is(#player-view, .card-actions button) { padding-inline: var(--s-2); }
+      #encounter .card-actions button { font-size: var(--fs-small); }
+      #encounter > .card-body { padding: var(--s-4); }
+      .tool-header { grid-template-columns: minmax(0, 1fr); }
+      .tool-header > div { padding: var(--s-2) var(--s-3); }
+      .tool-header p { font-size: var(--fs-small); margin-top: var(--s-1); }
       .tool-hero { block-size: clamp(var(--s-9), 20vw, calc(var(--s-9) + var(--s-5))); object-position: center 35%; }
+      .sheet-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sheet-stat:only-child { grid-column: 1 / -1; }
+      .sheet-score-pair { gap: var(--s-1); }
       .characteristics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .status-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .card-body :is(h1, h3) { font-size: var(--fs-h1); }
+      .card-body > h1, .encounter-identity h3 { font-size: var(--fs-h1); }
       .values { grid-template-columns: minmax(6rem, 35%) minmax(0, 1fr); }
     }
     @media print {
-      #settings, #group-settings, #species-guide, .topbar, .tool-hero, .tt-banner, .tt-about, .actions, .retained-record, .portrait-trigger span, .modal, #card-feedback, #lock-section, #check-section, #roll-section, #group-roll-section, .tt-catalog-return, tedt-global-header { display: none; }
+      #settings, #group-settings, #species-guide, .topbar, .tool-toolbar, .tool-hero, .tt-banner, .tt-about, .actions, .retained-record, .portrait-trigger span, .modal, #card-feedback, #lock-section, #check-section, #roll-section, #group-roll-section, .tt-catalog-return, tedt-global-header { display: none; }
       .tool-header, .workspace { display: block; }
       .tt-shell { padding: 0; }
       .tt-panel { break-inside: avoid; }
@@ -169,25 +305,24 @@
 </head>
 <body>
 <main id="generator" class="tt-shell" data-clarity-mask="true">
-  <nav class="topbar" aria-label="Tool navigation">
-    <a href="./">← Ted’s Tools</a>
-    <div class="topbar-links">
-      <a href="#encounter">Jump to encounter</a>
-      <a href="#species-guide">Species guide</a>
-      <button type="button" id="open-roster" class="quiet compact" aria-haspopup="dialog">Campaign roster</button>
-    </div>
-  </nav>
   <header class="tool-header">
     <div>
-      <h1 class="t-tool-title">Traveller <mark>NPC</mark> Generator</h1>
-      <p class="t-tagline">Roll a single NPC, a crew candidate, or a group encounter for Mongoose Traveller Second Edition.</p>
+      <h1 class="t-tool-title">Traveller NPC Generator</h1>
+      <p class="t-tagline">Roll NPCs, crew candidates, and group encounters for Mongoose Traveller 2E.</p>
     </div>
     <img class="tool-hero" src="img/2026-11/traveller-npc-generator-hero.webp" width="1440" height="810" loading="lazy" decoding="async"
       alt="A mixed-species crew reviews a cargo manifest in an orbital freight hangar.">
   </header>
-  <div class="actions mode-selector" id="encounter-mode" role="group" aria-label="Encounter mode">
-    <button type="button" id="single-mode" class="quiet compact" aria-pressed="true">Single NPC</button>
-    <button type="button" id="group-mode" class="quiet compact" aria-pressed="false">Group Encounter</button>
+  <div class="tool-toolbar">
+    <div class="actions mode-selector" id="encounter-mode" role="group" aria-label="Encounter mode">
+      <button type="button" id="single-mode" class="quiet compact" aria-pressed="true">Single NPC</button>
+      <button type="button" id="group-mode" class="quiet compact" aria-pressed="false">Group Encounter</button>
+    </div>
+    <nav class="tool-nav" aria-label="Tool navigation">
+      <a href="#encounter">Jump to encounter</a>
+      <a href="#species-guide">Species guide</a>
+      <button type="button" id="open-roster" class="quiet compact" aria-haspopup="dialog">Campaign roster</button>
+    </nav>
   </div>
   <div id="status" class="tt-banner" role="status" aria-live="polite" aria-atomic="true">Preparing your first NPC.</div>
   <noscript><p>Enable JavaScript to generate NPCs in this browser.</p></noscript>
@@ -201,7 +336,6 @@
             <label class="wide">Species profile <select id="species"></select></label>
             <figure id="settings-plate" class="species-plate wide" hidden></figure>
             <p id="source-encounter-note" class="wide hint field-notes" hidden>Uses the book’s encounter rules. You can set a name and scene location.</p>
-            <div class="wide hint"><a href="#species-guide">Species field guide</a></div>
             <label class="wide" id="adult-label" hidden>Adult form or caste <select id="adult-form"></select></label>
             <label class="wide" data-character-setting>Occupation <select id="occupation"></select></label>
             <label class="wide" id="specialty-label" hidden>Primary specialty <select id="specialty"></select></label>
@@ -212,96 +346,99 @@
             <span id="skill-minimums-summary"></span>
             <button type="button" class="quiet compact" id="clear-skill-minimums">Clear skill minimums and roll</button>
           </div>
-          <p class="hint" id="settings-feedback" hidden></p>
-          <div class="actions generation-actions">
+          <details class="settings-more" id="npc-more-settings">
+            <summary>More settings</summary>
+            <details class="group" data-character-setting>
+              <summary>Required skills and characteristics</summary>
+              <div class="field-grid">
+                <label class="wide">Skill minimums <textarea id="required-skills" rows="2" placeholder="Medic = 2" spellcheck="false" aria-describedby="requirements-help"></textarea></label>
+                <p class="wide hint field-notes" id="requirements-help">One per line. Use the specific specialty where needed, such as Engineer (j-drive) = 1. Level 0 requires familiarity.</p>
+                <label class="wide">Current characteristic minimums <textarea id="stat-minimums" rows="2" placeholder="END = 8" spellcheck="false"></textarea></label>
+                <label class="wide">Companion Boon on characteristics <input type="text" id="characteristic-boons" placeholder="STR, END" spellcheck="false" aria-describedby="boon-help"></label>
+                <p class="wide hint field-notes" id="boon-help">Optional. List ordinary 2D characteristics to roll 3D and keep the highest two.</p>
+                <div class="wide actions"><button type="button" class="compact quiet" id="medic-preset">Medic 2 hiring</button><button type="button" class="compact quiet" id="pilot-preset">Pilot and astrogator hiring</button></div>
+              </div>
+            </details>
+            <details class="group">
+              <summary>Campaign, age and identity</summary>
+              <div class="field-grid">
+                <label class="wide">Current location <input id="current-location" type="text" maxlength="500"></label>
+                <label class="wide">Last known location <input id="last-location" type="text" maxlength="500"></label>
+                <label class="wide">Environment <select id="medium">
+                  <option value="unknown">Unspecified</option><option value="breathable">Breathable atmosphere</option>
+                  <option value="water">Suitable water</option><option value="vacuum">Vacuum</option>
+                  <option value="unbreathable">Unbreathable atmosphere</option>
+                </select></label>
+                <label>Local TL <input type="number" id="local-tl" min="0" max="99" placeholder="Unknown"></label>
+                <label>Law level <input type="number" id="law" min="0" max="99" placeholder="Unknown"></label>
+                <label class="wide">Fixed homeworld <input id="homeworld" type="text" maxlength="500"></label>
+                <label class="wide" data-character-setting>Weighted homeworlds <textarea id="worlds" rows="2" placeholder="Regina | 3" aria-describedby="world-help"></textarea></label>
+                <p class="wide hint field-notes" id="world-help" data-character-setting>One per line. Optionally add weight and a supplied UWP, separated by |.</p>
+                <label>Age <select id="age-mode"><option value="random">Roll adult age</option><option value="unknown">Unspecified</option><option value="fixed">Set years</option></select></label>
+                <label id="age-label" hidden>Years <input type="number" id="age-years" min="0" max="99999"></label>
+                <label class="wide">Naming style <select id="name-style" aria-describedby="name-style-note"></select></label>
+                <p class="wide hint field-notes" id="name-style-note"></p>
+                <label class="wide">Common name <input id="common-name" type="text" maxlength="500" placeholder="Roll a name"></label>
+                <label class="wide">Native name <input id="native-name" type="text" maxlength="500" placeholder="Use naming style"></label>
+                <label class="wide">Pronouns <input id="pronouns" type="text" maxlength="500"></label>
+              </div>
+            </details>
+            <details class="group" data-character-setting>
+              <summary>Cross-training and psionics</summary>
+              <div class="field-grid">
+                <label class="wide">Secondary occupation <select id="secondary"></select></label>
+                <label class="wide" id="secondary-specialty-label" hidden>Secondary specialty <select id="secondary-specialty"></select></label>
+                <label class="wide">Psionics <select id="psi-mode">
+                  <option value="auto">Profile default</option><option value="off">Off</option>
+                  <option value="latent">Latent potential</option><option value="trained">Trained snapshot specialist</option>
+                </select></label>
+                <label class="wide" id="talent-label" hidden>Primary talent <select id="talent"></select></label>
+                <label id="potential-label" hidden>Latent PSI <input id="potential" type="number" min="0" max="12" placeholder="Roll 2D"></label>
+                <label id="psi-current-label" hidden>Current PSI <input id="psi-current" type="number" min="0" max="12" placeholder="Maximum"></label>
+                <label id="wings-label" hidden>Wings <select id="wings"><option value="random">Roll wing size</option><option>vestigial</option><option>small</option><option>large</option></select></label>
+                <label id="territory-label" hidden>Personal Territory <input id="territory" type="number" min="0" max="99999" placeholder="0"></label>
+                <label id="ascondi-soc-label" hidden>Base Ascondi SOC <input id="ascondi-soc" type="number" min="3" max="10" placeholder="Roll for adult phase"></label>
+                <label id="zhodani-psi-label" class="wide check-line" hidden><input id="zhodani-high-psi" type="checkbox"> Use the Zhodani 1D+6 PSI option</label>
+              </div>
+            </details>
+            <details class="group" id="equipment-settings" data-character-setting>
+              <summary>Assign catalogue equipment</summary>
+              <div class="field-grid">
+                <label class="wide">Catalogue item <select id="gear-item"></select></label>
+                <label>Fitted body <select id="gear-fit"></select></label>
+                <label>Owner <select id="gear-owner"><option>Personal</option><option>Employer</option><option>Ship</option><option>Borrowed</option></select></label>
+                <label>Location <select id="gear-location"><option>carried</option><option>worn</option><option>lodging</option><option>vehicle</option><option>ship</option><option>facility</option></select></label>
+                <label>Access <select id="gear-access"><option>immediate</option><option>permission required</option><option>conditional</option><option>unavailable</option></select></label>
+                <label>Ammunition <input id="gear-ammo" type="number" min="0" max="100000" placeholder="Unspecified"></label>
+                <label>Local legality <select id="gear-legality"><option>unknown</option><option>permitted</option><option>restricted</option><option>illegal</option></select></label>
+                <button type="button" id="add-gear" class="wide quiet">Add item to settings</button>
+                <div id="gear-list" class="wide hint"></div>
+              </div>
+            </details>
+            <details class="group" id="advanced-settings" data-character-setting>
+              <summary>Advanced referee facts</summary>
+              <div>
+                <label>Campaign options in JSON <textarea id="advanced" rows="8" spellcheck="false" placeholder="{}" aria-describedby="advanced-help"></textarea></label>
+                <p class="hint field-notes" id="advanced-help">Set population weights, accommodations, existing relationships, explicit skill grants, sourced equipment, and biological exceptions.</p>
+                <details class="group"><summary>Option formats and examples</summary><div id="option-docs"></div></details>
+              </div>
+            </details>
+            <details class="group" id="seed-settings">
+              <summary>Seed and rerolls</summary>
+              <div class="field-grid">
+                <label class="wide">Seed <input id="seed" type="text" maxlength="256" required spellcheck="false" autocomplete="off"></label>
+                <div class="wide actions"><button type="button" id="new-seed" class="quiet compact">New seed</button></div>
+              </div>
+            </details>
+            <details class="group">
+              <summary>Open a saved referee record</summary>
+              <div><label>Referee JSON file <input type="file" id="import-npc" accept=".json,application/json"></label></div>
+            </details>
+          </details>
+          <div class="settings-footer">
+            <p class="hint" id="settings-feedback" role="status" hidden></p>
             <button type="submit" class="primary" id="apply-settings" aria-describedby="settings-feedback">Apply settings</button>
           </div>
-          <details class="group" data-character-setting>
-            <summary>Required skills and characteristics</summary>
-            <div class="field-grid">
-              <label class="wide">Skill minimums <textarea id="required-skills" rows="2" placeholder="Medic = 2" spellcheck="false" aria-describedby="requirements-help"></textarea></label>
-              <p class="wide hint field-notes" id="requirements-help">One per line. Use the specific specialty where needed, such as Engineer (j-drive) = 1. Level 0 requires familiarity.</p>
-              <label class="wide">Current characteristic minimums <textarea id="stat-minimums" rows="2" placeholder="END = 8" spellcheck="false"></textarea></label>
-              <label class="wide">Companion Boon on characteristics <input type="text" id="characteristic-boons" placeholder="STR, END" spellcheck="false" aria-describedby="boon-help"></label>
-              <p class="wide hint field-notes" id="boon-help">Optional. List ordinary 2D characteristics to roll 3D and keep the highest two.</p>
-              <div class="wide actions"><button type="button" class="compact quiet" id="medic-preset">Medic 2 hiring</button><button type="button" class="compact quiet" id="pilot-preset">Pilot and astrogator hiring</button></div>
-            </div>
-          </details>
-          <details class="group">
-            <summary>Campaign, age and identity</summary>
-            <div class="field-grid">
-              <label class="wide">Current location <input id="current-location" type="text" maxlength="500"></label>
-              <label class="wide">Last known location <input id="last-location" type="text" maxlength="500"></label>
-              <label class="wide">Environment <select id="medium">
-                <option value="unknown">Unspecified</option><option value="breathable">Breathable atmosphere</option>
-                <option value="water">Suitable water</option><option value="vacuum">Vacuum</option>
-                <option value="unbreathable">Unbreathable atmosphere</option>
-              </select></label>
-              <label>Local TL <input type="number" id="local-tl" min="0" max="99" placeholder="Unknown"></label>
-              <label>Law level <input type="number" id="law" min="0" max="99" placeholder="Unknown"></label>
-              <label class="wide">Fixed homeworld <input id="homeworld" type="text" maxlength="500"></label>
-              <label class="wide" data-character-setting>Weighted homeworlds <textarea id="worlds" rows="2" placeholder="Regina | 3" aria-describedby="world-help"></textarea></label>
-              <p class="wide hint field-notes" id="world-help" data-character-setting>One per line. Optionally add weight and a supplied UWP, separated by |.</p>
-              <label>Age <select id="age-mode"><option value="random">Roll adult age</option><option value="unknown">Unspecified</option><option value="fixed">Set years</option></select></label>
-              <label id="age-label" hidden>Years <input type="number" id="age-years" min="0" max="99999"></label>
-              <label class="wide">Naming style <select id="name-style" aria-describedby="name-style-note"></select></label>
-              <p class="wide hint field-notes" id="name-style-note"></p>
-              <label class="wide">Common name <input id="common-name" type="text" maxlength="500" placeholder="Roll a name"></label>
-              <label class="wide">Native name <input id="native-name" type="text" maxlength="500" placeholder="Use naming style"></label>
-              <label class="wide">Pronouns <input id="pronouns" type="text" maxlength="500"></label>
-            </div>
-          </details>
-          <details class="group" data-character-setting>
-            <summary>Cross-training and psionics</summary>
-            <div class="field-grid">
-              <label class="wide">Secondary occupation <select id="secondary"></select></label>
-              <label class="wide" id="secondary-specialty-label" hidden>Secondary specialty <select id="secondary-specialty"></select></label>
-              <label class="wide">Psionics <select id="psi-mode">
-                <option value="auto">Profile default</option><option value="off">Off</option>
-                <option value="latent">Latent potential</option><option value="trained">Trained snapshot specialist</option>
-              </select></label>
-              <label class="wide" id="talent-label" hidden>Primary talent <select id="talent"></select></label>
-              <label id="potential-label" hidden>Latent PSI <input id="potential" type="number" min="0" max="12" placeholder="Roll 2D"></label>
-              <label id="psi-current-label" hidden>Current PSI <input id="psi-current" type="number" min="0" max="12" placeholder="Maximum"></label>
-              <label id="wings-label" hidden>Wings <select id="wings"><option value="random">Roll wing size</option><option>vestigial</option><option>small</option><option>large</option></select></label>
-              <label id="territory-label" hidden>Personal Territory <input id="territory" type="number" min="0" max="99999" placeholder="0"></label>
-              <label id="ascondi-soc-label" hidden>Base Ascondi SOC <input id="ascondi-soc" type="number" min="3" max="10" placeholder="Roll for adult phase"></label>
-              <label id="zhodani-psi-label" class="wide check-line" hidden><input id="zhodani-high-psi" type="checkbox"> Use the Zhodani 1D+6 PSI option</label>
-            </div>
-          </details>
-          <details class="group" id="equipment-settings" data-character-setting>
-            <summary>Assign catalogue equipment</summary>
-            <div class="field-grid">
-              <label class="wide">Catalogue item <select id="gear-item"></select></label>
-              <label>Fitted body <select id="gear-fit"></select></label>
-              <label>Owner <select id="gear-owner"><option>Personal</option><option>Employer</option><option>Ship</option><option>Borrowed</option></select></label>
-              <label>Location <select id="gear-location"><option>carried</option><option>worn</option><option>lodging</option><option>vehicle</option><option>ship</option><option>facility</option></select></label>
-              <label>Access <select id="gear-access"><option>immediate</option><option>permission required</option><option>conditional</option><option>unavailable</option></select></label>
-              <label>Ammunition <input id="gear-ammo" type="number" min="0" max="100000" placeholder="Unspecified"></label>
-              <label>Local legality <select id="gear-legality"><option>unknown</option><option>permitted</option><option>restricted</option><option>illegal</option></select></label>
-              <button type="button" id="add-gear" class="wide quiet">Add item to settings</button>
-              <div id="gear-list" class="wide hint"></div>
-            </div>
-          </details>
-          <details class="group" id="advanced-settings" data-character-setting>
-            <summary>Advanced referee facts</summary>
-            <div>
-              <label>Campaign options in JSON <textarea id="advanced" rows="8" spellcheck="false" placeholder="{}" aria-describedby="advanced-help"></textarea></label>
-              <p class="hint field-notes" id="advanced-help">Set population weights, accommodations, existing relationships, explicit skill grants, sourced equipment, and biological exceptions.</p>
-              <details class="group"><summary>Option formats and examples</summary><div id="option-docs"></div></details>
-            </div>
-          </details>
-          <details class="group" id="seed-settings">
-            <summary>Seed and rerolls</summary>
-            <div class="field-grid">
-              <label class="wide">Seed <input id="seed" type="text" maxlength="256" required spellcheck="false" autocomplete="off"></label>
-              <div class="wide actions"><button type="button" id="new-seed" class="quiet compact">New seed</button></div>
-            </div>
-          </details>
-          <details class="group">
-            <summary>Open a saved referee record</summary>
-            <div><label>Referee JSON file <input type="file" id="import-npc" accept=".json,application/json"></label></div>
-          </details>
         </form>
       </details>
     </section>
@@ -314,21 +451,24 @@
             <label class="wide">Group type <select id="group-type"></select></label>
             <label class="wide">Member species <select id="group-species"></select></label>
           </div>
-          <p class="hint" id="group-settings-feedback" hidden></p>
-          <div class="actions generation-actions">
+          <details class="settings-more" id="group-more-settings">
+            <summary>More settings</summary>
+            <details class="group" id="group-seed-settings">
+              <summary>Group seed and rerolls</summary>
+              <div class="field-grid">
+                <label class="wide">Group seed <input id="group-seed" type="text" maxlength="256" required spellcheck="false" autocomplete="off"></label>
+                <div class="wide actions"><button type="button" id="group-new-seed" class="quiet compact">New group seed</button></div>
+              </div>
+            </details>
+            <details class="group">
+              <summary>Open a saved group</summary>
+              <div><label>Saved group JSON <input type="file" id="import-group" accept=".json,application/json"></label></div>
+            </details>
+          </details>
+          <div class="settings-footer">
+            <p class="hint" id="group-settings-feedback" role="status" hidden></p>
             <button type="submit" class="primary" id="apply-group" aria-describedby="group-settings-feedback">Roll group</button>
           </div>
-          <details class="group" id="group-seed-settings">
-            <summary>Group seed and rerolls</summary>
-            <div class="field-grid">
-              <label class="wide">Group seed <input id="group-seed" type="text" maxlength="256" required spellcheck="false" autocomplete="off"></label>
-              <div class="wide actions"><button type="button" id="group-new-seed" class="quiet compact">New group seed</button></div>
-            </div>
-          </details>
-          <details class="group">
-            <summary>Open a saved group</summary>
-            <div><label>Saved group JSON <input type="file" id="import-group" accept=".json,application/json"></label></div>
-          </details>
         </form>
       </details>
     </section>
@@ -343,28 +483,30 @@
         </header>
         <div class="card-body">
           <p class="retained-record" id="retained-record" hidden></p>
-          <h3 id="npc-name">Your NPC</h3>
-          <p class="card-role" id="npc-role" hidden></p>
+          <div class="encounter-identity">
+            <div>
+              <h3 id="npc-name">Your NPC</h3>
+              <p class="card-role" id="npc-role" hidden></p>
+            </div>
+            <figure id="encounter-plate" class="species-plate encounter-plate" hidden></figure>
+          </div>
           <p id="npc-intro">The encounter introduction appears here.</p>
-          <figure id="encounter-plate" class="species-plate encounter-plate" hidden></figure>
-          <div class="actions">
+          <div class="actions card-actions">
             <button type="button" id="copy-player-link" disabled>Copy Player Link</button>
-            <button type="button" id="share-handout" class="quiet" aria-haspopup="dialog" disabled>Share handout</button>
             <button type="button" id="keep-npc" class="quiet" disabled>Keep NPC</button>
-            <button type="button" id="copy-card" class="quiet" disabled>Copy introduction</button>
-            <button type="button" id="player-export" class="quiet" disabled>Introduction · TXT</button>
-            <button type="button" id="save-referee-link" class="quiet" aria-haspopup="dialog" disabled>Referee link</button>
-            <button type="button" id="ref-export" class="quiet" disabled>Referee record · JSON</button>
-            <button type="button" id="reroll-name" class="quiet" disabled>Reroll name</button>
+            <button type="button" id="open-encounter-actions" class="quiet" aria-haspopup="dialog" disabled>More actions</button>
           </div>
           <p id="card-feedback" class="hint feedback" role="status"></p>
+          <section id="referee-brief" aria-labelledby="brief-title" hidden>
+            <div class="summary-row brief-head">
+              <h3 id="brief-title">Referee quick reference</h3>
+              <button type="button" id="open-character-sheet" class="quiet compact" aria-haspopup="dialog" hidden>Character sheet</button>
+            </div>
+            <div id="brief-content"></div>
+          </section>
         </div>
       </section>
-      <section id="referee-brief" class="tt-panel" aria-labelledby="brief-title" hidden>
-        <header class="tt-panel-head"><h2 id="brief-title">Referee quick reference</h2></header>
-        <div id="brief-content" class="tt-panel-body"></div>
-      </section>
-      <details id="referee" class="referee tt-panel" open hidden>
+      <details id="referee" class="referee tt-panel" hidden>
         <summary>Referee record</summary>
         <div class="tt-panel-body">
           <dl class="status-grid" id="validity" data-character-record></dl>
@@ -406,14 +548,58 @@
       </details>
     </div>
   </div>
-  <section id="species-guide" class="tt-panel species-reference" aria-labelledby="guide-title">
-    <header class="tt-panel-head"><h2 id="guide-title">Species field guide</h2></header>
-    <div class="tt-panel-body" id="guide-content"></div>
+  <section id="species-guide" class="tt-panel" aria-labelledby="guide-title">
+    <details id="guide-options" class="species-reference">
+      <summary id="guide-title">Species field guide</summary>
+      <div class="tt-panel-body">
+        <p class="guide-navigation"><a href="#encounter">Back to encounter</a></p>
+        <div id="guide-content"></div>
+      </div>
+    </details>
   </section>
   <footer class="tt-about" id="about">
-    <p><strong>Traveller NPC Generator.</strong> Unofficial house rules for adult biological sophonts. Generation and saved records stay in your browser.</p>
+    <p><strong>Traveller NPC Generator.</strong> Unofficial house rules for adult biological sophonts. Generation and saved records stay in your browser. <a href="./">Ted’s Tools catalog</a></p>
     <details id="rules"><summary>Rules, worked example and sources</summary><div id="rules-content"></div></details>
   </footer>
+  <dialog id="character-sheet" class="modal sheet-modal" aria-labelledby="character-sheet-title">
+    <header class="tt-panel-head">
+      <h2 id="character-sheet-title" tabindex="-1" autofocus>Character sheet</h2>
+    </header>
+    <form>
+      <div class="tt-panel-body sheet-content"></div>
+      <footer class="sheet-footer">
+        <p class="hint feedback" role="alert"></p>
+        <div class="actions">
+          <button type="submit" class="primary">Save sheet</button>
+          <button type="button" id="cancel-sheet" class="quiet">Cancel</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+  <dialog id="encounter-actions-dialog" class="modal" aria-labelledby="encounter-actions-title">
+    <header class="tt-panel-head">
+      <h2 id="encounter-actions-title">Encounter actions</h2>
+      <form method="dialog"><button class="quiet compact" autofocus>Close</button></form>
+    </header>
+    <div class="tt-panel-body">
+      <section class="action-group" aria-labelledby="player-actions-title">
+        <h3 id="player-actions-title">Player handout</h3>
+        <div class="action-list">
+          <button type="button" id="share-handout" class="quiet" aria-haspopup="dialog" disabled>Share handout</button>
+          <button type="button" id="copy-card" class="quiet" disabled>Copy introduction</button>
+          <button type="button" id="player-export" class="quiet" disabled>Introduction · TXT</button>
+        </div>
+      </section>
+      <section class="action-group" id="referee-actions" aria-labelledby="referee-actions-title">
+        <h3 id="referee-actions-title">Referee record</h3>
+        <div class="action-list">
+          <button type="button" id="save-referee-link" class="quiet" aria-haspopup="dialog" disabled>Referee link</button>
+          <button type="button" id="ref-export" class="quiet" disabled>Referee record · JSON</button>
+          <button type="button" id="reroll-name" class="quiet" disabled>Reroll name</button>
+        </div>
+      </section>
+    </div>
+  </dialog>
   <dialog id="handout-dialog" class="modal" aria-labelledby="handout-dialog-title">
     <header class="tt-panel-head">
       <h2 id="handout-dialog-title">Player handout</h2>
@@ -443,7 +629,7 @@
     </header>
     <div class="tt-panel-body">
       <label>Encounter URL <input id="referee-link-url" type="text" readonly></label>
-      <p class="hint field-notes">This link restores the full referee record. Use Share handout for players.</p>
+      <p class="hint field-notes">This link restores the full referee record. Use Copy Player Link to share with players.</p>
       <div class="actions generation-actions">
         <button type="button" id="copy-referee-link" class="primary">Copy link</button>
         <button type="button" id="bookmark-address" class="quiet">Use in address bar</button>

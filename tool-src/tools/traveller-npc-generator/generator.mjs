@@ -1,3 +1,4 @@
+import { setCharacterSheet } from './character-sheet.mjs';
 import { has, integer, normalizeConfig, object, requireRule, text } from './config.mjs';
 import { resolveEquipment } from './equipment.mjs';
 import { encounterSpecies } from './encounter-species.mjs';
@@ -90,6 +91,7 @@ export async function rerollNpc(npc, fields) {
     seed, index, counters, locks, namingPack: npc.provenance.packs.names,
   });
   if (onlyCosmetic) updated.controls.locks = structuredClone(npc.controls.locks);
+  if (updated.biology.profileId === npc.biology.profileId) setCharacterSheet(updated, npc.controls.characterSheet);
   return updated;
 }
 
@@ -504,5 +506,6 @@ export async function restoreNpc(saved) {
   requireRule(object(currentLocks) && Object.entries(currentLocks).every(([key, value]) =>
     has(finalValues, key) && sameValue(finalValues[key], value)), 'A saved lock does not match its generated value.');
   restored.controls.locks = structuredClone(currentLocks);
+  setCharacterSheet(restored, saved.controls.characterSheet);
   return restored;
 }
