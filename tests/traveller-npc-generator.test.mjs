@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { access } from 'node:fs/promises';
+import { characterSheet, characterSheetEdits, obtainableCash, rolledCharacterSheet, setCharacterSheet } from '../tool-src/tools/traveller-npc-generator/character-sheet.mjs';
 import { encounterSpecies } from '../tool-src/tools/traveller-npc-generator/encounter-species.mjs';
 import { generateNpc, rerollNpc, restoreNpc, setLock } from '../tool-src/tools/traveller-npc-generator/generator.mjs';
-import { generateGroup, restoreGroup } from '../tool-src/tools/traveller-npc-generator/group-encounters.mjs';
+import { generateGroup, restoreGroup, setMemberSheet } from '../tool-src/tools/traveller-npc-generator/group-encounters.mjs';
 import { groupTypes } from '../tool-src/tools/traveller-npc-generator/group-types.mjs';
 import { handoutUrl, readHandout } from '../tool-src/tools/traveller-npc-generator/handout.mjs';
 import { decodeLinkPayload, encodeLinkPayload } from '../tool-src/tools/traveller-npc-generator/link-payload.mjs';
@@ -19,6 +20,72 @@ import { occupationTable, packs, version } from '../tool-src/tools/traveller-npc
 import { fieldsFor } from '../tool-src/tools/traveller-npc-generator/work.mjs';
 
 const make = (config = {}, state = {}) => generateNpc(config, { seed: 'sketch-82', ...state });
+
+test('the character sheet projects the roll and preserves tracking edits through referee links', async () => {
+  const npc = await make({
+    species: 'vargr-extents', homeworld: 'Regina', homeworlds: [{ name: 'Regina', uwp: 'A788899-C' }],
+    psion: { mode: 'latent', potential: 5, current: 0 }, funds: 700,
+  });
+  const starting = rolledCharacterSheet(npc);
+  assert.equal(starting.charName, npc.player.name);
+  assert.equal(starting.homeworldUWP, 'A788899-C');
+  assert.equal(starting.cashOnHand, '700');
+  assert.equal(starting.characteristics.cha.current, npc.mechanics.characteristics.CHA.current);
+  assert.equal(starting.characteristics.chr, undefined);
+  assert.equal(starting.characteristics.psi.current, 0);
+  assert.deepEqual(characterSheetEdits(npc, starting), {});
+  const supplement = {
+    rads: '20', characteristics: { end: { current: null }, mrl: { current: 3, baseline: 8 },
+      lck: { current: 0 }, sty: { current: 9 }, chr: { baseline: 6 }, std: { current: 5 }, wlt: { current: 0, baseline: 15 } },
+    skills: [{ name: 'Gun Combat', specialization: 'slug', level: '1' }],
+    trainingSkills: [{ skill: 'Medic', specialization: '', weeksSpent: '2', weeksTotal: '8' }],
+    preCareerOptions: [{ type: 'University', years: '4', outcome: 'Graduate', benefits: 'Medic 0' }],
+    careers: [{ career: 'Merchant', assignment: 'Free Trader', promotions: '2', years: '8', rank: 'First Officer', benefits: 'Ship share' }],
+    weapons: [{ name: 'Cutlass', tl: '2', skill: 'Melee (blade)', damage: '3D', range: 'Melee', weight: '1 kg', magazine: '—' }],
+    armor: [{ name: 'Vacc Suit', rating: '4', tl: '8', radiation: '10' }],
+    augments: [{ type: 'Reflex implant', tl: '12', improvement: 'DEX +1' }],
+    equipment: [{ name: 'Medkit', tl: '9–12', mass: '2 kg', cost: '800', quantity: '2', equipped: 'yes', gearNotes: 'One spare' }],
+    credits: '1200', cashOnHand: '610', pension: '0', livingCosts: '240', shipPayments: '450', shipCosts: '70',
+    debt: '1000', financialNotes: 'Private debt', notes: 'Private character history',
+  };
+  const edits = characterSheetEdits(npc, supplement);
+  setCharacterSheet(npc, edits);
+  const href = refereeLink('https://tools.tedt.org/traveller-npc-generator.html', npc);
+  const restored = await restoreNpc(readRefereeLink(new URL(href).hash));
+  assert.deepEqual(restored, npc);
+  const sheet = characterSheet(restored);
+  assert.equal(sheet.characteristics.end.current, null);
+  assert.equal(sheet.characteristics.end.baseline, starting.characteristics.end.baseline);
+  assert.equal(sheet.characteristics.lck.current, 0);
+  assert.equal(obtainableCash(sheet.characteristics.wlt.current), 'Cr 0');
+  assert.equal(obtainableCash(sheet.characteristics.wlt.baseline), 'Cr 1,000,000+');
+  for (const [key, value] of Object.entries(edits).filter(([key]) => key !== 'characteristics')) assert.deepEqual(sheet[key], value);
+  assert.deepEqual((await rerollNpc(restored, ['name'])).controls.characterSheet, edits);
+  const handout = JSON.stringify(readHandout(new URL(handoutUrl(href, restored)).hash));
+  assert.ok(!handout.includes('Private character history'));
+  assert.ok(!handout.includes('Private debt'));
+
+  const published = rolledCharacterSheet(await make({ species: 'ganmeid' }));
+  assert.deepEqual(published.characteristics, {});
+  assert.equal(published.upp, '');
+  assert.ok(published.skills.some(skill => skill.name === 'Athletics' && skill.specialization === 'dexterity'));
+  assert.ok(published.weapons.some(attack => attack.name === 'Bite' && attack.damage === '1D+3'));
+});
+
+test('group referee links restore the edited sheets for the matching members', async () => {
+  const group = await generateGroup({ type: 'naval' }, { seed: 'group-sheets' });
+  const lead = group.members[0].npc;
+  setMemberSheet(group, lead, { notes: 'Group leader notes' });
+  const serialized = JSON.parse(JSON.stringify(group));
+  assert.deepEqual(await restoreGroup(serialized), group);
+  const href = refereeLink('https://tools.tedt.org/traveller-npc-generator.html', group);
+  const restored = await restoreGroup(readRefereeLink(new URL(href).hash));
+  assert.deepEqual(restored, group);
+  assert.equal(characterSheet(restored.members[0].npc).notes, 'Group leader notes');
+  assert.ok(restored.members.slice(1).every(({ npc }) => !npc.controls.characterSheet));
+  setMemberSheet(restored, restored.members[0].npc, {});
+  assert.equal(restored.controls.memberSheets, undefined);
+});
 
 test('group templates roll the shared encounter before building all named roles with 2E profiles', async () => {
   assert.equal(Object.keys(groupTypes).length, 18);

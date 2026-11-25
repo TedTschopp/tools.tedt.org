@@ -1,3 +1,4 @@
+import { setCharacterSheet } from './character-sheet.mjs';
 import { integer, object, option, requireRule, text } from './config.mjs';
 import { generateNpc } from './generator.mjs';
 import { groupScenes, groupTypes } from './group-types.mjs';
@@ -86,5 +87,24 @@ export async function restoreGroup(saved) {
   requireRule(object(controls) && object(controls.config), 'The saved group is missing its generator controls.');
   const restored = await generateGroup(controls.config, { seed: provenance.seed, index: provenance.index });
   requireRule(restored.id === saved.id, 'The group ID does not match the seed and index.');
+  applyMemberSheets(restored, controls.memberSheets);
   return restored;
+}
+
+export function setMemberSheet(group, member, data) {
+  setCharacterSheet(member, data);
+  const sheets = Object.fromEntries(group.members.filter(({ npc }) => npc.controls.characterSheet)
+    .map(({ npc }) => [npc.id, npc.controls.characterSheet]));
+  if (Object.keys(sheets).length) group.controls.memberSheets = sheets;
+  else delete group.controls.memberSheets;
+}
+
+export function applyMemberSheets(group, sheets) {
+  if (sheets == null) return;
+  requireRule(object(sheets) && Object.keys(sheets).length <= group.members.length, 'Invalid saved group member sheets.');
+  for (const [id, sheet] of Object.entries(sheets)) {
+    const member = group.members.find(({ npc }) => npc.id === id);
+    requireRule(member, 'A character sheet refers to a missing group member.');
+    setMemberSheet(group, member.npc, sheet);
+  }
 }

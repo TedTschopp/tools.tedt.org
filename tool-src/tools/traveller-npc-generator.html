@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,8 +7,62 @@
   <meta name="description" content="Roll reproducible NPCs and group encounters for Mongoose Traveller 2E. Share a player handout or keep a referee record and its roll history.">
   <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="colors_and_type.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&amp;family=Arsenal:wght@400;700&amp;family=Marcellus&amp;family=Roboto:wght@400;500;700&amp;display=swap">
   <style>
     [hidden] { display: none !important; }
+    :root {
+      --traveller-page: #f0f0f0;
+      --traveller-paper: #fff;
+      --traveller-inset: #f5f5f5;
+      --traveller-ink: #333;
+      --traveller-muted: #505050;
+      --traveller-rule: #ced4da;
+      --traveller-soft-rule: #ddd;
+      --traveller-black: #111;
+      --traveller-red: #b00;
+      --traveller-link: #a00000;
+      --traveller-primary-hover: #920000;
+      --traveller-heading: Arsenal, "Arial Narrow", Arial, sans-serif;
+      --traveller-title: Marcellus, Georgia, serif;
+    }
+    :root[data-theme="dark"] {
+      --traveller-page: #151515;
+      --traveller-paper: #202020;
+      --traveller-inset: #292929;
+      --traveller-ink: #f0f0f0;
+      --traveller-muted: #c5c5c5;
+      --traveller-rule: #767676;
+      --traveller-soft-rule: #414141;
+      --traveller-link: #ff9292;
+      --traveller-primary-hover: #a20000;
+    }
+    body { background: var(--traveller-page); }
+    .tt-shell, .portrait-viewer {
+      --bg-card: var(--traveller-paper);
+      --bg-inset: var(--traveller-inset);
+      --bg-hover: var(--traveller-inset);
+      --fg: var(--traveller-ink);
+      --fg-strong: var(--traveller-ink);
+      --fg-2: var(--traveller-muted);
+      --rule: var(--traveller-rule);
+      --border: var(--bw-1) solid var(--rule);
+      --border-soft: var(--bw-1) solid var(--traveller-soft-rule);
+      --accent: var(--traveller-red);
+      --accent-active: var(--traveller-primary-hover);
+      --fg-on-accent: #fff;
+      --link: var(--traveller-link);
+      --copper: var(--traveller-link);
+      --copper-tint: color-mix(in srgb, var(--traveller-red) 8%, var(--traveller-paper));
+      --font-display: var(--traveller-title);
+      --r-1: 3px;
+      --r-2: 3px;
+      --r-3: 3px;
+      color: var(--fg);
+      font-family: Arimo, Arial, sans-serif;
+    }
+    .tt-shell a:not(.button) { color: var(--link); }
     .tt-shell { max-width: var(--tool-max); margin: auto; padding: var(--s-6) var(--safe-padding) var(--s-9); }
     .topbar, .tt-panel-head, .actions, .summary-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--s-2) var(--s-3); }
     .topbar { margin-bottom: var(--s-6); }
@@ -19,11 +73,12 @@
     .tool-nav a { color: var(--fg-2); padding-block: var(--s-1); }
     .tool-nav button { padding-inline: var(--s-2); }
     body > .tt-catalog-return { display: none; }
-    .tool-header { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); align-items: center; gap: var(--s-6); margin-bottom: var(--s-4); }
-    .tool-header .t-tool-title { display: block; }
-    .tool-header p { margin: var(--s-3) 0 0; }
-    .tool-hero { display: block; inline-size: 100%; block-size: clamp(7rem, 13vw, 11rem); object-fit: cover; object-position: center 40%; border: var(--border); border-radius: var(--r-3); background: var(--bg-inset); }
-    .tt-banner, .tt-about { border: var(--bw-1) solid var(--ready-border); border-radius: var(--r-3); background: var(--ready-bg); color: var(--ready); padding: var(--s-3) var(--s-4); }
+    .tool-header { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); align-items: center; overflow: hidden; margin-bottom: var(--s-4); border-block-end: 4px solid var(--traveller-red); border-radius: var(--r-3); background: var(--traveller-black); color: #fff; }
+    .tool-header > div { padding: var(--s-4) var(--s-5); }
+    .tool-header .t-tool-title { display: block; font: 400 clamp(1.45rem, 2.8vw, 2.2rem)/1.15 var(--traveller-title); letter-spacing: .045em; text-transform: uppercase; color: inherit; }
+    .tool-header p { margin: var(--s-2) 0 0; color: #ddd; }
+    .tool-hero { display: block; inline-size: 100%; block-size: clamp(7rem, 13vw, 11rem); object-fit: cover; object-position: center 40%; background: var(--traveller-black); }
+    .tt-banner, .tt-about { border: var(--border); border-radius: var(--r-3); background: var(--bg-card); color: var(--fg-2); padding: var(--s-3) var(--s-4); }
     .tt-banner { margin-bottom: var(--s-4); padding: var(--s-1) var(--s-3); background: var(--bg-inset); border: var(--border-soft); color: var(--fg-2); font-size: var(--fs-small); overflow-wrap: anywhere; }
     .tt-banner[data-state="error"] { background: var(--error-bg); color: var(--error); border-color: var(--error-border); }
     .workspace { display: grid; grid-template-columns: minmax(0, 21rem) minmax(0, 1fr); align-items: start; gap: var(--s-5); }
@@ -34,8 +89,20 @@
     .tt-panel { min-width: 0; border: var(--border); border-radius: var(--r-3); background: var(--bg-card); }
     .tt-panel + .tt-panel { margin-top: var(--s-5); }
     .workspace > .tt-panel { margin-top: 0; }
-    .tt-panel-head { padding: var(--s-3) var(--s-4); border-bottom: var(--border); }
-    .tt-panel-head h2 { margin: 0; font-size: var(--fs-h3); }
+    .tt-panel-head, :is(.generation-settings, .referee, .species-reference) > summary, .sheet-heading {
+      --link: #fff;
+      padding: var(--s-3) var(--s-4);
+      border-inline-start: 4px solid var(--traveller-red);
+      border-radius: var(--r-3) var(--r-3) 0 0;
+      background: var(--traveller-black);
+      color: #fff;
+      font: 700 var(--fs-h3)/1.25 var(--traveller-heading);
+      letter-spacing: .035em;
+      text-transform: uppercase;
+    }
+    .tt-panel-head h2 { margin: 0; font: inherit; color: inherit; }
+    .tt-panel-head button.quiet { border-color: #888; color: #fff; }
+    .tt-panel-head button.quiet:hover { background: #2d2d2d; }
     .tt-panel-body { padding: var(--s-4); }
     .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); }
     .wide { grid-column: 1 / -1; }
@@ -47,6 +114,7 @@
     textarea { resize: vertical; min-height: var(--s-9); }
     [aria-invalid="true"] { outline: var(--bw-2) solid var(--error); }
     button, .button { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-1); background: transparent; color: var(--copper); border: var(--bw-1) solid var(--copper); border-radius: var(--r-2); min-height: calc(var(--s-7) + var(--s-2)); padding: var(--s-2) var(--s-3); cursor: pointer; font-weight: var(--fw-semibold); text-decoration: none; }
+    button, .button, label, .label { font-family: Roboto, Arial, sans-serif; }
     button:hover, .button:hover { background: var(--copper-tint); }
     .primary { color: var(--fg-on-accent); border-color: var(--accent); background: var(--accent); }
     .primary:hover { background: var(--accent-active); }
@@ -60,7 +128,7 @@
     #active-skill-minimums { margin: var(--s-4) 0; overflow-wrap: anywhere; }
     :is(#settings-feedback, #group-settings-feedback)[data-state="error"] { color: var(--error); }
     .mode-selector { gap: var(--s-1); }
-    .mode-selector button[aria-pressed="true"] { color: var(--fg-strong); background: var(--bg-card); border-color: var(--link); }
+    .mode-selector button[aria-pressed="true"] { color: #fff; background: var(--traveller-black); border-color: var(--traveller-black); box-shadow: inset 0 -3px var(--traveller-red); }
     .settings-more { border-block-start: var(--border-soft); margin-block-start: var(--s-4); }
     .settings-more > summary { padding-block: var(--s-3) var(--s-1); font-weight: var(--fw-semibold); cursor: pointer; }
     .settings-footer { background: var(--bg-card); border-block-start: var(--border-soft); margin-block-start: var(--s-4); padding-block-start: var(--s-3); }
@@ -86,12 +154,45 @@
     #encounter-plate img { width: clamp(3.5rem, 8vw, 6rem); }
     #encounter-plate figcaption { display: none; }
     .modal { box-sizing: border-box; inline-size: min(27rem, calc(100% - var(--s-6))); max-block-size: calc(100% - var(--s-6)); overflow: auto; overscroll-behavior: contain; padding: 0; border: var(--border); border-radius: var(--r-3); background: var(--bg-card); color: var(--fg); box-shadow: var(--shadow-3); }
-    .modal::backdrop { background: color-mix(in srgb, var(--plt-bg-900) 76%, transparent); }
+    .modal::backdrop { background: rgb(17 17 17 / .74); }
+    .sheet-modal { inline-size: min(63rem, calc(100% - var(--s-5))); }
+    .sheet-modal[open], .sheet-modal form { display: flex; flex-direction: column; overflow: hidden; }
+    .sheet-modal .tt-panel-head { flex-shrink: 0; }
+    .sheet-content { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scroll-padding-block: var(--s-2); }
+    .sheet-content > .hint { margin: 0 0 var(--s-3); }
+    .sheet-heading { margin: 0 0 var(--s-3); }
+    .sheet-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(8.5rem, 100%), 1fr)); gap: var(--s-2); }
+    .sheet-stat { min-inline-size: 0; margin: var(--s-2) 0 0; padding: var(--s-3) var(--s-2) var(--s-2); border: 1px solid var(--rule); border-block-start: 3px solid var(--traveller-red); border-radius: var(--r-2); background: var(--bg-inset); }
+    .sheet-stat legend { float: inline-start; width: 100%; padding: 0; margin: 0 0 var(--s-2); color: var(--fg); text-align: center; font: 700 1rem/1.1 var(--traveller-heading); }
+    .sheet-score-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); clear: both; }
+    .sheet-score { display: grid; justify-items: center; align-content: start; gap: var(--s-1); }
+    .sheet-score label { font-size: .75rem; }
+    .sheet-score input[type="number"] { background: var(--bg-card); min-height: 2rem; padding: var(--s-1); text-align: center; appearance: textfield; }
+    .sheet-score input::-webkit-inner-spin-button { appearance: none; }
+    .sheet-dm, .sheet-cash { font: var(--fs-small) / 1.25 var(--font-mono); }
+    .sheet-dm { min-inline-size: 2.25rem; padding: 2px 4px; border-radius: var(--r-1); background: var(--traveller-muted); color: var(--traveller-paper); text-align: center; }
+    .sheet-dm.current { background: var(--traveller-red); color: #fff; }
+    .sheet-section { border-block-start: var(--border-soft); margin-block-start: var(--s-3); }
+    .sheet-section > summary, .sheet-row > summary { padding: var(--s-2) 0; cursor: pointer; font-weight: var(--fw-semibold); overflow-wrap: anywhere; }
+    .sheet-section > summary { font-family: var(--traveller-heading); font-size: var(--fs-h3); }
+    .sheet-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr)); gap: var(--s-3); }
+    .sheet-fields :is(input, select, textarea) { min-height: 2.25rem; background: var(--bg-card); }
+    .sheet-fields textarea { font-family: inherit; }
+    .sheet-content .sheet-stats + .sheet-fields { margin-block-start: var(--s-3); }
+    .sheet-table h4 { margin: 0 0 var(--s-2); font: 700 1.06rem/1.2 var(--traveller-heading); color: var(--fg); }
+    .sheet-table + .sheet-table { margin-block-start: var(--s-4); }
+    .sheet-rows:not(:empty) { margin-block-end: var(--s-2); }
+    .sheet-row { border-block-end: var(--border-soft); }
+    .sheet-row[open] { padding: 0 var(--s-3) var(--s-2); background: var(--bg-inset); }
+    .sheet-row button { margin-block-start: var(--s-2); }
+    .sheet-footer { flex-shrink: 0; border-block-start: var(--border-soft); padding: var(--s-2) var(--s-4); }
+    .sheet-footer .feedback { color: var(--error); }
+    .sheet-footer .feedback:empty { display: none; }
     .portrait-viewer figure { margin: 0; display: grid; gap: var(--s-3); }
     .portrait-viewer img { display: block; max-inline-size: 100%; block-size: auto; margin-inline: auto; border-radius: var(--r-2); }
     #encounter, #species-guide { scroll-margin-block-start: var(--s-4); }
     #species-guide { margin-block-start: var(--s-5); }
-    .species-reference > summary { padding: var(--s-4); font-size: var(--fs-h3); font-weight: var(--fw-semibold); cursor: pointer; }
+    .species-reference > summary { cursor: pointer; }
     .species-reference[open] > summary { border-block-end: var(--border); }
     .guide-navigation { margin: 0 0 var(--s-3); font-size: var(--fs-small); }
     .species-reference .species-plate { margin-top: var(--s-2); }
@@ -109,17 +210,18 @@
     details.group { border-top: var(--border-soft); margin-top: var(--s-3); }
     details.group summary { padding: var(--s-3) 0; cursor: pointer; font-weight: var(--fw-semibold); }
     details.group > div { padding-bottom: var(--s-2); }
-    :is(.referee, .generation-settings) > summary { padding: var(--s-4); font-size: var(--fs-h3); font-weight: var(--fw-semibold); cursor: pointer; }
+    :is(.referee, .generation-settings) > summary { cursor: pointer; }
     :is(.referee, .generation-settings)[open] > summary { border-bottom: var(--border); }
     .referee .group:first-child { margin-top: 0; border-top: 0; }
     .card-body { padding: var(--s-5); }
-    .card-body > h1, .encounter-identity h3 { font: var(--fw-bold) var(--fs-display)/var(--lh-tight) var(--font-display); margin: 0 0 var(--s-2); letter-spacing: var(--tracking-tight); overflow-wrap: anywhere; }
+    .card-body > h1, .encounter-identity h3 { font: 400 var(--fs-display)/var(--lh-tight) var(--font-display); margin: 0 0 var(--s-2); overflow-wrap: anywhere; }
     .card-body p { color: var(--fg-2); font-size: var(--fs-body-lg); margin: var(--s-3) 0; max-width: 64ch; }
     .card-body .retained-record { color: var(--warn); font-size: var(--fs-small); margin: 0 0 var(--s-3); }
     .card-body .card-role { font: var(--fw-medium) var(--fs-small)/var(--lh-normal) var(--font-mono); color: var(--copper); margin: 0; overflow-wrap: anywhere; }
     .card-actions { margin-block-start: var(--s-4); }
     #referee-brief { border-block-start: var(--border-soft); margin-block-start: var(--s-4); padding-block-start: var(--s-3); }
-    #referee-brief h3 { font-size: var(--fs-h3); margin: 0 0 var(--s-2); }
+    .brief-head { margin: 0 0 var(--s-2); }
+    #referee-brief h3 { font: 700 var(--fs-h3)/1.25 var(--traveller-heading); margin: 0; }
     #card-feedback { margin-block: var(--s-2) 0; }
     #card-feedback:empty { margin: 0; }
     .action-group + .action-group { border-block-start: var(--border-soft); margin-block-start: var(--s-4); padding-block-start: var(--s-3); }
@@ -136,7 +238,7 @@
     .group-member-list p { margin: var(--s-1) 0; }
     .group-member-list .summary-row { align-items: baseline; }
     .characteristics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--s-2); margin: var(--s-3) 0; }
-    .stat { background: var(--bg-inset); border: var(--border-soft); border-radius: var(--r-2); padding: var(--s-2); text-align: center; }
+    .stat { background: var(--bg-inset); border: var(--border); border-block-start: 3px solid var(--traveller-red); border-radius: var(--r-2); padding: var(--s-2); text-align: center; }
     .stat dt { color: var(--fg-2); font: var(--fs-small)/var(--lh-normal) var(--font-mono); }
     .stat dd { margin: 0; }
     .stat .score { font: var(--fw-bold) var(--fs-h2)/var(--lh-normal) var(--font-mono); }
@@ -167,7 +269,6 @@
     .tt-about p:last-child { margin-bottom: 0; }
     .tt-about details { margin-top: var(--s-3); }
     .tt-about summary { cursor: pointer; font-weight: var(--fw-semibold); }
-    :root[data-theme="light"] .tt-shell { --copper: color-mix(in srgb, var(--plt-copper-600) 57%, var(--fg) 43%); }
     @media (max-width: 56rem) { .tt-shell { padding: var(--s-5) var(--s-4) var(--s-8); } .workspace { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 32rem) {
       #generator { padding-block-start: var(--s-3); }
@@ -178,10 +279,13 @@
       #encounter :is(#player-view, .card-actions button) { padding-inline: var(--s-2); }
       #encounter .card-actions button { font-size: var(--fs-small); }
       #encounter > .card-body { padding: var(--s-4); }
-      .tool-header { grid-template-columns: minmax(0, 1fr); gap: var(--s-2); }
-      .tool-header .t-tool-title { font-size: var(--fs-h1); }
-      .tool-header p { margin-top: var(--s-2); }
+      .tool-header { grid-template-columns: minmax(0, 1fr); }
+      .tool-header > div { padding: var(--s-2) var(--s-3); }
+      .tool-header p { font-size: var(--fs-small); margin-top: var(--s-1); }
       .tool-hero { block-size: clamp(var(--s-9), 20vw, calc(var(--s-9) + var(--s-5))); object-position: center 35%; }
+      .sheet-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sheet-stat:only-child { grid-column: 1 / -1; }
+      .sheet-score-pair { gap: var(--s-1); }
       .characteristics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .status-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .card-body > h1, .encounter-identity h3 { font-size: var(--fs-h1); }
@@ -203,7 +307,7 @@
 <main id="generator" class="tt-shell" data-clarity-mask="true">
   <header class="tool-header">
     <div>
-      <h1 class="t-tool-title">Traveller <mark>NPC</mark> Generator</h1>
+      <h1 class="t-tool-title">Traveller NPC Generator</h1>
       <p class="t-tagline">Roll NPCs, crew candidates, and group encounters for Mongoose Traveller 2E.</p>
     </div>
     <img class="tool-hero" src="img/2026-11/traveller-npc-generator-hero.webp" width="1440" height="810" loading="lazy" decoding="async"
@@ -394,7 +498,10 @@
           </div>
           <p id="card-feedback" class="hint feedback" role="status"></p>
           <section id="referee-brief" aria-labelledby="brief-title" hidden>
-            <h3 id="brief-title">Referee quick reference</h3>
+            <div class="summary-row brief-head">
+              <h3 id="brief-title">Referee quick reference</h3>
+              <button type="button" id="open-character-sheet" class="quiet compact" aria-haspopup="dialog" hidden>Character sheet</button>
+            </div>
             <div id="brief-content"></div>
           </section>
         </div>
@@ -454,6 +561,21 @@
     <p><strong>Traveller NPC Generator.</strong> Unofficial house rules for adult biological sophonts. Generation and saved records stay in your browser. <a href="./">Ted’s Tools catalog</a></p>
     <details id="rules"><summary>Rules, worked example and sources</summary><div id="rules-content"></div></details>
   </footer>
+  <dialog id="character-sheet" class="modal sheet-modal" aria-labelledby="character-sheet-title">
+    <header class="tt-panel-head">
+      <h2 id="character-sheet-title" tabindex="-1" autofocus>Character sheet</h2>
+    </header>
+    <form>
+      <div class="tt-panel-body sheet-content"></div>
+      <footer class="sheet-footer">
+        <p class="hint feedback" role="alert"></p>
+        <div class="actions">
+          <button type="submit" class="primary">Save sheet</button>
+          <button type="button" id="cancel-sheet" class="quiet">Cancel</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
   <dialog id="encounter-actions-dialog" class="modal" aria-labelledby="encounter-actions-title">
     <header class="tt-panel-head">
       <h2 id="encounter-actions-title">Encounter actions</h2>

@@ -1,7 +1,8 @@
+import { setCharacterSheet } from './character-sheet.mjs';
 import { has, normalizeConfig, object, requireRule, skillName } from './config.mjs';
 import { fieldGroups, generateNpc, rerollNpc, restoreNpc, setLock } from './generator.mjs';
 import { encounterSpecies } from './encounter-species.mjs';
-import { generateGroup, groupsForScene, isGroupEncounter, normalizeGroupConfig, restoreGroup } from './group-encounters.mjs';
+import { applyMemberSheets, generateGroup, groupsForScene, isGroupEncounter, normalizeGroupConfig, restoreGroup, setMemberSheet } from './group-encounters.mjs';
 import { groupScenes } from './group-types.mjs';
 import { isTalent, taskCheck } from './mechanics.mjs';
 import { fanNameSources, imperialNameCounts, nameStyleFor, nameStyles } from './names.mjs';
@@ -14,6 +15,7 @@ import { contexts, coreUrl, equipmentCatalogue, errataUrl, occupationChoices, oc
 import { fieldsFor } from './work.mjs';
 import { handoutUrl, isHandoutLink, portraitId, qualificationsFor, readHandout } from './handout.mjs';
 import { keepInRoster, readRoster, removeFromRoster } from './roster.mjs';
+import { editCharacterSheet } from './sheet-editor.mjs';
 
 const $ = id => document.getElementById(id);
 const field = id => $(id).value.trim();
@@ -430,18 +432,26 @@ function revealEncounter() {
 async function generation({ next = false, seedChange = false, reveal = compactLayout.matches } = {}) {
   if (busy) return;
   const rollingGroup = mode === 'group';
-  const record = await setRecord(() => {
+  const record = await setRecord(async () => {
     const seed = seedChange ? freshSeed() : field(rollingGroup ? 'group-seed' : 'seed');
     const previous = activeRecord()?.provenance;
     const sameSeed = seed === previous?.seed;
+    const sameRoll = sameSeed && !next;
     const index = sameSeed ? previous.index + Number(next) : 1;
     if (rollingGroup) {
-      return generateGroup({ scene: field('group-scene'), type: field('group-type'), species: field('group-species') }, { seed, index });
+      const rolled = await generateGroup({ scene: field('group-scene'), type: field('group-type'),
+        species: field('group-species') }, { seed, index });
+      if (sameRoll && Object.entries(rolled.controls.config).every(([key, value]) => group.controls.config[key] === value)) {
+        applyMemberSheets(rolled, group.controls.memberSheets);
+      }
+      return rolled;
     }
     const settings = readSettings();
     const sameModel = has(encounterSpecies, settings.species) === Boolean(npc?.encounter);
-    const counters = sameSeed && sameModel && !next ? previous.rerollCounters : {};
-    return generateNpc(settings, { seed, index, counters, locks: npc?.controls.locks });
+    const counters = sameRoll && sameModel ? previous.rerollCounters : {};
+    const rolled = await generateNpc(settings, { seed, index, counters, locks: npc?.controls.locks });
+    if (sameRoll && npc.biology.profileId === rolled.biology.profileId) setCharacterSheet(rolled, npc.controls.characterSheet);
+    return rolled;
   }, readyMessage, {
     fill: true,
     onError: message => showSettingsFeedback('error', message),
@@ -741,6 +751,18 @@ function renderNpcRecord() {
   renderRefereeBrief();
 }
 
+function openCharacterSheet(member, containingGroup) {
+  const record = containingGroup ?? member;
+  if (!record || playerView || busy || activeRecord() !== record) return;
+  editCharacterSheet($('character-sheet'), element, member, data => {
+    if (containingGroup) setMemberSheet(containingGroup, member, data);
+    else setCharacterSheet(member, data);
+    clearRefereeLink();
+    if (remember(record)) feedback('card-feedback', 'Character sheet saved.');
+    else feedback('card-feedback', 'Character sheet updated. Use a referee link or export JSON to keep it.');
+  });
+}
+
 function renderGroupRecord() {
   const { type, scene, size, purpose, affiliation, reaction, members, others, provenance } = group;
   $('brief-content').replaceChildren(definition([
@@ -753,13 +775,16 @@ function renderGroupRecord() {
     const stats = upp ? 'UPP ' + upp : order.map(stat => stat + ' ' + characteristics[stat].current).join(' · ');
     const details = element('button', 'Open NPC record', { type: 'button', class: 'quiet compact',
       'aria-label': 'Open NPC record for ' + member.player.name });
+    const sheet = element('button', 'Character sheet', { type: 'button', class: 'quiet compact',
+      'aria-label': 'Character sheet for ' + member.player.name, 'aria-haspopup': 'dialog' });
+    sheet.addEventListener('click', () => openCharacterSheet(member, group));
     details.addEventListener('click', async () => {
       if (playerView) return;
       const opened = await setRecord(() => structuredClone(member), member => 'Opened ' + member.player.name + ' from the group.', { fill: true });
       if (opened) revealEncounter();
     });
     return element('li', [
-      element('div', [h(member.player.name), details], { class: 'summary-row' }),
+      element('div', [h(member.player.name), element('div', [sheet, details], { class: 'actions' })], { class: 'summary-row' }),
       p((leader ? 'Leader · ' : '') + position + ' · ' + member.player.species),
       p([code(stats), ' · ' + member.work.competence.name], 'hint'),
       p(qualificationText(member), 'hint'),
@@ -808,6 +833,7 @@ function updatePlayerView() {
   hidden('settings', playerView || showingGroup);
   hidden('group-settings', playerView || !showingGroup);
   hidden('referee-actions', playerView);
+  hidden('open-character-sheet', playerView || showingGroup || !record);
   hidden('reroll-name', playerView || showingGroup || !record);
   hidden('referee', playerView || showingGroup || !record);
   hidden('group-referee', playerView || !showingGroup || !record);
@@ -1243,6 +1269,8 @@ async function initialize() {
     updatePlayerView();
   });
   $('copy-player-link').addEventListener('click', copyPlayerLink);
+  $('open-character-sheet').addEventListener('click', () => openCharacterSheet(npc));
+  $('cancel-sheet').addEventListener('click', () => $('character-sheet').close());
   const actions = $('encounter-actions-dialog');
   $('open-encounter-actions').addEventListener('click', () => {
     if (activeRecord() && !busy) actions.showModal();
