@@ -1,9 +1,16 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
+import { decodeLinkPayload } from '../../tool-src/tools/traveller-npc-generator/link-payload.mjs';
 import { routeHeaderAssets } from '../shared-header.mjs';
 
 const url = '/traveller-npc-generator.html';
 const savedFixture = 'Referee-only relationship';
+
+function handoutPayload(href: string) {
+  const { hash } = new URL(href);
+  expect(hash).toMatch(/^#h1=[A-Za-z0-9_-]+$/);
+  return decodeLinkPayload(hash.slice('#h1='.length), 150_000);
+}
 
 test.beforeEach(async ({ page }) => { await routeHeaderAssets(page); });
 
@@ -256,7 +263,7 @@ test('a player handout opens in another browser session with only opted-in facts
   await page.getByRole('button', { name: 'Share handout' }).click();
   const share = page.getByRole('dialog', { name: 'Player handout' });
   const open = share.getByRole('link', { name: 'Open handout' });
-  const handoutData = async () => JSON.parse(decodeURIComponent(new URL((await open.getAttribute('href'))!).hash.slice('#handout='.length)));
+  const handoutData = async () => handoutPayload((await open.getAttribute('href'))!);
   expect(Object.keys(await handoutData()).sort()).toEqual(['introduction', 'name', 'portrait', 'role', 'species', 'version']);
   await share.getByLabel('Qualifications', { exact: true }).check();
   await share.getByLabel('Availability', { exact: true }).check();
@@ -456,10 +463,16 @@ test('group handouts preserve the visible encounter and leave the referee facts 
   await page.getByRole('button', { name: 'Roll group' }).click();
   await expect(page.locator('#npc-name')).toHaveText('Portside associates');
   const group = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-group-v1')!));
+  await page.getByRole('button', { name: 'Referee link', exact: true }).click();
+  const refereeDialog = page.getByRole('dialog', { name: 'Referee link' });
+  const refereeHref = await refereeDialog.getByLabel('Encounter URL').inputValue();
+  expect(new URL(refereeHref).hash).toMatch(/^#r1=[A-Za-z0-9_-]+$/);
+  expect(refereeHref.length).toBeLessThan(300);
+  await refereeDialog.getByRole('button', { name: 'Close' }).click();
   await page.getByRole('button', { name: 'Share handout' }).click();
   const handoutDialog = page.getByRole('dialog', { name: 'Player handout' });
   const href = (await handoutDialog.getByRole('link', { name: 'Open handout' }).getAttribute('href'))!;
-  const data = JSON.parse(decodeURIComponent(new URL(href).hash.slice('#handout='.length)));
+  const data = handoutPayload(href);
   expect(Object.keys(data).sort()).toEqual(['introduction', 'kind', 'name', 'portrait', 'role', 'version']);
   expect(data.introduction).toBe(group.player.introduction);
   expect(JSON.stringify(data)).not.toContain(group.affiliation);
@@ -476,6 +489,12 @@ test('group handouts preserve the visible encounter and leave the referee facts 
   try {
     const reader = await recipient.newPage();
     await routeHeaderAssets(reader);
+    await reader.goto(refereeHref);
+    await expect(reader.locator('#status')).toContainText('Restored Group 1');
+    await expect(reader.locator('#brief-content')).toContainText(group.purpose);
+    await expect(reader.locator('#brief-content')).toContainText(group.affiliation);
+    await expect(reader.locator('[data-group-member="leader"] h3')).toHaveText(group.members[0].npc.player.name);
+    expect(await reader.evaluate(() => localStorage.getItem('tedt-traveller-group-v1'))).toBeNull();
     await reader.goto(href);
     await expect(reader.getByRole('heading', { name: 'Portside associates' })).toBeVisible();
     await expect(reader.locator('#handout-intro')).toHaveText(group.player.introduction);
@@ -493,14 +512,11 @@ test('referee links restore a character in a fresh browser without making it the
   await expect(page.locator('#npc-name')).toHaveText('Éla & Vár');
   await page.getByText('Locks and rerolls', { exact: true }).click();
   await page.getByLabel('Lock STR', { exact: true }).check();
-  const record = await page.evaluate(() => JSON.parse(localStorage.getItem('tedt-traveller-npc-v1')!));
   await page.getByRole('button', { name: 'Referee link', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Referee link' });
   const href = await dialog.getByLabel('Encounter URL').inputValue();
-  const variables = new URLSearchParams(new URL(href).hash.slice(1));
-  expect(variables.get('seed')).toBe(record.provenance.seed);
-  expect(variables.get('index')).toBe(String(record.provenance.index));
-  expect(variables.get('settings')).toContain('Éla & Vár');
+  expect(new URL(href).hash).toMatch(/^#r1=[A-Za-z0-9_-]+$/);
+  expect(href.length).toBeLessThan(350);
   await dialog.getByRole('button', { name: 'Use in address bar' }).click();
   await expect(page).toHaveURL(href);
   await dialog.getByRole('button', { name: 'Close' }).click();

@@ -1,8 +1,13 @@
 import { isGroupEncounter } from './group-encounters.mjs';
+import { decodeLinkPayload, encodeLinkPayload } from './link-payload.mjs';
 import { rating } from './mechanics.mjs';
 import { portraitFor } from './species-art.mjs';
 
-export const handoutPrefix = '#handout=';
+const legacyHandoutPrefix = '#handout=';
+const handoutPrefix = '#h1=';
+const maxHandoutLinkLength = 150_000;
+
+export const isHandoutLink = hash => hash.startsWith(handoutPrefix) || hash.startsWith(legacyHandoutPrefix);
 
 export function portraitId(record) {
   const npc = isGroupEncounter(record) ? record.members[0].npc : record;
@@ -30,15 +35,17 @@ export function handoutUrl(location, record, { qualifications, availability, pay
   }
   const url = new URL(location);
   url.search = '';
-  url.hash = handoutPrefix + encodeURIComponent(JSON.stringify(handout));
+  url.hash = handoutPrefix + encodeLinkPayload(handout, maxHandoutLinkLength);
   return url.href;
 }
 
 export function readHandout(hash) {
   try {
-    if (!hash.startsWith(handoutPrefix) || hash.length > 150_000) return null;
-    const { version, kind, name, species, role, introduction, portrait, qualifications, availability, pay } =
-      JSON.parse(decodeURIComponent(hash.slice(handoutPrefix.length)));
+    if (!isHandoutLink(hash) || hash.length > maxHandoutLinkLength) return null;
+    const payload = hash.startsWith(handoutPrefix)
+      ? decodeLinkPayload(hash.slice(handoutPrefix.length), maxHandoutLinkLength)
+      : JSON.parse(decodeURIComponent(hash.slice(legacyHandoutPrefix.length)));
+    const { version, kind, name, species, role, introduction, portrait, qualifications, availability, pay } = payload;
     const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
     if (version !== 1 || !text(name, 500) || !text(role, 500) || !text(introduction, 3000)) return null;
     if (kind === 'group' ? species !== undefined : kind !== undefined || !text(species, 500)) return null;

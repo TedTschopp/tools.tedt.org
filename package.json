@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "astro": "7.2.8",
+    "fflate": "0.8.3",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.3.2",
     "liquidjs": "^10.21.1",
