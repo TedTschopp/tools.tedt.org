@@ -222,13 +222,14 @@ test('locks, candidate rerolls and saved records work through the real browser e
   await openDisclosure(page, 'referee');
   await expect(page.locator('#characteristics')).toContainText('Technician');
   await expect(page.getByRole('region', { name: 'Resolved skills' })).toContainText('Flight');
-  const characteristics = await page.locator('.characteristics').innerText();
+  const characteristics = page.locator('#characteristics .stat');
+  const scores = await characteristics.allTextContents();
   await openDisclosure(page, 'referee');
   await page.getByText('Locks and rerolls', { exact: true }).click();
   await page.getByLabel('Lock STR', { exact: true }).check();
   await useEncounterAction(page, 'Reroll name');
   await expect(page.locator('#status')).toContainText('Rerolled the selected fields');
-  await expect(page.locator('.characteristics')).toHaveText(characteristics, { useInnerText: true });
+  await expect(characteristics).toHaveText(scores);
   await page.getByText('Seed, versions and roll record', { exact: true }).click();
   await expect(page.locator('#rolls')).toContainText('name 1');
   const waiting = page.waitForEvent('download');
@@ -491,6 +492,62 @@ test('an editable Traveller sheet fits a phone and keeps its saved data private'
   await expect(luck).toHaveValue('');
 });
 
+test('Generation settings choose which extra scores appear on the character sheet', async ({ page, browser }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto(url);
+  await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  await openDisclosure(page, 'settings-options');
+  const settings = page.getByRole('region', { name: 'Generation settings' });
+  await settings.getByLabel('Species profile').selectOption('human');
+  await openDisclosure(page, 'npc-additional-options');
+  const choices = settings.getByRole('group', { name: 'Additional characteristics' });
+  for (const option of ['Morale', 'Luck', 'PSI test', 'Standing', 'Wealth Level']) {
+    await choices.getByRole('checkbox', { name: option, exact: true }).check();
+  }
+  await openDisclosure(page, 'career-adjustments');
+  await settings.getByLabel('Successful military terms').fill('2');
+  await settings.getByLabel('Completed terms before PSI testing').fill('12');
+  await settings.getByRole('button', { name: 'Apply settings', exact: true }).click();
+  await expect(page.locator('#settings-options')).toHaveJSProperty('open', false);
+  await expect(page.locator('#status')).toContainText('NPC 1 ready');
+  await page.getByRole('button', { name: 'Character sheet', exact: true }).click();
+  const sheet = page.getByRole('dialog', { name: 'Character sheet' });
+  await sheet.getByText('Additional characteristics', { exact: true }).click();
+  const morale = sheet.getByRole('spinbutton', { name: 'Morale current' });
+  await expect(morale).toHaveValue(/^(?:[4-9]|1[0-4])$/);
+  await expect(sheet.getByRole('spinbutton', { name: 'Luck current' })).toHaveValue(/\d/);
+  await expect(sheet.getByRole('spinbutton', { name: 'Sanity current' })).toHaveValue('');
+  await expect(sheet.getByRole('spinbutton', { name: 'Psionics current' })).toHaveValue('0');
+  const soc = await sheet.getByRole('spinbutton', { name: 'Social Standing baseline' }).inputValue();
+  await expect(sheet.getByRole('spinbutton', { name: 'Standing current', exact: true })).toHaveValue(soc);
+  await sheet.getByText('Finances', { exact: true }).click();
+  await expect(sheet.locator('#sheet-wlt-current')).toHaveValue(soc);
+  await sheet.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await useEncounterAction(page, 'Referee link');
+  const href = await page.getByLabel('Encounter URL').inputValue();
+  await page.getByRole('dialog', { name: 'Referee link' }).getByRole('button', { name: 'Close' }).click();
+  const receiver = await browser.newContext();
+  try {
+    const loaded = await receiver.newPage();
+    await routeHeaderAssets(loaded);
+    await loaded.goto(href);
+    await expect(loaded.locator('#status')).toContainText('Restored NPC 1');
+    await openDisclosure(loaded, 'npc-additional-options');
+    await expect(loaded.getByRole('checkbox', { name: 'Morale', exact: true })).toBeChecked();
+    await expect(loaded.getByRole('checkbox', { name: 'Sanity', exact: true })).not.toBeChecked();
+    await openDisclosure(loaded, 'career-adjustments');
+    await expect(loaded.getByLabel('Completed terms before PSI testing')).toHaveValue('12');
+  } finally { await receiver.close(); }
+  await openDisclosure(page, 'settings-options');
+  await choices.getByRole('checkbox', { name: 'Morale', exact: true }).uncheck();
+  await settings.getByRole('button', { name: 'Apply settings', exact: true }).click();
+  await expect(page.locator('#settings-options')).toHaveJSProperty('open', false);
+  await page.getByRole('button', { name: 'Character sheet', exact: true }).click();
+  await sheet.getByText('Additional characteristics', { exact: true }).click();
+  await expect(morale).toHaveValue('');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('the field guide searches all profiles and rolls from both generator rulesets', async ({ page }) => {
   await page.goto(url + '#species-guide');
   await expect(page.locator('#status')).toContainText('NPC 1 ready');
@@ -582,6 +639,8 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   await expect(types.locator('option[value="hunt"]')).toHaveCount(0);
   await types.selectOption('naval');
   await settings.getByRole('combobox', { name: 'Member species' }).selectOption('human');
+  await openDisclosure(page, 'group-additional-options');
+  await settings.getByRole('checkbox', { name: 'Luck', exact: true }).check();
   await settings.getByRole('button', { name: 'Roll group' }).click();
   await expect(status).toContainText('Naval inspection or boarding detail');
   await expect(page.locator('#encounter')).toBeFocused();
@@ -595,10 +654,13 @@ test('Group Encounter rolls a scene-filtered team and keeps the group intact whe
   await expect(members.getByRole('listitem')).toHaveCount(group.members.length);
   await expect(members.locator('[data-group-member="leader"]')).toContainText('Detail officer');
   expect(group.size).toBe(group.members.length + group.others.count);
+  expect(group.controls.config.additionalCharacteristics).toEqual(['LCK']);
   const lead = group.members[0].npc.player.name;
 
   await page.getByRole('button', { name: 'Character sheet for ' + lead, exact: true }).click();
   const sheet = page.getByRole('dialog', { name: 'Character sheet' });
+  await sheet.getByText('Additional characteristics', { exact: true }).click();
+  await expect(sheet.getByRole('spinbutton', { name: 'Luck current' })).toHaveValue(String(group.members[0].npc.mechanics.characteristics.LCK.current));
   await sheet.getByText('Notes', { exact: true }).click();
   await sheet.getByLabel('Character notes').fill('Leader sheet entry');
   await sheet.getByRole('button', { name: 'Save sheet' }).click();

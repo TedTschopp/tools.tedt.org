@@ -6,6 +6,7 @@ import { applyMemberSheets, generateGroup, groupsForScene, isGroupEncounter, nor
 import { groupScenes } from './group-types.mjs';
 import { isTalent, taskCheck } from './mechanics.mjs';
 import { fanNameSources, imperialNameCounts, nameStyleFor, nameStyles } from './names.mjs';
+import { careerAdjustmentFields, optionalCharacteristics, psionMode } from './optional-characteristics.mjs';
 import { freshSeed } from './random.mjs';
 import { isRefereeLink, readRefereeLink, refereeLink } from './record-links.mjs';
 import { portraitFor } from './species-art.mjs';
@@ -119,6 +120,33 @@ function renderSkillMinimums() {
   $('skill-minimums-summary').textContent = 'Skill minimums · ' + minimums.replace(/\s*\n\s*/g, ', ');
 }
 
+const optionalScoreInputs = kind => Array.from($(kind + '-optional-scores').querySelectorAll('input'));
+const selectedOptionalScores = kind => optionalScoreInputs(kind).filter(input => input.checked).map(input => input.value);
+const careerInput = key => $('career-' + key);
+
+function renderOptionalSettings() {
+  for (const kind of ['npc', 'group']) {
+    $(kind + '-optional-scores').replaceChildren(...Object.entries(optionalCharacteristics).map(([stat, { name, source }]) =>
+      element('label', [element('input', null, { type: 'checkbox', value: stat }), stat === 'PSI' ? 'PSI test' : name],
+        { class: 'check-line', title: source })));
+  }
+  $('optional-career-fields').replaceChildren(...careerAdjustmentFields.map(({ key, label, checkbox }) => {
+    const id = 'career-' + key;
+    const input = element('input', null, checkbox ? { id, type: 'checkbox' } : { id, type: 'number', min: '0', max: '9999', placeholder: '0' });
+    return element('label', checkbox ? [input, label] : [label, input], { class: 'wide' + (checkbox ? ' check-line' : '') });
+  }));
+}
+
+function fillOptionalSettings(kind, config) {
+  for (const input of optionalScoreInputs(kind)) input.checked = config.additionalCharacteristics?.includes(input.value) ?? false;
+  if (kind === 'group') return;
+  for (const { key, checkbox } of careerAdjustmentFields) {
+    const value = config.careerAdjustments?.[key];
+    if (checkbox) careerInput(key).checked = value === true;
+    else careerInput(key).value = value ?? '';
+  }
+}
+
 function updateProfileControls(config) {
   const profileId = field('species');
   const isEncounter = has(encounterSpecies, profileId);
@@ -141,7 +169,7 @@ function updateProfileControls(config) {
   hidden('wings-label', !droyne);
   hidden('territory-label', profile?.special !== 'hierate' || field('adult-form') === 'Female');
   hidden('ascondi-soc-label', profile?.special !== 'ascondi');
-  const zhodani = field('culture') === 'zhodani';
+  const zhodani = candidate?.culture === 'zhodani' || field('culture') === 'zhodani';
   hidden('zhodani-psi-label', !zhodani);
   const specialtyOptions = (slot, id) => {
     const row = occupationChoices.find(row => row.id === field(slot));
@@ -152,10 +180,21 @@ function updateProfileControls(config) {
   };
   specialtyOptions('occupation', 'specialty');
   specialtyOptions('secondary', 'secondary-specialty');
-  const trained = field('psi-mode') === 'trained' || field('occupation') === 'psion';
+  const extra = selectedOptionalScores('npc');
+  const effectivePsiMode = psionMode(field('psi-mode'), extra);
+  const trained = effectivePsiMode === 'trained' || field('occupation') === 'psion';
+  const latent = effectivePsiMode === 'latent';
   hidden('talent-label', !trained);
-  hidden('potential-label', field('psi-mode') !== 'latent' || droyne || zhodani);
-  hidden('psi-current-label', !trained && !droyne && !zhodani && field('psi-mode') !== 'latent');
+  hidden('potential-label', !latent || droyne || zhodani);
+  hidden('psi-current-label', !trained && !droyne && !zhodani && !latent);
+  let hasAdjustments = false;
+  for (const { key, stat } of careerAdjustmentFields) {
+    const enabled = !isEncounter && (stat === 'PSI' ? !droyne && !zhodani && (latent || trained) : extra.includes(stat));
+    const input = careerInput(key);
+    input.disabled = input.parentElement.hidden = !enabled;
+    hasAdjustments ||= enabled;
+  }
+  hidden('career-adjustments', !hasAdjustments);
   hidden('age-label', field('age-mode') !== 'fixed');
   renderSkillMinimums();
 }
@@ -218,6 +257,7 @@ function fillSettings(config, seed) {
   $('talent').value = config.psion.talent;
   $('potential').value = config.psion.potential ?? '';
   $('psi-current').value = config.psion.current ?? '';
+  fillOptionalSettings('npc', config);
   const advanced = advancedFrom(config);
   $('advanced').value = Object.keys(advanced).length ? JSON.stringify(advanced, null, 2) : '';
   updateProfileControls(config);
@@ -235,6 +275,7 @@ function fillGroupSettings(config, seed) {
   updateGroupTypes(config.type);
   $('group-species').value = config.species;
   $('group-seed').value = seed;
+  fillOptionalSettings('group', config);
   showSettingsFeedback('', '', 'group');
 }
 
@@ -289,6 +330,9 @@ function readSettings() {
     requiredSkills: pairs('required-skills').map(([skill, level]) => ({ skill, level })),
     requiredCharacteristics: Object.fromEntries(pairs('stat-minimums').map(([stat, level]) => [stat.toUpperCase(), level])),
     characteristicBoons: field('characteristic-boons').toUpperCase().split(/[\s,]+/).filter(Boolean),
+    additionalCharacteristics: selectedOptionalScores('npc'),
+    careerAdjustments: Object.fromEntries(careerAdjustmentFields.filter(({ key }) => !careerInput(key).disabled)
+      .map(({ key, checkbox }) => [key, checkbox ? careerInput(key).checked : integerField('career-' + key)])),
     profileOptions: {
       adultForm: $('adult-label').hidden ? null : field('adult-form'),
       wings: $('wings-label').hidden ? 'random' : field('wings'),
@@ -440,8 +484,8 @@ async function generation({ next = false, seedChange = false, reveal = compactLa
     const index = sameSeed ? previous.index + Number(next) : 1;
     if (rollingGroup) {
       const rolled = await generateGroup({ scene: field('group-scene'), type: field('group-type'),
-        species: field('group-species') }, { seed, index });
-      if (sameRoll && Object.entries(rolled.controls.config).every(([key, value]) => group.controls.config[key] === value)) {
+        species: field('group-species'), additionalCharacteristics: selectedOptionalScores('group') }, { seed, index });
+      if (sameRoll && ['scene', 'type', 'species'].every(key => group.controls.config[key] === rolled.controls.config[key])) {
         applyMemberSheets(rolled, group.controls.memberSheets);
       }
       return rolled;
@@ -491,11 +535,14 @@ function renderValidity() {
 function renderCharacteristics() {
   const stats = npc.mechanics;
   const bio = npc.biology;
-  const grid = element('dl', stats.order.map(stat => {
+  const tiles = order => element('dl', order.map(stat => {
     const value = stats.characteristics[stat];
+    const source = value.source ?? (stat === 'PSI' ? npc.abilities.psion?.source : null);
     return element('div', [element('dt', stat), element('dd', value.current, { class: 'score' }),
-      element('dd', 'DM ' + signed(value.dm), { class: 'dm' })], { class: 'stat' });
+      element('dd', 'DM ' + signed(value.dm), { class: 'dm' })], { class: 'stat', ...(source && { title: source }) });
   }), { class: 'characteristics' });
+  const core = stats.order.filter(stat => !has(optionalCharacteristics, stat));
+  const optional = stats.order.filter(stat => has(optionalCharacteristics, stat));
   const meta = [stats.upp && 'UPP ' + stats.upp, stats.condition.status, bio.form, bio.status].filter(Boolean).join(' · ');
   const body = definition([['Profile', bio.name + ' · ' + bio.variant], ['Body and movement', bio.body + ' · ' + bio.movement],
     ['Senses and manipulation', bio.senses + ' · ' + bio.manipulators], ['Age', bio.age.years == null ? 'Adult, age unspecified' : bio.age.years + ' years'],
@@ -508,7 +555,9 @@ function renderCharacteristics() {
   const effects = [...stats.condition.records, ...npc.abilities.augmentations];
   const details = element('details', [element('summary', 'Raw rolls and current condition'), changes, effects.length ? list(effects.map(entry =>
     entry.name + ' · ' + entry.source + (entry.recovery ? ' · ' + entry.recovery : '') + (entry.active ? '' : ' · inactive'))) : null], { class: 'group' });
-  $('characteristics').replaceChildren(grid, p(meta, 'meta'), body, ...(traits ? [traits] : []), details);
+  $('characteristics').replaceChildren(tiles(core), p(meta, 'meta'),
+    ...(optional.length ? [h('Additional characteristics'), tiles(optional)] : []),
+    body, ...(traits ? [traits] : []), details);
 }
 
 function renderSkills() {
@@ -537,7 +586,7 @@ function renderSkills() {
   ];
   $('skills').replaceChildren(...entries.filter(Boolean));
   const initialized = field('check-skill');
-  select('check-stat', npc.mechanics.order.map(stat => [stat, stat]), initialized ? field('check-stat') : 'EDU');
+  select('check-stat', npc.mechanics.order.map(stat => [stat, optionalCharacteristics[stat]?.name ?? stat]), initialized ? field('check-stat') : 'EDU');
   if (!initialized) $('check-skill').value = occupation.slots[0];
   $('skill-options').replaceChildren(...skills.map(skill => element('option', null, { value: skill.skill })));
   for (const context of ['hearing', 'scent', 'decay', 'lure']) {
@@ -679,7 +728,8 @@ function renderLocks() {
   const groups = npc.encounter ? [['Identity', [['name', 'Common name']]]]
     : Object.entries(fieldGroups).map(([name, fields]) => [name, fields.filter(([key]) =>
       key !== 'wings' || npc.biology.wings).filter(([key]) => key !== 'form' || npc.biology.form)]);
-  if (!npc.encounter) groups.splice(3, 0, ['Characteristics', npc.mechanics.order.map(stat => ['stat.' + stat, stat])]);
+  if (!npc.encounter) groups.splice(3, 0, ['Characteristics',
+    npc.mechanics.order.filter(stat => !['STD', 'WLT'].includes(stat)).map(stat => ['stat.' + stat, stat])]);
   $('locks').replaceChildren(
     p('Lock the current value before applying new settings or rolling again. Derived values recalculate.', 'hint'),
     ...groups.map(([group, fields]) => element('div', [
@@ -1161,6 +1211,7 @@ async function initialize() {
   select('secondary', roleOptions(true));
   select('competence', [['random', 'Roll 2D'], ...tiers.map(tier => [tier.id, tier.name])]);
   select('talent', [['random', 'Roll a permitted talent'], ...specialties.psion.map(name => [name, name])]);
+  renderOptionalSettings();
   select('gear-item', Object.entries(equipmentCatalogue).map(([id, item]) => [id, item.name + ' · TL' + item.tl]));
   select('gear-fit', [['universal', 'Universal handheld'], ['custom', 'Referee-defined body'], ...Object.entries(Object.fromEntries(Object.values(species).reverse()
     .map(profile => [profile.fit, profile.name]))).sort((a, b) => a[1].localeCompare(b[1])).map(([key, label]) => [key, label])], 'human');
@@ -1194,6 +1245,10 @@ async function initialize() {
     }, true);
   }
   $('group-scene').addEventListener('change', () => updateGroupTypes());
+  $('npc-optional-scores').addEventListener('change', ({ target }) => {
+    if (target.value === 'PSI' && target.checked && field('psi-mode') === 'off') $('psi-mode').value = 'auto';
+    updateProfileControls();
+  });
   $('group-form').addEventListener('input', ({ target }) => {
     if (target.id !== 'import-group') settingsChanged('Settings changed. Roll group to update the encounter.');
   });
@@ -1216,6 +1271,9 @@ async function initialize() {
   for (const id of ['species', 'culture', 'name-style', 'occupation', 'secondary', 'adult-form', 'age-mode', 'psi-mode']) {
     $(id).addEventListener('change', () => {
       if (id === 'psi-mode' && field('psi-mode') === 'trained') $('occupation').value = 'psion';
+      if (id === 'psi-mode' && field('psi-mode') === 'off') {
+        optionalScoreInputs('npc').find(input => input.value === 'PSI').checked = false;
+      }
       if (id === 'occupation' && field('occupation') !== 'psion' && field('psi-mode') === 'trained') $('psi-mode').value = 'auto';
       updateProfileControls();
     });

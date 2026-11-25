@@ -1,4 +1,5 @@
 import { family, has, requireRule, skillKey } from './config.mjs';
+import { additionalRolls, optionalCharacteristics, psionMode } from './optional-characteristics.mjs';
 import { compatibleCulture, species } from './species.mjs';
 import { characteristicOrder, core, coreUrl, specialtyFamilies, specialties } from './tables.mjs';
 import { diceOutcomes, faces, pickDice, sum } from './random.mjs';
@@ -131,7 +132,8 @@ function statOptions(profile, config, locks, stat, social = null) {
 }
 
 function profileIssue(profile, config, locks) {
-  const supported = [...profile.order, 'PSI'];
+  const mode = psionMode(config.psion.mode, config.additionalCharacteristics);
+  const supported = [...profile.order, 'PSI', ...additionalRolls.filter(stat => config.additionalCharacteristics?.includes(stat))];
   const applied = [...config.conditions.filter(item => item.active).map(item => item.characteristic),
     ...config.augmentations.filter(item => item.active).flatMap(item => Object.keys(item.modifiers))];
   const inputs = [...Object.keys(config.requiredCharacteristics), ...Object.keys(locks)
@@ -153,11 +155,11 @@ function profileIssue(profile, config, locks) {
   if (config.augmentations.some(item => item.active && item.requiresSpecies.length && !item.requiresSpecies.includes(profile.id))) {
     return 'An active augmentation is incompatible with ' + profile.name + '.';
   }
-  if ((profile.special === 'droyne' || profile.culture === 'zhodani') && config.psion.mode === 'off') {
+  if ((profile.special === 'droyne' || profile.culture === 'zhodani') && mode === 'off') {
     return profile.name + ' in this rules profile requires PSI testing. Choose profile default or enable psionics.';
   }
-  if (profile.special === 'dvora' && config.psion.mode === 'off') return 'Dvora retain their innate unconscious Clairvoyance.';
-  if (profile.psionics === 'prohibited' && ['trained', 'latent'].includes(config.psion.mode)) return 'The referee profile prohibits psionics.';
+  if (profile.special === 'dvora' && mode === 'off') return 'Dvora retain their innate unconscious Clairvoyance.';
+  if (profile.psionics === 'prohibited' && ['trained', 'latent'].includes(mode)) return 'The referee profile prohibits psionics.';
   const forbidden = config.requiredSkills.find(entry => profile.forbidden?.includes(entry.skill));
   if (forbidden) return profile.name + ' cannot meet ' + forbidden.skill + ' ' + forbidden.level + '+. This profile prohibits the skill.';
   if (config.profileOptions.territory !== null && profile.special !== 'hierate') return 'Personal Territory applies to the Hierate profile.';
@@ -166,7 +168,7 @@ function profileIssue(profile, config, locks) {
   if (locks.wings && profile.special !== 'droyne') return 'Locked Droyne wings require a Droyne profile.';
   if (config.profileOptions.ascondiSoc !== null && profile.special !== 'ascondi') return 'Ascondi base SOC applies to Ascondi.';
   if (config.profileOptions.zhodaniHighPsi && profile.culture !== 'zhodani') return 'The high-PSI option requires Zhodani Consulate culture.';
-  if (profile.special !== 'droyne' && profile.culture !== 'zhodani' && !['trained', 'latent'].includes(config.psion.mode)
+  if (profile.special !== 'droyne' && profile.culture !== 'zhodani' && !['trained', 'latent'].includes(mode)
     && (has(config.requiredCharacteristics, 'PSI') || has(locks, 'stat.PSI') || config.psion.current !== null)) {
     return 'PSI was requested, but this profile has no active PSI module.';
   }
@@ -285,14 +287,14 @@ export async function chooseBiology(config, locks, rng, workIssue) {
   return profile;
 }
 
-function psiOptions(config, locks, model, active) {
+function psiOptions(config, locks, model, active, trained) {
   const requested = config.requiredCharacteristics.PSI ?? 0;
   const locked = locks['stat.PSI'];
   if (!active) return [];
   return outcomes(model).flatMap(dice => {
-    const maximum = sum(dice) + model.add;
+    const maximum = Math.max(0, sum(dice) + model.add);
     const current = config.psion.current ?? locked ?? maximum;
-    return current <= maximum && current >= requested && (locked === undefined || current === locked)
+    return (!trained || maximum > 0) && current <= maximum && current >= requested && (locked === undefined || current === locked)
       ? [{ dice, weight: 1, maximum, current }] : [];
   });
 }
@@ -310,15 +312,18 @@ async function pickStat(pool, stat, rng, label = 'Raw ' + stat) {
 export async function prepareMechanics(profile, config, locks, rng) {
   const zhodani = profile.culture === 'zhodani';
   const mandatory = zhodani || profile.special === 'droyne';
-  const trained = config.psion.mode === 'trained';
-  const active = mandatory || trained || config.psion.mode === 'latent';
-  const model = zhodani && config.profileOptions.zhodaniHighPsi ? { ...usualDice, count: 1, add: 6 } : usualDice;
-  const available = psiOptions(config, locks, model, active);
+  const mode = psionMode(config.psion.mode, config.additionalCharacteristics);
+  const trained = mode === 'trained';
+  const active = mandatory || trained || mode === 'latent';
+  const terms = mandatory ? 0 : config.careerAdjustments?.psiTerms ?? 0;
+  const model = zhodani && config.profileOptions.zhodaniHighPsi ? { ...usualDice, count: 1, add: 6 }
+    : { ...usualDice, add: -terms };
+  const available = psiOptions(config, locks, model, active, trained);
   const psiRng = rng('stat.PSI', 'psionics');
   let social = null;
   let psi = null;
   if (active) {
-    if (config.psion.mode === 'latent' && config.psion.potential !== null && !mandatory) {
+    if (mode === 'latent' && config.psion.potential !== null && !mandatory) {
       const maximum = config.psion.potential;
       const current = config.psion.current ?? locks['stat.PSI'] ?? maximum;
       requireRule(current <= maximum && current >= (config.requiredCharacteristics.PSI ?? 0)
@@ -360,7 +365,9 @@ export async function prepareMechanics(profile, config, locks, rng) {
         const dice = await pickDice(psiRng, available, model.count, 'PSI potential', model.sides);
         psi = available.find(entry => entry.dice.every((face, index) => face === dice[index]));
       }
-      psi = { maximum: psi.maximum, current: psi.current, raw: psi.maximum };
+      const raw = terms ? sum(psi.dice) : psi.maximum;
+      psi = { maximum: psi.maximum, current: psi.current, raw, ...(terms && { testingTerms: terms }) };
+      if (terms) psiRng.log({ label: 'PSI after completed terms', raw, result: psi.maximum, method: '2D − ' + terms + ' terms' });
     }
     psi = { ...psi, dm: dm(psi.current), mode: trained ? 'trained' : 'tested',
       source: zhodani || profile.special === 'droyne' ? profile.source : core + ', pp. 228–237', url: coreUrl };
@@ -419,9 +426,43 @@ export async function rollCharacteristics(prepared, skillTotal, rng) {
   for (const stat of profile.order.filter(stat => !has(values, stat))) {
     values[stat] = stat === 'SOC' && social?.rank ? social.rank : await pickStat(pools[stat], stat, rng);
   }
-  if (psi) values.PSI = { raw: psi.raw, adjustment: 0, baseline: psi.maximum, augment: 0,
+  if (psi) values.PSI = { raw: psi.raw, adjustment: psi.testingTerms ? psi.maximum - psi.raw : 0, baseline: psi.maximum, augment: 0,
     loss: psi.maximum - psi.current, uninjured: psi.maximum, current: psi.current, dm: psi.dm };
   return Object.fromEntries([...profile.order, ...(psi ? ['PSI'] : [])].map(stat => [stat, values[stat]]));
+}
+
+function initialValue(raw, score) {
+  return { raw, adjustment: score - raw, baseline: score, augment: 0, loss: 0, uninjured: score, current: score, dm: dm(score) };
+}
+
+export async function rollOptionalCharacteristics(config, locks, soc, rng) {
+  const { militaryTerms = 0, disciplinedTerms = 0, cashBenefits = 0, injuredCareers = 0, anagathics = false } = config.careerAdjustments ?? {};
+  const values = {};
+  for (const stat of config.additionalCharacteristics ?? []) {
+    if (stat === 'PSI') continue; // PSI participates in species and talent generation before the other scores.
+    const { name, source, rolled } = optionalCharacteristics[stat];
+    if (rolled) {
+      const bonus = stat === 'MRL' ? militaryTerms + Math.floor(disciplinedTerms / 2) : 0;
+      const locked = locks['stat.' + stat];
+      const options = outcomes(usualDice).map(dice => {
+        const raw = sum(dice);
+        return { dice, weight: 1, value: initialValue(raw, Math.min(15, raw + bonus)) };
+      }).filter(({ value }) => locked === undefined || value.current === locked);
+      values[stat] = { ...await pickStat({ options, model: usualDice }, stat, rng, 'Raw ' + name), source };
+      continue;
+    }
+    const field = rng('stat.' + stat, 'characteristics');
+    if (!soc) {
+      field.log({ label: name, result: 'Unspecified', method: 'This profile has no Social Standing (SOC)' });
+      continue;
+    }
+    const cash = Math.max(0, Math.min(15, soc.baseline + cashBenefits) - injuredCareers - (anagathics ? 3 : 0));
+    const value = stat === 'STD' ? soc : initialValue(soc.baseline, cash);
+    values[stat] = { ...value, source };
+    field.log({ label: name, result: value.current,
+      method: stat === 'STD' ? 'From SOC' : 'From baseline SOC and career adjustments' });
+  }
+  return values;
 }
 
 export function resolveSkills(grants) {

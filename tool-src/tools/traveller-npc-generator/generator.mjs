@@ -1,9 +1,10 @@
 import { setCharacterSheet } from './character-sheet.mjs';
-import { has, integer, normalizeConfig, object, requireRule, text } from './config.mjs';
+import { has, integer, normalizeConfig, object, requireRule, statKeys, text } from './config.mjs';
 import { resolveEquipment } from './equipment.mjs';
 import { encounterSpecies } from './encounter-species.mjs';
-import { chooseBiology, isTalent, prepareMechanics, rollCharacteristics, upp } from './mechanics.mjs';
+import { chooseBiology, isTalent, prepareMechanics, rollCharacteristics, rollOptionalCharacteristics, upp } from './mechanics.mjs';
 import { generateName, nameStyleFor } from './names.mjs';
+import { additionalRolls } from './optional-characteristics.mjs';
 import { diceOutcomes, pickDice, stableId, streams, sum } from './random.mjs';
 import { cultures } from './species.mjs';
 import {
@@ -23,7 +24,7 @@ export const fieldGroups = {
     ['risk', 'Risk tolerance'], ['secret', 'Secret'], ['network', 'Relationship']],
 };
 const ordinaryFields = Object.values(fieldGroups).flat().map(([key]) => key);
-const statFields = ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC', 'CHA', 'RES', 'TER', 'PSI'].map(stat => 'stat.' + stat);
+const statFields = [...statKeys, ...additionalRolls].map(stat => 'stat.' + stat);
 const allFields = new Set([...ordinaryFields, ...statFields, 'specialty', 'senses', 'psionicTraining']);
 const nonRerollable = ['skills'];
 const legacyPacks = { ...packs, names: legacyNamePack };
@@ -332,6 +333,7 @@ export function publicCard(npc) {
 }
 
 async function generateSourceEncounter(config, profile, { id, provenance, locks, rng }) {
+  requireRule(!config.additionalCharacteristics?.length, 'Additional characteristics use a character profile. This species has a published encounter block.');
   requireRule(config.context === 'mixed' && config.occupation === 'random' && config.competence === 'random'
     && config.secondary === 'none' && config.culture === 'auto' && config.lifeform === 'standard'
     && ['auto', 'off'].includes(config.psion.mode)
@@ -411,6 +413,7 @@ export async function generateNpc(input = {}, state = {}) {
   const work = await chooseWork(config, locks, prepared, rng);
   const age = await rollAge(profile, work.tier, config, locks, rng('age', 'age'));
   const characteristics = await rollCharacteristics(prepared, work.skillTotal, rng);
+  Object.assign(characteristics, await rollOptionalCharacteristics(config, locks, characteristics.SOC, rng));
   const namingStyle = legacyNames ? null : nameStyleFor(config.nameStyle, profile);
   const identity = await identityAndPlaces(config, profile, work, locks, rng, characteristics, namingStyle);
   const { employment, resources } = await employmentAndResources(config, work, locks, rng);
@@ -441,7 +444,7 @@ export async function generateNpc(input = {}, state = {}) {
       forbidden: profile.forbidden ?? [], status: profile.status, age,
     },
     mechanics: {
-      characteristics, order: [...profile.order, ...(psi ? ['PSI'] : [])], upp: upp(profile, characteristics),
+      characteristics, order: Object.keys(characteristics), upp: upp(profile, characteristics),
       grants: work.grants, skills: work.skills, skillTotal: work.skillTotal,
       skillLimit: 3 * (characteristics.INT.uninjured + characteristics.EDU.uninjured),
       condition: { status: profile.special === 'hiver' && zeroes.length === 3 ? 'Dormant'

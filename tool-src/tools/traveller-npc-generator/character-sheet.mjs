@@ -1,20 +1,21 @@
 import { has, integer, object, requireRule, text } from './config.mjs';
 import { dm } from './mechanics.mjs';
+import { optionalCharacteristics } from './optional-characteristics.mjs';
 
 export const coreCharacteristics = {
   str: 'Strength', dex: 'Dexterity', end: 'Endurance', int: 'Intelligence', edu: 'Education', soc: 'Social Standing',
 };
-export const additionalCharacteristics = {
-  mrl: 'Morale', lck: 'Luck', sty: 'Sanity', chr: 'Charm', psi: 'Psionics', std: 'Standing',
-};
+export const additionalCharacteristics = Object.fromEntries(Object.entries(optionalCharacteristics)
+  .filter(([key]) => key !== 'WLT').map(([key, { name }]) => [key.toLowerCase(), name]));
 export const speciesCharacteristics = { cha: 'Charisma (CHA)', res: 'Resolve (RES)', ter: 'Territory (TER)' };
 const characteristicNames = { ...coreCharacteristics, ...additionalCharacteristics, ...speciesCharacteristics, wlt: 'Wealth Level' };
 export const scoreFields = ['current', 'baseline'];
 export const scoreLimits = key => key === 'wlt' ? [0, 15] : [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
 export const scoreDM = value => value == null ? null : dm(Math.max(0, value));
-const wealth = [0, 100, 200, 300, 500, 800, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000];
+// Traveller Companion, p. 3. WLT 0 supplies no spending cash.
+const wealth = [0, 100, 200, 400, 800, 1200, 1500, 2000, 3000, 5000, 7500, 10000, 12500, 15000, 17500, 20000];
 export function obtainableCash(score) {
-  return wealth[score] == null ? '' : 'Cr ' + wealth[score].toLocaleString('en-US') + (score === 15 ? '+' : '');
+  return wealth[score] == null ? '' : 'Cr ' + wealth[score].toLocaleString('en-US');
 }
 
 export const personalFields = [

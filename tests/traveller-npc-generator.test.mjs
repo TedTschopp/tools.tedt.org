@@ -58,7 +58,7 @@ test('the character sheet projects the roll and preserves tracking edits through
   assert.equal(sheet.characteristics.end.baseline, starting.characteristics.end.baseline);
   assert.equal(sheet.characteristics.lck.current, 0);
   assert.equal(obtainableCash(sheet.characteristics.wlt.current), 'Cr 0');
-  assert.equal(obtainableCash(sheet.characteristics.wlt.baseline), 'Cr 1,000,000+');
+  assert.equal(obtainableCash(sheet.characteristics.wlt.baseline), 'Cr 20,000');
   for (const [key, value] of Object.entries(edits).filter(([key]) => key !== 'characteristics')) assert.deepEqual(sheet[key], value);
   assert.deepEqual((await rerollNpc(restored, ['name'])).controls.characterSheet, edits);
   const handout = JSON.stringify(readHandout(new URL(handoutUrl(href, restored)).hash));
@@ -85,6 +85,67 @@ test('group referee links restore the edited sheets for the matching members', a
   assert.ok(restored.members.slice(1).every(({ npc }) => !npc.controls.characterSheet));
   setMemberSheet(restored, restored.members[0].npc, {});
   assert.equal(restored.controls.memberSheets, undefined);
+});
+
+test('selected Traveller 2E characteristics use separate rolls and known career adjustments', async () => {
+  const config = { species: 'human', age: 38, occupation: '11' };
+  const baseline = await make(config);
+  const npc = await make({
+    ...config, additionalCharacteristics: ['WLT', 'MRL', 'LCK', 'STY', 'CHR', 'PSI', 'STD'],
+    careerAdjustments: { militaryTerms: 2, disciplinedTerms: 3, psiTerms: 5, cashBenefits: 20, injuredCareers: 1, anagathics: true },
+  });
+  const stats = npc.mechanics.characteristics;
+  assert.equal(npc.player.name, baseline.player.name);
+  assert.deepEqual(npc.work, baseline.work);
+  assert.equal(npc.mechanics.upp, baseline.mechanics.upp);
+  for (const [stat, value] of Object.entries(baseline.mechanics.characteristics)) assert.deepEqual(stats[stat], value);
+  for (const stat of ['MRL', 'LCK', 'STY', 'CHR', 'PSI']) {
+    const dice = npc.provenance.rolls.filter(roll => roll.field === 'stat.' + stat && roll.dice === 'd6');
+    assert.equal(dice.length, 2, stat);
+    assert.equal(stats[stat].raw, dice.reduce((sum, die) => sum + die.result, 0));
+  }
+  assert.equal(stats.MRL.current, Math.min(15, stats.MRL.raw + 3));
+  for (const stat of ['LCK', 'STY', 'CHR']) assert.equal(stats[stat].current, stats[stat].raw);
+  assert.equal(stats.PSI.current, Math.max(0, stats.PSI.raw - 5));
+  assert.equal(npc.abilities.psion.mode, 'tested');
+  assert.deepEqual(npc.abilities.psion.talents, []);
+  assert.equal(stats.STD.current, stats.SOC.current);
+  assert.equal(stats.WLT.raw, stats.SOC.baseline);
+  assert.equal(stats.WLT.current, 11);
+  for (const stat of npc.controls.config.additionalCharacteristics) {
+    assert.equal(characterSheet(npc).characteristics[stat.toLowerCase()].current, stats[stat].current);
+  }
+  const href = refereeLink('https://tools.tedt.org/traveller-npc-generator.html', npc);
+  assert.deepEqual(await restoreNpc(readRefereeLink(new URL(href).hash)), npc);
+
+  npc.controls.locks = setLock(npc, 'stat.MRL', true);
+  assert.equal((await rerollNpc(npc, ['stat.LCK'])).mechanics.characteristics.MRL.current, stats.MRL.current);
+  const noSocial = await make({ species: 'vargr-extents', additionalCharacteristics: ['STD', 'CHR', 'WLT'] });
+  assert.ok(noSocial.mechanics.characteristics.CHA && noSocial.mechanics.characteristics.CHR);
+  assert.equal(noSocial.mechanics.characteristics.WLT, undefined);
+  assert.equal(noSocial.mechanics.characteristics.STD, undefined);
+  const noPotential = await make({ ...config, additionalCharacteristics: ['PSI'], careerAdjustments: { psiTerms: 12 } });
+  assert.equal(noPotential.mechanics.characteristics.PSI.current, 0);
+  const droyne = { species: 'droyne', profileOptions: { adultForm: 'Worker' } };
+  const ordinaryDroyne = await make(droyne);
+  const extraDroyne = await make({ ...droyne, additionalCharacteristics: ['PSI'], careerAdjustments: { psiTerms: 5 } });
+  assert.deepEqual(extraDroyne.mechanics.characteristics.PSI, ordinaryDroyne.mechanics.characteristics.PSI);
+});
+
+test('group members inherit chosen additional characteristics through a referee link', async () => {
+  const config = { type: 'naval', species: 'human' };
+  const state = { seed: 'group-additional' };
+  const original = await generateGroup(config, state);
+  const group = await generateGroup({ ...config, additionalCharacteristics: ['MRL', 'WLT'] }, state);
+  assert.deepEqual(group.provenance, original.provenance);
+  assert.deepEqual(group.player, original.player);
+  for (const { npc } of group.members) {
+    assert.ok(npc.mechanics.characteristics.MRL);
+    assert.equal(npc.mechanics.characteristics.WLT.current, npc.mechanics.characteristics.SOC.baseline);
+    assert.equal(npc.mechanics.characteristics.LCK, undefined);
+  }
+  const href = refereeLink('https://tools.tedt.org/traveller-npc-generator.html', group);
+  assert.deepEqual(await restoreGroup(readRefereeLink(new URL(href).hash)), group);
 });
 
 test('group templates roll the shared encounter before building all named roles with 2E profiles', async () => {

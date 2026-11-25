@@ -3,6 +3,7 @@ import { cultures, needs, species } from './species.mjs';
 import { nameStyles } from './names.mjs';
 import { portraits } from './species-art.mjs';
 import { encounterSpecies } from './encounter-species.mjs';
+import { careerAdjustmentFields, optionalCharacteristics } from './optional-characteristics.mjs';
 
 export class RuleConflict extends Error {
   constructor(message) {
@@ -69,6 +70,25 @@ function checkedList(value, field, max) {
   const list = value ?? [];
   requireRule(Array.isArray(list) && list.length <= max, field + ' must be a list of at most ' + max + ' entries.');
   return list;
+}
+
+export function normalizeAdditionalSelection(input) {
+  const choices = Object.keys(optionalCharacteristics);
+  const selected = checkedList(input, 'Additional characteristics', choices.length)
+    .map(stat => option(stat, choices, 'Additional characteristic'));
+  return choices.filter(stat => selected.includes(stat));
+}
+
+function normalizeCareerAdjustments(input = {}) {
+  requireRule(object(input), 'Career adjustments must be an object.');
+  const adjustments = {};
+  for (const { key, label, checkbox } of careerAdjustmentFields) {
+    if (input[key] == null) continue;
+    if (checkbox) requireRule(typeof input[key] === 'boolean', label + ' must be true or false.');
+    else integer(input[key], label, 0, 9999);
+    if (input[key]) adjustments[key] = input[key];
+  }
+  return adjustments;
 }
 
 function weightMap(value, existing, field) {
@@ -226,6 +246,9 @@ export function normalizeConfig(input = {}, { legacyNames = false } = {}) {
   const psion = input.psion ?? {};
   requireRule(object(psion), 'Psionic options must be an object.');
   const mode = occupation === 'psion' ? 'trained' : option(psion.mode ?? 'auto', ['auto', 'off', 'latent', 'trained'], 'Psionics mode');
+  const additionalCharacteristics = normalizeAdditionalSelection(input.additionalCharacteristics);
+  requireRule(mode !== 'off' || !additionalCharacteristics.includes('PSI'), 'Enable psionics or clear the optional PSI test.');
+  const careerAdjustments = normalizeCareerAdjustments(input.careerAdjustments);
   const talent = option(psion.talent ?? 'random', ['random', ...specialties.psion], 'Psionic talent');
   const placement = input.placement ?? {};
   requireRule(object(placement), 'Placement details must be an object.');
@@ -276,6 +299,8 @@ export function normalizeConfig(input = {}, { legacyNames = false } = {}) {
       memoryHistory: text(clone.memoryHistory, 'Clone memory history'),
     } : null,
     conditions, augmentations, characteristicBoons,
+    ...(additionalCharacteristics.length && { additionalCharacteristics }),
+    ...(Object.keys(careerAdjustments).length && { careerAdjustments }),
     psion: { mode, talent, potential: psion.potential == null ? null : integer(psion.potential, 'Latent PSI potential', 0, 12),
       current: psion.current == null ? null : integer(psion.current, 'Current PSI', 0, 12),
       weights: weightMap(psion.weights, specialties.psion, 'Talent weight') },

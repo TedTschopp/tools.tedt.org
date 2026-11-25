@@ -260,6 +260,7 @@
     .rolls { max-height: 24rem; overflow: auto; }
     .rolls th { position: sticky; top: 0; background: var(--bg-card); }
     .check-line { display: flex; align-items: center; gap: var(--s-2); margin: var(--s-1) 0; }
+    .optional-scores { column-gap: var(--s-2); row-gap: var(--s-1); }
     input[type="checkbox"] { min-width: var(--s-4); min-height: var(--s-4); accent-color: var(--accent); }
     .lock-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); padding: var(--s-1) 0; }
     .lock-group { margin-bottom: var(--s-4); }
@@ -346,6 +347,18 @@
             <span id="skill-minimums-summary"></span>
             <button type="button" class="quiet compact" id="clear-skill-minimums">Clear skill minimums and roll</button>
           </div>
+          <details class="group" id="npc-additional-options" data-character-setting>
+            <summary>Additional characteristics</summary>
+            <div>
+              <div id="npc-optional-scores" class="field-grid optional-scores" role="group" aria-label="Additional characteristics"></div>
+              <p class="hint field-notes">Standing and Wealth require Social Standing (SOC). The PSI test enables latent potential for profiles set to automatic.</p>
+              <details class="group" id="career-adjustments" hidden>
+                <summary>Career adjustments</summary>
+                <div id="optional-career-fields" class="field-grid"></div>
+                <p class="hint field-notes">Enter known career history. Blank fields use starting values.</p>
+              </details>
+            </div>
+          </details>
           <details class="settings-more" id="npc-more-settings">
             <summary>More settings</summary>
             <details class="group" data-character-setting>
@@ -451,6 +464,13 @@
             <label class="wide">Group type <select id="group-type"></select></label>
             <label class="wide">Member species <select id="group-species"></select></label>
           </div>
+          <details class="group" id="group-additional-options">
+            <summary>Additional characteristics</summary>
+            <div>
+              <div id="group-optional-scores" class="field-grid optional-scores" role="group" aria-label="Additional characteristics"></div>
+              <p class="hint field-notes">Uses starting values for each named member. Standing and Wealth require Social Standing (SOC).</p>
+            </div>
+          </details>
           <details class="settings-more" id="group-more-settings">
             <summary>More settings</summary>
             <details class="group" id="group-seed-settings">
