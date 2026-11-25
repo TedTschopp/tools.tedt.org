@@ -6,13 +6,13 @@ import { groupScenes } from './group-types.mjs';
 import { isTalent, taskCheck } from './mechanics.mjs';
 import { fanNameSources, imperialNameCounts, nameStyleFor, nameStyles } from './names.mjs';
 import { freshSeed } from './random.mjs';
-import { readRefereeLink, refereeLink, refereeLinkPrefix } from './record-links.mjs';
+import { isRefereeLink, readRefereeLink, refereeLink } from './record-links.mjs';
 import { portraitFor } from './species-art.mjs';
 import { referenceGroups } from './species-reference.mjs';
 import { cultures, needs, species } from './species.mjs';
 import { contexts, coreUrl, equipmentCatalogue, errataUrl, occupationChoices, occupationTable, packs, specialties, tiers, version } from './tables.mjs';
 import { fieldsFor } from './work.mjs';
-import { handoutPrefix, handoutUrl, portraitId, qualificationsFor, readHandout } from './handout.mjs';
+import { handoutUrl, isHandoutLink, portraitId, qualificationsFor, readHandout } from './handout.mjs';
 import { keepInRoster, readRoster, removeFromRoster } from './roster.mjs';
 
 const $ = id => document.getElementById(id);
@@ -361,7 +361,7 @@ function readyMessage(record, verb = '') {
 }
 
 function clearRefereeLink() {
-  if (!location.hash.startsWith(refereeLinkPrefix)) return;
+  if (!isRefereeLink(location.hash)) return;
   const url = new URL(location.href);
   url.hash = '';
   try { history.replaceState(history.state, '', url.href); }
@@ -1283,7 +1283,7 @@ async function initialize() {
   fillSettings(normalizeConfig(), freshSeed());
   fillGroupSettings(normalizeGroupConfig(), freshSeed());
   let linkProblem;
-  if (location.hash.startsWith(refereeLinkPrefix)) {
+  if (isRefereeLink(location.hash)) {
     const opened = await setRecord(() => restoreEncounter(readRefereeLink(location.hash)),
       record => readyMessage(record, 'Restored '), { fill: true, persist: false, onError: error => { linkProblem = error; } });
     if (opened) return;
@@ -1293,7 +1293,7 @@ async function initialize() {
 }
 
 window.addEventListener('hashchange', () => {
-  if (location.hash.startsWith(handoutPrefix) || location.hash.startsWith(refereeLinkPrefix) || !$('shared-handout').hidden) location.reload();
+  if (isHandoutLink(location.hash) || isRefereeLink(location.hash) || !$('shared-handout').hidden) location.reload();
 });
-if (location.hash.startsWith(handoutPrefix)) renderSharedHandout();
+if (isHandoutLink(location.hash)) renderSharedHandout();
 else void initialize().catch(error => status(error.message || 'The generator failed to initialize.', 'error'));

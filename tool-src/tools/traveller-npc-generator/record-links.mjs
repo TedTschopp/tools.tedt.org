@@ -1,9 +1,13 @@
 import { requireRule } from './config.mjs';
-import { groupSchema, isGroupEncounter } from './group-encounters.mjs';
+import { groupSchema } from './group-encounters.mjs';
+import { decodeLinkPayload, encodeLinkPayload } from './link-payload.mjs';
 import { schema as npcSchema } from './tables.mjs';
 
-export const refereeLinkPrefix = '#record=';
+const legacyRefereeLinkPrefix = '#record=';
+const refereeLinkPrefix = '#r1=';
 const maxLinkLength = 2_000_000;
+
+export const isRefereeLink = hash => hash.startsWith(refereeLinkPrefix) || hash.startsWith(legacyRefereeLinkPrefix);
 
 export function recordInputs(record) {
   const { schema, id, provenance, controls } = record;
@@ -16,26 +20,24 @@ export function recordInputs(record) {
 }
 
 export function refereeLink(location, record) {
-  const { id, provenance, controls } = recordInputs(record);
-  const { seed, index, version, npcVersion, packs, rerollCounters } = provenance;
-  const variables = new URLSearchParams({
-    record: isGroupEncounter(record) ? 'group' : 'npc',
-    seed, index: String(index), id, version, settings: JSON.stringify(controls.config), packs: JSON.stringify(packs),
-  });
-  if (npcVersion) variables.set('npcVersion', npcVersion);
-  for (const [key, value] of Object.entries({ rerollCounters, locks: controls.locks, rollLocks: controls.rollLocks })) {
-    // Empty roll locks differ from absent roll locks when a lock was added after the roll.
-    if (value !== undefined) variables.set(key, JSON.stringify(value));
-  }
   const url = new URL(location);
   url.search = '';
-  url.hash = variables.toString();
+  try {
+    url.hash = refereeLinkPrefix + encodeLinkPayload(recordInputs(record), maxLinkLength);
+  } catch (error) {
+    if (!(error instanceof RangeError)) throw error;
+    throw new Error('This record is too large for a bookmark. Export the referee JSON to keep it.');
+  }
   requireRule(url.hash.length <= maxLinkLength, 'This record is too large for a bookmark. Export the referee JSON to keep it.');
   return url.href;
 }
 
 export function readRefereeLink(hash) {
-  requireRule(hash.startsWith(refereeLinkPrefix) && hash.length <= maxLinkLength, 'The referee link is incomplete or too large.');
+  requireRule(isRefereeLink(hash) && hash.length <= maxLinkLength, 'The referee link is incomplete or too large.');
+  if (hash.startsWith(refereeLinkPrefix)) {
+    try { return decodeLinkPayload(hash.slice(refereeLinkPrefix.length), maxLinkLength); }
+    catch { throw new Error('The referee link is incomplete or invalid.'); }
+  }
   const variables = new URLSearchParams(hash.slice(1));
   const kind = variables.get('record');
   requireRule(kind === 'npc' || kind === 'group', 'The referee link has an unknown record type.');

@@ -6,10 +6,12 @@ import { encounterSpecies } from '../tool-src/tools/traveller-npc-generator/enco
 import { generateNpc, rerollNpc, restoreNpc, setLock } from '../tool-src/tools/traveller-npc-generator/generator.mjs';
 import { generateGroup, restoreGroup } from '../tool-src/tools/traveller-npc-generator/group-encounters.mjs';
 import { groupTypes } from '../tool-src/tools/traveller-npc-generator/group-types.mjs';
+import { handoutUrl, readHandout } from '../tool-src/tools/traveller-npc-generator/handout.mjs';
+import { decodeLinkPayload, encodeLinkPayload } from '../tool-src/tools/traveller-npc-generator/link-payload.mjs';
 import { dm, rating, taskCheck } from '../tool-src/tools/traveller-npc-generator/mechanics.mjs';
 import { imperialNameCounts, nameStyles } from '../tool-src/tools/traveller-npc-generator/names.mjs';
 import { streams } from '../tool-src/tools/traveller-npc-generator/random.mjs';
-import { readRefereeLink, refereeLink } from '../tool-src/tools/traveller-npc-generator/record-links.mjs';
+import { readRefereeLink, recordInputs, refereeLink } from '../tool-src/tools/traveller-npc-generator/record-links.mjs';
 import { portraitFor } from '../tool-src/tools/traveller-npc-generator/species-art.mjs';
 import { referenceGroups } from '../tool-src/tools/traveller-npc-generator/species-reference.mjs';
 import { species } from '../tool-src/tools/traveller-npc-generator/species.mjs';
@@ -62,24 +64,72 @@ test('group rolls replay exactly, filter by scene and respect species restrictio
   await assert.rejects(generateGroup({ scene: 'urban', type: 'hunt' }, state), /Group type has an unsupported value/);
 });
 
-test('referee URLs round-trip full records through versioned variables', async () => {
+function legacyRefereeHash(record, kind) {
+  const { seed, index, version, npcVersion, packs, rerollCounters } = record.provenance;
+  const { config, locks, rollLocks } = record.controls;
+  const variables = new URLSearchParams({
+    record: kind,
+    seed, index: String(index), id: record.id, version, settings: JSON.stringify(config), packs: JSON.stringify(packs),
+  });
+  if (npcVersion) variables.set('npcVersion', npcVersion);
+  for (const [key, value] of Object.entries({ rerollCounters, locks, rollLocks })) {
+    if (value !== undefined) variables.set(key, JSON.stringify(value));
+  }
+  return '#' + variables.toString();
+}
+
+test('short referee URLs replay the same records and open previously shared links', async () => {
   const npc = await make({ species: 'human', occupation: '12', identity: { commonName: 'Éla & Vár' } },
-    { seed: 'Rain + shift / 3', index: 7 });
+    { seed: 'Rain + shift / 3 🪐', index: 7 });
   const rerolled = await rerollNpc(npc, ['detail']);
   rerolled.controls.locks = setLock(rerolled, 'stat.STR', true);
   const group = await generateGroup({ scene: 'starport', type: 'dock' }, { seed: 'Saved group', index: 2 });
   const legacy = await make({}, { namingPack: 'imperial-common/1' });
   for (const [record, restore, kind] of [[rerolled, restoreNpc, 'npc'], [group, restoreGroup, 'group'], [legacy, restoreNpc, 'npc']]) {
     const url = new URL(refereeLink('https://tools.tedt.org/traveller-npc-generator.html?old=1#species-guide', record));
-    const variables = new URLSearchParams(url.hash.slice(1));
+    const previousHash = legacyRefereeHash(record, kind);
     assert.equal(url.search, '');
-    assert.equal(variables.get('record'), kind);
-    assert.equal(variables.get('seed'), record.provenance.seed);
-    assert.equal(variables.get('index'), String(record.provenance.index));
+    assert.match(url.hash, /^#r1=[A-Za-z0-9_-]+$/);
+    assert.ok(url.hash.length < previousHash.length / 2);
+    assert.deepEqual(readRefereeLink(url.hash), JSON.parse(JSON.stringify(recordInputs(record))));
     assert.deepEqual(await restore(readRefereeLink(url.hash)), record);
+    assert.deepEqual(await restore(readRefereeLink(previousHash)), record);
   }
+  // A saved v1 link must keep working even if a future encoder changes.
+  const savedV1 = '#r1=I7XhZGFobmCSnJqSbJ6WaGRmlmhkapaUnGZhNpr0B1_SR6Tu4uzUkuQMXQuQA0dbVqMtq9GW1WjLaqBaVgA';
+  assert.deepEqual(await restoreNpc(readRefereeLink(savedV1)), await make());
   assert.throws(() => readRefereeLink('#record=invalid'), /unknown record type/);
   assert.throws(() => readRefereeLink('#record=npc&settings=%7B'), /invalid settings/);
+  assert.throws(() => readRefereeLink('#r1=%20'), /invalid/);
+  const hash = new URL(refereeLink('https://tools.tedt.org/traveller-npc-generator.html', rerolled)).hash;
+  assert.throws(() => readRefereeLink(hash.slice(0, -10)), /invalid/);
+});
+
+test('short and legacy player handouts show the same player-facing details', async () => {
+  const npc = await make({ species: 'human', occupation: '12', identity: { commonName: 'Éla & Vár' } });
+  const group = await generateGroup({ species: 'human', type: 'rivals' }, { seed: 'Handout comparison' });
+  for (const record of [npc, group]) {
+    const hash = new URL(handoutUrl('https://tools.tedt.org/traveller-npc-generator.html', record)).hash;
+    assert.match(hash, /^#h1=[A-Za-z0-9_-]+$/);
+    const payload = decodeLinkPayload(hash.slice('#h1='.length), 150_000);
+    const legacy = '#handout=' + encodeURIComponent(JSON.stringify(payload));
+    assert.ok(hash.length < legacy.length);
+    const decoded = readHandout(hash);
+    assert.equal(decoded.name, record.player.name);
+    assert.equal(decoded.introduction, record.player.introduction);
+    assert.equal(decoded.portrait, 'human');
+    assert.deepEqual(decoded, readHandout(legacy));
+  }
+  assert.equal(readHandout('#h1=%'), null);
+});
+
+test('the link codec preserves multibyte text across blocks and bounds inflated data', () => {
+  const text = Array.from({ length: 256 }, (_, index) => createHash('sha256').update(String(index)).digest('hex')).join(' 🪐 ');
+  const payload = encodeLinkPayload({ text }, 30_000);
+  assert.ok(payload.length > 5500);
+  assert.deepEqual(decodeLinkPayload(payload, 30_000), { text });
+  assert.throws(() => decodeLinkPayload(payload, 4000), /too large/);
+  assert.throws(() => encodeLinkPayload({ text }, 4000), /too large/);
 });
 
 test('the name pack keeps old saved names and isolates a new NPC name reroll', async () => {
