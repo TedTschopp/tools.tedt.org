@@ -20,6 +20,7 @@ features:
   - "Roll 18 types of group encounters with a shared purpose, affiliation and reaction"
   - "Reproduce each NPC from its seed, lock values, and reroll fields independently"
   - "Track characteristics, training, careers, gear, finances, and notes on each NPC’s editable character sheet"
+  - "Choose which Traveller 2E optional characteristics to generate for an NPC or group"
   - "Share player handouts, bookmark referee records, and keep a local campaign roster"
   - "Roll species such as Ganmeids and Weeven with their published encounter rules"
 ---
@@ -27,7 +28,8 @@ features:
 ## Roll an encounter
 
 Open **Generation settings** to choose a species, occupation, and level of
-competence. Open **More settings** for skill minimums, equipment, identity,
+competence. Open **Additional characteristics** to select campaign scores.
+Open **More settings** for skill minimums, equipment, identity,
 and seeds. Use **Next NPC** on the Encounter card to make another roll. The
 **Species field guide** searches sourcebooks and species names and can roll
 directly from eligible entries.
@@ -45,6 +47,19 @@ crew tables. Use **Keep group** to save the full encounter in the campaign
 roster, or **Share handout** to show the group’s visible introduction.
 
 ## Track a character
+
+Under **Additional characteristics**, choose Morale, Luck, Sanity, Charm,
+a PSI test, Standing, or Wealth Level. The same choices in **Group encounter
+settings** apply to each named member. Morale, Luck, and Sanity use 2D from
+the *Traveller Companion*, pp. 4–7. Charm uses an ordinary 2D characteristic
+roll for the Companion’s optional Charm score (p. 10).
+
+Standing starts from the sheet’s Social Standing (SOC) score. Wealth starts
+from baseline SOC and uses the Companion’s cash table (p. 3). Profiles with
+SOC can fill both fields. A PSI test rolls 2D minus completed terms as in the
+*Traveller Core Rulebook* and uses the species rule where one applies.
+For a single NPC, **Career adjustments** accepts known history for Morale,
+Wealth, and PSI. Group members use starting values.
 
 Open **Character sheet** on the Encounter card or beside any named group
 member. The layout follows the [Traveller 2E character sheet](https://tedt.org/RPG/Traveller/Character-Sheet.html).

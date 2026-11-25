@@ -1,5 +1,5 @@
 import { setCharacterSheet } from './character-sheet.mjs';
-import { integer, object, option, requireRule, text } from './config.mjs';
+import { integer, normalizeAdditionalSelection, object, option, requireRule, text } from './config.mjs';
 import { generateNpc } from './generator.mjs';
 import { groupScenes, groupTypes } from './group-types.mjs';
 import { stableId, streams } from './random.mjs';
@@ -19,10 +19,12 @@ export function groupsForScene(scene) {
 export function normalizeGroupConfig(input = {}) {
   requireRule(object(input), 'Group settings must be an object.');
   const scene = option(input.scene ?? 'any', Object.keys(groupScenes), 'Scene');
+  const additionalCharacteristics = normalizeAdditionalSelection(input.additionalCharacteristics);
   return {
     scene,
     type: option(input.type ?? 'random', ['random', ...groupsForScene(scene).map(([id]) => id)], 'Group type'),
     species: option(input.species ?? 'random', ['random', ...Object.keys(species)], 'Member species'),
+    ...(additionalCharacteristics.length && { additionalCharacteristics }),
   };
 }
 
@@ -57,6 +59,7 @@ export async function generateGroup(input = {}, state = {}) {
       species: config.species, occupation, affiliation,
       competence: slot === 0 ? 'experienced' : 'competent',
       placement: { current: groupScenes[scene] },
+      additionalCharacteristics: config.additionalCharacteristics,
     }, {
       seed: id + '-member-' + (slot + 1),
       locks: { attitude: reaction.attitude, employment: 3 },
