@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import matter from 'gray-matter';
 import yaml from 'js-yaml';
 import { marked } from 'marked';
@@ -129,7 +130,10 @@ async function writeStatic(original, dest) {
       text = text.replaceAll("script-src 'self'", "script-src 'self' https://tedt.org/assets/global-header/v1/").replaceAll("style-src 'self'", "style-src 'self' https://tedt.org/assets/global-header/v1/");
       if (/<html[\s>]/i.test(text)) {
         text = text.replace('</head>', sharedHeader.slice(0, sharedHeader.indexOf('<tedt-global-header')) + '</head>');
-        text = text.replace(/(<body\b[^>]*>)/i, '$1' + sharedHeader.slice(sharedHeader.indexOf('<tedt-global-header')) + returnLink);
+        const returnSlot = '<!-- tools-catalog-return -->';
+        const hasSlot = text.includes(returnSlot);
+        if (hasSlot) text = text.replace(returnSlot, returnLink);
+        text = text.replace(/(<body\b[^>]*>)/i, '$1' + sharedHeader.slice(sharedHeader.indexOf('<tedt-global-header')) + (hasSlot ? '' : returnLink));
         if (!/<link[^>]+rel=["']canonical/.test(text)) text = text.replace('</head>', `<link rel="canonical" href="${site}${canonicalPath('/' + dest)}"></head>`);
       }
       if (original === 'tools/traveller-npc-generator.html') {
@@ -170,6 +174,17 @@ for (const tool of catalog) {
 await fs.writeFile(path.join(out, 'lib/tedt-org-tools-loader.js'), `(function(){if(document.querySelector('link[data-tedt-org-tools-css="true"]'))return;var link=document.createElement('link');link.rel='stylesheet';link.dataset.tedtOrgToolsCss='true';link.href=new URL(location.protocol==='file:'?'tedt-org-tools-local.css':'tedt-org-tools.css',document.currentScript.src).href;document.head.appendChild(link);}());\n`);
 await writeStatic('tools/perplexity-projections/model.mjs', 'perplexity-projections/model.mjs');
 staticFiles.push('/perplexity-projections/model.mjs');
+// Keep the atlas datasets, ES module imports, publisher URLs and license files byte-exact.
+const atlasDir = path.join(source, 'tools/edison-atlas');
+const atlasOut = path.join(out, 'edison-atlas');
+for (const entry of (await fs.readdir(atlasDir, {recursive:true, withFileTypes:true})).filter(e => e.isFile()).map(e => path.relative(atlasDir, path.join(e.parentPath, e.name))).sort()) {
+  if (entry === 'index.html') continue;
+  await fs.mkdir(path.join(atlasOut, path.dirname(entry)), {recursive:true});
+  await fs.copyFile(path.join(atlasDir, entry), path.join(atlasOut, entry));
+  staticFiles.push('/edison-atlas/' + entry.split(path.sep).join('/'));
+}
+execFileSync('python3', ['scripts/package-edison-atlas.py', atlasDir, path.join(atlasOut, 'Edison-Atlas-offline.zip')], {stdio:'inherit'});
+staticFiles.push('/edison-atlas/Edison-Atlas-offline.zip');
 for (const name of (await fs.readdir(path.join(source, 'img/traveller-npc'))).sort()) {
   if (!name.endsWith('.webp')) continue;
   const file = 'img/traveller-npc/' + name;
@@ -217,7 +232,6 @@ await fs.writeFile(path.join(out,'robots.txt'), `User-agent: *\nAllow: /\nSitema
 await fs.writeFile(path.join(out,'CNAME'), 'tools.tedt.org\n');
 await fs.copyFile('README.md', path.join(out,'README.md'));
 await fs.writeFile(path.join(out,'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+['/', '/about/', '/work-in-progress/',...catalog.map(t=>'/about/'+t.slug+'/'),...new Set(pageUrls)].map(p=>`<url><loc>${escape(site+p)}</loc></url>`).join('')+'</urlset>');
-const {execFileSync} = await import('node:child_process');
 let commit='local';try{commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();}catch{}
 await json(path.join(out,'version.json'),{commit,sourceCommit:inventory.commit,tools:catalog.length});
 console.log(`Prepared ${catalog.length} catalog tools, ${new Set(pageUrls).size} tool pages, and ${staticFiles.length} supporting files.`);
