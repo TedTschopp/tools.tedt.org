@@ -123,6 +123,13 @@ async function start() {
     stride = meta.columns.length;
   if (raw.length !== meta.cells * stride)
     throw new Error("The hex grid is incomplete.");
+  // Render the WebP once during loading. At detailed zoom Safari can spend a
+  // whole frame preparing that image before it draws even a small patch.
+  const relief = document.createElement("canvas");
+  relief.width = pic.naturalWidth;
+  relief.height = pic.naturalHeight;
+  const reliefInk = relief.getContext("2d", { alpha: false });
+  reliefInk?.drawImage(pic, 0, 0);
   m = {
     meta,
     reg,
@@ -132,7 +139,7 @@ async function start() {
     local,
     outlines,
     portals,
-    image: pic,
+    image: reliefInk ? relief : pic,
     art,
     val: (i, k) => {
       const v = raw[i * stride + keys[k]];

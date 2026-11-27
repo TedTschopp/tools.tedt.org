@@ -597,14 +597,29 @@ export class HexMap {
     const next = this.nextLandscapeInk;
     if (next.canvas.width !== area.width) next.canvas.width = area.width;
     if (next.canvas.height !== area.height) next.canvas.height = area.height;
-    const band = Math.ceil(128 * view.dpr);
-    let y = 0;
+    const cols = Math.ceil(area.width / (384 * view.dpr));
+    const rows = Math.ceil(area.height / (128 * view.dpr));
+    const width = Math.ceil(area.width / cols),
+      height = Math.ceil(area.height / rows);
+    let tile = 0;
     const step = () => {
       if (this.pending) return;
-      const h = Math.min(band, area.height - y);
-      this.paintRegion(next, area, 0, y, area.width, h);
-      y += h;
-      if (y < area.height) {
+      const start = performance.now();
+      // Small fixed-size patches bound cold sprite work and reuse one backing
+      // store. Warm patches can share a frame without using its whole budget.
+      const limit = Math.min(tile + 3, rows * cols);
+      do {
+        this.paintRegion(
+          next,
+          area,
+          (tile % cols) * width,
+          Math.floor(tile / cols) * height,
+          width,
+          height,
+        );
+        tile++;
+      } while (tile < limit && performance.now() - start < 4);
+      if (tile < rows * cols) {
         this.refineFrame = requestAnimationFrame(step);
       } else {
         this.nextLandscapeInk = this.landscapeInk;
@@ -615,9 +630,32 @@ export class HexMap {
     };
     this.refineFrame = requestAnimationFrame(step);
   }
+  drawRelief(c, view) {
+    const image = this.m.image,
+      b = this.m.meta.backdrop;
+    const dx = (b[2] - b[0]) / image.width,
+      dy = (b[3] - b[1]) / image.height;
+    // Submit only the source pixels sampled by this patch. Include neighboring
+    // texels so interpolation at the edge matches drawing the whole image.
+    const x = Math.max(0, Math.floor((view.x0 - b[0]) / dx) - 2);
+    const y = Math.max(0, Math.floor((view.y0 - b[1]) / dy) - 2);
+    const w = Math.min(image.width, Math.ceil((view.x1 - b[0]) / dx) + 2) - x;
+    const h = Math.min(image.height, Math.ceil((view.y1 - b[1]) / dy) + 2) - y;
+    if (w > 0 && h > 0)
+      c.drawImage(
+        image,
+        x,
+        y,
+        w,
+        h,
+        b[0] + x * dx,
+        b[1] + y * dy,
+        w * dx,
+        h * dy,
+      );
+  }
   paintLandscape(c, view) {
     const { s, dpr, x0, y0, x1, y1 } = view,
-      b = this.m.meta.backdrop,
       Rpx = s * R;
     const terrain = this.lens.id === "terrain",
       nativeArt = terrain && this.opts.art && Rpx >= GLYPHS_MIN_RPX;
@@ -625,7 +663,7 @@ export class HexMap {
     c.fillStyle = "#dad6bf";
     c.fillRect(0, 0, c.canvas.width, c.canvas.height);
     c.setTransform(dpr * s, 0, 0, dpr * s, -x0 * dpr * s, -y0 * dpr * s);
-    c.drawImage(this.m.image, b[0], b[1], b[2] - b[0], b[3] - b[1]);
+    this.drawRelief(c, view);
     let contours;
     if (s > 8 || this.opts.contours) {
       contours = new Path2D();
@@ -644,7 +682,7 @@ export class HexMap {
       this.opts.water &&
       (this.coastEdges.some((edge) => intersects(edge, view, 1 / s)) ||
         this.hitCtx.isPointInPath(this.ocean, x0, y0, "evenodd"));
-    if (oceanVisible) this.drawOcean(c, view, b);
+    if (oceanVisible) this.drawOcean(c, view);
     this.drawLand(c, view, nativeArt, oceanVisible);
     const stroke = (p, color, width, dash = []) => {
       c.strokeStyle = color;
@@ -703,8 +741,7 @@ export class HexMap {
   }
   drawLand(screen, view, nativeArt, oceanVisible) {
     const s = view.s,
-      terrain = this.lens.id === "terrain",
-      b = this.m.meta.backdrop;
+      terrain = this.lens.id === "terrain";
     const visible = s >= 5 ? this.visible(view) : null;
     const sourceLayer =
       this.sourceAreas.enabled && this.sourceAreas.layer(this.lens);
@@ -732,7 +769,7 @@ export class HexMap {
     if (this.lens.id === "terrain" && s < 15) {
       c.globalCompositeOperation = "multiply";
       c.globalAlpha = 0.34;
-      c.drawImage(this.m.image, b[0], b[1], b[2] - b[0], b[3] - b[1]);
+      this.drawRelief(c, view);
       c.globalAlpha = 1;
       c.globalCompositeOperation = "source-over";
     }
@@ -792,10 +829,10 @@ export class HexMap {
     }
     screen.restore();
   }
-  drawOcean(c, view, b) {
+  drawOcean(c, view) {
     c.save();
     c.clip(this.ocean, "evenodd");
-    c.drawImage(this.m.image, b[0], b[1], b[2] - b[0], b[3] - b[1]);
+    this.drawRelief(c, view);
     if (this.opts.art) {
       c.lineJoin = "round";
       for (const [width, color] of [
