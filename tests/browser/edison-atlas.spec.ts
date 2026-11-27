@@ -3,6 +3,28 @@ import {routeHeaderAssets} from '../shared-header.mjs';
 
 test.beforeEach(async ({page}) => { await routeHeaderAssets(page); });
 
+test('returning visitors load content-versioned app and map modules even with stale stable URLs', async ({page}) => {
+  const staleRequests: string[] = [];
+  await page.route(/\/edison-atlas\/js\/(app|map)\.js$/, async route => {
+    staleRequests.push(route.request().url());
+    await route.fulfill({contentType:'application/javascript',body:'throw new Error("stale stable module");'});
+  });
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008');
+  await expect(page.locator('#loading')).toBeHidden();
+  const modules = await page.evaluate(async () => {
+    const imports = JSON.parse(document.querySelector('script[type="importmap"]')!.textContent!).imports;
+    const paths = [imports['./js/app.js'], imports['./js/map.js']];
+    return Promise.all(paths.map(async (url: string) => {
+      const bytes = await (await fetch(url)).arrayBuffer();
+      const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+      return {url,digest:Array.from(hash, byte => byte.toString(16).padStart(2,'0')).join('').slice(0,16)};
+    }));
+  });
+  expect(staleRequests).toEqual([]);
+  expect(modules[0].url).toBe(`./js/app.${modules[0].digest}.js`);
+  expect(modules[1].url).toBe(`./js/map.${modules[1].digest}.js`);
+});
+
 test('panning detailed terrain avoids one display-canvas fill per hex', async ({page}) => {
   await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=water,art');
   await expect(page.locator('#loading')).toBeHidden();

@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import matter from 'gray-matter';
 import yaml from 'js-yaml';
 import { marked } from 'marked';
@@ -177,12 +178,31 @@ staticFiles.push('/perplexity-projections/model.mjs');
 // Keep the atlas datasets, ES module imports, publisher URLs and license files byte-exact.
 const atlasDir = path.join(source, 'tools/edison-atlas');
 const atlasOut = path.join(out, 'edison-atlas');
+const atlasImports = {};
 for (const entry of (await fs.readdir(atlasDir, {recursive:true, withFileTypes:true})).filter(e => e.isFile()).map(e => path.relative(atlasDir, path.join(e.parentPath, e.name))).sort()) {
   if (entry === 'index.html') continue;
   await fs.mkdir(path.join(atlasOut, path.dirname(entry)), {recursive:true});
   await fs.copyFile(path.join(atlasDir, entry), path.join(atlasOut, entry));
-  staticFiles.push('/edison-atlas/' + entry.split(path.sep).join('/'));
+  const url = entry.split(path.sep).join('/');
+  staticFiles.push('/edison-atlas/' + url);
+  if (url.startsWith('js/') && url.endsWith('.js')) {
+    const bytes = await fs.readFile(path.join(atlasDir, entry));
+    const digest = createHash('sha256').update(bytes).digest('hex').slice(0, 16);
+    const versioned = url.slice(0, -3) + '.' + digest + '.js';
+    await fs.writeFile(path.join(atlasOut, versioned), bytes);
+    atlasImports['./' + url] = './' + versioned;
+    staticFiles.push('/edison-atlas/' + versioned);
+  }
 }
+// Keep relative imports in the original modules, but give each published
+// revision its own URL so a returning browser cannot reuse yesterday's code.
+const atlasIndex = path.join(atlasOut, 'index.html');
+const atlasPage = await fs.readFile(atlasIndex, 'utf8');
+const atlasEntry = '<script type="module" src="js/app.js"></script>';
+if (!atlasPage.includes(atlasEntry)) throw new Error('Missing Edison Atlas module entry');
+await fs.writeFile(atlasIndex, atlasPage.replace(atlasEntry,
+  '<script type="importmap">' + JSON.stringify({imports:atlasImports}) + '</script>\n    ' +
+  '<script type="module" src="' + atlasImports['./js/app.js'] + '"></script>'));
 execFileSync('python3', ['scripts/package-edison-atlas.py', atlasDir, path.join(atlasOut, 'Edison-Atlas-offline.zip')], {stdio:'inherit'});
 staticFiles.push('/edison-atlas/Edison-Atlas-offline.zip');
 for (const name of (await fs.readdir(path.join(source, 'img/traveller-npc'))).sort()) {
