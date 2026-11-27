@@ -52,6 +52,22 @@ test('fire colors the clicked hex by area and shows the complete percentage spli
   }
 });
 
+test('reopening a scrolled phone inspector brings all fire percentages into view', async ({page}) => {
+  await page.setViewportSize({width:390, height:844});
+  await page.goto('/edison-atlas/#lens=fire&tile=154,319&x=154.5&y=276.262&z=25&layers=');
+  const body = page.locator('#side-body');
+  const coverage = body.locator('section.detail-section').filter({has:page.getByRole('heading', {name:'Fire tier coverage'})});
+  await expect(coverage).toBeInViewport({ratio:1});
+  await body.evaluate(el => { el.scrollTop = el.scrollHeight; });
+  await expect(coverage).not.toBeInViewport();
+  await page.locator('#mobile-close').click();
+  const canvas = page.locator('canvas#map');
+  const bounds = (await canvas.boundingBox())!;
+  await canvas.click({position:{x:bounds.width/2, y:bounds.height/2}});
+  await expect(coverage).toBeInViewport({ratio:1});
+  await expect(coverage).toContainText('82.19%');
+});
+
 test('planning inventory, local religion sources, and both downloads are available', async ({page}) => {
   await page.goto('/edison-atlas/#report=planning');
   const body = page.locator('#dialog-body');

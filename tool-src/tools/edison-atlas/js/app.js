@@ -1016,8 +1016,8 @@ function showSelected(i, p = null, landmark = null) {
   inspector();
   map.queue();
   hovered(-1);
-  $("side-body").scrollTop = 0;
   if (small()) $("sidebar").classList.add("open");
+  $("side-body").scrollTop = 0;
   scheduleHash();
 }
 function pick(i, label) {
