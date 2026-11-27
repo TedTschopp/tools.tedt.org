@@ -20,7 +20,7 @@ export const direct = {
     "Southern California Edison",
     "November 27, 2026",
     "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer",
-    "One-mile area coverage of Tier 1 tree mortality and CPUC Tier 2 and Tier 3 districts as published in DRPEP.",
+    "SCE publishes the CPUC district polygons and a separate tree-mortality layer. The wildfire map partitions each clipped hex into Tier 3, Tier 2 and outside both. Tier 3 takes priority in overlaps. The color follows the largest area before rounding.",
   ],
   drpepGrowth: [
     "Load Growth Penetration Heat Map",
@@ -104,7 +104,7 @@ export const direct = {
     "California Public Utilities Commission",
     "Version 3, revised August 19, 2021",
     "https://www.cpuc.ca.gov/industries-and-topics/wildfires/fire-threat-maps-and-fire-safety-rulemaking",
-    "The adopted Tier 2 and Tier 3 polygons are joined to each tile’s sample point. The separate tree-mortality Zone 1 designation is outside this layer.",
+    "The CPUC defines the elevated and extreme utility wildfire districts. The GIS archive preserves the original CPUC point lookup alongside the area-based map classification. Tree-mortality Zone 1 has a separate lens.",
   ],
   acs: [
     "American Community Survey",

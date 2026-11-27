@@ -2,6 +2,7 @@ import { assetUrl, portable } from "./assets.js";
 import { HexMap } from "./map.js";
 import {
   addLocalLenses,
+  bins,
   coverNames,
   categorical,
   featured,
@@ -473,6 +474,36 @@ function layers() {
       .join("") +
     "</section>";
 }
+function fireShares(i) {
+  const fields = {
+    0: "fireOutsideShare",
+    2: "fireElevatedShare",
+    3: "fireExtremeShare",
+  };
+  return bins(lensById("fire"), m).map(({ key, label, color }) => ({
+    label,
+    color,
+    percent: m.val(i, fields[key]) / 100,
+  }));
+}
+
+function fireCoverage(i) {
+  const shares = fireShares(i);
+  const bar = shares
+    .map(
+      ({ percent, color }) =>
+        `<span style="width:${percent}%;background:${color}"></span>`,
+    )
+    .join("");
+  return detailSection(
+    "Fire tier coverage",
+    `<div class="fire-share-bar" aria-hidden="true">${bar}</div>` +
+      shares
+        .map(({ label, percent }) => fact(label, number(percent, 2) + "%"))
+        .join(""),
+  );
+}
+
 function inspector() {
   const i = map.selected,
     p = chosenPlace,
@@ -532,6 +563,7 @@ function inspector() {
         : "") +
       "</div>";
   html += "</section>";
+  if (i >= 0 && l.id === "fire") html += fireCoverage(i);
   if (p)
     html += detailSection(
       "Place profile",
@@ -597,15 +629,14 @@ function inspector() {
             .join(" / "),
         ) +
         fact("Approved study area coverage", v("projectCoverage")) +
-        fact("Fire tier at one point in the hex", v("fire")) +
+        (l.id === "fire" ? "" : fact("Fire tier by largest area", v("fire"))) +
         fact("Tier 1 tree mortality", v("tierOne")) +
-        fact("Tier 2 elevated fire area", v("fireTwoPct")) +
-        fact("Tier 3 extreme fire area", v("fireThreePct")) +
         classAndCoverage("growth") +
         classAndCoverage("loadFull") +
         classAndCoverage("loadPartial") +
         '<button class="table-link" data-report="planning">Planning sources and methods</button>',
     );
+    if (l.id !== "fire") html += fireCoverage(i);
     html += detailSection(
       "One-mile tile",
       fact("Hex column, row", cell) +
@@ -1410,6 +1441,8 @@ function save(blob, name) {
 function tileCsv() {
   const i = map.selected;
   if (i < 0) return;
+  const tile = m.val(i, "col") + "," + m.val(i, "row");
+  const coordinates = [tile, m.val(i, "lat") / 1e5, m.val(i, "lon") / 1e5];
   const rows = [
     [
       "Tile",
@@ -1423,9 +1456,7 @@ function tileCsv() {
       "Source",
     ],
     ...lenses.map((l) => [
-      m.val(i, "col") + "," + m.val(i, "row"),
-      m.val(i, "lat") / 1e5,
-      m.val(i, "lon") / 1e5,
+      ...coordinates,
       l.name,
       formatValue(l, valueAt(m, l.id, i)),
       l.scope,
@@ -1434,6 +1465,15 @@ function tileCsv() {
         ? (localValue(m, m.local.fields.homeMoe, i) ?? "")
         : "",
       sourceFor(l.source, m.reg)[0],
+    ]),
+    ...fireShares(i).map(({ label, percent }) => [
+      ...coordinates,
+      "Fire tier coverage · " + label,
+      number(percent, 2) + "%",
+      "One-mile hex inside SCE",
+      "Hex " + tile,
+      "",
+      sourceFor("drpepFire", m.reg)[0],
     ]),
   ];
   save(
