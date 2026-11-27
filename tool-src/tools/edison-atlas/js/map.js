@@ -71,6 +71,14 @@ function intersects(box, view, pad = 0) {
     box.y0 <= view.y1 + pad
   );
 }
+function coversView(area, view) {
+  return (
+    view.x0 >= area.x0 &&
+    view.y0 >= area.y0 &&
+    view.x1 <= area.x1 &&
+    view.y1 <= area.y1
+  );
+}
 // Keep complete contour lines so their joins and dash phases survive culling.
 function contourIndex(lines) {
   const groups = new Map();
@@ -401,6 +409,7 @@ export class HexMap {
     this.paintCells(c, null, 1.11);
     this.cache = cache;
     this.landscape = null;
+    this.zoomPreview = null;
     this.queue();
   }
   viewport() {
@@ -468,22 +477,27 @@ export class HexMap {
       ...landscapeOptions.map((option) => this.opts[option]),
     ].join("|");
     const prev = this.landscape;
-    const covers =
-      prev?.key === key &&
-      view.x0 >= prev.x0 &&
-      view.y0 >= prev.y0 &&
-      view.x1 <= prev.x1 &&
-      view.y1 <= prev.y1;
-    const ratio = covers ? view.s / prev.s : 1;
-    let left = covers ? (view.x0 - prev.x0) * prev.s * view.dpr : 0;
-    let top = covers ? (view.y0 - prev.y0) * prev.s * view.dpr : 0;
+    const compatible = prev?.key === key;
+    const covers = compatible && coversView(prev, view);
+    const ratio = compatible ? view.s / prev.s : 1;
+    // A button or double-click changes scale in a single event. Keep the
+    // current image on screen while these local zooms gain native detail.
+    const previewOut =
+      !exact &&
+      !covers &&
+      ratio < 1 &&
+      ratio >= 1 / 3 &&
+      compatible &&
+      intersects(prev, view);
+    let left = compatible ? (view.x0 - prev.x0) * prev.s * view.dpr : 0;
+    let top = compatible ? (view.y0 - prev.y0) * prev.s * view.dpr : 0;
     const fractional =
       Math.abs(left - Math.round(left)) > 1e-5 ||
       Math.abs(top - Math.round(top)) > 1e-5;
     const needsDetail = Math.abs(ratio - 1) > 1e-6 || fractional;
     clearTimeout(this.refineTimer);
     cancelAnimationFrame(this.refineFrame);
-    if (!covers || ratio > 1.5 || (exact && needsDetail)) {
+    if ((!covers && !previewOut) || ratio > 3 || (exact && needsDetail)) {
       const area = this.landscapeArea(view, key);
       this.landscapeInk ??= this.landscapeContext();
       const sheet = this.landscapeInk.canvas;
@@ -514,6 +528,7 @@ export class HexMap {
       left = (view.x0 - area.x0) * px;
       top = (view.y0 - area.y0) * px;
     } else if (Math.abs(ratio - 1) > 1e-6) {
+      if (previewOut) this.drawZoomBackdrop(screen, view, key);
       this.refineTimer = setTimeout(() => this.refineLandscape(view, key), 120);
     }
     if (this.landscape.s === view.s) {
@@ -534,6 +549,50 @@ export class HexMap {
       0,
       width,
       height,
+    );
+  }
+  drawZoomBackdrop(screen, view, key) {
+    // Zooming out can expose geography outside the retained image. Paint a
+    // small overview of the same lens there until its native patches are ready.
+    let area = this.zoomPreview;
+    this.previewInk ??= this.landscapeContext();
+    const ink = this.previewInk,
+      sheet = ink.canvas;
+    if (area?.key !== key || !coversView(area, view)) {
+      const s = Math.min(4, view.s / 2);
+      const w = view.x1 - view.x0,
+        h = view.y1 - view.y0;
+      const x0 = view.x0 - w / 4,
+        y0 = view.y0 - h / 4;
+      const width = Math.ceil(1.5 * w * s),
+        height = Math.ceil(1.5 * h * s);
+      if (sheet.width !== width) sheet.width = width;
+      if (sheet.height !== height) sheet.height = height;
+      area = {
+        key,
+        s,
+        dpr: 1,
+        x0,
+        y0,
+        x1: x0 + width / s,
+        y1: y0 + height / s,
+      };
+      ink.save();
+      this.paintLandscape(ink, area);
+      ink.restore();
+      this.zoomPreview = area;
+    }
+    screen.resetTransform();
+    screen.drawImage(
+      sheet,
+      (view.x0 - area.x0) * area.s,
+      (view.y0 - area.y0) * area.s,
+      (view.x1 - view.x0) * area.s,
+      (view.y1 - view.y0) * area.s,
+      0,
+      0,
+      screen.canvas.width,
+      screen.canvas.height,
     );
   }
   landscapeContext() {
