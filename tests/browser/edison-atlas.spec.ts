@@ -3,6 +3,28 @@ import {routeHeaderAssets} from '../shared-header.mjs';
 
 test.beforeEach(async ({page}) => { await routeHeaderAssets(page); });
 
+test('returning visitors load content-versioned app and map modules even with stale stable URLs', async ({page}) => {
+  const staleRequests: string[] = [];
+  await page.route(/\/edison-atlas\/js\/(app|map)\.js$/, async route => {
+    staleRequests.push(route.request().url());
+    await route.fulfill({contentType:'application/javascript',body:'throw new Error("stale stable module");'});
+  });
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008');
+  await expect(page.locator('#loading')).toBeHidden();
+  const modules = await page.evaluate(async () => {
+    const imports = JSON.parse(document.querySelector('script[type="importmap"]')!.textContent!).imports;
+    const paths = [imports['./js/app.js'], imports['./js/map.js']];
+    return Promise.all(paths.map(async (url: string) => {
+      const bytes = await (await fetch(url)).arrayBuffer();
+      const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+      return {url,digest:Array.from(hash, byte => byte.toString(16).padStart(2,'0')).join('').slice(0,16)};
+    }));
+  });
+  expect(staleRequests).toEqual([]);
+  expect(modules[0].url).toBe(`./js/app.${modules[0].digest}.js`);
+  expect(modules[1].url).toBe(`./js/map.${modules[1].digest}.js`);
+});
+
 test('panning detailed terrain avoids one display-canvas fill per hex', async ({page}) => {
   await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=water,art');
   await expect(page.locator('#loading')).toBeHidden();
@@ -42,6 +64,7 @@ test('a fractional pan reuses terrain and crossing the cache edge paints only ex
     const proto = HexMap.prototype;
     const original = proto.paintLandscape;
     const areas: number[] = [];
+    const reliefFractions: number[] = [];
     let fullSize = 0;
     const afterFrame = () => new Promise(requestAnimationFrame);
     const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
@@ -60,7 +83,15 @@ test('a fractional pan reuses terrain and crossing the cache edge paints only ex
     fullSize = map.landscapeInk.canvas.width * map.landscapeInk.canvas.height;
     proto.paintLandscape = function(ctx: CanvasRenderingContext2D, ...args: any[]) {
       areas.push(ctx.canvas.width * ctx.canvas.height);
-      return original.call(this,ctx,...args);
+      const drawImage = ctx.drawImage;
+      ctx.drawImage = new Proxy(drawImage, {apply(target, receiver, argList) {
+        if (argList[0] === map.m.image) {
+          const [image,,,sw,sh] = argList;
+          reliefFractions.push(argList.length===9 ? sw*sh/(image.width*image.height) : 1);
+        }
+        return Reflect.apply(target,receiver,argList);
+      }});
+      try { return original.call(this,ctx,...args); } finally { ctx.drawImage = drawImage; }
     };
     try {
       const [x,y,z,s] = [map.x,map.y,map.z,map.scale];
@@ -73,19 +104,21 @@ test('a fractional pan reuses terrain and crossing the cache edge paints only ex
       // An export must be able to request precise native pixels immediately.
       map.zoom(1.13); await afterFrame();
       map.draw();
-      return {fractional,exposed,fullSize,exportScale:map.landscape.s,cameraScale:map.scale};
+      return {fractional,exposed,fullSize,reliefFractions,exportScale:map.landscape.s,cameraScale:map.scale};
     } finally { proto.paintLandscape = original; }
   });
   expect(result.fractional).toEqual([]);
   expect(result.exposed.length).toBeGreaterThan(0);
   expect(result.exposed.reduce((a,b)=>a+b,0)).toBeLessThan(result.fullSize/2);
+  expect(result.reliefFractions.length).toBeGreaterThan(0);
+  expect(Math.max(...result.reliefFractions)).toBeLessThan(.05);
   expect(result.exportScale).toBe(result.cameraScale);
 });
 
 test('a settled zoom finishes at native detail and a layer change cancels old zoom work', async ({page}) => {
   await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=roads,water,art');
   await expect(page.locator('#loading')).toBeHidden();
-  const {native,correctLayer,bands} = await page.evaluate(async () => {
+  const {native,correctLayer,patches} = await page.evaluate(async () => {
     const {HexMap} = await import(new URL('js/map.js', document.baseURI).href);
     const proto = HexMap.prototype, draw = proto.draw, paint = proto.paintLandscape;
     const nextFrame = () => new Promise(requestAnimationFrame);
@@ -98,9 +131,9 @@ test('a settled zoom finishes at native detail and a layer change cancels old zo
       m = await received;
     } finally { proto.draw = draw; }
     m.draw();
-    let bands = 0;
+    let patches = 0;
     proto.paintLandscape = function(ctx: CanvasRenderingContext2D,...args: any[]) {
-      if (ctx.canvas.height < m.canvas.height) bands++;
+      if (ctx.canvas.height < m.canvas.height) patches++;
       return paint.call(this,ctx,...args);
     };
     try {
@@ -108,17 +141,17 @@ test('a settled zoom finishes at native detail and a layer change cancels old zo
       for (let i=0; i<150 && m.landscape.s!==m.scale; i++) await nextFrame();
       const native = m.landscape.s===m.scale;
       m.zoom(1.1);
-      const previous = bands;
-      for (let i=0; i<150 && bands===previous; i++) await nextFrame();
+      const previous = patches;
+      for (let i=0; i<150 && patches===previous; i++) await nextFrame();
       document.querySelector<HTMLButtonElement>('[data-overlay="roads"]')!.click();
       await nextFrame();
       const current = m.landscape;
       await new Promise(r => setTimeout(r,400));
-      return {native,bands,correctLayer:!m.opts.roads && m.landscape===current};
+      return {native,patches,correctLayer:!m.opts.roads && m.landscape===current};
     } finally { proto.paintLandscape = paint; }
   });
   expect(native).toBe(true);
-  expect(bands).toBeGreaterThan(1);
+  expect(patches).toBeGreaterThan(1);
   expect(correctLayer).toBe(true);
 });
 
