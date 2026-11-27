@@ -1012,6 +1012,14 @@ kbd {
   font-size: 13px;
   margin: 0 0 6px;
 }
+.fire-share-bar {
+  display: flex;
+  height: 8px;
+  overflow: hidden;
+  margin: 9px 0 6px;
+  border-radius: 2px;
+  outline: 1px solid var(--line);
+}
 .fact {
   display: flex;
   align-items: baseline;

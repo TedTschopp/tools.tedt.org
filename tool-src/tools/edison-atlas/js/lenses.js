@@ -131,9 +131,9 @@ add(
   "fire",
   "Utility wildfire threat",
   "Environment",
-  "Fire tier at one point in the hex",
-  "fire",
-  "The California Public Utilities Commission maps long-term risk from utility-associated wildfires. Tier 2 means elevated risk and Tier 3 means extreme risk. The atlas checks the hex center, or an interior point in SCE territory if the center falls outside. Select the hex for the percentage in each tier.",
+  "Largest area in the hex",
+  "drpepFire",
+  "Color shows the class covering the largest area within the SCE portion of this hex. CPUC Tier 2 means elevated utility wildfire risk and Tier 3 means extreme risk. The third class is outside both tiers. Overlapping district polygons count toward Tier 3. The higher tier wins an exact tie. Select a hex to see all three percentages.",
   "",
   [],
   ["#dcdcc3", "#e6ae66", "#b95640"],
@@ -240,7 +240,7 @@ export function valueAt(m, id, i) {
   const get = (k) => m.val(i, k);
   if (id === "terrain") return biome(get("cover"), get("elev"));
   if (id === "elev") return get("elev") == null ? null : get("elev") * 3.28084;
-  if (id === "fire") return get("fire");
+  if (id === "fire") return get("fireDominant");
   if (["july", "january", "rain", "solar"].includes(id))
     return get(id) == null ? null : get(id) / (id === "solar" ? 100 : 10);
   if (id === "screen") return m.tracts.screen[get("ces")]?.[1] ?? null;
