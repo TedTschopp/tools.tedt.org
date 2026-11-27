@@ -53,6 +53,60 @@ function lineGroups(items, split) {
   for (const [rank, pts] of items) groups[split(rank) ? 0 : 1].push(pts);
   return groups.map((a) => pathOf(a));
 }
+function pathBounds(points) {
+  const box = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity };
+  for (const [x, y] of points) {
+    box.x0 = Math.min(box.x0, x);
+    box.x1 = Math.max(box.x1, x);
+    box.y0 = Math.min(box.y0, y);
+    box.y1 = Math.max(box.y1, y);
+  }
+  return box;
+}
+function intersects(box, view, pad = 0) {
+  return (
+    box.x1 >= view.x0 - pad &&
+    box.x0 <= view.x1 + pad &&
+    box.y1 >= view.y0 - pad &&
+    box.y0 <= view.y1 + pad
+  );
+}
+// Keep complete contour lines so their joins and dash phases survive culling.
+function contourIndex(lines) {
+  const groups = new Map();
+  for (const line of lines) {
+    if (!line.length) continue;
+    const box = pathBounds(line);
+    const key =
+      Math.floor((box.x0 + box.x1) / 48) +
+      "," +
+      Math.floor((box.y0 + box.y1) / 48);
+    const group = groups.get(key);
+    if (group) {
+      group.x0 = Math.min(group.x0, box.x0);
+      group.x1 = Math.max(group.x1, box.x1);
+      group.y0 = Math.min(group.y0, box.y0);
+      group.y1 = Math.max(group.y1, box.y1);
+      group.lines.push(line);
+    } else groups.set(key, { ...box, lines: [line] });
+  }
+  return Array.from(groups.values(), ({ lines, ...box }) => ({
+    ...box,
+    path: pathOf(lines),
+  }));
+}
+// A rectangle without crossing edges is wholly inside or outside an even-odd
+// water polygon. Keeping short runs of edges also handles holes and islands.
+function edgeBounds(rings) {
+  const boxes = [];
+  for (const ring of rings) {
+    if (!ring.length) continue;
+    for (let i = 0; i + 1 < ring.length; i += 12)
+      boxes.push(pathBounds(ring.slice(i, i + 13)));
+    boxes.push(pathBounds([ring.at(-1), ring[0]]));
+  }
+  return boxes;
+}
 function tinted(hex, shift) {
   const c = parseInt(hex.slice(1), 16);
   return (
@@ -127,6 +181,8 @@ export class HexMap {
     this.rivers = lineGroups(m.context.rivers, (x) => x < 6);
     this.lakes = pathOf(m.context.lakes, true);
     this.ocean = pathOf(m.context.ocean, true);
+    this.coastEdges = edgeBounds(m.context.ocean);
+    this.lakeBounds = m.context.lakes.filter((r) => r.length).map(pathBounds);
     const [x0, y0, x1, y1] = m.meta.backdrop;
     this.dryLand = new Path2D(this.ocean);
     this.dryLand.rect(x0, y0, x1 - x0, y1 - y0);
@@ -139,7 +195,7 @@ export class HexMap {
       m.context.parks.flatMap((p) => p.rings),
       true,
     );
-    this.contours = pathOf(m.context.contours);
+    this.contours = contourIndex(m.context.contours);
     this.rows = new Map();
     this.lookup = new Map();
     this.coords = [];
@@ -426,34 +482,45 @@ export class HexMap {
       Math.abs(top - Math.round(top)) > 1e-5;
     const needsDetail = Math.abs(ratio - 1) > 1e-6 || fractional;
     clearTimeout(this.refineTimer);
+    cancelAnimationFrame(this.refineFrame);
     if (!covers || ratio > 1.5 || (exact && needsDetail)) {
-      const pad = Math.ceil(
-        Math.min(160, Math.min(this.w, this.h) / 4) * view.dpr,
-      );
-      const margin = pad / (view.s * view.dpr);
-      const area = {
-        ...view,
-        x0: view.x0 - margin,
-        y0: view.y0 - margin,
-        x1: view.x1 + margin,
-        y1: view.y1 + margin,
-        key,
-      };
-      this.landscapeInk ??= document
-        .createElement("canvas")
-        .getContext("2d", { alpha: false });
+      const area = this.landscapeArea(view, key);
+      this.landscapeInk ??= this.landscapeContext();
       const sheet = this.landscapeInk.canvas;
-      if (sheet.width !== width + 2 * pad) sheet.width = width + 2 * pad;
-      if (sheet.height !== height + 2 * pad) sheet.height = height + 2 * pad;
-      this.landscapeInk.save();
-      this.paintLandscape(this.landscapeInk, area);
-      this.landscapeInk.restore();
+      const sameGrid = prev?.key === key && prev.s === view.s;
+      const px = view.s * view.dpr;
+      const dx = sameGrid ? Math.round((area.x0 - prev.x0) * px) : 0;
+      const dy = sameGrid ? Math.round((area.y0 - prev.y0) * px) : 0;
+      if (
+        !exact &&
+        sameGrid &&
+        Math.abs(dx) < sheet.width / 2 &&
+        Math.abs(dy) < sheet.height / 2
+      ) {
+        // Stay on the existing device-pixel grid so the overlap is an exact copy.
+        area.x0 = prev.x0 + dx / px;
+        area.y0 = prev.y0 + dy / px;
+        area.x1 = area.x0 + sheet.width / px;
+        area.y1 = area.y0 + sheet.height / px;
+        this.scrollLandscape(area, dx, dy);
+      } else {
+        if (sheet.width !== area.width) sheet.width = area.width;
+        if (sheet.height !== area.height) sheet.height = area.height;
+        this.landscapeInk.save();
+        this.paintLandscape(this.landscapeInk, area);
+        this.landscapeInk.restore();
+      }
       this.landscape = area;
-      left = top = pad;
-    } else if (needsDetail) {
-      // A wheel or pinch can reuse the current picture while it is moving.
-      // Repaint at the precise zoom and pixel origin once input settles.
-      this.refineTimer = setTimeout(() => this.draw(), 120);
+      left = (view.x0 - area.x0) * px;
+      top = (view.y0 - area.y0) * px;
+    } else if (Math.abs(ratio - 1) > 1e-6) {
+      this.refineTimer = setTimeout(() => this.refineLandscape(view, key), 120);
+    }
+    if (this.landscape.s === view.s) {
+      // Keep native pixels sharp on a fractional pan. Labels and hit testing use
+      // the unrounded camera. A synchronous draw for PNG uses its exact origin.
+      left = Math.round(left);
+      top = Math.round(top);
     }
     const sourceScale = this.landscape.s / view.s;
     screen.resetTransform();
@@ -469,6 +536,85 @@ export class HexMap {
       height,
     );
   }
+  landscapeContext() {
+    return document.createElement("canvas").getContext("2d", { alpha: false });
+  }
+  landscapeArea(view, key) {
+    const pad = Math.ceil(
+      Math.min(160, Math.min(this.w, this.h) / 4) * view.dpr,
+    );
+    const px = view.s * view.dpr;
+    const x0 = view.x0 - pad / px,
+      y0 = view.y0 - pad / px;
+    const width = this.canvas.width + pad * 2,
+      height = this.canvas.height + pad * 2;
+    return {
+      ...view,
+      key,
+      x0,
+      y0,
+      x1: x0 + width / px,
+      y1: y0 + height / px,
+      width,
+      height,
+    };
+  }
+  paintRegion(target, area, x, y, width, height) {
+    this.patchInk ??= this.landscapeContext();
+    const patch = this.patchInk,
+      canvas = patch.canvas;
+    if (canvas.width !== width) canvas.width = width;
+    if (canvas.height !== height) canvas.height = height;
+    const px = area.s * area.dpr;
+    patch.save();
+    this.paintLandscape(patch, {
+      ...area,
+      x0: area.x0 + x / px,
+      y0: area.y0 + y / px,
+      x1: area.x0 + (x + width) / px,
+      y1: area.y0 + (y + height) / px,
+    });
+    patch.restore();
+    target.drawImage(canvas, x, y);
+  }
+  scrollLandscape(area, dx, dy) {
+    const c = this.landscapeInk,
+      { width, height } = c.canvas;
+    const x = Math.max(0, -dx),
+      y = Math.max(0, -dy);
+    const w = width - Math.abs(dx),
+      h = height - Math.abs(dy);
+    c.resetTransform();
+    c.drawImage(c.canvas, x + dx, y + dy, w, h, x, y, w, h);
+    if (dx) this.paintRegion(c, area, x ? 0 : w, y, Math.abs(dx), h);
+    if (dy) this.paintRegion(c, area, 0, y ? 0 : h, width, Math.abs(dy));
+  }
+  refineLandscape(view, key) {
+    // A stopped zoom still needs native-scale artwork. Paint into a spare
+    // surface over several frames, keeping the current picture and hits live.
+    const area = this.landscapeArea(view, key);
+    this.nextLandscapeInk ??= this.landscapeContext();
+    const next = this.nextLandscapeInk;
+    if (next.canvas.width !== area.width) next.canvas.width = area.width;
+    if (next.canvas.height !== area.height) next.canvas.height = area.height;
+    const band = Math.ceil(128 * view.dpr);
+    let y = 0;
+    const step = () => {
+      if (this.pending) return;
+      const h = Math.min(band, area.height - y);
+      this.paintRegion(next, area, 0, y, area.width, h);
+      y += h;
+      if (y < area.height) {
+        this.refineFrame = requestAnimationFrame(step);
+      } else {
+        this.nextLandscapeInk = this.landscapeInk;
+        this.landscapeInk = next;
+        this.landscape = area;
+        this.draw(false);
+      }
+    };
+    this.refineFrame = requestAnimationFrame(step);
+  }
   paintLandscape(c, view) {
     const { s, dpr, x0, y0, x1, y1 } = view,
       b = this.m.meta.backdrop,
@@ -480,16 +626,26 @@ export class HexMap {
     c.fillRect(0, 0, c.canvas.width, c.canvas.height);
     c.setTransform(dpr * s, 0, 0, dpr * s, -x0 * dpr * s, -y0 * dpr * s);
     c.drawImage(this.m.image, b[0], b[1], b[2] - b[0], b[3] - b[1]);
+    let contours;
+    if (s > 8 || this.opts.contours) {
+      contours = new Path2D();
+      for (const piece of this.contours)
+        if (intersects(piece, view, 1 / s)) contours.addPath(piece.path);
+    }
     if (s > 8) {
       const fade = Math.min(0.76, (s - 8) / 35);
       c.fillStyle = "rgba(227,223,199," + fade + ")";
       c.fillRect(x0, y0, x1 - x0, y1 - y0);
       c.strokeStyle = "rgba(119,119,89,.36)";
       c.lineWidth = 0.7 / s;
-      c.stroke(this.contours);
+      c.stroke(contours);
     }
-    if (this.opts.water) this.drawOcean(c, view, b);
-    this.drawLand(c, view, nativeArt);
+    const oceanVisible =
+      this.opts.water &&
+      (this.coastEdges.some((edge) => intersects(edge, view, 1 / s)) ||
+        this.hitCtx.isPointInPath(this.ocean, x0, y0, "evenodd"));
+    if (oceanVisible) this.drawOcean(c, view, b);
+    this.drawLand(c, view, nativeArt, oceanVisible);
     const stroke = (p, color, width, dash = []) => {
       c.strokeStyle = color;
       c.lineWidth = width / s;
@@ -498,16 +654,19 @@ export class HexMap {
       c.setLineDash([]);
     };
     if (this.opts.water) {
-      c.fillStyle = terrain ? "#4092ca" : "rgba(75,139,168,.72)";
-      c.fill(this.lakes, "evenodd");
-      if (nativeArt) {
-        c.save();
-        c.clip(this.lakes, "evenodd");
-        drawOceanTexture(c, view, { Rpx });
-        c.restore();
-        stroke(this.lakes, "#a3d2d6", 1.3);
-        this.civ.rivers(c, s);
-      } else {
+      if (this.lakeBounds.some((box) => intersects(box, view, 1 / s))) {
+        c.fillStyle = terrain ? "#4092ca" : "rgba(75,139,168,.72)";
+        c.fill(this.lakes, "evenodd");
+        if (nativeArt) {
+          c.save();
+          c.clip(this.lakes, "evenodd");
+          drawOceanTexture(c, view, { Rpx });
+          c.restore();
+          stroke(this.lakes, "#a3d2d6", 1.3);
+        }
+      }
+      if (nativeArt) this.civ.rivers(c, s);
+      else {
         stroke(this.rivers[0], "#4d9bc0", s > 6 ? 1.6 : 0.85);
         if (s > 3.7) stroke(this.rivers[1], "#73abc3", 1);
       }
@@ -519,7 +678,7 @@ export class HexMap {
     }
     if (this.opts.counties)
       stroke(this.countyLines, "rgba(70,75,65,.65)", 0.95, [4, 4]);
-    if (this.opts.contours) stroke(this.contours, "rgba(97,89,65,.54)", 0.7);
+    if (this.opts.contours) stroke(contours, "rgba(97,89,65,.54)", 0.7);
     if (terrain && this.opts.art && Rpx >= ROAD_MIN_RPX) {
       c.save();
       if (this.opts.roads) drawRoads(c, this.network, view, { Rpx });
@@ -542,7 +701,7 @@ export class HexMap {
     stroke(this.boundary, "rgba(247,237,190,.85)", s > 4 ? 3 : 2.3);
     stroke(this.boundary, "#436247", s > 4 ? 1.6 : 1.2);
   }
-  drawLand(screen, view, nativeArt) {
+  drawLand(screen, view, nativeArt, oceanVisible) {
     const s = view.s,
       terrain = this.lens.id === "terrain",
       b = this.m.meta.backdrop;
@@ -551,7 +710,7 @@ export class HexMap {
       this.sourceAreas.enabled && this.sourceAreas.layer(this.lens);
     screen.save();
     screen.clip(this.boundary, "evenodd");
-    if (terrain && this.opts.water) screen.clip(this.dryLand, "evenodd");
+    if (terrain && oceanVisible) screen.clip(this.dryLand, "evenodd");
     // Applying these detailed clips to hundreds of individual draws is slow in
     // Safari. Draw the land at native resolution and clip one image instead.
     let c = screen;
@@ -782,20 +941,32 @@ export class HexMap {
       w = this.mini.width,
       h = this.mini.height,
       b = this.fitBounds;
-    const s = Math.min((w - 14) / (b[2] - b[0]), (h - 12) / (b[3] - b[1])),
-      ox = w / 2 - ((b[0] + b[2]) / 2) * s,
-      oy = h / 2 - ((b[1] + b[3]) / 2) * s;
-    this.miniT = { s, ox, oy };
-    c.setTransform(1, 0, 0, 1, 0, 0);
-    c.clearRect(0, 0, w, h);
-    c.fillStyle = "#e1e2ce";
-    c.fillRect(0, 0, w, h);
+    if (
+      !this.miniBase ||
+      this.miniBase.width !== w ||
+      this.miniBase.height !== h
+    ) {
+      const s = Math.min((w - 14) / (b[2] - b[0]), (h - 12) / (b[3] - b[1]));
+      const ox = w / 2 - ((b[0] + b[2]) / 2) * s;
+      const oy = h / 2 - ((b[1] + b[3]) / 2) * s;
+      this.miniT = { s, ox, oy };
+      this.miniBase = document.createElement("canvas");
+      this.miniBase.width = w;
+      this.miniBase.height = h;
+      const base = this.miniBase.getContext("2d");
+      base.fillStyle = "#e1e2ce";
+      base.fillRect(0, 0, w, h);
+      base.setTransform(s, 0, 0, s, ox, oy);
+      base.fillStyle = "#819678";
+      base.fill(this.boundary, "evenodd");
+      base.strokeStyle = "#627e60";
+      base.lineWidth = 0.8 / s;
+      base.stroke(this.boundary);
+    }
+    const { s, ox, oy } = this.miniT;
+    c.resetTransform();
+    c.drawImage(this.miniBase, 0, 0);
     c.setTransform(s, 0, 0, s, ox, oy);
-    c.fillStyle = "#819678";
-    c.fill(this.boundary, "evenodd");
-    c.strokeStyle = "#627e60";
-    c.lineWidth = 0.8 / s;
-    c.stroke(this.boundary);
     const [x, y] = this.world(0, 0),
       [x1, y1] = this.world(this.w, this.h);
     c.strokeStyle = "#ce863a";
