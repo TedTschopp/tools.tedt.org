@@ -21,6 +21,17 @@ const ROW = Math.sqrt(3) / 2,
     [-0.5, -R / 2],
   ];
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const landscapeOptions = [
+  "art",
+  "places",
+  "water",
+  "grid",
+  "roads",
+  "rail",
+  "parks",
+  "counties",
+  "contours",
+];
 function polygon(c, x, y, size = 1) {
   c.moveTo(x, y - R * size);
   for (let i = 1; i < 6; i++)
@@ -187,8 +198,10 @@ export class HexMap {
     this.h = rect.height;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
     for (const c of [this.canvas, this.overlay]) {
-      c.width = Math.round(this.w * this.dpr);
-      c.height = Math.round(this.h * this.dpr);
+      const width = Math.round(this.w * this.dpr),
+        height = Math.round(this.h * this.dpr);
+      if (c.width !== width) c.width = width;
+      if (c.height !== height) c.height = height;
     }
     const [x0, y0, x1, y1] = this.fitBounds;
     const padX = this.w < 550 ? 26 : 68,
@@ -328,14 +341,19 @@ export class HexMap {
       -this.cacheBox[0] * pp,
       -this.cacheBox[1] * pp,
     );
-    c.clip(this.boundary, "evenodd");
+    // The map clips this completed overview image to the service territory.
     this.paintCells(c, null, 1.11);
     this.cache = cache;
+    this.landscape = null;
     this.queue();
   }
-  visible(margin = 1.4) {
+  viewport() {
     const [x0, y0] = this.world(0, 0),
       [x1, y1] = this.world(this.w, this.h);
+    return { x0, y0, x1, y1, s: this.scale, dpr: this.dpr };
+  }
+  visible({ x0, y0, x1, y1 } = this.viewport()) {
+    const margin = 1.4;
     const result = [];
     for (
       let r = Math.floor((y0 - margin) / ROW);
@@ -366,29 +384,106 @@ export class HexMap {
     if (!this.pending)
       this.pending = requestAnimationFrame(() => {
         this.pending = 0;
-        this.draw();
+        this.draw(false);
       });
   }
-  draw() {
+  draw(exact = true) {
     if (!this.cache) return;
     const c = this.ctx,
-      s = this.scale,
-      b = this.m.meta.backdrop;
-    const [x0, y0] = this.world(0, 0),
-      [x1, y1] = this.world(this.w, this.h);
-    const view = { x0, y0, x1, y1, s, dpr: this.dpr },
+      view = this.viewport();
+    this.drawLandscape(c, view, exact);
+    this.normal(c);
+    this.labels = [];
+    this.drawLabels(c);
+    this.highlights();
+    this.drawMini();
+    this.onDraw?.();
+  }
+  drawLandscape(screen, view, exact) {
+    // Cache the static geography with a pan margin, as in the USACiv renderer.
+    // Labels and hit targets are laid out against the live camera on every frame.
+    const { width, height } = screen.canvas;
+    const key = [
+      this.lens.id,
+      this.sourceAreas.enabled,
+      width,
+      height,
+      view.dpr,
+      ...landscapeOptions.map((option) => this.opts[option]),
+    ].join("|");
+    const prev = this.landscape;
+    const covers =
+      prev?.key === key &&
+      view.x0 >= prev.x0 &&
+      view.y0 >= prev.y0 &&
+      view.x1 <= prev.x1 &&
+      view.y1 <= prev.y1;
+    const ratio = covers ? view.s / prev.s : 1;
+    let left = covers ? (view.x0 - prev.x0) * prev.s * view.dpr : 0;
+    let top = covers ? (view.y0 - prev.y0) * prev.s * view.dpr : 0;
+    const fractional =
+      Math.abs(left - Math.round(left)) > 1e-5 ||
+      Math.abs(top - Math.round(top)) > 1e-5;
+    const needsDetail = Math.abs(ratio - 1) > 1e-6 || fractional;
+    clearTimeout(this.refineTimer);
+    if (!covers || ratio > 1.5 || (exact && needsDetail)) {
+      const pad = Math.ceil(
+        Math.min(160, Math.min(this.w, this.h) / 4) * view.dpr,
+      );
+      const margin = pad / (view.s * view.dpr);
+      const area = {
+        ...view,
+        x0: view.x0 - margin,
+        y0: view.y0 - margin,
+        x1: view.x1 + margin,
+        y1: view.y1 + margin,
+        key,
+      };
+      this.landscapeInk ??= document
+        .createElement("canvas")
+        .getContext("2d", { alpha: false });
+      const sheet = this.landscapeInk.canvas;
+      if (sheet.width !== width + 2 * pad) sheet.width = width + 2 * pad;
+      if (sheet.height !== height + 2 * pad) sheet.height = height + 2 * pad;
+      this.landscapeInk.save();
+      this.paintLandscape(this.landscapeInk, area);
+      this.landscapeInk.restore();
+      this.landscape = area;
+      left = top = pad;
+    } else if (needsDetail) {
+      // A wheel or pinch can reuse the current picture while it is moving.
+      // Repaint at the precise zoom and pixel origin once input settles.
+      this.refineTimer = setTimeout(() => this.draw(), 120);
+    }
+    const sourceScale = this.landscape.s / view.s;
+    screen.resetTransform();
+    screen.drawImage(
+      this.landscapeInk.canvas,
+      left,
+      top,
+      width * sourceScale,
+      height * sourceScale,
+      0,
+      0,
+      width,
+      height,
+    );
+  }
+  paintLandscape(c, view) {
+    const { s, dpr, x0, y0, x1, y1 } = view,
+      b = this.m.meta.backdrop,
       Rpx = s * R;
     const terrain = this.lens.id === "terrain",
       nativeArt = terrain && this.opts.art && Rpx >= GLYPHS_MIN_RPX;
-    this.normal(c);
+    c.resetTransform();
     c.fillStyle = "#dad6bf";
-    c.fillRect(0, 0, this.w, this.h);
-    this.frame(c);
+    c.fillRect(0, 0, c.canvas.width, c.canvas.height);
+    c.setTransform(dpr * s, 0, 0, dpr * s, -x0 * dpr * s, -y0 * dpr * s);
     c.drawImage(this.m.image, b[0], b[1], b[2] - b[0], b[3] - b[1]);
     if (s > 8) {
       const fade = Math.min(0.76, (s - 8) / 35);
       c.fillStyle = "rgba(227,223,199," + fade + ")";
-      c.fillRect(...this.world(0, 0), this.w / s, this.h / s);
+      c.fillRect(x0, y0, x1 - x0, y1 - y0);
       c.strokeStyle = "rgba(119,119,89,.36)";
       c.lineWidth = 0.7 / s;
       c.stroke(this.contours);
@@ -446,18 +541,12 @@ export class HexMap {
     }
     stroke(this.boundary, "rgba(247,237,190,.85)", s > 4 ? 3 : 2.3);
     stroke(this.boundary, "#436247", s > 4 ? 1.6 : 1.2);
-    this.normal(c);
-    this.labels = [];
-    this.drawLabels(c);
-    this.highlights();
-    this.drawMini();
-    this.onDraw?.();
   }
   drawLand(screen, view, nativeArt) {
     const s = view.s,
       terrain = this.lens.id === "terrain",
       b = this.m.meta.backdrop;
-    const visible = s >= 5 ? this.visible() : null;
+    const visible = s >= 5 ? this.visible(view) : null;
     const sourceLayer =
       this.sourceAreas.enabled && this.sourceAreas.layer(this.lens);
     screen.save();
@@ -476,7 +565,7 @@ export class HexMap {
       c.save();
       c.resetTransform();
       c.clearRect(0, 0, c.canvas.width, c.canvas.height);
-      this.frame(c);
+      c.setTransform(screen.getTransform());
     }
     if (sourceLayer) this.sourceAreas.draw(c, this, sourceLayer, view);
     else if (s < 5) c.drawImage(this.cache, ...this.cacheBox);

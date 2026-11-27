@@ -51,6 +51,23 @@ test('cooling center directory opens and shares the actual one-mile hex', async 
   expect(view.get('tile')).toBe('129,311');
 });
 
+test('switching roads off and on repaints the cached landscape at the same camera', async ({page}) => {
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=roads');
+  const roads = page.locator('[data-overlay="roads"]');
+  await expect(roads).toHaveAttribute('aria-checked', 'true');
+  const picture = () => page.locator('#base').evaluate(async (canvas: HTMLCanvasElement) => {
+    await new Promise(requestAnimationFrame);
+    const pixels = canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height);
+    const hash = await crypto.subtle.digest('SHA-256', pixels.data);
+    return Array.from(new Uint8Array(hash));
+  });
+  const withRoads = await picture();
+  await roads.click();
+  await expect.poll(picture).not.toEqual(withRoads);
+  await roads.click();
+  await expect.poll(picture).toEqual(withRoads);
+});
+
 test('one-mile planning data distinguishes partial polygons and overlapping source bands', async ({page}) => {
   await page.goto('/edison-atlas/#lens=projectCoverage&tile=83,53&x=83.5&y=45.9&z=25');
   await expect(page.locator('.lens-callout strong')).toHaveText('14.17%');
