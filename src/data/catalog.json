@@ -326,6 +326,41 @@
     "html": "<h2>What it does</h2>\n<p>Explain what the tool is and why you made it.</p>\n<h2>How it works</h2>\n<p>Add notes, screenshots, architectural details, etc.</p>\n<h2>Notes</h2>\n<p>Any caveats, future ideas, or context.</p>\n"
   },
   {
+    "slug": "edison-atlas",
+    "title": "Edison Atlas",
+    "summary": "Explore Southern California Edison’s service territory one mile at a time. Map electricity use, neighborhood data, energy resources, outages, and grid planning.",
+    "status": "active",
+    "category": "Maps and RPG",
+    "tags": [
+      "maps",
+      "energy",
+      "California",
+      "SCE",
+      "terrain",
+      "utilities",
+      "GIS",
+      "solar",
+      "wind",
+      "storage",
+      "EV charging"
+    ],
+    "type": "webapp",
+    "updated": "2026-11-27",
+    "featured": false,
+    "launch": "https://tools.tedt.org/edison-atlas/",
+    "migrated": true,
+    "image": "/img/2026-11/edison-atlas-coast.webp",
+    "imageAlt": "Ventura and Oxnard along the Pacific coast, with farms, city banners, and mountain tiles on the illustrated hex map.",
+    "screenshots": [
+      "/img/2026-11/edison-atlas-mojave.webp"
+    ],
+    "features": [],
+    "repo": "https://github.com/TedTschopp/tools.tedt.org",
+    "upstream": "",
+    "sourcePath": "tool-src/tools/edison-atlas/index.html",
+    "html": "<p>The map covers all 20 pieces of Southern California Edison’s published service territory, including Catalina Island. Each of its 61,985 hexes measures one mile between opposite sides. Search for a community or select a hex to inspect its data and sources.</p>\n<h2>Explore the map</h2>\n<ul>\n<li>Inspect a neighborhood’s estimated home value and its margin of error. Select <strong>Block groups</strong> in the legend to see the Census boundary. <a href=\"https://tools.tedt.org/edison-atlas/#lens=home_value&x=109.5&y=293.583&z=28&layers=places,roads,water,grid,art&geography=source&geoid=060590995041\">Open the Orange County coast</a></li>\n<li>Compare solar farms, wind farms, battery storage, and public EV charging. Symbols cover all owners in the reporting area. <a href=\"https://tools.tedt.org/edison-atlas/#lens=terrain&x=108&y=207.846&z=12&layers=utility,places,roads,rail,water,grid,art&resource=solar@12:9,20\">Explore the Mojave utility layer</a></li>\n<li>Browse SCE’s dated outage and community resource lists by city or ZIP. Check current customer impact through the California Governor’s Office of Emergency Services. <a href=\"https://tools.tedt.org/edison-atlas/#report=outages\">Open Outages</a></li>\n<li>Explore approved project study areas, fire districts, and SCE’s annual distribution planning forecasts. <a href=\"https://tools.tedt.org/edison-atlas/#report=planning\">Open Grid planning</a></li>\n</ul>\n<p>The atlas includes 93 map lenses. ZIP, tract, and block-group estimates retain their source geography. The Almanac preserves the original county reports and explains the coverage of local religious surveys. <a href=\"https://tools.tedt.org/edison-atlas/#report=religion\">Explore religion sources</a></p>\n<h2>Downloads</h2>\n<p><a href=\"https://tools.tedt.org/edison-atlas/Edison-Atlas-offline.zip\">Download the offline atlas (ZIP)</a>. Extract the archive and open <strong>Edison-Atlas.html</strong> in a browser. The illustrated map, Almanac, source references, and GIS export travel together.</p>\n<p><a href=\"https://tools.tedt.org/edison-atlas/data/SCE-one-mile-hexes.zip\">Download the GIS data (ZIP)</a>. Open the GeoJSON files in QGIS or ArcGIS. The archive includes clipped one-mile hexes, native reporting areas, and source tables from the November 27, 2026 snapshot.</p>\n<p>Terrain, city artwork, banners, and map symbols use Andrej Karpathy’s USACiv graphics. The atlas credits each data publisher under <strong>Sources</strong>. <a href=\"https://karpathy.ai/usaciv/\">Original USACiv map</a> · <a href=\"https://tools.tedt.org/edison-atlas/licenses/USACiv-MIT.txt\">Artwork license</a></p>\n"
+  },
+  {
     "slug": "traveller-npc-generator",
     "title": "Traveller NPC Generator",
     "summary": "Roll NPCs, group encounters, and casts for ships, buildings and exterior sites in Mongoose Traveller 2E.",

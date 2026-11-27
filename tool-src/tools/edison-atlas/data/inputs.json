@@ -1,0 +1,3548 @@
+[
+ {
+  "file": "B01002.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b01002.dat",
+  "bytes": 26666521,
+  "sha256": "04784637609550868d9da7321e7a947b34e0a10b654dbf6d344599f97f8de7f8"
+ },
+ {
+  "file": "B01003.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b01003.dat",
+  "bytes": 18313708,
+  "sha256": "38d1a992bb058d184009b10b9b34987279aee575e4323165cfb5706c69b6ca90"
+ },
+ {
+  "file": "B05012.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b05012.dat",
+  "bytes": 13046931,
+  "sha256": "da37fc7df8bf26ac4f2f6e30ee87f3ca64936e337657aa6b5ff7c2b93fb776b4"
+ },
+ {
+  "file": "B08013.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b08013.dat",
+  "bytes": 15207821,
+  "sha256": "6939fdfa046fd5bb829ec8da9549e66298cc740f6a3f5dd60e1920a08e3083fb"
+ },
+ {
+  "file": "B08303.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b08303.dat",
+  "bytes": 64154309,
+  "sha256": "1b9b9243afe6656fa8d760830b0b760e7de759752b49510175fd1853e1c016de"
+ },
+ {
+  "file": "B15003.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b15003.dat",
+  "bytes": 92292840,
+  "sha256": "d0c8609e958022459215c8a31d7452ef7528ee8dd70fbb6f9a99de0f491f42d7"
+ },
+ {
+  "file": "B19013.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b19013.dat",
+  "bytes": 17917916,
+  "sha256": "b25a176b0e6c339b6f3a2a0d3d8446bf06f5f080b4395993ec9a8313efb1c229"
+ },
+ {
+  "file": "B21001.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b21001.dat",
+  "bytes": 152476479,
+  "sha256": "fd9787b05a24038dadaa5d4ed232fa0ae7384434dc8cd2a48dc23ed14f3b425b"
+ },
+ {
+  "file": "B23025.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b23025.dat",
+  "bytes": 39968046,
+  "sha256": "264a5bd9367c5f58d9773fa4966fa94fe1e02f9c7106bc2ab39168d6de7c3e4a"
+ },
+ {
+  "file": "B25003.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b25003.dat",
+  "bytes": 26901770,
+  "sha256": "68e963e1ed60fcf6b0658579cefc6498b7a9eb780b9f3e87fd1b9775c4d4ac6c"
+ },
+ {
+  "file": "B25024.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b25024.dat",
+  "bytes": 47866463,
+  "sha256": "26ff26c645d1abc55c3b47998931cea45af40600a6e8d36228d3ed7493add2ef"
+ },
+ {
+  "file": "B25040.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b25040.dat",
+  "bytes": 43870500,
+  "sha256": "470470c2520a27748bd358527abd0088c5a252d541cd73a6112b6f914d4442d2"
+ },
+ {
+  "file": "B25077.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b25077.dat",
+  "bytes": 18496426,
+  "sha256": "89eb2153764a2330b23959d8bbc29b3a8f3016f087b990f2a8ea0d5096d9a816"
+ },
+ {
+  "file": "B27010.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b27010.dat",
+  "bytes": 226230726,
+  "sha256": "2ceba99dada3ec1042310e1dc1f00bcc819de765c3143028aa000df025012a69"
+ },
+ {
+  "file": "B28002.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-b28002.dat",
+  "bytes": 58063218,
+  "sha256": "12446ff0691b8818f5908cdc398817361772c5b3078c506d0409adc9c841840b"
+ },
+ {
+  "file": "C17002.dat",
+  "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-c17002.dat",
+  "bytes": 42027042,
+  "sha256": "dc3dc675113683ec3ff2a0e29a840f43e03268151d7f14b922658d7306da5187"
+ },
+ {
+  "file": "afdc-electric-ca.json",
+  "url": "https://developer.nlr.gov/api/alt-fuel-stations/v1.json?api_key=DEMO_KEY&fuel_type=ELEC&state=CA&country=US&status=E&access=public&limit=all",
+  "bytes": 72043052,
+  "sha256": "4e4c9d0bdf12deb735ca0ca1a740f3d24092b609c01b5b93719716bf0d53ad68"
+ },
+ {
+  "file": "block-groups-2020.zip",
+  "url": "https://www2.census.gov/geo/tiger/GENZ2020/shp/cb_2020_06_bg_500k.zip",
+  "bytes": 7267109,
+  "sha256": "4885d002e0812314b8c4634db17a0249ec10667f0f0d1f73f116d8470e9ee7d2"
+ },
+ {
+  "file": "block-groups.zip",
+  "url": "https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_06_bg_500k.zip",
+  "bytes": 7024144,
+  "sha256": "69e888639d2ea9f2820931025e13b047f17f68e856a50c4b9e3af71d288e6c72"
+ },
+ {
+  "file": "ca-wac-2024.csv.gz",
+  "url": "https://lehd.ces.census.gov/data/lodes/LODES8/ca/wac/ca_wac_S000_JT00_2024.csv.gz",
+  "bytes": 6372235,
+  "sha256": "d48ce18d196518c1245f36a00dd8a9ba47c7e8d9714b873448660d2067e51eb1"
+ },
+ {
+  "file": "cdc-places-tract-ca.json",
+  "url": "https://data.cdc.gov/resource/yjkw-uj5s.json?%24select=tractfips%2Cmhlth_crudeprev%2Cdepression_crudeprev%2Cghlth_crudeprev%2Clpa_crudeprev&stateabbr=CA&%24order=tractfips&%24limit=50000",
+  "bytes": 1197143,
+  "sha256": "5a46099967cc9c6bef292319aa0886867b559d67d280eb07926674f2c52ea752"
+ },
+ {
+  "file": "cdc-tract-loneliness.json",
+  "url": "https://data.cdc.gov/resource/yjkw-uj5s.json?%24select=tractfips%2Cloneliness_crudeprev&stateabbr=CA&%24order=tractfips&%24limit=50000",
+  "bytes": 535131,
+  "sha256": "ba93623fa0c0b87983968acb4459e5cb55f3226c8526bd1b6666f45e36b4c3e5"
+ },
+ {
+  "file": "ces-ids.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 39114,
+  "sha256": "1a2e75ee23cb0ca1e5974f753b7c6550ae239d3e25dcacdbcb6d84f9a89dad9c"
+ },
+ {
+  "file": "ces-range/00000.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+1+AND+300&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 742769,
+  "sha256": "3d49e675b3ed1ab9a99ec99b6d95e77e55037fb4a68c1dba2064348b01cbdb5b"
+ },
+ {
+  "file": "ces-range/00300.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+301+AND+600&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 298328,
+  "sha256": "c7373c1e14d46735aed8192b2097fbf13beda1bfe77604bb55b1e5a37b6437f9"
+ },
+ {
+  "file": "ces-range/00600.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+601+AND+900&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 161088,
+  "sha256": "b69320e4a83906cc997709fb04c901fa35ad68cd158b77631a00e0380488eeb2"
+ },
+ {
+  "file": "ces-range/00900.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+901+AND+1200&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 465720,
+  "sha256": "b296d0f67e9e155b2055741fc09fb42247529989e849c4488cc86740de2b61c7"
+ },
+ {
+  "file": "ces-range/01200.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+1201+AND+1500&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 417229,
+  "sha256": "185021cc75702d676d5dd74c09a15ea18081936440b8871aa24860e75aaa206b"
+ },
+ {
+  "file": "ces-range/01500.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+1501+AND+1800&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 506355,
+  "sha256": "a86f75c220a44fbb6097ed79e4b0dffbad41e92234ab04e87e25a05d07e11e1e"
+ },
+ {
+  "file": "ces-range/01800.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+1801+AND+2100&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 289100,
+  "sha256": "b0183e1566c250af60803adfa84ea2115f3449cd7c545e640b3188ead6f34bc1"
+ },
+ {
+  "file": "ces-range/02100.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+2101+AND+2400&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 323316,
+  "sha256": "b112e7c5cea98b18648f212970717269ee37b086699061766183b8b4ca5d53cb"
+ },
+ {
+  "file": "ces-range/02400.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+2401+AND+2700&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 386731,
+  "sha256": "fdd31473df06c583ece0f52bf450df4d75aeb24172c55f09dc4584b43e6c5493"
+ },
+ {
+  "file": "ces-range/02700.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+2701+AND+3000&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 612299,
+  "sha256": "78c69c94423d782e708402d78997e4ae43a301bcad92bf6b9ed0b9178242b835"
+ },
+ {
+  "file": "ces-range/03000.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+3001+AND+3300&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 524231,
+  "sha256": "553e1fa1848237e1ff44a073f383b0a3250b54c5ee792397f022ed5ecb1929aa"
+ },
+ {
+  "file": "ces-range/03300.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+3301+AND+3600&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 435193,
+  "sha256": "7e5117724e586ea8884286bdea2fcff54679ae3f3994b447089e51a2ed66fe04"
+ },
+ {
+  "file": "ces-range/03600.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+3601+AND+3900&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 276618,
+  "sha256": "e79a4ea123854c122dec747acfaee4f633091a32d52fd20df84359b882723fba"
+ },
+ {
+  "file": "ces-range/03900.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+3901+AND+4200&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 271167,
+  "sha256": "cdb6f9b238ddf1e485fa32508272c134bf4de377f11a0946e58303bf43bb969c"
+ },
+ {
+  "file": "ces-range/04200.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+4201+AND+4500&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 397497,
+  "sha256": "3cbcd541ac65b3df318caeefe378df87aaaf8d8aa436c8c91140157d9e29e3b5"
+ },
+ {
+  "file": "ces-range/04500.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+4501+AND+4800&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 551349,
+  "sha256": "07560f2a5b4c9fe5f2540faae8f845bce690fc44368e53adcc0dd0416cbd5708"
+ },
+ {
+  "file": "ces-range/04800.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+4801+AND+5100&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 461935,
+  "sha256": "c7bc8ee8030dc7b5b656d6d253c8b82040485f5d99feda346b5535a24084277b"
+ },
+ {
+  "file": "ces-range/05100.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+5101+AND+5400&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 311885,
+  "sha256": "dd23eaf1646a49cc755c8bd151052b9057c0505cab93697d47d1cf80ebaf5796"
+ },
+ {
+  "file": "ces-range/05400.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+5401+AND+5700&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 436814,
+  "sha256": "1d728a5c18c376467c82acadc7e243de06fff2d3b35ce3e6fedb6b35b286e037"
+ },
+ {
+  "file": "ces-range/05700.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+5701+AND+6000&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 163670,
+  "sha256": "c7bf0fffaa01c16633f8ed021e3d5e545ac1d69546c4f2adec5a1f7c1e24373d"
+ },
+ {
+  "file": "ces-range/06000.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+6001+AND+6300&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 138737,
+  "sha256": "a6ae5cb5eff2d5572b77e15af6d84cfa5e246496748d2e00fccfb6cb60279786"
+ },
+ {
+  "file": "ces-range/06300.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+6301+AND+6600&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 139822,
+  "sha256": "9a8bb32d4a13106b83831bdd07c338abdca77d1db6abc6f9722ccd0336d3d83d"
+ },
+ {
+  "file": "ces-range/06600.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+6601+AND+6900&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 153829,
+  "sha256": "fd7195841a09f37dceb24b9e9a4ab5f95fb9e8a1d4e42c8d13c2e51403fdaf27"
+ },
+ {
+  "file": "ces-range/06900.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+6901+AND+7200&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 127684,
+  "sha256": "70d70fec454a3606a7c103418a052db790efc6c0af932f63fbffd722df74b1aa"
+ },
+ {
+  "file": "ces-range/07200.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+7201+AND+7500&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 160449,
+  "sha256": "0e247e53404a7b1d5a67864504eda500e14dfa05dfbe11553dfbbce1273a33b4"
+ },
+ {
+  "file": "ces-range/07500.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+7501+AND+7800&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 191079,
+  "sha256": "b7ee5c1811ce8bff500521084990b77fd216ddc59da0eb6e2f7b568551f43656"
+ },
+ {
+  "file": "ces-range/07800.json",
+  "url": "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/CalEnviroScreen_4_0_Results_/FeatureServer/0/query?where=OBJECTID+BETWEEN+7801+AND+8035&outFields=OBJECTID%2CTractTXT%2CCIscoreP&outSR=3310&maxAllowableOffset=20&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 172134,
+  "sha256": "55d8e9bfbd110e933ef06b8508ce228ee8bcc0982ce145ae995cb336ad846cf0"
+ },
+ {
+  "file": "chargers.xlsx",
+  "url": "https://www.energy.ca.gov/filebrowser/download/10037?fid=10037",
+  "bytes": 89930,
+  "sha256": "50950331a382b97313f2be4a8fa5ffd59f279c2b7f07d9f8c228f943b647071f"
+ },
+ {
+  "file": "counties.zip",
+  "url": "https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_us_county_500k.zip",
+  "bytes": 11626066,
+  "sha256": "da4051717caec55c75e3748c3608c2a3dbde8d1ff401bbaf4f952e3c3fb63ef1"
+ },
+ {
+  "file": "county-energy.xlsx",
+  "url": "https://www.energy.ca.gov/filebrowser/download/8144?fid=8144",
+  "bytes": 585826,
+  "sha256": "142a104d6deebc5c789c1dfcc51387f8681891e4e300f787510cf8b7c23d67ca"
+ },
+ {
+  "file": "dem/35-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/100.png",
+  "bytes": 132554,
+  "sha256": "d300dc7f71d66e338deaae742d8cb49b878b7227e0f263be28d6e60567eef3e7"
+ },
+ {
+  "file": "dem/35-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/101.png",
+  "bytes": 132458,
+  "sha256": "d9e80236dac9642d1c7af43a9d20034a13096cf8ea2a07a66e32de6920cb24a4"
+ },
+ {
+  "file": "dem/35-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/102.png",
+  "bytes": 134337,
+  "sha256": "6182560746301857801396740b8a56ba0e990faadeb56d27aceaed5276e9c2cc"
+ },
+ {
+  "file": "dem/35-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/103.png",
+  "bytes": 136398,
+  "sha256": "dbc19ef64d42e624df6e45e01b530bc6fa0586f7baf5eecd2e8f766dccc6d4fa"
+ },
+ {
+  "file": "dem/35-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/104.png",
+  "bytes": 134987,
+  "sha256": "89d675475cb5e7f57fd49c182abbbbece353b7dcb3bfbfd2923a9ceae3edcb28"
+ },
+ {
+  "file": "dem/35-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/105.png",
+  "bytes": 139918,
+  "sha256": "97b0f3e9b8c1fbef3461bff65889e660889eb52ac02afb7acafaa62e81e1498b"
+ },
+ {
+  "file": "dem/35-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/106.png",
+  "bytes": 138882,
+  "sha256": "c005ba2d7612b31baaed47c0e2fd30e1cecf75e618bf8a4ed278b04c88ba7d3b"
+ },
+ {
+  "file": "dem/35-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/107.png",
+  "bytes": 141885,
+  "sha256": "2a50b36cd7c9cc1217907d34be92295d4af7de6d1371734101bf8ba38be08043"
+ },
+ {
+  "file": "dem/35-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/108.png",
+  "bytes": 134861,
+  "sha256": "62892f033913ef79c4f6afd4ba70a06d3265eaa0da0bb35c0cb94bfac287f40c"
+ },
+ {
+  "file": "dem/35-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/109.png",
+  "bytes": 137171,
+  "sha256": "ea812dbbbad8a2a983c7950cba016ec5c9df1e2694532a7e8f22aeaadc2bdd2f"
+ },
+ {
+  "file": "dem/35-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/92.png",
+  "bytes": 139587,
+  "sha256": "527d27e0064399f3e398590dd88118038317a04efd0573d6dd62d0f6feb3bf51"
+ },
+ {
+  "file": "dem/35-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/93.png",
+  "bytes": 125509,
+  "sha256": "d1bef6936ed3cfa4aafeddf11b28590784f371cb36d89b34e97498258e5ed1f4"
+ },
+ {
+  "file": "dem/35-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/94.png",
+  "bytes": 119423,
+  "sha256": "99fa902882635f292a18a30ff65388c8eae5f74afd8da7596f9e0d2d08e1f26f"
+ },
+ {
+  "file": "dem/35-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/95.png",
+  "bytes": 137218,
+  "sha256": "49d0e0724892f3bc2df3573791c1103a60cf4d3fab2a18e4079d32aefd16ca53"
+ },
+ {
+  "file": "dem/35-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/96.png",
+  "bytes": 138361,
+  "sha256": "20334a5891174b6b8cf67176aca66198b891f88fdd6a9c93051848f8270338c9"
+ },
+ {
+  "file": "dem/35-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/97.png",
+  "bytes": 126086,
+  "sha256": "2eaee931ff738b92d7ebfda211505afa0ebb382b252a9cf0f06faa29491da6b1"
+ },
+ {
+  "file": "dem/35-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/98.png",
+  "bytes": 127274,
+  "sha256": "8731f7433ad8b8b58d03e4f19eb98bdbd4965113f6dabe460bfbcd1595b6bdc7"
+ },
+ {
+  "file": "dem/35-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/99.png",
+  "bytes": 127799,
+  "sha256": "2a8329a6a0c9878db49cc19c499bf5ad21ecd4de4e9da4a6e007947adfe16b98"
+ },
+ {
+  "file": "dem/36-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/100.png",
+  "bytes": 129257,
+  "sha256": "c59eee66120954b5700b866b803d46da9477d4bd4497e2f956faf53fa386ecef"
+ },
+ {
+  "file": "dem/36-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/101.png",
+  "bytes": 130386,
+  "sha256": "cde8ee717333141e18b4a25b8e35be949d5f37f0ccaeb95688c2f77e52268790"
+ },
+ {
+  "file": "dem/36-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/102.png",
+  "bytes": 132517,
+  "sha256": "4a5bf14b784825d52231789a143891e968c54ac5ba3906e7ae32c32a77cde00b"
+ },
+ {
+  "file": "dem/36-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/103.png",
+  "bytes": 134029,
+  "sha256": "d9049ee493a282bb3d364f79f1a0261fee02955ec3206bb2dc4d770c31d3e293"
+ },
+ {
+  "file": "dem/36-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/104.png",
+  "bytes": 135072,
+  "sha256": "9b5ccf4f00a8d035d36036391dd34c11f9b1dfe4ecb66628e25c60bf5be4b07a"
+ },
+ {
+  "file": "dem/36-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/105.png",
+  "bytes": 138520,
+  "sha256": "372a1ee5a5b8d8fb6da633946ee7e65791096db2de2f5d18b9ec08122e687837"
+ },
+ {
+  "file": "dem/36-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/106.png",
+  "bytes": 140892,
+  "sha256": "f725ea9e807b6a63a7f4fa762fda07952316b3054d643c126ae57c4c7024da85"
+ },
+ {
+  "file": "dem/36-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/107.png",
+  "bytes": 141195,
+  "sha256": "34a1ef0919c3dd2bc6b67df1e90e92677b1ada3b1655c94de558e181f921d8da"
+ },
+ {
+  "file": "dem/36-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/108.png",
+  "bytes": 139081,
+  "sha256": "69508737f2f77865b2575f76871708c08fed987f42e724576752fad8fd9c79cc"
+ },
+ {
+  "file": "dem/36-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/109.png",
+  "bytes": 137836,
+  "sha256": "07a8e6045cf15690ac767813c77dd26b97ed921b0dcfe78041e5221c05092573"
+ },
+ {
+  "file": "dem/36-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/92.png",
+  "bytes": 127296,
+  "sha256": "9217ca55f218789afb1d122b0d4c216e712fe38c187fd8de5cc714bd9ce06f30"
+ },
+ {
+  "file": "dem/36-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/93.png",
+  "bytes": 136235,
+  "sha256": "4da4de95c41f6fcabc80103e100cb8c63de449411303bd457ae4efb2bd8de7bb"
+ },
+ {
+  "file": "dem/36-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/94.png",
+  "bytes": 125904,
+  "sha256": "0603fe3583f5bd7f7c7bc5ba8485ab9a3de404fb7ef4d4a9c0dc8075221ea285"
+ },
+ {
+  "file": "dem/36-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/95.png",
+  "bytes": 127691,
+  "sha256": "bba5d45d73fe0ec47e2c6e93e54cb644a3df659751f9907f5e306e09afe57673"
+ },
+ {
+  "file": "dem/36-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/96.png",
+  "bytes": 133478,
+  "sha256": "66ce18741a695a7218dd335ad51e1652b92637c091cd2c50676553e07bdb69d7"
+ },
+ {
+  "file": "dem/36-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/97.png",
+  "bytes": 122432,
+  "sha256": "53ec2795cb52279647411900c88ddffb6fa487dfa4751f7d97e12ce7fda55106"
+ },
+ {
+  "file": "dem/36-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/98.png",
+  "bytes": 126996,
+  "sha256": "6066cb5c8f0ee3e1371d71586384d07db86b0fb5712fa93c862dee77fecf8f34"
+ },
+ {
+  "file": "dem/36-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/36/99.png",
+  "bytes": 123026,
+  "sha256": "5f4f9a7a6ea633a989e2e324428cbd01335368e82e7d713918698f0f7643583e"
+ },
+ {
+  "file": "dem/37-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/100.png",
+  "bytes": 127738,
+  "sha256": "16132546fa027986eaa5897d7c3ef729f2fe6a0d675f57cb890c34b326023798"
+ },
+ {
+  "file": "dem/37-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/101.png",
+  "bytes": 128201,
+  "sha256": "aab3a3a9bfd76de572ee3d352ec38b6b3df6d9188ed2c82eb37a8d44c6292bdd"
+ },
+ {
+  "file": "dem/37-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/102.png",
+  "bytes": 135502,
+  "sha256": "240d5790b296d92f18bdc189e9ce3ae8df461c643f4c8d389dfec2459cf3be76"
+ },
+ {
+  "file": "dem/37-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/103.png",
+  "bytes": 134630,
+  "sha256": "28ea6387ce8413f5b8d649225a9c67f054a2328543a241a73c132826a3c60c73"
+ },
+ {
+  "file": "dem/37-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/104.png",
+  "bytes": 137938,
+  "sha256": "48ea3142e5021ddd4e7792dfb7ccc8002949428e2b4a52a21b37959b250cb727"
+ },
+ {
+  "file": "dem/37-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/105.png",
+  "bytes": 137831,
+  "sha256": "ebb8ab76bebcc645939f587fc31e69d51a0d03d45de2719e8062dc2b8b334cff"
+ },
+ {
+  "file": "dem/37-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/106.png",
+  "bytes": 139410,
+  "sha256": "f67d732ee1164a6143ec9a46d41178489096d727ebc5327c13b8dd03a867701b"
+ },
+ {
+  "file": "dem/37-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/107.png",
+  "bytes": 137115,
+  "sha256": "b8ba9ec8d397d87ae6f60df4a85614d853be47189ee73343c941c6b9a05a4d0e"
+ },
+ {
+  "file": "dem/37-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/108.png",
+  "bytes": 140190,
+  "sha256": "9ffe389731fcfedbb6c9b25cab461404326f1451e60478f600a01d36b63b8e68"
+ },
+ {
+  "file": "dem/37-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/109.png",
+  "bytes": 142199,
+  "sha256": "2065c14060917c951c4d8bad410b6eb1c3a526915d947f15b9eca817bf1df88d"
+ },
+ {
+  "file": "dem/37-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/92.png",
+  "bytes": 118047,
+  "sha256": "0ed1615710d9b1228d076e3b3d36d54bb9b349f6339a98cb61f376095f5ed79e"
+ },
+ {
+  "file": "dem/37-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/93.png",
+  "bytes": 136470,
+  "sha256": "5e446332ee2c2e1579cb638eb99d8eb112eff13e3fd7ea353ca0ea421da89b12"
+ },
+ {
+  "file": "dem/37-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/94.png",
+  "bytes": 141435,
+  "sha256": "93258805d0f0c07cfd35cc70edf01fc3b88716453cdcd4ab324346337466f0d0"
+ },
+ {
+  "file": "dem/37-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/95.png",
+  "bytes": 143477,
+  "sha256": "a7874002a587a4384fe07cbee03ff26ce18339a8a5e23b57a45dd2410ffc4340"
+ },
+ {
+  "file": "dem/37-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/96.png",
+  "bytes": 130370,
+  "sha256": "d13b4f65d37d4035af486cccfccac062dfb2343958cbf6f474c9ebc392aba104"
+ },
+ {
+  "file": "dem/37-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/97.png",
+  "bytes": 119698,
+  "sha256": "0629e8665363226e15c6e0d00614722ded904b8494bd503b9968041b41ea6d35"
+ },
+ {
+  "file": "dem/37-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/98.png",
+  "bytes": 122320,
+  "sha256": "e011dca310e70f531cc32dbe3c9f43ceaf46b3c055494078b7111cdc6b388113"
+ },
+ {
+  "file": "dem/37-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/37/99.png",
+  "bytes": 120371,
+  "sha256": "6bc32e9a0235cad51a7ac057fd53dbde09ac3f07d46346004440195adfcaa41f"
+ },
+ {
+  "file": "dem/38-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/100.png",
+  "bytes": 117062,
+  "sha256": "6fc006a453cd55f0ae0819cf829b4c6e8b9aeb2bec7481ca3c5764dd42785c7e"
+ },
+ {
+  "file": "dem/38-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/101.png",
+  "bytes": 120003,
+  "sha256": "011f7863ba07da3f856d386f086e3e8fd259e94bd462587c7dd27c427518c319"
+ },
+ {
+  "file": "dem/38-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/102.png",
+  "bytes": 131550,
+  "sha256": "c6a8702d74d12b42c6bb310442bef18256fbdb2a27921249a0b53afcc406f0bd"
+ },
+ {
+  "file": "dem/38-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/103.png",
+  "bytes": 130226,
+  "sha256": "745a0ad9b02fb75a7e02badb91c4114ba4e8b1a2274b37af3648377a6634adcd"
+ },
+ {
+  "file": "dem/38-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/104.png",
+  "bytes": 137556,
+  "sha256": "24a2e8f6c84597a439013d692c091bbb672b09c570ea09e0e3a125ec6317daf9"
+ },
+ {
+  "file": "dem/38-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/105.png",
+  "bytes": 139658,
+  "sha256": "1d57f2c71a861a70ac2eb03fba73a65fe5fb15b6cc3db3f137ae21829b1005b0"
+ },
+ {
+  "file": "dem/38-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/106.png",
+  "bytes": 138255,
+  "sha256": "502b601cc0ae3a43a9b99e3b08c248de288710b9e2aec3cdc1db4b403ce422d2"
+ },
+ {
+  "file": "dem/38-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/107.png",
+  "bytes": 137504,
+  "sha256": "122f68c3879b211c321054a1c80aae14810797ae4fad63cff29f14b5197a0e5e"
+ },
+ {
+  "file": "dem/38-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/108.png",
+  "bytes": 138169,
+  "sha256": "a9522380100cb70f47f01f35b9da61f685f25f76ea5bc869da21db10a988ec85"
+ },
+ {
+  "file": "dem/38-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/109.png",
+  "bytes": 137435,
+  "sha256": "a3db1d667b1877de2a91cf0f83a446746813b9cf84b77587fdaeee93e83a4190"
+ },
+ {
+  "file": "dem/38-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/92.png",
+  "bytes": 117235,
+  "sha256": "0afb7e0d32592a983d9201682b099559b77deff33fa8ec8adcc59337a61d8f90"
+ },
+ {
+  "file": "dem/38-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/93.png",
+  "bytes": 113192,
+  "sha256": "b6a83aa1e97643b6c22da368cd957d5f10685e4c3b030690382a316569e2edb5"
+ },
+ {
+  "file": "dem/38-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/94.png",
+  "bytes": 128282,
+  "sha256": "83175c7cf688f6ebf43b14229fb61e6a306fbf8415c6e7a90ad6d9f1a2f6e79a"
+ },
+ {
+  "file": "dem/38-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/95.png",
+  "bytes": 126073,
+  "sha256": "b179dfb4a19a89cbb3c19d7edb6ba0e0cbe6430f24922933729991d12b5046c9"
+ },
+ {
+  "file": "dem/38-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/96.png",
+  "bytes": 128568,
+  "sha256": "8bded4e39d5c44e21793e477495902109d5aaa6592a158cabadb29614efb5601"
+ },
+ {
+  "file": "dem/38-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/97.png",
+  "bytes": 127058,
+  "sha256": "b872252d2d375177d72b13f8ce7d3841a9521f7810bf1c2390fdda0e2329535d"
+ },
+ {
+  "file": "dem/38-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/98.png",
+  "bytes": 122543,
+  "sha256": "b21c8b919cc2fa2791e248e5ac5709d32ac9a5540c5f0735f00cf9d3f776588d"
+ },
+ {
+  "file": "dem/38-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/38/99.png",
+  "bytes": 121194,
+  "sha256": "d1d7fd404e588466428e3736bbb9b803dc7a9ca12773705de9e4b800f127bffa"
+ },
+ {
+  "file": "dem/39-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/100.png",
+  "bytes": 123636,
+  "sha256": "99dde979597e9e9f1e4419e3e21203a62a7d00954237c65260a209ebdab9ff49"
+ },
+ {
+  "file": "dem/39-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/101.png",
+  "bytes": 123684,
+  "sha256": "f1b969b6df45db8e5fbf9bf8deb169a3fb81fc39c4e527254eac5ba9a30f9b1b"
+ },
+ {
+  "file": "dem/39-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/102.png",
+  "bytes": 136128,
+  "sha256": "8446000b3a88c6173b1e4744de4f12cdf45691837611ed013526ac653f240ea4"
+ },
+ {
+  "file": "dem/39-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/103.png",
+  "bytes": 133774,
+  "sha256": "0d9959ce9805dafadc897db4f566d351ce76770bbf236193334596f1adf43dcc"
+ },
+ {
+  "file": "dem/39-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/104.png",
+  "bytes": 136740,
+  "sha256": "cb17445d773ac948b146aedff3420a911b8afa4bc44fca6d46e26fd358e1e7b6"
+ },
+ {
+  "file": "dem/39-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/105.png",
+  "bytes": 136361,
+  "sha256": "97cebe0fca8e97471a5cc0596800858c0944363b3c6d6fb7f6aa29fcf2112cb8"
+ },
+ {
+  "file": "dem/39-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/106.png",
+  "bytes": 132624,
+  "sha256": "0284572a7892e606091e4fbc7a14101d04a0d79f3a060a303998db2f64d19d7e"
+ },
+ {
+  "file": "dem/39-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/107.png",
+  "bytes": 136891,
+  "sha256": "30c747cfccf1a6704fd7ace324cbf8a26b7713409d7075319644879da32fb9cb"
+ },
+ {
+  "file": "dem/39-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/108.png",
+  "bytes": 141083,
+  "sha256": "0c1edefcdaeb950621e692f27f35c9185ce13812e65dfc5b750bb847f190f883"
+ },
+ {
+  "file": "dem/39-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/109.png",
+  "bytes": 138039,
+  "sha256": "28dfefc072aa72d290f61e4c12cbe53f39c0426d998c6600f47d5df8204dc586"
+ },
+ {
+  "file": "dem/39-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/92.png",
+  "bytes": 118842,
+  "sha256": "893f301c46b500fa1aa7ec31ac3b39d48476bfdee2c9bc9c50229fdeeb714e98"
+ },
+ {
+  "file": "dem/39-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/93.png",
+  "bytes": 116904,
+  "sha256": "ea2e346164baba2583db4ba79f7ef4da4c50c4936855542d3ff2b29988a710c5"
+ },
+ {
+  "file": "dem/39-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/94.png",
+  "bytes": 120013,
+  "sha256": "f41f2be6cc16f794acb9ae6a3ccfef91d84451a49dd30b19d6548e32d232a169"
+ },
+ {
+  "file": "dem/39-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/95.png",
+  "bytes": 124134,
+  "sha256": "ebd6be1da3b2543c9158bdd4bf059e44e5f055151cba0ccc9980dddbd6c0ee90"
+ },
+ {
+  "file": "dem/39-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/96.png",
+  "bytes": 126435,
+  "sha256": "239b73bb1c9660504fd42f93244e8da4c5697318becc21805a5975f1bb59faec"
+ },
+ {
+  "file": "dem/39-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/97.png",
+  "bytes": 137852,
+  "sha256": "b3881964dcb6bd39d664fcb8d8505488a568492a0bbdfde5c607e2060dd8dd4b"
+ },
+ {
+  "file": "dem/39-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/98.png",
+  "bytes": 129832,
+  "sha256": "c7a712cb4b3de4b3835369dfeb85efa1e4b491fd0da349af2a19753aeee2dd95"
+ },
+ {
+  "file": "dem/39-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/39/99.png",
+  "bytes": 124520,
+  "sha256": "c68fb6a8b44ca651e315e36ca9b75381fc5b45c8b4e3257947964e6aa74e28b4"
+ },
+ {
+  "file": "dem/40-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/100.png",
+  "bytes": 133125,
+  "sha256": "857f75bb6aa6a5da5746cadeeceb8a92dc9683ebe38fecdfade30b32d60020f3"
+ },
+ {
+  "file": "dem/40-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/101.png",
+  "bytes": 125357,
+  "sha256": "386ac15a244b8247b79c581ffec7ca0a85c2eb42bf9e09a7a94de30304f97b27"
+ },
+ {
+  "file": "dem/40-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/102.png",
+  "bytes": 134159,
+  "sha256": "13f42838f130fa334e767fb3c35262d4c65b1655ebc58d401a9b66cd6970c2cc"
+ },
+ {
+  "file": "dem/40-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/103.png",
+  "bytes": 133246,
+  "sha256": "caecc9decd50577aaa4958dfa0566dab7f2c2582a30415d37eb5731fae10a2c1"
+ },
+ {
+  "file": "dem/40-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/104.png",
+  "bytes": 136786,
+  "sha256": "4c36be73248f0a9b9a57d7eb1ba9c9b5e81bedff7cc1a5e63ea5ccb19d9f6cd8"
+ },
+ {
+  "file": "dem/40-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/105.png",
+  "bytes": 139497,
+  "sha256": "c45710b4f3abcf9d81b5a2d3b60fdc79acdf064491a4c44b05eb56aa17bd5378"
+ },
+ {
+  "file": "dem/40-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/106.png",
+  "bytes": 131360,
+  "sha256": "687dd77841b183c69976280b071e6b952251032afa6079ddf6bc0f6865e9bbd2"
+ },
+ {
+  "file": "dem/40-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/107.png",
+  "bytes": 137688,
+  "sha256": "b90a1c9315dffb095814cd9b740028d7c77be5b00ce4b86bc3412cdc4f4fea48"
+ },
+ {
+  "file": "dem/40-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/108.png",
+  "bytes": 140573,
+  "sha256": "d26b857d28cfff94b78abdf204af2d1b21a4844ace8950f69c33de53fc356f8f"
+ },
+ {
+  "file": "dem/40-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/109.png",
+  "bytes": 136517,
+  "sha256": "d981e02453256d19a7cafb31e89422b7c445303d95d935d36e4d963417f807af"
+ },
+ {
+  "file": "dem/40-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/92.png",
+  "bytes": 84748,
+  "sha256": "d273caee62e77b8f3136c4ca0f155b16906c4aff57d2e9e47f3828a0cc63ad4e"
+ },
+ {
+  "file": "dem/40-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/93.png",
+  "bytes": 96473,
+  "sha256": "a6b0e88f418e377a35a7d3a222c9754658d0e86ebfe5efd071be44310b8a4fd7"
+ },
+ {
+  "file": "dem/40-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/94.png",
+  "bytes": 96276,
+  "sha256": "7260129354b47e4e7fb32d74b3517f4b3a2207937b174d238181ab5a1d9a023b"
+ },
+ {
+  "file": "dem/40-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/95.png",
+  "bytes": 100004,
+  "sha256": "781d59740f52385d1a5647d5b4facbd6ffaf23fc517df156ae8cd17224ceebc9"
+ },
+ {
+  "file": "dem/40-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/96.png",
+  "bytes": 97804,
+  "sha256": "142be7719be7a3f8c46a14851477ea8810c27f0896c3c7b8f9b3051bc212129d"
+ },
+ {
+  "file": "dem/40-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/97.png",
+  "bytes": 96768,
+  "sha256": "c423efabb7144d4b0574edb9201bc94ae77b8df0af390216928fed2e8c8bb5e6"
+ },
+ {
+  "file": "dem/40-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/98.png",
+  "bytes": 112071,
+  "sha256": "3d4d7a12f7fc91b0259bfd557a9d3277012e1b3dc06a52d3a844e0e8cb2e3a32"
+ },
+ {
+  "file": "dem/40-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/40/99.png",
+  "bytes": 137750,
+  "sha256": "ead91266c11242ea7db56290beb0749584eec60cd2641ba1dbde8dba7f2e76e2"
+ },
+ {
+  "file": "dem/41-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/100.png",
+  "bytes": 123576,
+  "sha256": "38818fabb584873ac50f8c0ac741f32868660448ee4246d2f72aca1bab76f5e0"
+ },
+ {
+  "file": "dem/41-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/101.png",
+  "bytes": 137849,
+  "sha256": "9d3578172a6748bab116b3bfeadb26fb2b275e7b903c227241b684ff8be8fba2"
+ },
+ {
+  "file": "dem/41-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/102.png",
+  "bytes": 134845,
+  "sha256": "ca8048401fe961c3c28fee402ec93d87b333b875164701b999cba3bbb9a59143"
+ },
+ {
+  "file": "dem/41-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/103.png",
+  "bytes": 138575,
+  "sha256": "52fc434922a68a903c541299b65ea0d0c17d5f6046cb6882c0df86e865a163e9"
+ },
+ {
+  "file": "dem/41-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/104.png",
+  "bytes": 137300,
+  "sha256": "0563ce4da7649062689e832a0e2168f8d29edb571c6143d05f23d3f1be46de88"
+ },
+ {
+  "file": "dem/41-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/105.png",
+  "bytes": 134511,
+  "sha256": "8de4f8daab1337dc562aabcdc94b3a534af4f7c5a994941d5e07ab31017576fd"
+ },
+ {
+  "file": "dem/41-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/106.png",
+  "bytes": 134498,
+  "sha256": "cc4a3e006ee7ca048d4c27277f12f0b9f940c663bbe5bde7645977e638fcac17"
+ },
+ {
+  "file": "dem/41-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/107.png",
+  "bytes": 135692,
+  "sha256": "e280c7c0342a47df40e59c180c794a760fd0756285124357e6e55614f41c21d3"
+ },
+ {
+  "file": "dem/41-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/108.png",
+  "bytes": 142177,
+  "sha256": "f965e68f7fed1a895465f60c19d36668fe260a456a9746ff3157e107947abe26"
+ },
+ {
+  "file": "dem/41-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/109.png",
+  "bytes": 133452,
+  "sha256": "6472e0a6507de8e03835f5bfe84390196d8035d956ed10ff09810ee766ce698b"
+ },
+ {
+  "file": "dem/41-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/92.png",
+  "bytes": 89054,
+  "sha256": "36c1de48695f6efbf90fa1f10c87586f52969d3c1c3bf2bb878e3991953f11f2"
+ },
+ {
+  "file": "dem/41-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/93.png",
+  "bytes": 80743,
+  "sha256": "7b460cc5a3ffa1fe4ac56ee7c331718661a9aba38ff642cabd0b85c75933d17d"
+ },
+ {
+  "file": "dem/41-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/94.png",
+  "bytes": 78196,
+  "sha256": "75ed224b76461c2cd4f0f93dd778c6451861e5072536268dabf1d8892b72e413"
+ },
+ {
+  "file": "dem/41-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/95.png",
+  "bytes": 78720,
+  "sha256": "e869c4ef2715af7a26a6706eaa8ec6e3dbc036c24dc7883fc7f01681ac6db3f7"
+ },
+ {
+  "file": "dem/41-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/96.png",
+  "bytes": 86581,
+  "sha256": "3d72d64b107395f8399992aa6e5f122ae9a662458e044fa5cf54b0a78e50aaf1"
+ },
+ {
+  "file": "dem/41-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/97.png",
+  "bytes": 69722,
+  "sha256": "3f51b66dc9a8f0e9bb43439d7f050296dfd215bc8898760558284987590b3cdf"
+ },
+ {
+  "file": "dem/41-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/98.png",
+  "bytes": 67482,
+  "sha256": "430c2e13df64134c7cc3df9e12d3d7881c1f671c8adb14bac3d65d21f5763f97"
+ },
+ {
+  "file": "dem/41-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/41/99.png",
+  "bytes": 94846,
+  "sha256": "56a291cbadc698968777794f1534dbae9a0302ccf588f1a848ba9ec17c4aaf8f"
+ },
+ {
+  "file": "dem/42-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/100.png",
+  "bytes": 70374,
+  "sha256": "d62326a3107a54ac2b193b710d34cbb872d8ccde4d74929bcccec37986071808"
+ },
+ {
+  "file": "dem/42-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/101.png",
+  "bytes": 102036,
+  "sha256": "4198506819655f11e43b80460035c15bf570edb2541ff6b6ca1c87faaac6588e"
+ },
+ {
+  "file": "dem/42-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/102.png",
+  "bytes": 139613,
+  "sha256": "0e05cc002ec0555d0d28c7d93371c9884a8456c59af362d289af9c1f095d0446"
+ },
+ {
+  "file": "dem/42-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/103.png",
+  "bytes": 140769,
+  "sha256": "9a7a49a8cf8104ad573f0e5ada3b5d753880fc4b597c6415812f07ad8eefdd8f"
+ },
+ {
+  "file": "dem/42-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/104.png",
+  "bytes": 132413,
+  "sha256": "03a1f6b5964c9d0f6ab10b36fb20bf8eb8fdbb99ae50948d1660f76107efd568"
+ },
+ {
+  "file": "dem/42-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/105.png",
+  "bytes": 139141,
+  "sha256": "549ef51c092431705ac49c45dce18b1aed342ac286ac4af0c98a01b81790e8f7"
+ },
+ {
+  "file": "dem/42-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/106.png",
+  "bytes": 135139,
+  "sha256": "729083e282905efcd5682085d259982a80b83ac1a91af7919c729ffe2d1c6905"
+ },
+ {
+  "file": "dem/42-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/107.png",
+  "bytes": 135661,
+  "sha256": "c0b75c69864bb1bc219c435f4ae0cfe8b6e5ae35ab81f5d40c7797d3e04c05e7"
+ },
+ {
+  "file": "dem/42-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/108.png",
+  "bytes": 134582,
+  "sha256": "ddb18dcaa352b263ef636e9c539dbb06098907dd40dede700d612b08d58daa1d"
+ },
+ {
+  "file": "dem/42-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/109.png",
+  "bytes": 132517,
+  "sha256": "b632c94dd8bf9b39e2f3f670bad3a403030f66739e3a585386280a71d5bea80b"
+ },
+ {
+  "file": "dem/42-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/92.png",
+  "bytes": 89245,
+  "sha256": "56402f0b88f166c40d1accb5fd6eb2bcf9cda6e18e8732978a24cc3db0ffc6cb"
+ },
+ {
+  "file": "dem/42-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/93.png",
+  "bytes": 70696,
+  "sha256": "7bff06476037fa430f2a12177acfb1eac95ca5759f985d13a25eaa70532fd62c"
+ },
+ {
+  "file": "dem/42-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/94.png",
+  "bytes": 76778,
+  "sha256": "f0d43c5277a312fa55f742c2f7bc207e6e2c2d89cb569dddd81f9530ca13808a"
+ },
+ {
+  "file": "dem/42-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/95.png",
+  "bytes": 76891,
+  "sha256": "6512f6972c27757734889bac402c8a400163c99235d48aeb64386c2b504fb07c"
+ },
+ {
+  "file": "dem/42-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/96.png",
+  "bytes": 80306,
+  "sha256": "e88f2e8e8be34e6476087cbff80fec4a499465d8fc2adc328adcc19f085df2e7"
+ },
+ {
+  "file": "dem/42-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/97.png",
+  "bytes": 90637,
+  "sha256": "5276bda4d1dc50b1b27a6b2e6d7ff0e4c32a60c6e551bda0cd8c10f7c9c2bb7b"
+ },
+ {
+  "file": "dem/42-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/98.png",
+  "bytes": 93839,
+  "sha256": "f64c3133347995d4818cea01ecfbbc52a1412b18c13720312198a3748dac36d6"
+ },
+ {
+  "file": "dem/42-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/42/99.png",
+  "bytes": 64094,
+  "sha256": "d3d55738e32e6fde71ca5f14daa83e2461a609256382d5f171a30b3d9032e20a"
+ },
+ {
+  "file": "dem/43-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/100.png",
+  "bytes": 82166,
+  "sha256": "a63b5a4121a4f0030de7523e781cfa31ae4fa2c9de3852b5ccc7b0981bed83f2"
+ },
+ {
+  "file": "dem/43-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/101.png",
+  "bytes": 85948,
+  "sha256": "d59c83f805b8cb9da2ebce30ec3d729cb536475a3c1992c4f473f50213047031"
+ },
+ {
+  "file": "dem/43-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/102.png",
+  "bytes": 126732,
+  "sha256": "a5801e2636d74eb658982063b18c348d014876b82843c5b6279acc4879ca4ea4"
+ },
+ {
+  "file": "dem/43-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/103.png",
+  "bytes": 145643,
+  "sha256": "19ae17727b1a58e619f8fd464e3cde8b2ce8b171b3baa3f05998db9c49629357"
+ },
+ {
+  "file": "dem/43-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/104.png",
+  "bytes": 144972,
+  "sha256": "111121fef0a3ff07402635194f9307124e524c1a3a00508ea990861d1803bbf3"
+ },
+ {
+  "file": "dem/43-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/105.png",
+  "bytes": 139234,
+  "sha256": "13e92c0baddb9044c3a7cbad2668a12f19af097fe522031af83f2129ab0e1220"
+ },
+ {
+  "file": "dem/43-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/106.png",
+  "bytes": 137787,
+  "sha256": "30e8ef18c4aedd78337069f1ef425e2d24f04c5089f6c29baeb5b12464665514"
+ },
+ {
+  "file": "dem/43-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/107.png",
+  "bytes": 139993,
+  "sha256": "6c3e909c60f581d84f41ae0cb6ff0db1d36c4ea374143fd8000158dc4ddf1ab4"
+ },
+ {
+  "file": "dem/43-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/108.png",
+  "bytes": 135642,
+  "sha256": "d895436a707e611c5c19f5df00110e5a5cc28f2c0519b85f9a78305c37826b5b"
+ },
+ {
+  "file": "dem/43-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/109.png",
+  "bytes": 137107,
+  "sha256": "c0bc01952706900e9bad147ad79c306cccb0f7d92fc2bed1f06beea1d0c2d2f5"
+ },
+ {
+  "file": "dem/43-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/92.png",
+  "bytes": 92311,
+  "sha256": "f174a244e21622f7228ad35fe68d4e594f1d68e74766e23214be10c500e47c5d"
+ },
+ {
+  "file": "dem/43-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/93.png",
+  "bytes": 76714,
+  "sha256": "41ded5d0e836e0531beefb91d7b1c8171dc9a87411299824ffaae72036722b0e"
+ },
+ {
+  "file": "dem/43-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/94.png",
+  "bytes": 75843,
+  "sha256": "40486c0da115d232882d986a50cdddf2c6a90c598b41a2acc145af56339f0eab"
+ },
+ {
+  "file": "dem/43-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/95.png",
+  "bytes": 78401,
+  "sha256": "0737e2f5df3ab80daf3c12994a68ad0b7ed54513b1d73ebf97ce8d5f8b82b787"
+ },
+ {
+  "file": "dem/43-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/96.png",
+  "bytes": 75427,
+  "sha256": "86b7f7870142f8b87d7406758f87a1366f08f69e2cc3b2645f3d547863657ec5"
+ },
+ {
+  "file": "dem/43-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/97.png",
+  "bytes": 75381,
+  "sha256": "2a86933ec2aea284b68fd3b545a9760f5ecdf1c707e7f097403bca81a8311ac3"
+ },
+ {
+  "file": "dem/43-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/98.png",
+  "bytes": 89428,
+  "sha256": "e84dafba5ed472e5e9473cd99c19d231b109b5245f6ff34d83029bc72b503263"
+ },
+ {
+  "file": "dem/43-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/43/99.png",
+  "bytes": 96415,
+  "sha256": "8b089e4e268364b5ed7bf92bdaa4c98d26b3cb98b7ea217a3e732462c5a6083f"
+ },
+ {
+  "file": "dem/44-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/100.png",
+  "bytes": 87190,
+  "sha256": "1f76e07a87802852409be7e082556b93005fdd12551a846def1f04a6d666a14c"
+ },
+ {
+  "file": "dem/44-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/101.png",
+  "bytes": 71902,
+  "sha256": "7f6bc3bd6570e6613324653510d6f69c017285c17d74aa514cdc0e19a6d1f73e"
+ },
+ {
+  "file": "dem/44-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/102.png",
+  "bytes": 95172,
+  "sha256": "3945587e8cd61936d742ff7dcf2d98f09ceeaa3868afb82eb167ab25a31e002c"
+ },
+ {
+  "file": "dem/44-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/103.png",
+  "bytes": 128989,
+  "sha256": "6a7324d6a2e16dc9dc9c0e1916f76b6e37c4ef42a3814370646166250945edd8"
+ },
+ {
+  "file": "dem/44-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/104.png",
+  "bytes": 142160,
+  "sha256": "eebdcbce0f39298d495e0ac4676c4974184358e5bb682e062432299e710759be"
+ },
+ {
+  "file": "dem/44-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/105.png",
+  "bytes": 146927,
+  "sha256": "42f3f6e320f05257d962c1f74c91ebb7706a8175b0db2d7bbab7dfb5e7e43d3d"
+ },
+ {
+  "file": "dem/44-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/106.png",
+  "bytes": 137932,
+  "sha256": "3425d078e4116491fa434ea8dc56360336d5d25187555446253f255549544923"
+ },
+ {
+  "file": "dem/44-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/107.png",
+  "bytes": 140863,
+  "sha256": "11d01165f5cab4c239fd200c8b5b9b70ca7b99091156e6c9fdbb567ba68c5842"
+ },
+ {
+  "file": "dem/44-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/108.png",
+  "bytes": 134576,
+  "sha256": "b05ddcaa8c4659b83dea6836c1f63257cb1b208f73647b387af76fd7c8be76fb"
+ },
+ {
+  "file": "dem/44-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/109.png",
+  "bytes": 135736,
+  "sha256": "033007647fdb6189ec16329d0b09d709cb8ba8cc5a2432b0de8241363ad5367f"
+ },
+ {
+  "file": "dem/44-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/92.png",
+  "bytes": 89693,
+  "sha256": "24bc4279834472d81f44cb3899b718306db0e59f0028aa73783e73b3a25abde8"
+ },
+ {
+  "file": "dem/44-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/93.png",
+  "bytes": 81022,
+  "sha256": "d2bb9380342f6bdb76cea21be6a7534600d942851a139e5b28e6fb511edbe40e"
+ },
+ {
+  "file": "dem/44-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/94.png",
+  "bytes": 74224,
+  "sha256": "156289ccfb0237d08f022e84fa34438d084ad7d3637651b7295e66f451ffc424"
+ },
+ {
+  "file": "dem/44-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/95.png",
+  "bytes": 75237,
+  "sha256": "a2b704bd572eb87c36998e8c9247382c3f23452de28a4d3857d002964b10846b"
+ },
+ {
+  "file": "dem/44-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/96.png",
+  "bytes": 77288,
+  "sha256": "44666cb8969273b17db04678d1cd134e218683392ff47927385903e889974354"
+ },
+ {
+  "file": "dem/44-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/97.png",
+  "bytes": 81820,
+  "sha256": "1a7e2d9e410cbe198caf6c146f148c0aa711102d70043f059b61c3b205d8bb8c"
+ },
+ {
+  "file": "dem/44-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/98.png",
+  "bytes": 77146,
+  "sha256": "249c81562eb27890ffd67ca4105eeb0673b5d1ae28a4a2ec0eae40d6b1fe0a8b"
+ },
+ {
+  "file": "dem/44-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/44/99.png",
+  "bytes": 86021,
+  "sha256": "c21828771ec478f45a40e31d500fa6093b8ee813fc3421781101d6ce22ace03b"
+ },
+ {
+  "file": "dem/45-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/100.png",
+  "bytes": 81261,
+  "sha256": "4f2fea3a7631c1b497a4b556e51239407e2d89b3e215c13bbcff78a2cd0c394c"
+ },
+ {
+  "file": "dem/45-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/101.png",
+  "bytes": 75776,
+  "sha256": "a436d384ef373db8c513521effa556cc985b1542c0fcc1c64e773266a6034a0c"
+ },
+ {
+  "file": "dem/45-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/102.png",
+  "bytes": 83005,
+  "sha256": "69e6fe75d47b0b86513b6ebf0023fc8a513021c909bbd0094d5be01b2246576c"
+ },
+ {
+  "file": "dem/45-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/103.png",
+  "bytes": 78831,
+  "sha256": "ab7d69027effaeb4758cf8f2c9873690a7081a6f1e1f3504862ee4cc2fe92fa2"
+ },
+ {
+  "file": "dem/45-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/104.png",
+  "bytes": 100411,
+  "sha256": "2219116ac2fe2c81529087ef9f83a19cdd12a750fff7e1271d7b5b6c75b05d90"
+ },
+ {
+  "file": "dem/45-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/105.png",
+  "bytes": 126595,
+  "sha256": "ea38e45d8ef3e0ee839d109a1f90216be88cd882a6e0a7ea173b6309185654b4"
+ },
+ {
+  "file": "dem/45-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/106.png",
+  "bytes": 145146,
+  "sha256": "445b4f42843096e52d50b0d23af5ce0abfbec02056d1821dfb8ae11b97f984c2"
+ },
+ {
+  "file": "dem/45-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/107.png",
+  "bytes": 141050,
+  "sha256": "d413280d5f18d86fb1bdf14af4862f587faa4ae314494f622eafc5269e1485c4"
+ },
+ {
+  "file": "dem/45-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/108.png",
+  "bytes": 133528,
+  "sha256": "6ff859cb235a66878372890f6ed00937c449cf78cead59a50dd1aa8387e4acc9"
+ },
+ {
+  "file": "dem/45-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/109.png",
+  "bytes": 137114,
+  "sha256": "c11b47662c5b9e5f2a8eb10ae79cc3bce81033576755cbaac89ec60c28d0b850"
+ },
+ {
+  "file": "dem/45-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/92.png",
+  "bytes": 92922,
+  "sha256": "5f90268414154dbef9a19abdd0709519cc02f5da475bcf76368136ad59749ab5"
+ },
+ {
+  "file": "dem/45-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/93.png",
+  "bytes": 84160,
+  "sha256": "58ce9a75d3c6d5aeb53187bd368c139b753a77c0e5d8fb9c0ffd79c58043b95f"
+ },
+ {
+  "file": "dem/45-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/94.png",
+  "bytes": 73673,
+  "sha256": "6cf1b7bd333cf7daf1cc2ea7d78d1de322415d75d218418b88c08964783e699b"
+ },
+ {
+  "file": "dem/45-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/95.png",
+  "bytes": 85214,
+  "sha256": "c2a567f4bcc59a9b18f9c72435b56a9df73cf5b6dc4d021c2a488bb64a126cdf"
+ },
+ {
+  "file": "dem/45-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/96.png",
+  "bytes": 79864,
+  "sha256": "fdb3b6af571e5bff614b29174b6db3e57742c652296c681024628fa410a5c5af"
+ },
+ {
+  "file": "dem/45-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/97.png",
+  "bytes": 76838,
+  "sha256": "0a14aab6cd6abd6ba0b44aa3088ed631d8da70c06db76af4d171b758a6f74034"
+ },
+ {
+  "file": "dem/45-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/98.png",
+  "bytes": 76848,
+  "sha256": "d974f7ab8a4d7c4f22b6feae228fa45d3e81de76e65ee2e72dee29c8e941aa87"
+ },
+ {
+  "file": "dem/45-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/45/99.png",
+  "bytes": 78456,
+  "sha256": "aebec2f4247590c6e9f13d9d9800f4067033cf9f9daffd07a7015b8d9786d81f"
+ },
+ {
+  "file": "dem/46-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/100.png",
+  "bytes": 80368,
+  "sha256": "4be261b11dcc26cfa1aa13e973ab13f03d343807f7e4c67a11dcef8c53e75614"
+ },
+ {
+  "file": "dem/46-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/101.png",
+  "bytes": 74296,
+  "sha256": "9ee8b7374d89d42be47eb44a065d58cddb97bc9f4fe506cce3cc77c8ddfdd3b3"
+ },
+ {
+  "file": "dem/46-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/102.png",
+  "bytes": 69181,
+  "sha256": "42e85a97ec3b2975862eacd1abdc5d25da7d8812f19a31caac5ae01e78d621c9"
+ },
+ {
+  "file": "dem/46-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/103.png",
+  "bytes": 56403,
+  "sha256": "2adcee2d45981852c3a65a94ad30ea43afa4af2d73d9eada8b2af0f33724b39f"
+ },
+ {
+  "file": "dem/46-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/104.png",
+  "bytes": 88742,
+  "sha256": "4de863e4b8b5955d93e6316da5fed8173084c3ffd01170e2c6c4f7483b06e28b"
+ },
+ {
+  "file": "dem/46-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/105.png",
+  "bytes": 103887,
+  "sha256": "72eeb007b631617d3f81e8a2afe3fee3916eb47ecd0ee571a1ad91faf7b7b811"
+ },
+ {
+  "file": "dem/46-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/106.png",
+  "bytes": 103501,
+  "sha256": "3b6d2bb7fe43d44a38904225db17352af667e207260a76e6b24d3273a7a790d4"
+ },
+ {
+  "file": "dem/46-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/107.png",
+  "bytes": 111127,
+  "sha256": "6dede38c2adb0698a4b8e2d83c374d0cbe01e5196b599b44e6bffe93ac058569"
+ },
+ {
+  "file": "dem/46-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/108.png",
+  "bytes": 144256,
+  "sha256": "8ca54dd0eedf0fac573affa0da0db72106ebff55b696c8c892cef7afc6f109a1"
+ },
+ {
+  "file": "dem/46-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/109.png",
+  "bytes": 141045,
+  "sha256": "54e729d74468c3c754241f4e4adcedfc359b1f3a75a3afbe650acefe3a396283"
+ },
+ {
+  "file": "dem/46-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/92.png",
+  "bytes": 99951,
+  "sha256": "94054115cd17fc36f915a04b417182a1712dc1e3decd978e88f5c781d0c6658a"
+ },
+ {
+  "file": "dem/46-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/93.png",
+  "bytes": 91471,
+  "sha256": "da74504542166aaec53bc06fcdcda5b5d10efa40b3afd2c48124d3e901b53a4f"
+ },
+ {
+  "file": "dem/46-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/94.png",
+  "bytes": 67634,
+  "sha256": "600a2debbfb435ad71c051bd377e956b35965da61f1bd983b69e6f60dd9b75c2"
+ },
+ {
+  "file": "dem/46-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/95.png",
+  "bytes": 80681,
+  "sha256": "cb115c53335b6f04c6ff099a8745f4071fa6e573103d7d85af1524ca85f48a17"
+ },
+ {
+  "file": "dem/46-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/96.png",
+  "bytes": 72148,
+  "sha256": "3b441776ad9fbbc1a450ee413d5e6245e398da9b5bdf7e8c1654d95bf6399d18"
+ },
+ {
+  "file": "dem/46-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/97.png",
+  "bytes": 80400,
+  "sha256": "4ac5d0ea84eb228a73f59a6b083146e83d9b18c02979bcebb9d5ab9199416ce9"
+ },
+ {
+  "file": "dem/46-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/98.png",
+  "bytes": 75706,
+  "sha256": "6771a733f80e11f0ef6b25fc391da39574600edaf54f8191590a0f1ddf663940"
+ },
+ {
+  "file": "dem/46-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/46/99.png",
+  "bytes": 83926,
+  "sha256": "5fbfebc971191546a36c35ecc7bc71e2b9b300dcb80faf58181639d572c3a68c"
+ },
+ {
+  "file": "dem/47-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/100.png",
+  "bytes": 85725,
+  "sha256": "e4dfe2fb6dfa1350a03697578a286085e9f439ad76e1f42cfb1c5bfd6b5f85e7"
+ },
+ {
+  "file": "dem/47-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/101.png",
+  "bytes": 84485,
+  "sha256": "91f8c1360881f30af43ecf6db42cc5721018436bc19f80a3162db5675277dd83"
+ },
+ {
+  "file": "dem/47-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/102.png",
+  "bytes": 69079,
+  "sha256": "1b2e9e5a3dc41e3e6961600dcc7872a9bb4f92693d8b2be05e39b9ef2f561719"
+ },
+ {
+  "file": "dem/47-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/103.png",
+  "bytes": 61989,
+  "sha256": "0bf63ef431cf09eeee5ca0578d8ef924b7f7b39060bce026df741a75aa87dcb3"
+ },
+ {
+  "file": "dem/47-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/104.png",
+  "bytes": 76778,
+  "sha256": "770eeb380b5a90bca591e2a3d548aa65269532da7cec36bf9fa804b44075c06f"
+ },
+ {
+  "file": "dem/47-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/105.png",
+  "bytes": 108853,
+  "sha256": "686ae7f4e512144d1fd193cfb155817fdf0132be587538972eac46f9b02e0828"
+ },
+ {
+  "file": "dem/47-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/106.png",
+  "bytes": 122491,
+  "sha256": "54f5495ea51cea1edae148d7b471a5a2e2003db197d6f95a382b0b29b82d877b"
+ },
+ {
+  "file": "dem/47-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/107.png",
+  "bytes": 82150,
+  "sha256": "e47ad84dc438ad0a2e6d3be42f58d5a0fec5986bd3e95a254ebd41c7c1b66c88"
+ },
+ {
+  "file": "dem/47-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/108.png",
+  "bytes": 106896,
+  "sha256": "ac399efce11da7b648df5a02eaae21762fbe70921bd9163e18a5a4e95df7596e"
+ },
+ {
+  "file": "dem/47-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/109.png",
+  "bytes": 141794,
+  "sha256": "7d6e13d8c870a3fc13f50567646fc40170997652d3af5cde57f757c9a4badce4"
+ },
+ {
+  "file": "dem/47-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/92.png",
+  "bytes": 92037,
+  "sha256": "fb0cad9b6b29cf0995e24717491a27bd5726fa54f9de6d2fbbe1987119852382"
+ },
+ {
+  "file": "dem/47-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/93.png",
+  "bytes": 70379,
+  "sha256": "1e2c253392799025bb5716fec1e3ab913f1aa539cbf02fd3912041727afd8808"
+ },
+ {
+  "file": "dem/47-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/94.png",
+  "bytes": 69704,
+  "sha256": "61fe8e8865240c331250594a3a536a54d34953ca1ff2bcfbd51af719d310d5ea"
+ },
+ {
+  "file": "dem/47-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/95.png",
+  "bytes": 56882,
+  "sha256": "2967944fb7bc36f4a60af4e310c39535ba2286ea557da41a5520faafded0426e"
+ },
+ {
+  "file": "dem/47-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/96.png",
+  "bytes": 59859,
+  "sha256": "896f82ee5e21f6c5d2ef0663b000120c5f7f6a06c206462051b9d2044a13693f"
+ },
+ {
+  "file": "dem/47-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/97.png",
+  "bytes": 68349,
+  "sha256": "4f107640b9e1dfbb09009e63aaf2d2dc862319b27ef6cb08f23dea361238ceb1"
+ },
+ {
+  "file": "dem/47-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/98.png",
+  "bytes": 74993,
+  "sha256": "1d4ec7a1fae2fd04d0d03f4f8a96a12a37483a341bb4bfb547484fea28efc0dd"
+ },
+ {
+  "file": "dem/47-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/47/99.png",
+  "bytes": 86074,
+  "sha256": "c6b59a24bfae20c9e19a54fd87c54e624e6cb40539e8c075abe4e206184b6931"
+ },
+ {
+  "file": "dem/48-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/100.png",
+  "bytes": 77342,
+  "sha256": "db5d130d23cf87ffc3c66d4a4dbf87892c65a86162f15099954639ab2165b527"
+ },
+ {
+  "file": "dem/48-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/101.png",
+  "bytes": 82278,
+  "sha256": "1930b36dfb2a12cd49352e671c666f1a10f8d31fb6d7c82cd29d606bfb7e5e1b"
+ },
+ {
+  "file": "dem/48-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/102.png",
+  "bytes": 80056,
+  "sha256": "af513be55edb34409586d9fc0c193a70ae98c8c856cc6d6fdd21e118bbb39e8e"
+ },
+ {
+  "file": "dem/48-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/103.png",
+  "bytes": 59636,
+  "sha256": "975fa64673bc10685426d27a3954e06cf8c83b0b8b3a7cff74da89033d302fdd"
+ },
+ {
+  "file": "dem/48-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/104.png",
+  "bytes": 69734,
+  "sha256": "f61f573eb5d340406052a6fbea962f4d9862a3501b65065430385aa8a2294d77"
+ },
+ {
+  "file": "dem/48-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/105.png",
+  "bytes": 65198,
+  "sha256": "97aeab778df579c301f2372e5aac7895d8e8f927c4dd4a198ff580d21600cfaa"
+ },
+ {
+  "file": "dem/48-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/106.png",
+  "bytes": 77964,
+  "sha256": "e8949afd5c59fb844f4418b62a7846ab60628d056ae95964550271dfb5b16252"
+ },
+ {
+  "file": "dem/48-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/107.png",
+  "bytes": 134696,
+  "sha256": "25af4079564221a50e2c3fbeb23c0dd18d2f99c346ed55bb090e8d142c6b31e5"
+ },
+ {
+  "file": "dem/48-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/108.png",
+  "bytes": 111939,
+  "sha256": "200d48fd2f34d2ec26a93c0ecccbba4b9c657716121a4ff980c0e511dd7a77b1"
+ },
+ {
+  "file": "dem/48-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/109.png",
+  "bytes": 86134,
+  "sha256": "1312ebb4c90af3abc8fc94c718208afd88538b3e02436b65ebed86e38a5001cb"
+ },
+ {
+  "file": "dem/48-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/92.png",
+  "bytes": 82141,
+  "sha256": "d4fdd68b0f7a35654ef87efb83661c41d3142bdabfc549aac2e163dfdf6ba2da"
+ },
+ {
+  "file": "dem/48-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/93.png",
+  "bytes": 72489,
+  "sha256": "944654671a73d81206b7f06f160cb783e59568f90a3f36b077f197fa7d51b163"
+ },
+ {
+  "file": "dem/48-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/94.png",
+  "bytes": 86576,
+  "sha256": "130da4fd3275778c2c349434989dcc3fad5106f85653e33c57846b4d31111993"
+ },
+ {
+  "file": "dem/48-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/95.png",
+  "bytes": 78645,
+  "sha256": "bdfca0e0374cab4b723414fa01e91f1d58f7488c7c8e6fa3e22f43c939d3e4a0"
+ },
+ {
+  "file": "dem/48-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/96.png",
+  "bytes": 80499,
+  "sha256": "df6a8a6d2dd2b53c57e77ba3ac6791dca08eccc4eb56bd58d6854efc708139b5"
+ },
+ {
+  "file": "dem/48-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/97.png",
+  "bytes": 87124,
+  "sha256": "a967f8ed97dbfa520216874c6549f023efbdb47200e520651d0c7b803ba7d127"
+ },
+ {
+  "file": "dem/48-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/98.png",
+  "bytes": 89711,
+  "sha256": "d1d1f97db3eb065ebb2b8f739e87cfd9c6528b4eaff12a63d5864da1b2331f7b"
+ },
+ {
+  "file": "dem/48-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/48/99.png",
+  "bytes": 84823,
+  "sha256": "ecba3e8846b884519af06307622e774f42c14d30a70630de52d505e245f2996b"
+ },
+ {
+  "file": "dem/49-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/100.png",
+  "bytes": 72731,
+  "sha256": "865d6b155a26985099709ff690b3d3627f476a62b9276537684fbbd9076d3c92"
+ },
+ {
+  "file": "dem/49-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/101.png",
+  "bytes": 64642,
+  "sha256": "6db6757b7ddc3c6bc2b1fb5438f0bc31e2160434401b2edc95be049c24d1760d"
+ },
+ {
+  "file": "dem/49-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/102.png",
+  "bytes": 89801,
+  "sha256": "02ec3cdfa78c7bd6bb90383fed4d106387bedfc759ce81006ff94b19e200b1dd"
+ },
+ {
+  "file": "dem/49-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/103.png",
+  "bytes": 82330,
+  "sha256": "1d833f4be2c87f5e746890db3f78c6a9cce0b0b9d5e1ab80f379424eb3b2d568"
+ },
+ {
+  "file": "dem/49-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/104.png",
+  "bytes": 81969,
+  "sha256": "618f5e5e0ab4a7190f8e87a85326fbfffcd5d60ea0231fa2ac5369485f87d685"
+ },
+ {
+  "file": "dem/49-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/105.png",
+  "bytes": 87606,
+  "sha256": "34aa9c953d6c2146e1de09af4d57a1ad5910c7ed5da1ab1058f4410639be19b1"
+ },
+ {
+  "file": "dem/49-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/106.png",
+  "bytes": 77885,
+  "sha256": "8403a5321f174966a4c0d8b45c3fe50d84990ba279d75f6dfca9442626707ac4"
+ },
+ {
+  "file": "dem/49-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/107.png",
+  "bytes": 89290,
+  "sha256": "84fedd0fa0a3a4c540dddc56fe3a72e69153ba87643e034a94ab83b35c23e9bc"
+ },
+ {
+  "file": "dem/49-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/108.png",
+  "bytes": 137731,
+  "sha256": "9b461a3a401cbf3a865114504bc3155778d152c984cc3ac754a2751d2f8c8ec2"
+ },
+ {
+  "file": "dem/49-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/109.png",
+  "bytes": 141194,
+  "sha256": "9730ad494c9e7127006eab74a5d6f229554f69f6cfe2ed6755a6347e8756bbef"
+ },
+ {
+  "file": "dem/49-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/92.png",
+  "bytes": 90662,
+  "sha256": "08c1ecd755be6c2750c53e8b20d636174b56bfe96428d79cde6791bcb373b690"
+ },
+ {
+  "file": "dem/49-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/93.png",
+  "bytes": 94251,
+  "sha256": "b2b6194a9b25416aa53fe5a1d2320a5d38841512ee9cf5e81f9a9ca78b753613"
+ },
+ {
+  "file": "dem/49-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/94.png",
+  "bytes": 83910,
+  "sha256": "38320706dac58db31350c0984450e9949db5f81760b09819ef999fc68f995797"
+ },
+ {
+  "file": "dem/49-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/95.png",
+  "bytes": 73602,
+  "sha256": "de1f0914780bfb9743e814775eaf129d6cd93b2453a0bccee721dda4c2339296"
+ },
+ {
+  "file": "dem/49-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/96.png",
+  "bytes": 88575,
+  "sha256": "54d77baa0d5db46c8e54ea93a8db698d075ea51b84d6bf24fa97947f4fc24656"
+ },
+ {
+  "file": "dem/49-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/97.png",
+  "bytes": 89751,
+  "sha256": "1e5426e003e7e732d56a58046f50951c9ecc4b62a7e760e145145e53de5fbcef"
+ },
+ {
+  "file": "dem/49-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/98.png",
+  "bytes": 86775,
+  "sha256": "b1d7c4a517c6881794d8193fce7ac32c92e2962b0a808a5aad2d07b9f59e8a87"
+ },
+ {
+  "file": "dem/49-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/49/99.png",
+  "bytes": 85892,
+  "sha256": "0f618c39d4adb6380fb25df9a7efbe65b6dc4b17e1cccf1c1e5483f8d7a4af5d"
+ },
+ {
+  "file": "dem/50-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/100.png",
+  "bytes": 75137,
+  "sha256": "97053b6052723e0ad4b40add3d490baa8ca7e6aab86861ff26442bc0eb43f04d"
+ },
+ {
+  "file": "dem/50-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/101.png",
+  "bytes": 70633,
+  "sha256": "538ed59a385fdcb71bfad2838d264a6edd0b510047056e792b6cdbf37f82e1a0"
+ },
+ {
+  "file": "dem/50-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/102.png",
+  "bytes": 89055,
+  "sha256": "fa793c6b6256805067b17ba882f6cc2c7c8af21c5aab3771a63b0fc5483eb0d5"
+ },
+ {
+  "file": "dem/50-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/103.png",
+  "bytes": 75836,
+  "sha256": "20939d14e97783b670fb8fd58b4e171ff0b77cfb82cb841358576b1d73fe8ca3"
+ },
+ {
+  "file": "dem/50-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/104.png",
+  "bytes": 78133,
+  "sha256": "faf986d44324c4f0b7aac1544426e0d2806e2166b6760580135d3f09688f8a72"
+ },
+ {
+  "file": "dem/50-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/105.png",
+  "bytes": 95468,
+  "sha256": "34d9a4efc4971c2badf00812f41b77a8fa3d91781938fc3cbddd0b50326e5cd9"
+ },
+ {
+  "file": "dem/50-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/106.png",
+  "bytes": 98119,
+  "sha256": "ac7c722f3abd4b7c54af66c4340928aeaa9d2fa57fcf80591cf24914290b8e45"
+ },
+ {
+  "file": "dem/50-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/107.png",
+  "bytes": 94853,
+  "sha256": "ef7c9b6ebd63a5ddfeaee66ca5415ecb08e9b3155d9a0c912ce3730579c9a6de"
+ },
+ {
+  "file": "dem/50-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/108.png",
+  "bytes": 84065,
+  "sha256": "4b4efcb71e61c0b181d14f41561038e4b950e6c1f66da9bb9f2766a6a10b8cd5"
+ },
+ {
+  "file": "dem/50-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/109.png",
+  "bytes": 123307,
+  "sha256": "c0d66d42239ebe9829f3412eb94f52a6ddf61c43585bad98e119f9a445a42482"
+ },
+ {
+  "file": "dem/50-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/92.png",
+  "bytes": 83779,
+  "sha256": "84cbef92e718d91add246ee88ef2c6b96ee832f6368319fd187cfc5a6e9427c0"
+ },
+ {
+  "file": "dem/50-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/93.png",
+  "bytes": 88245,
+  "sha256": "3180d316b94f7d036d7fe898a14a66dfa706d9bab2026367f4795e8f31b78d5d"
+ },
+ {
+  "file": "dem/50-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/94.png",
+  "bytes": 76882,
+  "sha256": "ea351ce02bf0a199f5d7b4749b8ef7b20699d59ce52167c9b0f7eee935d71193"
+ },
+ {
+  "file": "dem/50-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/95.png",
+  "bytes": 73760,
+  "sha256": "21135c716cd4a5569471518403aa2ef3a00fc48c8d01a9bddc65213c43b11376"
+ },
+ {
+  "file": "dem/50-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/96.png",
+  "bytes": 85023,
+  "sha256": "06cdcf18bb2988fd7bc08382621c7bf753064ac2e6bfc7a8b56470a42feaf56e"
+ },
+ {
+  "file": "dem/50-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/97.png",
+  "bytes": 89284,
+  "sha256": "638aa21cbab88f3b55c58901abed4dedabf1784afba6b07a7bda71582e808f9d"
+ },
+ {
+  "file": "dem/50-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/98.png",
+  "bytes": 88862,
+  "sha256": "b2fcba8be9a673bd79828d327bdac009626de68f0b399e64a0d6f4943cafbe1c"
+ },
+ {
+  "file": "dem/50-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/50/99.png",
+  "bytes": 79972,
+  "sha256": "4231dd5d71822b85df30d010e98fe5317184d231182ebb97e3709702e9231e77"
+ },
+ {
+  "file": "dem/51-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/100.png",
+  "bytes": 74220,
+  "sha256": "5b51a03d9c367b3e4eb8580709bc2fe04c2ef872c8e2dbee870974f3a047fcf3"
+ },
+ {
+  "file": "dem/51-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/101.png",
+  "bytes": 75840,
+  "sha256": "42e3133bf2f38533aa4e163a3d6375cdb8e33745bc49e7349c16a64a52ff8e93"
+ },
+ {
+  "file": "dem/51-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/102.png",
+  "bytes": 80142,
+  "sha256": "7d9ab0b4454de26e7567b7747fa41f9b9fe7bc0969064af211b4e1206b07b397"
+ },
+ {
+  "file": "dem/51-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/103.png",
+  "bytes": 71166,
+  "sha256": "67a05421728dc8fac26efe4169dee5b2ab065ed2001394545fa66970f517cdde"
+ },
+ {
+  "file": "dem/51-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/104.png",
+  "bytes": 61945,
+  "sha256": "f5e3ba468c03dc22d1f9f5693962924b7f15c58c45ce3de72c0f0b2db2578af0"
+ },
+ {
+  "file": "dem/51-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/105.png",
+  "bytes": 79031,
+  "sha256": "bfbd2fd55bc635728d95f9709ef5d29baf0f1e1f218cd12602886e938f6c0555"
+ },
+ {
+  "file": "dem/51-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/106.png",
+  "bytes": 85170,
+  "sha256": "62ef833dbb693176a01ac073b3e384cd448c2d028c2748a12298d6f984d83b3a"
+ },
+ {
+  "file": "dem/51-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/107.png",
+  "bytes": 96569,
+  "sha256": "ce8a20c7186545b5e8aadd0394d52b642e8f417fbfd30fe80b9712dcc55419f8"
+ },
+ {
+  "file": "dem/51-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/108.png",
+  "bytes": 100725,
+  "sha256": "12e9b3b34998ff3758e3a1bfc46cd8c38161c060a3d005d4312b7596e0fb2384"
+ },
+ {
+  "file": "dem/51-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/109.png",
+  "bytes": 88461,
+  "sha256": "a079e36e809a634e0171cab893d32e439bb993ad49e845f00908be2122e49e0c"
+ },
+ {
+  "file": "dem/51-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/92.png",
+  "bytes": 86665,
+  "sha256": "8004e568df08f485c505b052b9c81e2f7f14fa936368d817303c7220fb7f5744"
+ },
+ {
+  "file": "dem/51-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/93.png",
+  "bytes": 77650,
+  "sha256": "1f62b74732692e6dabed0a396af14b92449d2828a5538173e6023bd99ead7239"
+ },
+ {
+  "file": "dem/51-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/94.png",
+  "bytes": 70546,
+  "sha256": "516e14eff5fa941da22701deae2cb880ec0f43e7ded011f55e0334b2c01c8517"
+ },
+ {
+  "file": "dem/51-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/95.png",
+  "bytes": 72618,
+  "sha256": "28246f8e4101428d8037ab37fcd2d792f9dd80a041dd14fe66a2ffcadd22e0b1"
+ },
+ {
+  "file": "dem/51-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/96.png",
+  "bytes": 87291,
+  "sha256": "8a2e83fa2b0c7285d7bcfc6ead82fad5cf849f56693376c6d6668ddf8992191f"
+ },
+ {
+  "file": "dem/51-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/97.png",
+  "bytes": 95186,
+  "sha256": "4543c175be533dde7ca574d5be1964d7ed334203fd7af2d21e104d01e00cd269"
+ },
+ {
+  "file": "dem/51-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/98.png",
+  "bytes": 93462,
+  "sha256": "505136d5ad17b21bb20de426a1489839e5e6b572c7553f9348fa7998ec682d84"
+ },
+ {
+  "file": "dem/51-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/51/99.png",
+  "bytes": 89718,
+  "sha256": "6fc69f857796f9efca957d5df6a9db7398000262db9756d6ba1f05706246fe08"
+ },
+ {
+  "file": "dem/52-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/100.png",
+  "bytes": 87372,
+  "sha256": "1fde1a71a0f6e3a070a304b5dee4f3660d02154b1c3efbb36e86b484dcbcd84e"
+ },
+ {
+  "file": "dem/52-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/101.png",
+  "bytes": 68124,
+  "sha256": "9015a5e8bd068a24150bbec69b3b8d8ced0310ce82e4bdb6d7e105417e683571"
+ },
+ {
+  "file": "dem/52-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/102.png",
+  "bytes": 73508,
+  "sha256": "2cb025ec376f611d6507c3b007e16c5d2c94a454e2447b834ff7f2d15cd700e6"
+ },
+ {
+  "file": "dem/52-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/103.png",
+  "bytes": 69106,
+  "sha256": "280e3ac48f804b5731813adcf5226eb24db4c681a49fa8bc1f46d441a014e8ab"
+ },
+ {
+  "file": "dem/52-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/104.png",
+  "bytes": 64157,
+  "sha256": "1b6f5cec1034722e5fbfe52f49c60255aefee886da242d10f00f9739ab5b056c"
+ },
+ {
+  "file": "dem/52-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/105.png",
+  "bytes": 67128,
+  "sha256": "3a44bba929d5c50c98d0c804562be01f99aca7b4f3c68eb7cb829b4626ed94f4"
+ },
+ {
+  "file": "dem/52-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/106.png",
+  "bytes": 78421,
+  "sha256": "fb29e3d22e12c936c962f27830a0f295245b1304df1f45f9dbff1f666050a168"
+ },
+ {
+  "file": "dem/52-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/107.png",
+  "bytes": 84297,
+  "sha256": "a2218398f9a59cb437994c611deff52aef2615d320f9677bde7c42139bd4e89f"
+ },
+ {
+  "file": "dem/52-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/108.png",
+  "bytes": 94502,
+  "sha256": "6fac1215054206c32b214e29daf61caae3eee757e36f6efe62ae04820769a76b"
+ },
+ {
+  "file": "dem/52-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/109.png",
+  "bytes": 100379,
+  "sha256": "03b395b46095fca9d91c8371297b16d32ebd8f09aa1550b25982871a7329de75"
+ },
+ {
+  "file": "dem/52-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/92.png",
+  "bytes": 77043,
+  "sha256": "6ae511f83d71c911c995773a8b6b9c77b866117e3ed0b4c9b8ec93676aa53414"
+ },
+ {
+  "file": "dem/52-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/93.png",
+  "bytes": 69432,
+  "sha256": "2141c7c40fe1819f7b29b15fed60e1c639b533380bcecb75b1b1bcc6a9127234"
+ },
+ {
+  "file": "dem/52-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/94.png",
+  "bytes": 75781,
+  "sha256": "ca38584ed285bb275ac2fc40f378253e5ea13ec0bef9bf9ba8b9660ffbf75811"
+ },
+ {
+  "file": "dem/52-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/95.png",
+  "bytes": 73889,
+  "sha256": "9d4139489ae2db82ee70612b849f14a23c4a88ebfee511348da1d7bdd3ba302e"
+ },
+ {
+  "file": "dem/52-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/96.png",
+  "bytes": 91810,
+  "sha256": "995fac9aac5d0dbe5291ccee26619eb207d460f68a28dfce5fa4075d9c14762b"
+ },
+ {
+  "file": "dem/52-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/97.png",
+  "bytes": 96400,
+  "sha256": "3fde42842c578885471636e3bf9f42367f9dd83a69ec46082ce36867ce1d92c0"
+ },
+ {
+  "file": "dem/52-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/98.png",
+  "bytes": 88633,
+  "sha256": "e2879c3e1ba62eec2881fd3884b4c996af528344513c99b50830249ae976dd17"
+ },
+ {
+  "file": "dem/52-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/52/99.png",
+  "bytes": 79844,
+  "sha256": "b4f13713df887225a49a6752d24bf2d3e3a0a33636d2452d044f29a81a0633bc"
+ },
+ {
+  "file": "dem/53-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/100.png",
+  "bytes": 78795,
+  "sha256": "3da94acb22fd5c214bcf4a8ac46b71bfdac9358854d66f07f7d957c99324b722"
+ },
+ {
+  "file": "dem/53-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/101.png",
+  "bytes": 65980,
+  "sha256": "275b575f13a6ac6567f9b19bf0bf83f9e93e4e0facffef659d544f8afeec0097"
+ },
+ {
+  "file": "dem/53-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/102.png",
+  "bytes": 65997,
+  "sha256": "eb4677f451a66d273f7b32c74d5f0f322727e447700333302929c1e3cf818577"
+ },
+ {
+  "file": "dem/53-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/103.png",
+  "bytes": 72211,
+  "sha256": "66cd234226f732b35abe58d2854fbf1d02853f94413a1d5eb8a8f2600558e46e"
+ },
+ {
+  "file": "dem/53-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/104.png",
+  "bytes": 71093,
+  "sha256": "52f293460b75b66d09791f74b4b056d929848d0ae7f6c0a992afdd9212506f4a"
+ },
+ {
+  "file": "dem/53-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/105.png",
+  "bytes": 77304,
+  "sha256": "b7f19b1841a2a7ff81adb9e686ca8309d9ff6a0432cb0f6381444077f24ff430"
+ },
+ {
+  "file": "dem/53-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/106.png",
+  "bytes": 76510,
+  "sha256": "127f9bd09a4705d0ce58d18f6c08e04d47698962a34d5127b48c7c752f64ce05"
+ },
+ {
+  "file": "dem/53-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/107.png",
+  "bytes": 69238,
+  "sha256": "e5ebd2736d99c04da4922d347c61f8f4d94203a68088d23e8da1bd6b1a162a68"
+ },
+ {
+  "file": "dem/53-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/108.png",
+  "bytes": 70077,
+  "sha256": "095e73e51db8864a63541618119f7b6feab260ae08bd6b80ae63ab4ccb157eb0"
+ },
+ {
+  "file": "dem/53-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/109.png",
+  "bytes": 87583,
+  "sha256": "a58e250a9723f2177c8830ab329b001d47a95ffbb49bb65a3cbff85663c0bed1"
+ },
+ {
+  "file": "dem/53-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/92.png",
+  "bytes": 73594,
+  "sha256": "e2d178d0936f3092a4e63ddbbb4674526e8e45f6422e6c2721c421b8e0aafde5"
+ },
+ {
+  "file": "dem/53-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/93.png",
+  "bytes": 66268,
+  "sha256": "5d6fa751f943f653d81fbf9e8a62f6aa64c997552bb2ae4dc390c05b61658cb6"
+ },
+ {
+  "file": "dem/53-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/94.png",
+  "bytes": 69492,
+  "sha256": "4b65774218ddfc5a56c16d5fe89d00654fe774b00f793ee80bab5ddfee6ecc4e"
+ },
+ {
+  "file": "dem/53-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/95.png",
+  "bytes": 67085,
+  "sha256": "612a27dbc9dc579864626d5f99a84914ff02a44bb387cd118dbaaef5eceb93d8"
+ },
+ {
+  "file": "dem/53-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/96.png",
+  "bytes": 67231,
+  "sha256": "d0d40543f465d42fe1f4ee8a348558645cbd504fc1ecddc66cc078bd2eac95dc"
+ },
+ {
+  "file": "dem/53-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/97.png",
+  "bytes": 76870,
+  "sha256": "1b0ef69da9a184291af89a6ea9c82819ba4cff742ab9c61f6998a35b4ff4121e"
+ },
+ {
+  "file": "dem/53-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/98.png",
+  "bytes": 76611,
+  "sha256": "a47afb34b474185f5709343c23b07d47316ad597a5ac926871c3b02eade4cf0a"
+ },
+ {
+  "file": "dem/53-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/53/99.png",
+  "bytes": 85317,
+  "sha256": "5bc00de075b5fc453750cff29eb40766ba99fcaa0868fc242664501f0573c863"
+ },
+ {
+  "file": "dem/54-100.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/100.png",
+  "bytes": 60723,
+  "sha256": "d8939e7f67ad4d350d423d2538cce38039f549148819726697949612ec855964"
+ },
+ {
+  "file": "dem/54-101.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/101.png",
+  "bytes": 56685,
+  "sha256": "307d877d8aba626605ed9ebd9f279019d15dff8b1dc23ac5faa20080916861c4"
+ },
+ {
+  "file": "dem/54-102.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/102.png",
+  "bytes": 45829,
+  "sha256": "b148cb16b645026f215003fd971e8f395b4166cbacbd78c1eeeb4baa2c810af1"
+ },
+ {
+  "file": "dem/54-103.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/103.png",
+  "bytes": 48031,
+  "sha256": "6229039ce271704452a5d1c29dbcf12825dd58a48a7d840508e9477a86477e4c"
+ },
+ {
+  "file": "dem/54-104.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/104.png",
+  "bytes": 50762,
+  "sha256": "b289f59fc0bebfadae617cfb20836ec0aa95f3f7179606f713ceda2ae6877c82"
+ },
+ {
+  "file": "dem/54-105.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/105.png",
+  "bytes": 77515,
+  "sha256": "a450d2cb68466b2b474e08387140dffe6b3354de91909a3eb35bd9509008b329"
+ },
+ {
+  "file": "dem/54-106.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/106.png",
+  "bytes": 79422,
+  "sha256": "35bbd850d0ca4f36f46fb7842d4abb8faf2675c92a74bbbebc106f0dfb5ac9f4"
+ },
+ {
+  "file": "dem/54-107.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/107.png",
+  "bytes": 71234,
+  "sha256": "fae7def7f4bdaf173b785699505b5eeafc624c1ff62afedf7bacae20f3f7a614"
+ },
+ {
+  "file": "dem/54-108.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/108.png",
+  "bytes": 65142,
+  "sha256": "4788c616847e296a26ea1efbdd945d33a1580eddda7dfe38de0e6ba37bdc5c91"
+ },
+ {
+  "file": "dem/54-109.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/109.png",
+  "bytes": 76384,
+  "sha256": "d22a69eb3f6bbea74beeb141973db7ba0a9564f469f3ed0fefe6549e5818b4b8"
+ },
+ {
+  "file": "dem/54-92.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/92.png",
+  "bytes": 68121,
+  "sha256": "8f9c4844105e5b7ab59b19eec24aa409b821c19c5698fdd20d7a72c1368c6441"
+ },
+ {
+  "file": "dem/54-93.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/93.png",
+  "bytes": 73822,
+  "sha256": "c9bd6b08736d2ce6063167faa9250c621327ceb982a6675bb68ae784c30662b3"
+ },
+ {
+  "file": "dem/54-94.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/94.png",
+  "bytes": 63148,
+  "sha256": "4ccab3546fd01db003f3349be7cc05733a3b1e94c4dfaa8ae0d8cc1c33e39e8a"
+ },
+ {
+  "file": "dem/54-95.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/95.png",
+  "bytes": 59919,
+  "sha256": "6d2d04ab7352dc7852961958ae32706715b96afbf31890adb98fb028649eedb3"
+ },
+ {
+  "file": "dem/54-96.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/96.png",
+  "bytes": 54026,
+  "sha256": "f9ec6533f24a58457a744c00f35e00b982926b454e3eb3fd39a2738dfbe18461"
+ },
+ {
+  "file": "dem/54-97.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/97.png",
+  "bytes": 55707,
+  "sha256": "8809b75812e8052ca7cee3b534ec353b9ed546f46adf8b1a2849ff29764a7a94"
+ },
+ {
+  "file": "dem/54-98.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/98.png",
+  "bytes": 51293,
+  "sha256": "374cb842089ed2db53b0fa062829b6baf1fc5723ddd8bc530ff1c1c3aa9333bc"
+ },
+ {
+  "file": "dem/54-99.png",
+  "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/54/99.png",
+  "bytes": 70287,
+  "sha256": "26675778c6c1268ea4492e81f360826faf3b8c6aba7163d62741221714ea78b0"
+ },
+ {
+  "file": "drpep/AVL_LOAD_CAP_TOGGLE.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_CAP_TOGGLE/FeatureServer?f=json",
+  "bytes": 3462,
+  "sha256": "640cf7f0ca76e3354c819fa60d5c03f34fa2756b3bd4b4c47ed3c7d6aa7fbcd8"
+ },
+ {
+  "file": "drpep/AVL_LOAD_HEAT_MAP_TOGGLE.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer?f=json",
+  "bytes": 3354,
+  "sha256": "e2bd76fe818dbc0b3db08d0fb04f63c45322138e604557049dd7dc1aff1d62df"
+ },
+ {
+  "file": "drpep/DRP_PSPS_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_PSPS_Layer/FeatureServer?f=json",
+  "bytes": 1808,
+  "sha256": "c6fe2019b40a931eb5672d1c7c200258e85e6baae0d59f17352719fcc869f0fa"
+ },
+ {
+  "file": "drpep/DRP_ScreenL_08202021.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_ScreenL_08202021/FeatureServer?f=json",
+  "bytes": 1615,
+  "sha256": "23a9be31cd9e5dd0d20cd036a3fa906ab4b1ba5640c32351e7fb6f84872648ab"
+ },
+ {
+  "file": "drpep/DRP_Transmission_Projects.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer?f=json",
+  "bytes": 2016,
+  "sha256": "dfa6a21846746259cf027b559b491435ff22fcccb61ca08d7f97968f57da613f"
+ },
+ {
+  "file": "drpep/DUPR_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer?f=json",
+  "bytes": 1955,
+  "sha256": "374e0b2ebb76e171f6e6adaee06bc22b14e6c77be75c447c2b6df02971287ecd"
+ },
+ {
+  "file": "drpep/Distribution_circuits.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Distribution_circuits/FeatureServer?f=json",
+  "bytes": 3297,
+  "sha256": "5e2c4a0fe8786a122bb48e891cd8787c7e006566c41f795e97a80e07e1f502bc"
+ },
+ {
+  "file": "drpep/Firemap.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer?f=json",
+  "bytes": 2056,
+  "sha256": "bea2d2616e09dee5fdbba22e0c85edf7c844c9cda9b756dcf5f1f5b431c0c298"
+ },
+ {
+  "file": "drpep/GNA_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer?f=json",
+  "bytes": 3673,
+  "sha256": "46305d9c3fc345db779954bf0012344ef041b15a4b263cab396da86af2ec6938"
+ },
+ {
+  "file": "drpep/ICA_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer?f=json",
+  "bytes": 4056,
+  "sha256": "7d522604c36b5ff822e770afee319d4ca3102a34e60d4cfa7602def8f9f07a8f"
+ },
+ {
+  "file": "drpep/ICA_Tables.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer?f=json",
+  "bytes": 1990,
+  "sha256": "7d0c20aa8dcb2df57644f4f82eadaa65a79cd98e84483c388795d07cc3648a6a"
+ },
+ {
+  "file": "drpep/LNBA_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer?f=json",
+  "bytes": 2146,
+  "sha256": "2d0784fbb273e9f460a011415ff5677f230366c23b183fd3f4b80ae9d26fca9c"
+ },
+ {
+  "file": "drpep/LOAD_GROWTH_PEN_HTMAP.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer?f=json",
+  "bytes": 3290,
+  "sha256": "e2128f706dfe4d0f58198ec058094ca721ccc8beed4369036be72c69955b98a8"
+ },
+ {
+  "file": "drpep/MGEP_AVL_LOAD_HEAT_MAP_TOGGLE.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer?f=json",
+  "bytes": 3303,
+  "sha256": "900bc3058edd4e7a1dc0858ef5e06512f3f3d1b4a59c572598daceb81d3d30f2"
+ },
+ {
+  "file": "drpep/MGEP_DUPR_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_DUPR_Layer/FeatureServer?f=json",
+  "bytes": 1955,
+  "sha256": "352446d50ee16ac7f25aaaaf5d58b7818a16106052465d97296fda3078996d40"
+ },
+ {
+  "file": "drpep/MGEP_GNA_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_GNA_Layer/FeatureServer?f=json",
+  "bytes": 3469,
+  "sha256": "5a747e588f976a1ecc9ac95e502f37c05ce248461968bd73ffc055e206a9ff2b"
+ },
+ {
+  "file": "drpep/MGEP_ICA_Layer.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer?f=json",
+  "bytes": 3750,
+  "sha256": "2c9ba97c32add7ea4f008b98edad3fa2e3be106414d681a24e82f65aee9d2e9f"
+ },
+ {
+  "file": "drpep/MGEP_ICA_Tables.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Tables/FeatureServer?f=json",
+  "bytes": 1939,
+  "sha256": "b665a6071c9edb93cba39d2eff47ce409d8d0ed72b7228ccbd86c43e24600c1e"
+ },
+ {
+  "file": "drpep/MGEP_ScreenL_08202021.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ScreenL_08202021/FeatureServer?f=json",
+  "bytes": 1666,
+  "sha256": "42af7602be1341c199018538e3ddfba99e292a001c13eb1914a0d91c27368719"
+ },
+ {
+  "file": "drpep/SUBTRANS_HEATMAP.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/SUBTRANS_HEATMAP/FeatureServer?f=json",
+  "bytes": 3342,
+  "sha256": "35363a061ae252550ff33582de7afff0fec5c966d79e435c49a7e121bef2dac2"
+ },
+ {
+  "file": "drpep/counts/AVL_LOAD_CAP_TOGGLE-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_CAP_TOGGLE/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "0cc9a78b886625bc6686f4a8909c450700d4d3add77f3f8ed9b5fa3a661f3bef"
+ },
+ {
+  "file": "drpep/counts/AVL_LOAD_CAP_TOGGLE-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_CAP_TOGGLE/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "0cc9a78b886625bc6686f4a8909c450700d4d3add77f3f8ed9b5fa3a661f3bef"
+ },
+ {
+  "file": "drpep/counts/AVL_LOAD_HEAT_MAP_TOGGLE-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 15,
+  "sha256": "1339a0326302f5038d5a52bddb0acfc373299d8cc5590a6f28fc70393d588751"
+ },
+ {
+  "file": "drpep/counts/AVL_LOAD_HEAT_MAP_TOGGLE-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 15,
+  "sha256": "36fd7b7aae8dc76c2fc325b851c3259e78368ba87a57e903168907e23dabc59e"
+ },
+ {
+  "file": "drpep/counts/DRP_PSPS_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_PSPS_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 12,
+  "sha256": "19f8817224a7a07445208b8738e329b10f123cce8737a134a2c1048911fa83cc"
+ },
+ {
+  "file": "drpep/counts/DRP_PSPS_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_PSPS_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "675e936626186f6a44aba6ed3b92622835fe45d9c32bbf7f9b9fbda0f9f08d20"
+ },
+ {
+  "file": "drpep/counts/DRP_ScreenL_08202021-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_ScreenL_08202021/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 12,
+  "sha256": "af4c8b7d406fc01b9c42f7581f4bf52ae9ca54576f3acc15e21b580ff5d47be9"
+ },
+ {
+  "file": "drpep/counts/DRP_Transmission_Projects-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 12,
+  "sha256": "19f8817224a7a07445208b8738e329b10f123cce8737a134a2c1048911fa83cc"
+ },
+ {
+  "file": "drpep/counts/DRP_Transmission_Projects-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 12,
+  "sha256": "19f8817224a7a07445208b8738e329b10f123cce8737a134a2c1048911fa83cc"
+ },
+ {
+  "file": "drpep/counts/DRP_Transmission_Projects-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 12,
+  "sha256": "a801e3865bd6b93fa0f4735ca65ca39157d0351f446ccecbb37ba7501a2e8faf"
+ },
+ {
+  "file": "drpep/counts/DUPR_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "599c00b7d1f490fc3a18196236c389e3fda1e98dc9948b52d9d47509dbcf071f"
+ },
+ {
+  "file": "drpep/counts/DUPR_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "c0839041104f9c1260fac6d94af404cfb1294807f8929afc063241d5eaae2d5a"
+ },
+ {
+  "file": "drpep/counts/DUPR_Layer-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "3f4a475646058bb96cffe9f9301941bdc59a4ce91dc4aae625d9c233a72f7302"
+ },
+ {
+  "file": "drpep/counts/DUPR_Layer-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/Distribution_circuits-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Distribution_circuits/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "3e47a90ca731cbc06b295229bbabd04b446ba76997d959e43d89a47acc5d7f60"
+ },
+ {
+  "file": "drpep/counts/Firemap-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 15,
+  "sha256": "2e9c08102620ad8c2b9cf7d926ed482bebf4919b1f5b46edbfb913fc57c0d146"
+ },
+ {
+  "file": "drpep/counts/Firemap-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "f97361e7a07e0d917f541f1af27b095e07eb2ec64dc1d53da80e0e7692850514"
+ },
+ {
+  "file": "drpep/counts/Firemap-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 12,
+  "sha256": "40e3044e0f3337b0fc36299b670471cbe02fcf0a797cea70ed9d817cfd477c81"
+ },
+ {
+  "file": "drpep/counts/GNA_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "1a25e87d5b1e6570fff692b2be8ab43a4cd42444908e8974fb29e2c8aa5f929a"
+ },
+ {
+  "file": "drpep/counts/GNA_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "a8482caa4d8f22b109069011c5e8cbf18e0b9e656ca64abedd60a669ffd9ad32"
+ },
+ {
+  "file": "drpep/counts/GNA_Layer-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "c6e487e697592b2bb268dda61b1f4e4b42334d324764cb475821e9ca8f3e67bc"
+ },
+ {
+  "file": "drpep/counts/GNA_Layer-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 15,
+  "sha256": "779c82c70ea652770ca9d499c8aad9f4365de4cf35947ff81b03bc0ac6663ea8"
+ },
+ {
+  "file": "drpep/counts/GNA_Layer-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/4/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/GNA_Layer-5.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/5/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "8bab4c676c085805411c212f59f8312b463ff66676fd6d2bcddcbe240a41d384"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "e4742c4f1f510f356b5e8f67d23dc2944e710c1039b4135b99ca7788afc05d90"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-10.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/10/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-11.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/11/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-12.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/12/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "16117fd7e5a4985849f7c58e03489331cdcaf73360e6eda5ba4720bdaf8f5671"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-13.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/13/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-14.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/14/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-15.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/15/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-16.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/16/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "908d8fb1a9f160c36307b9f4832f9b7b488d8a90163df961097d11e093894def"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-17.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/17/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-18.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/18/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "9f2340ce9ca29201d44246994dcbf3fecdf79470502fe2d71f550e55c71dc745"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-19.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/19/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "e81d2a9c96bb05487e2aa10f459003bde1fc32b9c2302071ccd07c5850eaeba0"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/4/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-5.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/5/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-6.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/6/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-7.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/7/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-8.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/8/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Layer-9.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/9/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/ICA_Tables-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/ICA_Tables-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 17,
+  "sha256": "49ff2ce86a1bde0538a88a928b9d40d489be81494398ecb9d550e6f7de759e24"
+ },
+ {
+  "file": "drpep/counts/ICA_Tables-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "2847f469daae736fa34912c28e98eb5f807df9c9d6493a65c94bc29dac69d3e4"
+ },
+ {
+  "file": "drpep/counts/ICA_Tables-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "76e1391eb395b7543b97e00f4aa639613bf30bf03ed482257513925ad29b673e"
+ },
+ {
+  "file": "drpep/counts/ICA_Tables-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/4/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 17,
+  "sha256": "d4fa39829c638cbeadc29c67c1d8d94342f05f14834d43215686b3bc8cdbc463"
+ },
+ {
+  "file": "drpep/counts/LNBA_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "5738dff6eaba71543765d2afe5fef5fc0ba387bb7845bb9b5667a60741075e97"
+ },
+ {
+  "file": "drpep/counts/LNBA_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "07855f3719b200de79673c51980e4f872978384408db40526811d7d585d514c2"
+ },
+ {
+  "file": "drpep/counts/LNBA_Layer-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "07855f3719b200de79673c51980e4f872978384408db40526811d7d585d514c2"
+ },
+ {
+  "file": "drpep/counts/LNBA_Layer-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "07855f3719b200de79673c51980e4f872978384408db40526811d7d585d514c2"
+ },
+ {
+  "file": "drpep/counts/LNBA_Layer-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/4/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/LOAD_GROWTH_PEN_HTMAP-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "24ed7c9f24d87f441ee23b8144363b9843636bae0a1f1d06fa8f805cc6eb7160"
+ },
+ {
+  "file": "drpep/counts/MGEP_AVL_LOAD_HEAT_MAP_TOGGLE-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 15,
+  "sha256": "1339a0326302f5038d5a52bddb0acfc373299d8cc5590a6f28fc70393d588751"
+ },
+ {
+  "file": "drpep/counts/MGEP_AVL_LOAD_HEAT_MAP_TOGGLE-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 15,
+  "sha256": "36fd7b7aae8dc76c2fc325b851c3259e78368ba87a57e903168907e23dabc59e"
+ },
+ {
+  "file": "drpep/counts/MGEP_DUPR_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_DUPR_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "599c00b7d1f490fc3a18196236c389e3fda1e98dc9948b52d9d47509dbcf071f"
+ },
+ {
+  "file": "drpep/counts/MGEP_DUPR_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_DUPR_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "c0839041104f9c1260fac6d94af404cfb1294807f8929afc063241d5eaae2d5a"
+ },
+ {
+  "file": "drpep/counts/MGEP_DUPR_Layer-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_DUPR_Layer/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "3f4a475646058bb96cffe9f9301941bdc59a4ce91dc4aae625d9c233a72f7302"
+ },
+ {
+  "file": "drpep/counts/MGEP_DUPR_Layer-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_DUPR_Layer/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/MGEP_GNA_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_GNA_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "1a25e87d5b1e6570fff692b2be8ab43a4cd42444908e8974fb29e2c8aa5f929a"
+ },
+ {
+  "file": "drpep/counts/MGEP_GNA_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_GNA_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "a8482caa4d8f22b109069011c5e8cbf18e0b9e656ca64abedd60a669ffd9ad32"
+ },
+ {
+  "file": "drpep/counts/MGEP_GNA_Layer-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_GNA_Layer/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "c6e487e697592b2bb268dda61b1f4e4b42334d324764cb475821e9ca8f3e67bc"
+ },
+ {
+  "file": "drpep/counts/MGEP_GNA_Layer-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_GNA_Layer/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 15,
+  "sha256": "779c82c70ea652770ca9d499c8aad9f4365de4cf35947ff81b03bc0ac6663ea8"
+ },
+ {
+  "file": "drpep/counts/MGEP_GNA_Layer-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_GNA_Layer/FeatureServer/4/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/MGEP_GNA_Layer-5.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_GNA_Layer/FeatureServer/5/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "8bab4c676c085805411c212f59f8312b463ff66676fd6d2bcddcbe240a41d384"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "e4742c4f1f510f356b5e8f67d23dc2944e710c1039b4135b99ca7788afc05d90"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-10.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/10/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-11.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/11/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-12.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/12/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "16117fd7e5a4985849f7c58e03489331cdcaf73360e6eda5ba4720bdaf8f5671"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-13.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/13/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-14.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/14/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-15.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/15/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-16.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/16/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "908d8fb1a9f160c36307b9f4832f9b7b488d8a90163df961097d11e093894def"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-17.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/17/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-18.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/18/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 13,
+  "sha256": "9f2340ce9ca29201d44246994dcbf3fecdf79470502fe2d71f550e55c71dc745"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-19.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/19/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "e81d2a9c96bb05487e2aa10f459003bde1fc32b9c2302071ccd07c5850eaeba0"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/4/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-5.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/5/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-6.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/6/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-7.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/7/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-8.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/8/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Layer-9.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Layer/FeatureServer/9/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "453bf7a9a6b230b9bc1be2e69ebb96d1ad70817df6e1515e5b35247f6a7a14b8"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Tables-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Tables/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Tables-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Tables/FeatureServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 17,
+  "sha256": "49ff2ce86a1bde0538a88a928b9d40d489be81494398ecb9d550e6f7de759e24"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Tables-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Tables/FeatureServer/2/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 16,
+  "sha256": "2847f469daae736fa34912c28e98eb5f807df9c9d6493a65c94bc29dac69d3e4"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Tables-3.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Tables/FeatureServer/3/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "76e1391eb395b7543b97e00f4aa639613bf30bf03ed482257513925ad29b673e"
+ },
+ {
+  "file": "drpep/counts/MGEP_ICA_Tables-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ICA_Tables/FeatureServer/4/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 17,
+  "sha256": "d4fa39829c638cbeadc29c67c1d8d94342f05f14834d43215686b3bc8cdbc463"
+ },
+ {
+  "file": "drpep/counts/MGEP_ScreenL_08202021-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/MGEP_ScreenL_08202021/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 12,
+  "sha256": "af4c8b7d406fc01b9c42f7581f4bf52ae9ca54576f3acc15e21b580ff5d47be9"
+ },
+ {
+  "file": "drpep/counts/SUBTRANS_HEATMAP-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/SUBTRANS_HEATMAP/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 14,
+  "sha256": "0cc8414be7afa8125fcfdd249e9b618f855a86b20b30bb5a5f4136d8b9232191"
+ },
+ {
+  "file": "drpep/forecast-by-year.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/3/query?where=1%3D1&groupByFieldsForStatistics=year_value&orderByFields=year_value&outStatistics=%5B%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22base_demand%22%2C+%22outStatisticFieldName%22%3A+%22sum_base_demand%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22ev%22%2C+%22outStatisticFieldName%22%3A+%22sum_ev%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22pv%22%2C+%22outStatisticFieldName%22%3A+%22sum_pv%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22es%22%2C+%22outStatisticFieldName%22%3A+%22sum_es%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22ee%22%2C+%22outStatisticFieldName%22%3A+%22sum_ee%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22be%22%2C+%22outStatisticFieldName%22%3A+%22sum_be%22%7D%2C+%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 2541,
+  "sha256": "d8c36aaaaabc21e28832914ec10d916ec9b5df3022fe7ccae27c51ef131323e8"
+ },
+ {
+  "file": "drpep/project-areas-0.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/0/query?where=1%3D1&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=100&geometryPrecision=0&f=geojson",
+  "bytes": 32139,
+  "sha256": "582f154ee14dc96f30cd09f1315b34ed83251846f3b5f1df2e89b7231e57d014"
+ },
+ {
+  "file": "drpep/project-areas-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/1/query?where=1%3D1&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=100&geometryPrecision=0&f=geojson",
+  "bytes": 32139,
+  "sha256": "582f154ee14dc96f30cd09f1315b34ed83251846f3b5f1df2e89b7231e57d014"
+ },
+ {
+  "file": "drpep/project-areas-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/2/query?where=1%3D1&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=100&geometryPrecision=0&f=geojson",
+  "bytes": 20848,
+  "sha256": "bdf9704217d4c90c972ac0b0ca41b0bef71b4b550bafd268b73a1204914a7ad3"
+ },
+ {
+  "file": "drpep/services.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted?f=json",
+  "bytes": 1212,
+  "sha256": "6bf748f87341e4de4038960bde8bb59140035ef7d6cd7043e79fecb2145968c5"
+ },
+ {
+  "file": "drpep/trees-ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=1%3D1&geometry=-50000%2C-524000%2C541000%2C45000&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects&returnIdsOnly=true&f=json",
+  "bytes": 2937,
+  "sha256": "72f97b91e211b93a36a7ed2d882f4bc6be239bc039e1eccfcc663a41f0e0c0f6"
+ },
+ {
+  "file": "drpep/trees/00000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=1%2C18%2C24%2C51%2C52%2C53%2C112%2C297%2C298%2C299%2C300%2C310%2C311%2C312%2C313%2C314%2C315%2C316%2C319%2C320%2C321%2C322%2C323%2C324%2C325%2C372%2C373%2C617%2C618%2C619%2C620%2C621%2C622%2C623%2C624%2C625%2C626%2C627%2C628%2C629%2C630%2C631%2C632%2C633%2C634%2C635%2C636%2C637%2C638%2C639%2C640%2C641%2C642%2C643%2C644%2C645%2C646%2C647%2C648%2C649%2C650%2C651%2C652%2C653%2C654%2C655%2C656%2C657%2C658%2C659%2C660%2C661%2C662%2C663%2C664%2C665%2C666%2C667%2C668%2C669%2C670%2C671%2C672%2C673%2C674%2C675%2C676%2C677%2C678%2C679%2C680%2C732%2C753%2C1517%2C1518%2C1519%2C1520%2C1521%2C1522%2C1523%2C1524%2C1525%2C1526%2C1527%2C1528%2C1529%2C1530%2C1531%2C1532%2C1533%2C1534%2C1535%2C1536%2C1537%2C1538%2C1539%2C1540%2C1542%2C1543%2C1544%2C1545%2C1547%2C1548%2C1549%2C1550%2C1551%2C1552%2C1553%2C1554%2C1556%2C1557%2C1558%2C1559%2C1560%2C1563%2C1564%2C1574%2C1575%2C1578%2C1579%2C1580%2C1581%2C1582%2C1583%2C1585%2C1586%2C1587%2C1588%2C1589%2C1590%2C1591%2C1592%2C1593%2C1595%2C1596%2C1597%2C1598%2C1599%2C1600%2C1601&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
+  "bytes": 135262,
+  "sha256": "1c6176ca98ad33cd2ac48055426750b7c37b3847a08b0ae82eb3d244ce53fb23"
+ },
+ {
+  "file": "drpep/trees/00160.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=1602%2C1603%2C1604%2C1605%2C1606%2C1607%2C1608%2C1609%2C1610%2C1611%2C1612%2C1613%2C1614%2C1615%2C1616%2C1617%2C1618%2C1619%2C1620%2C1621%2C1622%2C1625%2C1626%2C1627%2C1628%2C1629%2C1630%2C1631%2C1632%2C1633%2C1634%2C1635%2C1636%2C1637%2C1638%2C1647%2C1648%2C1649%2C1650%2C1651%2C1652%2C1653%2C1654%2C1655%2C1656%2C1657%2C1658%2C1659%2C1660%2C1661%2C1662%2C1663%2C1664%2C1665%2C1666%2C1667%2C1668%2C1669%2C1670%2C1671%2C1675%2C1676%2C1677%2C1679%2C1681%2C1791%2C1792%2C1793%2C1794%2C1795%2C1796%2C1797%2C1798%2C1799%2C1800%2C1803%2C1804%2C1807%2C1809%2C1811%2C1812%2C1814%2C1815%2C1816%2C1817%2C1818%2C1819%2C1820%2C1821%2C1822%2C1823%2C1824%2C1825%2C1844%2C1845%2C1848%2C1849%2C1850%2C1851%2C1852%2C1853%2C1854%2C1879%2C1880%2C1881%2C1903%2C1904%2C1905%2C1906%2C1907%2C1908%2C1909%2C1910%2C1911%2C1912%2C1913%2C1914%2C1915%2C1916%2C1917%2C1918%2C1919%2C1920%2C1921%2C1922%2C1923%2C1924%2C1925%2C1926%2C1927%2C1928%2C1929%2C1930%2C1931%2C1945%2C1980%2C1995%2C2006%2C2007%2C2008%2C2015%2C2020%2C2039%2C2040%2C2041%2C2042%2C2043%2C2060%2C2061%2C2062%2C2063%2C2069%2C2070%2C2072%2C2073%2C2075%2C2076%2C2078%2C2083%2C2084&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
+  "bytes": 82145,
+  "sha256": "d9a88ba1beabbfe8bc35b5d0efbdacd9022e695812aa7c5130a4dfd7230ab616"
+ },
+ {
+  "file": "drpep/trees/00320.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=2085%2C2086%2C2087%2C2088%2C2089%2C2090%2C2091%2C2092%2C2093%2C2094%2C2095%2C2096%2C2097%2C2098%2C2099%2C2100%2C2101%2C2102%2C2103%2C2104%2C2105%2C2106%2C2107%2C2108%2C2109%2C2110%2C2177%2C2178%2C2179%2C2180%2C2181%2C2182%2C2223%2C2224%2C2251%2C2252%2C2253%2C2254%2C2255%2C2256%2C2273%2C2274%2C2279%2C2280%2C2317%2C2318%2C2319%2C2320%2C2321%2C2322%2C2323%2C2324%2C2325%2C2326%2C2351%2C2352%2C2353%2C2354%2C2355%2C2356%2C2359%2C2360%2C2361%2C2362%2C2363%2C2364%2C2365%2C2366%2C2367%2C2425%2C2426%2C2427%2C2428%2C2429%2C2430%2C2431%2C2432%2C2433%2C2434%2C2435%2C2436%2C2482%2C2483%2C2484%2C2548%2C2549%2C2550%2C2551%2C2552%2C2553%2C2566%2C2567%2C2568%2C2569%2C2570%2C2571%2C2572%2C2573%2C2574%2C2575%2C2576%2C2577%2C2606%2C2607%2C2608%2C2609%2C2610%2C2611%2C2680%2C2681%2C2682%2C2683%2C2696%2C2697%2C2698%2C2699%2C2778%2C2779%2C2780%2C2781%2C2784%2C2785%2C2787%2C2789%2C2790%2C2792%2C2793%2C2794%2C2795%2C2796%2C2799%2C2800%2C2802%2C2808%2C2830%2C2840%2C2842%2C2864%2C2868%2C2875%2C2878%2C2890%2C2892%2C2895%2C2904%2C2922%2C2951%2C2952%2C2953%2C2954%2C2955%2C2956%2C2957%2C2958%2C2959%2C2960%2C2961%2C2962%2C2963%2C2964&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
+  "bytes": 68199,
+  "sha256": "41ff31fafad743a0eaf2cba9ed34d560c1c629b9c85610232d49a64f0cc33e74"
+ },
+ {
+  "file": "drpep/trees/00480.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=2965%2C2966%2C2967%2C2968%2C2969%2C2970%2C2971%2C2972%2C2973%2C2974%2C2975%2C2976%2C2977%2C2978%2C2979%2C2980%2C2981%2C2982%2C2983%2C2984%2C2985%2C2986%2C2987%2C2988%2C2989%2C2990%2C3814%2C3815%2C3816%2C3817%2C3818%2C3819%2C3820%2C3821%2C3822%2C3823%2C3824%2C3825%2C3826%2C3827%2C3828%2C3829%2C3845%2C3846%2C3847%2C3848%2C3849%2C3850%2C3851%2C3852%2C3853%2C13372%2C13378%2C13379%2C13682%2C13683%2C13684%2C13685%2C13686%2C13687%2C13688%2C13689%2C13690%2C13691%2C13692%2C13693%2C13694%2C13695%2C13696%2C13697%2C13698%2C13699%2C13700%2C13701%2C13702%2C13703%2C13704%2C13705%2C13706%2C13707%2C13708%2C13709%2C13710%2C13711%2C13712%2C13713%2C13714%2C13715%2C13716%2C13717%2C13756%2C13757%2C15460%2C15461%2C15462%2C15463%2C15464%2C15467%2C15468%2C15469%2C15470%2C15471%2C15472%2C15473%2C15474%2C15477%2C15478&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
+  "bytes": 40952,
+  "sha256": "eb2c372da65ea7279c2524987f2a316b27ac01f38015ef8083e3be97d15122dc"
+ },
+ {
+  "file": "drpep/upgrades-by-service.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=grid_need&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 661,
+  "sha256": "36d9cdae16d89b0a105b81cf6ce8c8e31a648690c5b8c057572c5506e32536e4"
+ },
+ {
+  "file": "eia861.zip",
+  "url": "https://www.eia.gov/electricity/data/eia861/zip/f8612025.zip",
+  "bytes": 4756816,
+  "sha256": "f59f6c732bf685fe0a1591b32227f5ce572dc0dfd26bb5caaeed128ac4e3a396"
+ },
+ {
+  "file": "fema/Owners-count.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceOwners?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24count=true&%24top=1",
+  "bytes": 666,
+  "sha256": "767e729d053719fa04ec49efe07314afa610abc6d35fa4db4db58e60f05e650f"
+ },
+ {
+  "file": "fema/Owners/00000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceOwners?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=0",
+  "bytes": 140025,
+  "sha256": "becba505765c7dc4276a45a04c7ecdd214638434c08d0098650398808eba9224"
+ },
+ {
+  "file": "fema/Owners/01000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceOwners?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=1000",
+  "bytes": 140060,
+  "sha256": "36b289fbc19c3bba76d9f66e49be922a792f102593c4a5408c71ae5d4cacf071"
+ },
+ {
+  "file": "fema/Owners/02000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceOwners?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=2000",
+  "bytes": 140058,
+  "sha256": "1d17aff0fbfb187e26c2c18f3cf04ab7bbf90253506c3219bf48e6e6ca7d049a"
+ },
+ {
+  "file": "fema/Owners/03000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceOwners?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=3000",
+  "bytes": 140072,
+  "sha256": "146567e411e7809608eaf48c866997d6d06fdb9a7a8ac73ba33141fd75bc9f79"
+ },
+ {
+  "file": "fema/Owners/04000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceOwners?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=4000",
+  "bytes": 140025,
+  "sha256": "1448bfdf9ff78175dfa3cbef261cf63285e62670c03dc86966a7230fe1d01c39"
+ },
+ {
+  "file": "fema/Owners/05000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceOwners?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=5000",
+  "bytes": 110880,
+  "sha256": "7f10a6ad6299ec0b14588d8c45e5ad70ab767b1e99a58ace07552837c44ff20f"
+ },
+ {
+  "file": "fema/Renters-count.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24count=true&%24top=1",
+  "bytes": 669,
+  "sha256": "d538542f8e564ec89b7c0f86b03604b44c64566b646351f5a9bf515343fca35a"
+ },
+ {
+  "file": "fema/Renters/00000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=0",
+  "bytes": 140199,
+  "sha256": "6fb6828b2e0a9313d295b78c774d83770310464440819407e6d45cac56ed48df"
+ },
+ {
+  "file": "fema/Renters/01000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=1000",
+  "bytes": 140113,
+  "sha256": "8f34143189074aebe1dac594b0176c16ffdff6aa876e1b5ed5947b3351a820c1"
+ },
+ {
+  "file": "fema/Renters/02000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=2000",
+  "bytes": 140033,
+  "sha256": "2ff76ecb10db6d036c9ee925e6599f56e2c122d0a3143b69fb195c1099f88600"
+ },
+ {
+  "file": "fema/Renters/03000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=3000",
+  "bytes": 140041,
+  "sha256": "ea01b1ddee151d9ecaa1e9ae374f0eb6e336df2795abed815b0253b32619cffb"
+ },
+ {
+  "file": "fema/Renters/04000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=4000",
+  "bytes": 140160,
+  "sha256": "67357d3fc5e822e3c934347443d9ddc4a337f52bc3cadfb6e48a8066971c4b2c"
+ },
+ {
+  "file": "fema/Renters/05000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=5000",
+  "bytes": 140153,
+  "sha256": "57890c217be4afedd379f97b535f5d14e1208cb9ebd90b086d3100fe9e2096d7"
+ },
+ {
+  "file": "fema/Renters/06000.json",
+  "url": "https://www.fema.gov/api/open/v2/HousingAssistanceRenters?%24filter=state+eq+%27CA%27&%24select=id%2CdisasterNumber%2CzipCode%2CvalidRegistrations%2CapprovedForFemaAssistance&%24orderby=id&%24top=1000&%24skip=6000",
+  "bytes": 97977,
+  "sha256": "ee1f8b1338b1f128fbb24eff8cbb02dc9d0c4b4e563b019773cf880dfe05856d"
+ },
+ {
+  "file": "fema/ca-major.json",
+  "url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=state+eq+%27CA%27+and+declarationType+eq+%27DR%27+and+incidentType+ne+%27Biological%27+and+declarationDate+ge+%272000-01-01T00%3A00%3A00.000Z%27&%24select=disasterNumber%2CdeclarationDate&%24top=10000&%24count=true",
+  "bytes": 30493,
+  "sha256": "5fa3296f6136e3bb1f8988bb64b36ab153f5c402d5e15675b289d43337c3aacc"
+ },
+ {
+  "file": "fire.zip",
+  "url": "https://files.cpuc.ca.gov/safety/fire-threat_map/2021/GIS_Files/CPUC_Fire_Threat_Map_v3r_08_19_2021(Tier2Tier3).zip",
+  "bytes": 1724795,
+  "sha256": "e6a49f122f5baa2f332fffa84e7c8940c2d879778cdf3bff3a3137c4db035fdd"
+ },
+ {
+  "file": "generators.xlsx",
+  "url": "https://www.eia.gov/electricity/data/eia860m/xls/october_generator2026.xlsx",
+  "bytes": 14033583,
+  "sha256": "18b37ac0aeb9e78da6fb0733dc857df2ed5c8f33dc506872fac7cdd61ab98a2c"
+ },
+ {
+  "file": "january.zip",
+  "url": "https://data.prism.oregonstate.edu/normals/us/4km/tmin/monthly/prism_tmin_us_25m_202001_avg_30y.zip",
+  "bytes": 2964105,
+  "sha256": "81841c0ddb7a04acd5577a15e8c8fa903ff8d3c9f4434d04514d95eaa7bf883e"
+ },
+ {
+  "file": "july.zip",
+  "url": "https://data.prism.oregonstate.edu/normals/us/4km/tmax/monthly/prism_tmax_us_25m_202007_avg_30y.zip",
+  "bytes": 2924182,
+  "sha256": "286c9cc5e8ef3887e7fd425e8f4c7cdf8abfade62e5144811eff8c46532d2ee2"
+ },
+ {
+  "file": "lakes.zip",
+  "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_lakes.zip",
+  "bytes": 2349685,
+  "sha256": "0803a06f9c3cb4671d89b68c48b142aad9366ba40f665245e12a913fbc61722a"
+ },
+ {
+  "file": "land.zip",
+  "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_land.zip",
+  "bytes": 3269070,
+  "sha256": "e547d749445eaa0964aba76738090ec88f5e63c4585122170f98c67a7ea922dc"
+ },
+ {
+  "file": "landmarks.json",
+  "url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?where=Is_NHL%3D%27X%27+AND+State+IN+%28%27CA%27%2C%27California%27%2C%27CALIFORNIA%27%29&outFields=NRIS_Refnum%2CRESNAME%2CCity%2CCounty%2CState&outSR=4326&f=geojson",
+  "bytes": 12694,
+  "sha256": "52a9709302bffb1a4429e9cf0fc822e39ae7683c9a8112e9d3e22593ec681728"
+ },
+ {
+  "file": "nlcd.tif",
+  "url": "https://www.mrlc.gov/geoserver/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=mrlc_download__NLCD_2021_Land_Cover_L48&subset=X%28-2304000%2C-1526000%29&subset=Y%281224000%2C2013000%29&format=image%2Ftiff&scalesize=i%283112%29%2Cj%283156%29&interpolation=http%3A%2F%2Fwww.opengis.net%2Fdef%2Finterpolation%2FOGC%2F1%2Fnearest-neighbor",
+  "bytes": 12847380,
+  "sha256": "89c4515d890a8de07b3fbb469b23a975e831b11454c7cdb898aac24a3d944ca6"
+ },
+ {
+  "file": "outage/centers-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps_logistics/MapServer/1/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 319,
+  "sha256": "bfcb7e80c90ba0f9ceeb8b44e393075713f398cbb215543bd19b7d8e4dc05bfa"
+ },
+ {
+  "file": "outage/charging-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/1/query?where=1%3D1&groupByFieldsForStatistics=City%2CZIP&orderByFields=City%2CZIP&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 320,
+  "sha256": "1a7e2db340630786c0c4d7a2ddcdbd538b4982967ff650cbd3dd95fedafc70dc"
+ },
+ {
+  "file": "outage/cooling-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/0/query?where=1%3D1&groupByFieldsForStatistics=City%2CZipCode&orderByFields=City%2CZipCode&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 20480,
+  "sha256": "b9b44eb18ec89107dd7e05398f0f86b7cc65ccc4e7bbfc5274285ff21587b0a1"
+ },
+ {
+  "file": "outage/current-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/outage/MapServer/0/query?where=1%3D1&groupByFieldsForStatistics=CityName%2CZipcodeName&orderByFields=CityName%2CZipcodeName&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%2C%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22NoOfAffectedCust_Inci%22%2C%22outStatisticFieldName%22%3A%22customers%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 821,
+  "sha256": "7e7f4d598abe25bc1002210e914d9f46bcd6966f31e424002ea0bf03fe2537ba"
+ },
+ {
+  "file": "outage/food-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/2/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 319,
+  "sha256": "bfcb7e80c90ba0f9ceeb8b44e393075713f398cbb215543bd19b7d8e4dc05bfa"
+ },
+ {
+  "file": "outage/hotels-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/3/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 319,
+  "sha256": "e7014502bce4ac55f2f90b916c95b682a55a4986c3c92a3eef6b122e45816545"
+ },
+ {
+  "file": "outage/major.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/outage_support/MapServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
+ },
+ {
+  "file": "outage/pspsActive.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps/MapServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
+ },
+ {
+  "file": "outage/pspsConsidered.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps/MapServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+  "bytes": 11,
+  "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
+ },
+ {
+  "file": "outage/scheduled-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/outage/MapServer/1/query?where=1%3D1&groupByFieldsForStatistics=CityName%2CZipcodeName&orderByFields=CityName%2CZipcodeName&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%2C%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22NoOfAffectedCust_Inci%22%2C%22outStatisticFieldName%22%3A%22customers%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 37742,
+  "sha256": "b746b2377bceaa7d08f7d5d8b6a29a789d9aae5aed34001cd77f7b71da274aed"
+ },
+ {
+  "file": "outage/stamp.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/lastupdate_time/MapServer/6/query?where=1%3D1&outFields=LAST_UPDATE&returnGeometry=false&f=json",
+  "bytes": 242,
+  "sha256": "b03f5aac25a29fb661c8fe4e153a214439ac47bce4ed596c2001a042b777416d"
+ },
+ {
+  "file": "outage/vehicles-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps_logistics/MapServer/0/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
+  "bytes": 319,
+  "sha256": "bfcb7e80c90ba0f9ceeb8b44e393075713f398cbb215543bd19b7d8e4dc05bfa"
+ },
+ {
+  "file": "parks.json",
+  "url": "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2/query?where=STATE%3D%27CA%27&outFields=UNIT_CODE%2CUNIT_NAME%2CUNIT_TYPE&outSR=4326&maxAllowableOffset=0.0008&geometryPrecision=5&returnGeometry=true&f=geojson",
+  "bytes": 111987,
+  "sha256": "d6d00193b388df544ccd2a9e7d881fd2cd536834ecf19da2650238e7fa9beb60"
+ },
+ {
+  "file": "places.zip",
+  "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip",
+  "bytes": 1221402,
+  "sha256": "cf262fc92b2326f7a8c62a89d156a60eb17d64d6d35f7a62310c43bb08972c06"
+ },
+ {
+  "file": "rail.zip",
+  "url": "https://naturalearth.s3.amazonaws.com/10m_cultural/ne_10m_railroads.zip",
+  "bytes": 15116579,
+  "sha256": "0bce64d1bb7ce1178810f0a341322b0459acb0689a61016259ef38f75abed0a4"
+ },
+ {
+  "file": "rain.zip",
+  "url": "https://data.prism.oregonstate.edu/normals/us/4km/ppt/monthly/prism_ppt_us_25m_2020_avg_30y.zip",
+  "bytes": 2752139,
+  "sha256": "054ee0ea81f38eb2f4d4272b9a6c3905d0df1c0b92bb4e391ebc3f9901ce3246"
+ },
+ {
+  "file": "rivers.zip",
+  "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_rivers_lake_centerlines.zip",
+  "bytes": 2079507,
+  "sha256": "ded71b01870855ccfe19b51f2ec14c9bb48fae23c0e9f3c11974d426433b5c38"
+ },
+ {
+  "file": "roads.zip",
+  "url": "https://www2.census.gov/geo/tiger/TIGER2024/PRISECROADS/tl_2024_06_prisecroads.zip",
+  "bytes": 12776243,
+  "sha256": "9f43eed4a60a58481482012ee0f4a7d926b9610c1da848654d5f51f239d8af1a"
+ },
+ {
+  "file": "sce-zip-q3-2026.xlsx",
+  "url": "https://www.sce.com/sites/default/files/custom-files/PDF_Files/SCE_2026_Q3_ElectricUsagebyZip.xlsx",
+  "bytes": 387858,
+  "sha256": "2a6af618f2afc245c363c3e68cc144514784a1efc4ce3cd832e0fd2884bd1ca8"
+ },
+ {
+  "file": "solar.zip",
+  "url": "https://data.prism.oregonstate.edu/normals/us/800m/soltotal/monthly/prism_soltotal_us_30s_2020_avg_30y.zip",
+  "bytes": 54712075,
+  "sha256": "149a5fceb1e2689814a8440af36f53794034a9907c556ff4b5b1a9b0e88a0438"
+ },
+ {
+  "file": "territory.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/17/query?where=1%3D1&outFields=objectid&returnGeometry=true&outSR=3310&f=geojson",
+  "bytes": 462694,
+  "sha256": "2e81b0085c6d8ebc75d5e5cc98450146efd32a5f02d27a99982fec17ca0ba94b"
+ },
+ {
+  "file": "tracts-2023.zip",
+  "url": "https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_06_tract_500k.zip",
+  "bytes": 4290033,
+  "sha256": "63afe6f8a9a10cee22dd8b2d9950b676909e9e9a0b3bd58703ea4fe9ee2107c4"
+ },
+ {
+  "file": "tracts.zip",
+  "url": "https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_06_tract_500k.zip",
+  "bytes": 4283145,
+  "sha256": "0590a3db4d9dce1f93ca9c7c3b80abb5e00a6b7b1091ba8b871435b93758a2d8"
+ },
+ {
+  "file": "usaciv-source.zip",
+  "url": "https://karpathy.ai/usaciv/usaciv-source.zip",
+  "bytes": 8008568,
+  "sha256": "52b3b2c3cf189b8ceff2376c48188db7ec88634d6a0f73ae254077ed50306314"
+ },
+ {
+  "file": "utility-energy.xlsx",
+  "url": "https://www.energy.ca.gov/filebrowser/download/8168?fid=8168",
+  "bytes": 496507,
+  "sha256": "b2a8a8d5863cca938ce3cf6c41c6ff941c20640a977952e75e449732f19460c2"
+ },
+ {
+  "file": "vehicles.xlsx",
+  "url": "https://www.energy.ca.gov/filebrowser/download/9606?fid=9606",
+  "bytes": 8137686,
+  "sha256": "03a0954c1581e382bde380aa3e90486c40b0dc00c789412e14826cde53de62ef"
+ },
+ {
+  "file": "zbp23detail.zip",
+  "url": "https://www2.census.gov/programs-surveys/cbp/datasets/2023/zbp23detail.zip",
+  "bytes": 15712046,
+  "sha256": "bbed2edd444e8b35c36a100e4dd846ce18e7c36660d6ba8f1f14743a67596809"
+ },
+ {
+  "file": "zctas.zip",
+  "url": "https://www2.census.gov/geo/tiger/GENZ2020/shp/cb_2020_us_zcta520_500k.zip",
+  "bytes": 66655314,
+  "sha256": "c69a4ede8aebebfc7ed3a98a9075c6aaa1b75d514a129bc5c662fd806d2f3d17"
+ }
+]
