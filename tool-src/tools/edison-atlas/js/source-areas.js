@@ -5,7 +5,6 @@ export const shapeNames = {
   tract: "Census tracts",
   health: "Census tracts",
   zcta: "ZIP areas",
-  planningRegion: "48-mile regions",
   work: "Block groups",
 };
 

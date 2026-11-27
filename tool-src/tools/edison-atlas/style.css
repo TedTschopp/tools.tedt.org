@@ -920,15 +920,12 @@ kbd {
   gap: 12px;
   align-items: end;
 }
-.sce-controls label,
-.live-impact label {
+.sce-controls label {
   display: block;
   font-weight: 600;
   font-size: 12px;
 }
-.sce-controls input,
-.sce-controls select,
-.live-impact select {
+.sce-controls input {
   display: block;
   max-width: 100%;
   padding: 6px;
@@ -943,13 +940,12 @@ kbd {
   top: 0;
   background: var(--paper);
 }
-.live-impact {
-  border-block: 1px solid var(--line);
-  padding-bottom: 8px;
-  margin: 12px 0;
+.cooling-site p {
+  margin: 0.2rem 0;
+  white-space: pre-line;
 }
-#live-result {
-  font-weight: 650;
+.cooling-site + .cooling-site {
+  margin-top: 0.7rem;
 }
 .status .tt-catalog-return {
   position: static;
@@ -1605,4 +1601,13 @@ details p {
 }
 dialog[data-view="share"] {
   width: min(540px, calc(100vw - 24px));
+}
+
+.band-coverage {
+  font-size: 12px;
+  margin: 2px 0 6px;
+}
+.band-coverage ul {
+  margin: 0.35em 0;
+  padding-left: 1.4em;
 }

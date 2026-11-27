@@ -306,6 +306,18 @@
   "sha256": "50950331a382b97313f2be4a8fa5ffd59f279c2b7f07d9f8c228f943b647071f"
  },
  {
+  "file": "cooling/ids.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/0/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 1730,
+  "sha256": "ff84ae5b8bdcccb319fc05ab9537a2dd88c1d3c0a3abc673ecbd2c1b37bc7edc"
+ },
+ {
+  "file": "cooling/sites-00000.json",
+  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/0/query?where=OBJECTID+BETWEEN+1+AND+448&outFields=OBJECTID%2CCoolCenterName%2CStreet%2CCity%2CZipCode%2CHRSOPERATE&outSR=4326&returnGeometry=true&f=json",
+  "bytes": 130719,
+  "sha256": "8dbd8a1b042fc3b2af4bfbea5c264cea6891ae19e1d5e7359dad5325738118ea"
+ },
+ {
   "file": "counties.zip",
   "url": "https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_us_county_500k.zip",
   "bytes": 11626066,
@@ -3168,58 +3180,862 @@
   "sha256": "d8c36aaaaabc21e28832914ec10d916ec9b5df3022fe7ccae27c51ef131323e8"
  },
  {
-  "file": "drpep/project-areas-0.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/0/query?where=1%3D1&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=100&geometryPrecision=0&f=geojson",
-  "bytes": 32139,
-  "sha256": "582f154ee14dc96f30cd09f1315b34ed83251846f3b5f1df2e89b7231e57d014"
+  "file": "drpep/hex/caiso/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/0/query?where=objectid+BETWEEN+1+AND+18&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 84538,
+  "sha256": "05399a56a7870afae78e1da7e79cfe908c2716b7a36c47f97d900f804347ca6b"
  },
  {
-  "file": "drpep/project-areas-1.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/1/query?where=1%3D1&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=100&geometryPrecision=0&f=geojson",
-  "bytes": 32139,
-  "sha256": "582f154ee14dc96f30cd09f1315b34ed83251846f3b5f1df2e89b7231e57d014"
+  "file": "drpep/hex/caiso/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/0/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 91,
+  "sha256": "4855a2ce45e2dd77d8f571f1533e6153a2c72373a4c0e6f537fc6b82aed2a02a"
  },
  {
-  "file": "drpep/project-areas-2.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/2/query?where=1%3D1&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=100&geometryPrecision=0&f=geojson",
-  "bytes": 20848,
-  "sha256": "bdf9704217d4c90c972ac0b0ca41b0bef71b4b550bafd268b73a1204914a7ad3"
+  "file": "drpep/hex/caiso/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/0?f=json",
+  "bytes": 11896,
+  "sha256": "c63bed4c0318d14e2785cc41557ca010e783a0ffd6ba062de1340eec40ffc55a"
+ },
+ {
+  "file": "drpep/hex/cpuc/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/2/query?where=objectid+BETWEEN+1+AND+13&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 52123,
+  "sha256": "4bc9687d732e0ef72c967fa37bac942a803ed88e72ff733d0b5e1ef028b0b01c"
+ },
+ {
+  "file": "drpep/hex/cpuc/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/2/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 76,
+  "sha256": "f86a0adcbcd04621d268348af74259bf49300b8307857f5e4b81891357729112"
+ },
+ {
+  "file": "drpep/hex/cpuc/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/2?f=json",
+  "bytes": 11202,
+  "sha256": "696e7b88dfb6633b65d1ef8d204e40f98ad858d65a0711646c97f90cce02108d"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+2+AND+20&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 1188138,
+  "sha256": "34058e10e7f77e9be2542a500f669f3b96ccce7d8c43c2197526eb4534dd6802"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000012.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+21+AND+49&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 175852,
+  "sha256": "bd2f7f1707ac7057bba7a7794a7a54a75f03042ee1661e98ac9b70775acbd08d"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000024.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+50+AND+66&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 96424,
+  "sha256": "6d8096674ffd3cc8b8211ac6805592be3181b7f56306a86902d4b17d26208834"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000036.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+67+AND+89&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 51235,
+  "sha256": "576d6115cbc5ff28f2556ef66758adb40f7e6de7e3df09f37b475bcdff0ca580"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000048.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+90+AND+104&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 38971,
+  "sha256": "201cd10a23fe1d9084600369579c0a7ecdfe912c41d9b85773b051c38c0a0123"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000060.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+114+AND+136&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 22316,
+  "sha256": "c4e10747be6b6ea53c46f62310442b0906a38761e4ec6087e2131e9af4b2cad4"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000072.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+139+AND+158&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 17727,
+  "sha256": "ce4c449495ccf1d758e81a1d6aba4843c1699363843d89545eb82eb5948c3629"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000084.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+159+AND+178&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 15844,
+  "sha256": "c30d181d539d81f56364952244f237f8a094a9a31fd5e81e63a2527a34d060a1"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000096.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+179+AND+210&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 12906,
+  "sha256": "601a6c4fd64c567fc67ace8ea881b41253095e8d21a835045a46902a2f7f3d13"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000108.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+211+AND+237&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 11072,
+  "sha256": "b45496fc33291c12255ead84f3c8a50fca7cacdb534089f8189fcbc32f9a23f5"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000120.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+240+AND+269&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 6791,
+  "sha256": "da2b747ed36d6ac32687ddf58336d9d8dee81323eccd62e9719d1d1fe7ebab5c"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000132.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+272+AND+301&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 5934,
+  "sha256": "a7c710560607f19eb6522ac0f1df79d2e2a97071001a1da11a105213a1609072"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000144.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+303+AND+326&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 5601,
+  "sha256": "0033c2b1a8e077565da938804006c714af2a9457c83f2b514ffc4ade7144f69e"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000156.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+332+AND+363&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 5254,
+  "sha256": "84e5ffa36ce4ac3a3cc920fa92f05d037b0f1da67b61bd2175cb9f5a96fe15a7"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000168.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+364+AND+412&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 4969,
+  "sha256": "2cf2d9413a32a910ffb81b7fb3c24b84a0a70ecf853be55ecd9ede10641fd6a9"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000180.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+414+AND+437&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 4357,
+  "sha256": "4f54ede44a749801782428d95884f6ed017a2075990846b94ab4440502a3b8aa"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000192.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+439+AND+485&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 4144,
+  "sha256": "27c7614199228759c39b97ee24c952b7284fb8e7d2b3c86f60e97862298dcf91"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000204.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+491+AND+541&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 3983,
+  "sha256": "fd61d3e7f7c584bb806561be6aab7f4be593a6bab48aba00a79e45ae59a46e2c"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000216.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+543+AND+583&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 3755,
+  "sha256": "377600c3210a57537142315fcb47b26accb52dadd65ddc38f84e662cd3a042bc"
+ },
+ {
+  "file": "drpep/hex/fire2/features-000228.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=objectid+BETWEEN+587+AND+630&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 2495,
+  "sha256": "0541320337b77b1af4eac9ec4c1fea11509c5473d287dc4ae6edc75914ba862d"
+ },
+ {
+  "file": "drpep/hex/fire2/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1/query?where=1%3D1&returnIdsOnly=true&f=json&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 929,
+  "sha256": "28f1b51551166787ce92b6a5d516e0375de6720adcaa6902c50806de3523ca6f"
+ },
+ {
+  "file": "drpep/hex/fire2/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/1?f=json",
+  "bytes": 6582,
+  "sha256": "9c876bd77b668cf0b1fc5b94c4a98252bca05a303e36ebdd2d507c925734b874"
+ },
+ {
+  "file": "drpep/hex/fire3/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/2/query?where=objectid+BETWEEN+1+AND+7&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 403472,
+  "sha256": "ff0388c861f0ffdb7e7e2408494e8cfb81afe311108db9e19453ad69a86d83a3"
+ },
+ {
+  "file": "drpep/hex/fire3/features-000005.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/2/query?where=objectid+BETWEEN+9+AND+30&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 40595,
+  "sha256": "1ed3e511d5bc23a52a76649f65d85ad8178b24e9192c13cbf63ec9d2dca8bb2f"
+ },
+ {
+  "file": "drpep/hex/fire3/features-000010.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/2/query?where=objectid+BETWEEN+32+AND+39&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 29315,
+  "sha256": "9d36bfc67d218b3735ffc583117b51fdefc301c7da6036ccc87a3b3ea6854e60"
+ },
+ {
+  "file": "drpep/hex/fire3/features-000015.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/2/query?where=objectid+BETWEEN+42+AND+52&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 9301,
+  "sha256": "2ba57a9d726af67bc7bd204319f50865dbc1c45586c74e8cd58c27bf9ef097c0"
+ },
+ {
+  "file": "drpep/hex/fire3/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/2/query?where=1%3D1&returnIdsOnly=true&f=json&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 100,
+  "sha256": "ea0a0200b763f5286f0f8840800723664041ab9b3a4e6b3aa8cff902b0dcb1b1"
+ },
+ {
+  "file": "drpep/hex/fire3/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/2?f=json",
+  "bytes": 6579,
+  "sha256": "9d5121e4495a39b3d7c00cf5a902664ee2d1be444178d7d76662267589edd4e5"
+ },
+ {
+  "file": "drpep/hex/growth/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+578778+AND+579777&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4467817,
+  "sha256": "3b7e6a0de26a2ba2284cacb05488305b20ebcfded6ee015d17f75636baca9e6a"
+ },
+ {
+  "file": "drpep/hex/growth/features-001000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+579778+AND+580777&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4037290,
+  "sha256": "031730dc9251366886ba7393fb265bcf97319af8fcfd841add886c5ef54911d0"
+ },
+ {
+  "file": "drpep/hex/growth/features-002000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+580778+AND+581777&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4051983,
+  "sha256": "e6b795b45f561a777cb5bd31295640a87649f7d7d69bb5c9c82cd2a263cf9ed0"
+ },
+ {
+  "file": "drpep/hex/growth/features-003000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+581778+AND+582777&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3969074,
+  "sha256": "496f418b7237320360ff2e3c6ddda36ed1632d64e06278424cab780c97b0c553"
+ },
+ {
+  "file": "drpep/hex/growth/features-004000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+582778+AND+583777&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3931883,
+  "sha256": "8e0b489740485947d157a6700ce3ab3d60ae5dffa2e3de07b5a99fd32ba58f10"
+ },
+ {
+  "file": "drpep/hex/growth/features-005000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+583778+AND+584777&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3834350,
+  "sha256": "626871c0c4de39db7d0ed8d489de65f8b41a3859e2a3521c2d3b5553de69c4ab"
+ },
+ {
+  "file": "drpep/hex/growth/features-006000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+584778+AND+585777&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4460940,
+  "sha256": "73f95495499bbd69a8e05bde87eaef3f983fe4cc38eac826a2bf92f4b50821bc"
+ },
+ {
+  "file": "drpep/hex/growth/features-007000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=objectid+BETWEEN+585778+AND+586321&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1733759,
+  "sha256": "56a242c0dd2654c4378e3eec91291c4a143a993bf586c36c04692be3d4f0b227"
+ },
+ {
+  "file": "drpep/hex/growth/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 52854,
+  "sha256": "c5826b111fdcf08ed9ddb20ce45e8a7143fe37d7ff96725f305bfd93600de7ea"
+ },
+ {
+  "file": "drpep/hex/growth/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LOAD_GROWTH_PEN_HTMAP/FeatureServer/0?f=json",
+  "bytes": 7604,
+  "sha256": "dad4bf78d41d11d1e0c5e2a25da04af3486673c02c51bd504fd03d51ce3bc273"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+1+AND+1000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4298476,
+  "sha256": "135ad100d234e0d040a0908bd16d14330eb0cd2ad25c03daae5e6a5bf3470070"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-001000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+1001+AND+2000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 7005818,
+  "sha256": "65b9994e9e0b78df13e408dba11dea235058bd319d292a546bb7bf6e02700791"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-002000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+2001+AND+3000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3165073,
+  "sha256": "5d0e028790153b5f1a6ab15a534eb5e519d230028370699a9e95f5045e8afeb2"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-003000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+3001+AND+4000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3302798,
+  "sha256": "d6f44973c7931e3cefc35655ffa7817529cdd65d10fecb4d6fd2a373a2ac38f6"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-004000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+4001+AND+5000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 7915121,
+  "sha256": "6ebb9769da412cf6d4dca952248dbb7c57e7b36ef2c819d9df740d93bec9dd84"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-005000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+5001+AND+6000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3104025,
+  "sha256": "e6500f483a879c8d00425fa2d47fd6db932a48d2bb03f067d70f75472af19d99"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-006000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+6001+AND+7000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4793329,
+  "sha256": "43bbbf6fc210a03b2ad3a2e0233a4da8606cd3dae10eca68dc44c9cc7177f0c7"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-007000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+7001+AND+8000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 7242307,
+  "sha256": "877e673e6cb40841602e1848b96a09059ceff03b09412ae5708f62538243e716"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-008000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+8001+AND+9000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 6452801,
+  "sha256": "13a0ef3bee4e3320f423a5e674baae157b57cb430b6ba136279afb5274dbaaf0"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-009000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+9001+AND+10000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1212750,
+  "sha256": "42f1dbcc99f3cd16579d66ef7bc228e830ba058902b187db962af58c071bf540"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-010000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+10001+AND+11000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 5927206,
+  "sha256": "7c9bd38d9c319370b1afb061cc65decebd8ba51b1b6b087746326c62fd450825"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-011000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+11001+AND+12000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2567710,
+  "sha256": "0f30415e08feb7e32d59e5fd2811bd41355b61de5da3aab87ab1e8f880a6f2fb"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-012000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+12001+AND+13000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3293493,
+  "sha256": "7286eff9aea456667017861740f142b4c8c185c09c5d98aa138aa15e8af24b05"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-013000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+13001+AND+14000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 6150952,
+  "sha256": "f6ebe79b80ec031e0fc228a8f418005ac95bc573c00e1ad4f204d096f2c0135f"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-014000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+14001+AND+15000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 8381037,
+  "sha256": "53eb8d241bbe68793eec4d014482930b47077af62a8efbe2a0e1bce074e691e7"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-015000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+15001+AND+16000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2155259,
+  "sha256": "c50b65402f4ce1f047c5c1ba5e3a3c676577d4c25e0eb1405c33d7f27d24dabe"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-016000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+16001+AND+17000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2900792,
+  "sha256": "ecdc9ac6d2fa08d42d87a0f6d79c95f5c11682d53908ea91bf438f6225143f65"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-017000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+17001+AND+18000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 11336016,
+  "sha256": "d9f3414798a3fba86990b3f2cb5b899c8c162ead2b3f1cb6716cd787e589a26b"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-018000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+18001+AND+19000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2542596,
+  "sha256": "bea563e0c041904d01906bfa2c4d3a4836867e2d25eaab5bf0e888fc592a7cc9"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-019000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+19001+AND+20000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3836953,
+  "sha256": "2076dd3095e8b2bde5ba9788920bd874725287baaf77aac3b55de086a5c1cebf"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-020000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+20001+AND+21000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1889221,
+  "sha256": "f5bbb504550c7c5f28519787dd0c44bc2881b88ea05201c7ed7b5648bd058d70"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-021000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+21001+AND+22000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 6104752,
+  "sha256": "b166e5f47cb304db3b360f911a47d35bce67af3aa408edd7924d82301d458b3e"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-022000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+22001+AND+23000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 6057940,
+  "sha256": "d45e00e6885344af1d9a46940edc13b30a38f2b5c9d9e616e2145ac5c3341295"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-023000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+23001+AND+24000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2243619,
+  "sha256": "5b7c1f024fa70bdbf91116bf10c126ab327c08bb0cb5831b9d47cd4a93ef1cdf"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-024000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+24001+AND+25000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2142962,
+  "sha256": "5e491b782cf42a043fad5251a90caa4930284f6d9790b91c3c508f29e7162ad9"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-025000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+25001+AND+26000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1490183,
+  "sha256": "70bddb968b27083fd8a5cfe938db25f6e461bb214ab992760caa274d3c970526"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-026000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+26001+AND+27000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3393907,
+  "sha256": "6ea7cf35ff89b5581e919070b2a62c3880a04f3f19220453ad837b2ee13c7dcd"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-027000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+27001+AND+28000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1842365,
+  "sha256": "69667922cb17253282f98b819869ff9ab728a0b178a9e6d97198dab866aefebd"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-028000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+28001+AND+29000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 6031763,
+  "sha256": "6ec84012383493b010d5eee9500802ac39ef5064f696bd17185291f5524c6967"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-029000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+29001+AND+30000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 22084516,
+  "sha256": "9ff30a6c3f68b429c959501407559e1a1087de3366d8cb3ff1173589698a2c4a"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-030000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+30001+AND+31000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3555744,
+  "sha256": "bd002419fed16f15cd855a67392780f40c20592e0d46857bf9321b15b3d6840d"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-031000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+31001+AND+32000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2843673,
+  "sha256": "7ae16fabfab998b5f110addfd095043a504a54fe5ed41f69508ba2b0f86b1a6c"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-032000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+32001+AND+33000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 10437125,
+  "sha256": "f4eacb02eb4adffaffce52fe0e12c70d95e8f6d3e294ba1b938b91af91b8899c"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-033000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+33001+AND+34000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3553581,
+  "sha256": "84b528a56852ec23ab63801069065cf85bec94d4fdab0f20dc2f92cc018684af"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-034000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+34001+AND+35000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2814039,
+  "sha256": "747f7441bea4b5c4e02c394bdba266e41ae7fb330d57f56ff9801fed1c4770a9"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-035000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+35001+AND+36000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 5657138,
+  "sha256": "1b4c861fc5dcfb27245f8343fb464eaa4b560252b72ac70132e265e62e602e83"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-036000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+36001+AND+37000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 18173460,
+  "sha256": "7d04e87c5dcbbdcc87af5bb2894d7d7e37c919d67bb938c895c1eb5f7e5e25a5"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-037000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+37001+AND+38000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 7875411,
+  "sha256": "622a46b76d755ed7a63b5e6a6a877bae95c924629366d5a63ea48a2ec477e34a"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-038000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+38001+AND+39000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 7901400,
+  "sha256": "34dbbdee1e02a653e3b532885deb7438852ac4d1c4d7da005f5beb74d3851519"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-039000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+39001+AND+40000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2902567,
+  "sha256": "282e17f8137690df5a22fedbc04477b6f19807be42edb11f873821c8ec35d397"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-040000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+40001+AND+41000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3053071,
+  "sha256": "22b09c065d5cccb258f68ff423142f5790acb56455494b3bc5f48908897aa5c3"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-041000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+41001+AND+42000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4528887,
+  "sha256": "4cb95797d546ce152f83f6091a452bea2366315949384530f026226742ea8c9b"
+ },
+ {
+  "file": "drpep/hex/loadFull/features-042000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=objectid+BETWEEN+42001+AND+42322&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3258207,
+  "sha256": "660a96211e218a262184ace1cb6fd6e2861045e93a373a9a340648301be45c33"
+ },
+ {
+  "file": "drpep/hex/loadFull/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 242872,
+  "sha256": "99bb9da0012c3d5acb85b5fc25adfec370c174a4dc38c8e3272898bebc7327b4"
+ },
+ {
+  "file": "drpep/hex/loadFull/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/0?f=json",
+  "bytes": 7954,
+  "sha256": "b57976bb983ac0b576f8bc64ec83230d4151cae1e66a1bbfe64288ba7cd9a261"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+1+AND+1000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 5370880,
+  "sha256": "117fb5c0a98d89bace8871e0ae1b82ac08516c9adf7bfc1c9257c9b1ca0621e1"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-001000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+1001+AND+2000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 6784675,
+  "sha256": "160fd1a1d67f49b76ebab2d7b9f62159a7e14dabbd1fb34c6ad06e71c5e912ac"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-002000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+2001+AND+3000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4662427,
+  "sha256": "b45421ed7fb4c0d23f5fea2a14843d645a6f92e6a7131df742e65facf6f23fa8"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-003000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+3001+AND+4000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4684627,
+  "sha256": "189e6a57f5ba1a301fb39a3e3ad8ffe0e4628f3e4b2fb508d00b59b442a644a4"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-004000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+4001+AND+5000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 7572913,
+  "sha256": "b83b9fdcae35307f1d97df30618495292d558bf8f0b54f1a0a7339d6506fe049"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-005000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+5001+AND+6000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 5709998,
+  "sha256": "b9b4cd062194bcf87370df58a15ae53cb4dbd0f246f357ab7dd57529175b237e"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-006000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+6001+AND+7000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 10584819,
+  "sha256": "2752776983f5a1ef51ff3f52f62ddcaeab2915e9b758c845c0980c0da631ae6d"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-007000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+7001+AND+8000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1884603,
+  "sha256": "19a99467a5f90648aef95168ad80ad01cbd38ce015e726a067f755ff981bc50d"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-008000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+8001+AND+9000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2780715,
+  "sha256": "7833a86915868a43eeb7e4b5030f5d85faf6981e03c75f3d00f9976ab0b93cd2"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-009000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+9001+AND+10000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2622541,
+  "sha256": "83c9539ab70c58b5fe14f028ab07b0040c138cbf532e11a7e77e2985a38e2195"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-010000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+10001+AND+11000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2100528,
+  "sha256": "4772d6e8ec8d758f43d63be02c3ad890a510cc433bc25b67cc48e02a93d18b2e"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-011000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+11001+AND+12000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1877740,
+  "sha256": "e5dd4dac92d9273fe23f5d86d1f8e632d914c207f19c68dde59c10c41d78516f"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-012000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+12001+AND+13000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 11761967,
+  "sha256": "2a96161611a2956859f76cdfff9b74d02dda02576f76de5a278184a7b0ed9db0"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-013000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+13001+AND+14000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 6310333,
+  "sha256": "b634ad531eb7980be3c6e04e72072d60d9eabfc2ea8f91ebc33940944584d17f"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-014000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+14001+AND+15000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3610147,
+  "sha256": "ac8646ef5da4f3cc26dbe4c96fb39cdd1a390db5cd2b646d58f304f0407f8102"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-015000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+15001+AND+16000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2541881,
+  "sha256": "cffe941d02774e41bd619a7c5917169fde7c6ee35305c36a2df9b773736193c5"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-016000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+16001+AND+17000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1503364,
+  "sha256": "70dd9fadfc4c8a42639b24d3e7ca891bb8059e2d1e59cb80c7d54bb54a6cdd28"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-017000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+17001+AND+18000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1818370,
+  "sha256": "94b5022310cb055aec229db98d8cf3f6ee34b1250afa69740c3173808a851e31"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-018000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+18001+AND+19000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 11441557,
+  "sha256": "f9a8a63296cc370184486bb20cb2b0b4873c78f473df047674ade7cb61be0ba2"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-019000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+19001+AND+20000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 4778757,
+  "sha256": "8d2528aa047b0be237de03f50733863f48ecc43f02c687d7c418286a537ab287"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-020000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+20001+AND+21000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2149327,
+  "sha256": "a49f7f97001fa547cf4585bc642dbf96662c41d432dae39a60da94ffdfc46e98"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-021000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+21001+AND+22000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3754294,
+  "sha256": "5aa74deeaa1137b6268c573114fd4e9c6c47ad8b3e2d5df6a6113295391fa0ff"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-022000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+22001+AND+23000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 16462431,
+  "sha256": "2a9225548e2dc16387b9cc6e0746b7661a9ceb40ff93c444a7642f851f3244bf"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-023000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+23001+AND+24000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2745684,
+  "sha256": "bf484a07ba53800926af344a16845b7dbf18cd313e79e5d62fba644e8aa0126b"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-024000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+24001+AND+25000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3400156,
+  "sha256": "18316b390b2f3e5ff4fa22f6332e774dd3b4b5981879b1e4974b427a9e457786"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-025000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+25001+AND+26000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 9817604,
+  "sha256": "6475107bce931436b7922e934686c127714c32f51bbab16240902cb4e1a06f6e"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-026000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+26001+AND+27000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3366731,
+  "sha256": "7686855f002ad94c5c427601fbbf839a6301a631bd9b2c43ce812eb52ababa4d"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-027000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+27001+AND+28000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1523605,
+  "sha256": "16bddf30b1942d88c8780b70702b416c76aa278696e1200efe4e9767d45c551a"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-028000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+28001+AND+29000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2035584,
+  "sha256": "4ec39d7b57b9c368881f1a5e27469a127c2a0786a2eeb57cc80af0a2561d1c66"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-029000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+29001+AND+30000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 17313098,
+  "sha256": "796ab262c048eddc386a543d0fee007a5cb514ab0f887890058c342eac708c63"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-030000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+30001+AND+31000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 16556206,
+  "sha256": "e1e096ce5e9a9f9e93ab3e0a658dc60e0b57252c075827c3e4fc572e22d168e3"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-031000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+31001+AND+32000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2051688,
+  "sha256": "27877917f22c276efaadc2ff85b59bde289ddf7ba9fe82377fd9edcec834a339"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-032000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+32001+AND+33000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 2288876,
+  "sha256": "fa91bbd5a18f4f7e5385d82947319c6848d38d50f04fa9043b422bce5110255b"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-033000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+33001+AND+34000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1318458,
+  "sha256": "b3f305aaf5dbacd5c32344ef379ead127104a01d25669b36b9b18f6a289671a5"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-034000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+34001+AND+35000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1426564,
+  "sha256": "93ef85ddb96d90f8d4d1195fe7e36214287b8f603d9f119845ed359811fbeeab"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-035000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+35001+AND+36000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 1251513,
+  "sha256": "14ee5765c4e7c56698d04bdc4f9634e99dc7033b8b23e00b58dd3929b1ff4b37"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-036000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+36001+AND+37000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 20693205,
+  "sha256": "77f21b21646f49b9b975027e9cfce7f9400b025a724f8e0a3494883ddd17b0aa"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-037000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+37001+AND+38000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3101092,
+  "sha256": "0de7d9cc218e86ae5af833bd0a68300702fca51f9445119c3ee7485e57b864b6"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-038000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+38001+AND+39000&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 9149211,
+  "sha256": "83434acae56ab0efc6de60ce3ac652df06c7b6f1c564e5670bbcfa8d0bbedb9e"
+ },
+ {
+  "file": "drpep/hex/loadPartial/features-039000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=objectid+BETWEEN+39001+AND+39925&outFields=objectid%2Crank&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 3679750,
+  "sha256": "482548ea21766b75f986df246a85fb8696d0d5b01a51438a2deb52091430c80e"
+ },
+ {
+  "file": "drpep/hex/loadPartial/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 228490,
+  "sha256": "248475f688db2f99838ac5f5ad670729264cbb8e338cc610e32659cb5a848a01"
+ },
+ {
+  "file": "drpep/hex/loadPartial/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_HEAT_MAP_TOGGLE/FeatureServer/1?f=json",
+  "bytes": 7962,
+  "sha256": "37d518bae92484445a8ffb82d5056c5b3159e61faae0d7ed8b5461a99c94c617"
+ },
+ {
+  "file": "drpep/hex/tree/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=objectid+BETWEEN+1+AND+1527&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 1202796,
+  "sha256": "e1c37d0b2e6440cc05589d9193dde625d577eed912f100c7b0442826cf96f1ba"
+ },
+ {
+  "file": "drpep/hex/tree/features-000100.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=objectid+BETWEEN+1528+AND+1656&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 1676746,
+  "sha256": "b4d7dbc7cca715693a595c53cd0bea5f477b6437872fa32d185958b8e24c1550"
+ },
+ {
+  "file": "drpep/hex/tree/features-000200.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=objectid+BETWEEN+1657+AND+2043&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 830837,
+  "sha256": "3d9e3d96e0496e775fef177c0f7c644c1f9a46d461b9973784b5739de0ccdce5"
+ },
+ {
+  "file": "drpep/hex/tree/features-000300.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=objectid+BETWEEN+2060+AND+2550&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 268296,
+  "sha256": "04e7c04c79cba8c861f5e003a93ae94cf90539f96ab79198f6e005e4fd61189f"
+ },
+ {
+  "file": "drpep/hex/tree/features-000400.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=objectid+BETWEEN+2551+AND+3815&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 115782,
+  "sha256": "3e1fd2fa1f2eef97189b5b751664478d067f99d03d51a7f02fec6b8982faab97"
+ },
+ {
+  "file": "drpep/hex/tree/features-000500.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=objectid+BETWEEN+3816+AND+15478&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 92183,
+  "sha256": "c6ded0b3d470ac650e2657ae5659824cc642caa0e075ed7b4642b8451ecd5e5b"
+ },
+ {
+  "file": "drpep/hex/tree/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=1%3D1&returnIdsOnly=true&f=json&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 2892,
+  "sha256": "9e819dacb333d65acf054028aad913df765dfed2d4ed8a5e4ab11ef81d6613ba"
+ },
+ {
+  "file": "drpep/hex/tree/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0?f=json",
+  "bytes": 6540,
+  "sha256": "02c0c18fc69ca4167cec4d6f8f07f57cb1291930f67ac55eeef5da7c37801a6c"
+ },
+ {
+  "file": "drpep/hex/utility/features-000000.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/1/query?where=objectid+BETWEEN+1+AND+18&outFields=objectid&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 84538,
+  "sha256": "05399a56a7870afae78e1da7e79cfe908c2716b7a36c47f97d900f804347ca6b"
+ },
+ {
+  "file": "drpep/hex/utility/ids.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/1/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 91,
+  "sha256": "4855a2ce45e2dd77d8f571f1533e6153a2c72373a4c0e6f537fc6b82aed2a02a"
+ },
+ {
+  "file": "drpep/hex/utility/schema.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/1?f=json",
+  "bytes": 11898,
+  "sha256": "d087bb9acb463693a13269e689990f269035b0e9cabcd9d341f83d84664c9878"
  },
  {
   "file": "drpep/services.json",
   "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted?f=json",
   "bytes": 1212,
   "sha256": "6bf748f87341e4de4038960bde8bb59140035ef7d6cd7043e79fecb2145968c5"
- },
- {
-  "file": "drpep/trees-ids.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?where=1%3D1&geometry=-50000%2C-524000%2C541000%2C45000&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects&returnIdsOnly=true&f=json",
-  "bytes": 2937,
-  "sha256": "72f97b91e211b93a36a7ed2d882f4bc6be239bc039e1eccfcc663a41f0e0c0f6"
- },
- {
-  "file": "drpep/trees/00000.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=1%2C18%2C24%2C51%2C52%2C53%2C112%2C297%2C298%2C299%2C300%2C310%2C311%2C312%2C313%2C314%2C315%2C316%2C319%2C320%2C321%2C322%2C323%2C324%2C325%2C372%2C373%2C617%2C618%2C619%2C620%2C621%2C622%2C623%2C624%2C625%2C626%2C627%2C628%2C629%2C630%2C631%2C632%2C633%2C634%2C635%2C636%2C637%2C638%2C639%2C640%2C641%2C642%2C643%2C644%2C645%2C646%2C647%2C648%2C649%2C650%2C651%2C652%2C653%2C654%2C655%2C656%2C657%2C658%2C659%2C660%2C661%2C662%2C663%2C664%2C665%2C666%2C667%2C668%2C669%2C670%2C671%2C672%2C673%2C674%2C675%2C676%2C677%2C678%2C679%2C680%2C732%2C753%2C1517%2C1518%2C1519%2C1520%2C1521%2C1522%2C1523%2C1524%2C1525%2C1526%2C1527%2C1528%2C1529%2C1530%2C1531%2C1532%2C1533%2C1534%2C1535%2C1536%2C1537%2C1538%2C1539%2C1540%2C1542%2C1543%2C1544%2C1545%2C1547%2C1548%2C1549%2C1550%2C1551%2C1552%2C1553%2C1554%2C1556%2C1557%2C1558%2C1559%2C1560%2C1563%2C1564%2C1574%2C1575%2C1578%2C1579%2C1580%2C1581%2C1582%2C1583%2C1585%2C1586%2C1587%2C1588%2C1589%2C1590%2C1591%2C1592%2C1593%2C1595%2C1596%2C1597%2C1598%2C1599%2C1600%2C1601&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
-  "bytes": 135262,
-  "sha256": "1c6176ca98ad33cd2ac48055426750b7c37b3847a08b0ae82eb3d244ce53fb23"
- },
- {
-  "file": "drpep/trees/00160.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=1602%2C1603%2C1604%2C1605%2C1606%2C1607%2C1608%2C1609%2C1610%2C1611%2C1612%2C1613%2C1614%2C1615%2C1616%2C1617%2C1618%2C1619%2C1620%2C1621%2C1622%2C1625%2C1626%2C1627%2C1628%2C1629%2C1630%2C1631%2C1632%2C1633%2C1634%2C1635%2C1636%2C1637%2C1638%2C1647%2C1648%2C1649%2C1650%2C1651%2C1652%2C1653%2C1654%2C1655%2C1656%2C1657%2C1658%2C1659%2C1660%2C1661%2C1662%2C1663%2C1664%2C1665%2C1666%2C1667%2C1668%2C1669%2C1670%2C1671%2C1675%2C1676%2C1677%2C1679%2C1681%2C1791%2C1792%2C1793%2C1794%2C1795%2C1796%2C1797%2C1798%2C1799%2C1800%2C1803%2C1804%2C1807%2C1809%2C1811%2C1812%2C1814%2C1815%2C1816%2C1817%2C1818%2C1819%2C1820%2C1821%2C1822%2C1823%2C1824%2C1825%2C1844%2C1845%2C1848%2C1849%2C1850%2C1851%2C1852%2C1853%2C1854%2C1879%2C1880%2C1881%2C1903%2C1904%2C1905%2C1906%2C1907%2C1908%2C1909%2C1910%2C1911%2C1912%2C1913%2C1914%2C1915%2C1916%2C1917%2C1918%2C1919%2C1920%2C1921%2C1922%2C1923%2C1924%2C1925%2C1926%2C1927%2C1928%2C1929%2C1930%2C1931%2C1945%2C1980%2C1995%2C2006%2C2007%2C2008%2C2015%2C2020%2C2039%2C2040%2C2041%2C2042%2C2043%2C2060%2C2061%2C2062%2C2063%2C2069%2C2070%2C2072%2C2073%2C2075%2C2076%2C2078%2C2083%2C2084&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
-  "bytes": 82145,
-  "sha256": "d9a88ba1beabbfe8bc35b5d0efbdacd9022e695812aa7c5130a4dfd7230ab616"
- },
- {
-  "file": "drpep/trees/00320.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=2085%2C2086%2C2087%2C2088%2C2089%2C2090%2C2091%2C2092%2C2093%2C2094%2C2095%2C2096%2C2097%2C2098%2C2099%2C2100%2C2101%2C2102%2C2103%2C2104%2C2105%2C2106%2C2107%2C2108%2C2109%2C2110%2C2177%2C2178%2C2179%2C2180%2C2181%2C2182%2C2223%2C2224%2C2251%2C2252%2C2253%2C2254%2C2255%2C2256%2C2273%2C2274%2C2279%2C2280%2C2317%2C2318%2C2319%2C2320%2C2321%2C2322%2C2323%2C2324%2C2325%2C2326%2C2351%2C2352%2C2353%2C2354%2C2355%2C2356%2C2359%2C2360%2C2361%2C2362%2C2363%2C2364%2C2365%2C2366%2C2367%2C2425%2C2426%2C2427%2C2428%2C2429%2C2430%2C2431%2C2432%2C2433%2C2434%2C2435%2C2436%2C2482%2C2483%2C2484%2C2548%2C2549%2C2550%2C2551%2C2552%2C2553%2C2566%2C2567%2C2568%2C2569%2C2570%2C2571%2C2572%2C2573%2C2574%2C2575%2C2576%2C2577%2C2606%2C2607%2C2608%2C2609%2C2610%2C2611%2C2680%2C2681%2C2682%2C2683%2C2696%2C2697%2C2698%2C2699%2C2778%2C2779%2C2780%2C2781%2C2784%2C2785%2C2787%2C2789%2C2790%2C2792%2C2793%2C2794%2C2795%2C2796%2C2799%2C2800%2C2802%2C2808%2C2830%2C2840%2C2842%2C2864%2C2868%2C2875%2C2878%2C2890%2C2892%2C2895%2C2904%2C2922%2C2951%2C2952%2C2953%2C2954%2C2955%2C2956%2C2957%2C2958%2C2959%2C2960%2C2961%2C2962%2C2963%2C2964&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
-  "bytes": 68199,
-  "sha256": "41ff31fafad743a0eaf2cba9ed34d560c1c629b9c85610232d49a64f0cc33e74"
- },
- {
-  "file": "drpep/trees/00480.json",
-  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Firemap/FeatureServer/0/query?objectIds=2965%2C2966%2C2967%2C2968%2C2969%2C2970%2C2971%2C2972%2C2973%2C2974%2C2975%2C2976%2C2977%2C2978%2C2979%2C2980%2C2981%2C2982%2C2983%2C2984%2C2985%2C2986%2C2987%2C2988%2C2989%2C2990%2C3814%2C3815%2C3816%2C3817%2C3818%2C3819%2C3820%2C3821%2C3822%2C3823%2C3824%2C3825%2C3826%2C3827%2C3828%2C3829%2C3845%2C3846%2C3847%2C3848%2C3849%2C3850%2C3851%2C3852%2C3853%2C13372%2C13378%2C13379%2C13682%2C13683%2C13684%2C13685%2C13686%2C13687%2C13688%2C13689%2C13690%2C13691%2C13692%2C13693%2C13694%2C13695%2C13696%2C13697%2C13698%2C13699%2C13700%2C13701%2C13702%2C13703%2C13704%2C13705%2C13706%2C13707%2C13708%2C13709%2C13710%2C13711%2C13712%2C13713%2C13714%2C13715%2C13716%2C13717%2C13756%2C13757%2C15460%2C15461%2C15462%2C15463%2C15464%2C15467%2C15468%2C15469%2C15470%2C15471%2C15472%2C15473%2C15474%2C15477%2C15478&outFields=objectid&outSR=3310&returnGeometry=true&maxAllowableOffset=10&geometryPrecision=1&f=geojson",
-  "bytes": 40952,
-  "sha256": "eb2c372da65ea7279c2524987f2a316b27ac01f38015ef8083e3be97d15122dc"
  },
  {
   "file": "drpep/upgrades-by-service.json",
@@ -3376,78 +4192,6 @@
   "url": "https://www.mrlc.gov/geoserver/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=mrlc_download__NLCD_2021_Land_Cover_L48&subset=X%28-2304000%2C-1526000%29&subset=Y%281224000%2C2013000%29&format=image%2Ftiff&scalesize=i%283112%29%2Cj%283156%29&interpolation=http%3A%2F%2Fwww.opengis.net%2Fdef%2Finterpolation%2FOGC%2F1%2Fnearest-neighbor",
   "bytes": 12847380,
   "sha256": "89c4515d890a8de07b3fbb469b23a975e831b11454c7cdb898aac24a3d944ca6"
- },
- {
-  "file": "outage/centers-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps_logistics/MapServer/1/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 319,
-  "sha256": "bfcb7e80c90ba0f9ceeb8b44e393075713f398cbb215543bd19b7d8e4dc05bfa"
- },
- {
-  "file": "outage/charging-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/1/query?where=1%3D1&groupByFieldsForStatistics=City%2CZIP&orderByFields=City%2CZIP&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 320,
-  "sha256": "1a7e2db340630786c0c4d7a2ddcdbd538b4982967ff650cbd3dd95fedafc70dc"
- },
- {
-  "file": "outage/cooling-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/0/query?where=1%3D1&groupByFieldsForStatistics=City%2CZipCode&orderByFields=City%2CZipCode&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 20480,
-  "sha256": "b9b44eb18ec89107dd7e05398f0f86b7cc65ccc4e7bbfc5274285ff21587b0a1"
- },
- {
-  "file": "outage/current-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/outage/MapServer/0/query?where=1%3D1&groupByFieldsForStatistics=CityName%2CZipcodeName&orderByFields=CityName%2CZipcodeName&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%2C%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22NoOfAffectedCust_Inci%22%2C%22outStatisticFieldName%22%3A%22customers%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 821,
-  "sha256": "7e7f4d598abe25bc1002210e914d9f46bcd6966f31e424002ea0bf03fe2537ba"
- },
- {
-  "file": "outage/food-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/2/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 319,
-  "sha256": "bfcb7e80c90ba0f9ceeb8b44e393075713f398cbb215543bd19b7d8e4dc05bfa"
- },
- {
-  "file": "outage/hotels-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/reference/MapServer/3/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 319,
-  "sha256": "e7014502bce4ac55f2f90b916c95b682a55a4986c3c92a3eef6b122e45816545"
- },
- {
-  "file": "outage/major.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/outage_support/MapServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
-  "bytes": 11,
-  "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
- },
- {
-  "file": "outage/pspsActive.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps/MapServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
-  "bytes": 11,
-  "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
- },
- {
-  "file": "outage/pspsConsidered.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps/MapServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
-  "bytes": 11,
-  "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
- },
- {
-  "file": "outage/scheduled-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/outage/MapServer/1/query?where=1%3D1&groupByFieldsForStatistics=CityName%2CZipcodeName&orderByFields=CityName%2CZipcodeName&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%2C%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22NoOfAffectedCust_Inci%22%2C%22outStatisticFieldName%22%3A%22customers%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 37742,
-  "sha256": "b746b2377bceaa7d08f7d5d8b6a29a789d9aae5aed34001cd77f7b71da274aed"
- },
- {
-  "file": "outage/stamp.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/lastupdate_time/MapServer/6/query?where=1%3D1&outFields=LAST_UPDATE&returnGeometry=false&f=json",
-  "bytes": 242,
-  "sha256": "b03f5aac25a29fb661c8fe4e153a214439ac47bce4ed596c2001a042b777416d"
- },
- {
-  "file": "outage/vehicles-00000.json",
-  "url": "https://sce-outage-ags.esriemcs.com/arcgis/rest/services/43/psps_logistics/MapServer/0/query?where=1%3D1&groupByFieldsForStatistics=City%2CZip&orderByFields=City%2CZip&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22records%22%7D%5D&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=0",
-  "bytes": 319,
-  "sha256": "bfcb7e80c90ba0f9ceeb8b44e393075713f398cbb215543bd19b7d8e4dc05bfa"
  },
  {
   "file": "parks.json",

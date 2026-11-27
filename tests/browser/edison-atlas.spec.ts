@@ -3,20 +3,35 @@ import {routeHeaderAssets} from '../shared-header.mjs';
 
 test.beforeEach(async ({page}) => { await routeHeaderAssets(page); });
 
-test('outage directory opens its ZIP on the map and shares the native geography', async ({page}) => {
-  await page.goto('/edison-atlas/#report=outages');
-  await expect(page.getByRole('heading', {name:'Outages and community resources'})).toBeVisible();
-  await page.locator('#sce-directory').selectOption('scheduled');
-  const area = page.locator('button[data-outage-zip]').first();
-  const zip = await area.getAttribute('data-outage-zip');
-  await area.click();
-  await expect(page.locator('.detail-hero')).toContainText('ZIP area ' + zip);
+test('cooling center directory opens and shares the actual one-mile hex', async ({page}) => {
+  await page.goto('/edison-atlas/#report=cooling');
+  await expect(page.getByRole('heading', {name:'Cooling centers in SCE territory'})).toBeVisible();
+  const search = page.getByRole('searchbox', {name:'Facility, city, street or ZIP'});
+  await search.fill('Palomares Park');
+  await expect(page.locator('#cooling-table tbody tr:visible')).toHaveCount(1);
+  await page.getByRole('button', {name:'Palomares Park Community Center'}).click();
+  await expect(page.locator('#side-body')).toContainText('499 E Arrow Highway');
+  await expect(page.locator('#side-body')).toContainText('Cooling centers in this hex');
   await page.getByRole('button', {name:'Share view'}).click();
   const link = new URL(await page.locator('#share-url').inputValue());
   const view = new URLSearchParams(link.hash.slice(1));
   expect(link.pathname).toBe('/edison-atlas/');
-  expect(view.get('lens')).toBe('sceScheduled');
-  expect(view.get('geoid')).toBe(zip);
+  expect(view.get('lens')).toBe('sceCooling');
+  expect(view.get('tile')).toBe('129,311');
+});
+
+test('one-mile planning data distinguishes partial polygons and overlapping source bands', async ({page}) => {
+  await page.goto('/edison-atlas/#lens=projectCoverage&tile=83,53&x=83.5&y=45.9&z=25');
+  await expect(page.locator('.lens-callout strong')).toHaveText('14.17%');
+  const panel = page.locator('#side-body');
+  await expect(panel).toContainText('SCE planning in this hex');
+  await expect(panel).toContainText('3 records');
+  await expect(panel).toContainText('32.56% mapped');
+  await panel.locator('.band-coverage summary').first().click();
+  await expect(panel.locator('.band-coverage[open]')).toContainText('Above 5 MW');
+  await page.goto('/edison-atlas/#lens=fire&tile=163,146&x=163&y=126.44&z=25');
+  await expect(page.locator('.lens-callout')).toContainText('Fire tier at one point in the hex');
+  await expect(page.locator('.lens-callout strong')).toHaveText('Outside tiers 2–3');
 });
 
 test('planning inventory, local religion sources, and both downloads are available', async ({page}) => {

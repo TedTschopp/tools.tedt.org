@@ -129,11 +129,11 @@ add(
 );
 add(
   "fire",
-  "Fire-threat districts",
+  "Utility wildfire threat",
   "Environment",
-  "CPUC district at sample",
+  "Fire tier at one point in the hex",
   "fire",
-  "CPUC’s adopted map identifies Tier 2 elevated and Tier 3 extreme fire-threat areas. It is a long-term designation.",
+  "The California Public Utilities Commission maps long-term risk from utility-associated wildfires. Tier 2 means elevated risk and Tier 3 means extreme risk. The atlas checks the hex center, or an interior point in SCE territory if the center falls outside. Select the hex for the percentage in each tier.",
   "",
   [],
   ["#dcdcc3", "#e6ae66", "#b95640"],
@@ -248,6 +248,14 @@ export function valueAt(m, id, i) {
   if (local) return localValue(m, local, i);
   return null;
 }
+const capacityClasses = ["Above 3 MW", "1–3 MW", "0–1 MW", "Tied bands"];
+const planningClasses = {
+  growth: ["Above 5 MW", "Above 3 through 5 MW", "0–3 MW", "Tied bands"],
+  loadFull: capacityClasses,
+  loadPartial: capacityClasses,
+};
+export const categorical = (id) =>
+  id === "terrain" || id === "fire" || Object.hasOwn(planningClasses, id);
 export function formatValue(l, v) {
   if (v == null) return "No data";
   if (l.id === "home_value" && (v === 9999 || v === 2000001))
@@ -255,7 +263,7 @@ export function formatValue(l, v) {
   if (l.id === "income" && (v === 2499 || v === 250001))
     return v === 2499 ? "Under $2,500" : "$250,000+";
   if (l.id === "terrain") return terrainNames[v];
-  if (l.id === "tierOne") return v === 1 ? "Inside Tier 1" : "Outside Tier 1";
+  if (planningClasses[l.id]) return planningClasses[l.id][v - 1];
   if (l.id === "fire")
     return {
       0: "Outside tiers 2–3",
@@ -283,11 +291,11 @@ export function bins(l, m) {
       label: formatValue(l, key),
       color: l.colors[i],
     }));
-  if (l.id === "tierOne")
-    return [0, 1].map((key) => ({
-      key,
-      label: formatValue(l, key),
-      color: l.colors[key],
+  if (planningClasses[l.id])
+    return planningClasses[l.id].map((label, i) => ({
+      key: i + 1,
+      label,
+      color: l.colors[i],
     }));
   return l.colors.map((color, i) => {
     const b = l.breaks,
@@ -306,8 +314,7 @@ export function bins(l, m) {
 }
 export function band(l, v, legend) {
   if (v == null) return -1;
-  if (["terrain", "fire", "tierOne"].includes(l.id))
-    return legend.findIndex((b) => b.key === v);
+  if (categorical(l.id)) return legend.findIndex((b) => b.key === v);
   const i = l.breaks.findIndex((x) => v < x);
   return i < 0 ? l.breaks.length : i;
 }

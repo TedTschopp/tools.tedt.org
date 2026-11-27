@@ -569,6 +569,38 @@ export class HexMap {
       );
     drawSites(c, this);
     if (this.opts.utility) this.utility.draw(c, this);
+    if (this.lens.id === "sceCooling" && s >= 6) {
+      c.save();
+      for (const site of this.m.portals.cooling.sites) {
+        const [x, y] = this.screen(site.x, site.y);
+        if (x < -8 || y < -8 || x > this.w + 8 || y > this.h + 8) continue;
+        c.beginPath();
+        c.arc(x, y, 5, 0, Math.PI * 2);
+        c.fillStyle = "#246b82";
+        c.fill();
+        c.lineWidth = 1.4;
+        c.strokeStyle = "#fff5d7";
+        c.stroke();
+        c.beginPath();
+        for (let n = 0; n < 6; n++) {
+          c.moveTo(x, y);
+          c.lineTo(
+            x + 3 * Math.cos((n * Math.PI) / 3),
+            y + 3 * Math.sin((n * Math.PI) / 3),
+          );
+        }
+        c.stroke();
+        this.labels.unshift({
+          kind: "cooling",
+          p: site,
+          x0: x - 6,
+          x1: x + 6,
+          y0: y - 6,
+          y1: y + 6,
+        });
+      }
+      c.restore();
+    }
   }
   highlights() {
     const c = this.ink;

@@ -1,5 +1,4 @@
 import { assetUrl, portable } from "./assets.js";
-import { outageLabels, publisherTime } from "./sce-outages.js";
 import { number, compact } from "./lenses.js";
 import { coverage, direct } from "./sources.js";
 import { icon } from "./icons.js";
@@ -481,49 +480,18 @@ function state(m) {
     "</p>"
   );
 }
-function outages(m, selected) {
-  const key = Object.hasOwn(outageLabels, selected) ? selected : "current";
-  const feeds = m.portals.feeds,
-    active = feeds[key].rows;
-  const sum = (rows, column) =>
-    rows.reduce((total, row) => total + (row[column] ?? 0), 0);
-  const zipRows = m.local.tables.zcta.rows;
-  const zipIDs = new Set(zipRows.map((row) => row[0]));
-  const outage = key === "current" || key === "scheduled";
-  const dataset = Object.entries(outageLabels)
+function coolingCenters(m) {
+  const cooling = m.portals.cooling;
+  const rows = cooling.sites
     .map(
-      ([id, label]) =>
-        `<option value="${id}" ${key === id ? "selected" : ""}>${esc(label)}</option>`,
+      (s) =>
+        `<tr><td><button class="table-link" data-cooling-site="${s.id}">${esc(s.name)}</button></td><td>${esc(s.address)}</td><td>${esc(s.city)}</td><td>${esc(s.zip)}</td></tr>`,
     )
     .join("");
-  const rows = active
-    .map(
-      ([city, zip, count, customers]) =>
-        `<tr><td>${esc(city || "Unspecified")}</td><td>${zipIDs.has(zip) ? `<button class="table-link" data-outage-zip="${esc(zip)}" data-feed="${key}">${esc(zip)}</button>` : esc(zip || "Unspecified")}</td><td>${number(count)}</td>${outage ? `<td>${number(customers)}</td>` : ""}</tr>`,
-    )
-    .join("");
-  const liveCheck = portable
-    ? ""
-    : `<section class="live-impact"><h4>Check current customer impact</h4><p>Cal OES updates its utility feed about every 15 minutes. A ZIP check counts active SCE incident locations within its Census boundary. Affected customers can live across the boundary.</p><label for="live-zip">Check an area</label><select id="live-zip"><option value="">Whole SCE territory</option>${zipRows.map((row) => `<option>${esc(row[0])}</option>`).join("")}</select> ${btn("Check current impact", "live-impact")}<p id="live-result" role="status"></p></section>`;
-  return `<h3>Outages and community resources</h3><p>SCE snapshot as of <strong>${esc(publisherTime(m.portals.stamp))}</strong>. SCE advises that reported outages can take up to 30 minutes to appear. For restoration times, rotating outage groups, and service-address lookup, ${sourceLink(direct.sceOutages[3], "open the SCE Outage Center")}.</p>
-    <div class="tile-stats">${stat("Reported outages", number(sum(feeds.current.rows, 2)))}${stat("Customers listed as affected", number(sum(feeds.current.rows, 3)))}${stat("Scheduled outages", number(sum(feeds.scheduled.rows, 2)))}</div>
-    ${liveCheck}<h4>SCE snapshot by city and ZIP</h4><div class="sce-controls"><label>Directory<select id="sce-directory">${dataset}</select></label><label>City or ZIP<input id="sce-city-filter" type="search" placeholder="Filter listed areas"></label></div>
-    <p>${number(sum(active, 2))} ${outage ? "outage records" : "directory listings"}. Select a linked ZIP to inspect it on the map. The map counts records assigned to a single matching ZIP.</p>
-    <div class="sce-scroll"><table class="report-table" id="sce-city-table"><thead><tr><th>City or community</th><th>Reported ZIP</th><th>Records</th>${outage ? "<th>Customers listed</th>" : ""}</tr></thead><tbody>${rows}</tbody></table></div><p id="sce-directory-empty" ${active.length ? "hidden" : ""}>No matching listings in this snapshot.</p>
-    <h4>Other SCE outage layers</h4>${table(
-      ["Published layer", "Snapshot records"],
-      [
-        [
-          "Public safety shutoff active",
-          number(m.portals.totals.pspsActive.count),
-        ],
-        [
-          "Public safety shutoff under consideration",
-          number(m.portals.totals.pspsConsidered.count),
-        ],
-        ["Major outage", number(m.portals.totals.major.count)],
-      ],
-    )}<p>These counts refer to records in each published layer. The Outage Center provides individual public notices and customer support details.</p>`;
+  return `<h3>Cooling centers in SCE territory</h3><p>SCE’s November 27, 2026 directory places ${number(cooling.sites.length)} of its ${number(cooling.sourceCount)} public listings inside the service boundary. Select a facility to see its one-mile hex, address and published hours. Confirm availability with the facility before visiting.</p>
+    <div class="actions"><button class="action-btn" data-lens="sceCooling">Map cooling centers</button></div>
+    <div class="sce-controls"><label>Facility, city, street or ZIP<input id="cooling-filter" type="search" placeholder="Search cooling centers"></label></div>
+    <div class="sce-scroll"><table class="report-table" id="cooling-table"><thead><tr><th scope="col">Cooling center</th><th scope="col">Street</th><th scope="col">City</th><th scope="col">ZIP</th></tr></thead><tbody>${rows}</tbody></table></div><p id="cooling-empty" hidden>No matching cooling centers.</p><p>${sourceLink(direct.sceCooling[3], "SCE cooling-center source")}</p>`;
 }
 
 function planning(m) {
@@ -532,10 +500,12 @@ function planning(m) {
     (total, service) => total + service.layers.length,
     0,
   );
-  return `<h3>Distribution planning</h3><p>SCE’s Distribution Resources Plan External Portal lists ${services.length} public feature services with ${count} layers and tables in the November 27, 2026 snapshot. The map shows the territory boundary, fire districts, tree-mortality areas, and regional counts of approved project study areas.</p>
-    <div class="actions"><button class="action-btn" data-lens="planningAreas">Map approved study areas</button><button class="action-btn" data-lens="tierOne">Map Tier 1 tree mortality</button><button class="action-btn" data-lens="fire">Map fire districts</button></div>
-    <p>Project counts are intersections between 48-mile regions and the public CAISO, utility, and CPUC approval polygons. Individual projects can cross regions. For circuit-level interconnection capacity, grid needs, screening and load profiles, ${sourceLink(direct.drpepProjects[3], "open SCE’s planning portal")}.</p>
-    <h4>Annual planning assumptions</h4><p>Sum of the values SCE publishes for each year in its circuit planning table, in MW. Forecasts refer to individual circuit peaks at different times. Signs follow SCE’s source. ${sourceLink("https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M541/K492/541492933.PDF", "SCE planning data definitions")}</p>
+  return `<h3>Distribution planning</h3><p>SCE’s Distribution Resources Plan External Portal lists ${services.length} public feature services with ${count} layers and tables in the November 27, 2026 snapshot. The map measures the overlap of SCE’s published planning polygons with each one-mile hex inside the territory.</p>
+    <h4>Planning data by hex</h4><p>${number(m.portals.mappedHexes.planningAreas)} hexes intersect an approved project study area. Select a hex to see the number of CAISO, utility and CPUC approval records and the share of the hex inside any study area. Fire layers show the share in each tier.</p>
+    <div class="actions"><button class="action-btn" data-lens="planningAreas">Map approved study areas</button><button class="action-btn" data-lens="projectCoverage">Study area coverage</button><button class="action-btn" data-lens="tierOne">Tier 1 tree mortality</button><button class="action-btn" data-lens="fireTwoPct">Tier 2 fire area</button><button class="action-btn" data-lens="fireThreePct">Tier 3 fire area</button></div>
+    <p>The load maps show the published MW band covering the greatest mapped area in each hex. The hex inspector gives the percentage with source coverage for each scenario. When SCE maps several bands over the same place, the inspector lists the area covered by each band. Their percentages can add up to more than 100%. Blank hexes have no published band. A MW band describes the source area and cannot be summed across hexes.</p>
+    <div class="actions"><button class="action-btn" data-lens="growth">Load growth</button><button class="action-btn" data-lens="loadFull">Available load · full submittals</button><button class="action-btn" data-lens="loadPartial">Available load · full and partial</button></div>
+    <h4>Annual planning assumptions</h4><p>Territory-wide sums of SCE’s circuit planning assumptions, in MW. The source does not allocate these totals to one-mile areas. Forecasts refer to individual circuit peaks at different times. Signs follow SCE’s source. ${sourceLink("https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M541/K492/541492933.PDF", "SCE planning data definitions")}</p>
     <div class="sce-scroll">${table(
       [
         "Year",
@@ -592,7 +562,7 @@ function religion() {
 export function report(m, view = "utility", id = "") {
   const tabs = {
     utility: "SCE profile",
-    outages: "Outages",
+    cooling: "Cooling centers",
     planning: "Grid planning",
     religion: "Religion",
     counties: "Counties",
@@ -617,7 +587,7 @@ export function report(m, view = "utility", id = "") {
     "</nav>" +
     {
       utility: () => utility(m),
-      outages: () => outages(m, id),
+      cooling: () => coolingCenters(m),
       planning: () => planning(m),
       religion,
       counties: () => counties(m, id),

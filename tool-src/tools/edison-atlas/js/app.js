@@ -1,9 +1,9 @@
 import { assetUrl, portable } from "./assets.js";
-import { currentImpact, publisherTime } from "./sce-outages.js";
 import { HexMap } from "./map.js";
 import {
   addLocalLenses,
   coverNames,
+  categorical,
   featured,
   formatValue,
   lenses,
@@ -199,7 +199,6 @@ function sourceDetail() {
       tract: "Tract ",
       health: "Tract ",
       zcta: "ZIP area ",
-      planningRegion: "Planning region ",
       work: "Workplace block group ",
     }[layer] + id;
   $("side-body").innerHTML =
@@ -457,7 +456,7 @@ function layers() {
     lenses.length +
     " lenses</span>" +
     icon("right", 14) +
-    '</button><div class="sce-shortcuts"><button data-report="outages">Outages &amp; resources</button><button data-report="planning">SCE grid planning</button></div></section>' +
+    '</button><div class="sce-shortcuts"><button data-report="cooling">Cooling centers</button><button data-report="planning">SCE grid planning</button></div></section>' +
     '<section class="panel-section"><div class="section-head"><h3>Map overlays</h3></div>' +
     Object.entries(overlaySpec)
       .map(
@@ -552,6 +551,61 @@ function inspector() {
     );
   if (i >= 0) {
     const cov = m.val(i, "coverage") / 1e6;
+    if (l.id === "sceCooling" || m.val(i, "sceCooling") > 0) {
+      const key = m.val(i, "col") + "," + m.val(i, "row");
+      const sites = m.portals.cooling.sites.filter((site) => site.tile === key);
+      html += detailSection(
+        "Cooling centers in this hex",
+        sites.length
+          ? sites
+              .map(
+                (site) =>
+                  `<div class="cooling-site"><strong>${esc(site.name)}</strong><p>${esc([site.address, site.city, site.zip].filter(Boolean).join(", "))}</p><p>${esc(site.hours || "Hours not listed")}</p></div>`,
+              )
+              .join("")
+          : "<p>No listed sites in this hex.</p>",
+      );
+    }
+    const classAndCoverage = (key) => {
+      const percent = (column) =>
+        number(localValue(m, m.local.fields[column], i), 2) + "%";
+      const bands = [1, 2, 3].map(
+        (rank) =>
+          esc(formatValue(lensById(key), rank)) +
+          " · " +
+          percent(key + "Band" + rank),
+      );
+      const mapped = localValue(m, m.local.fields[key + "Coverage"], i);
+      const scope =
+        mapped === 0 && m.val(i, key) != null
+          ? "<0.01%"
+          : percent(key + "Coverage");
+      return (
+        fact(lensById(key).name, v(key) + " · " + scope + " mapped") +
+        (m.val(i, key) == null
+          ? ""
+          : `<details class="band-coverage"><summary>Coverage by MW band</summary><ul>${bands.map((b) => "<li>" + b + "</li>").join("")}</ul></details>`)
+      );
+    };
+    html += detailSection(
+      "SCE planning in this hex",
+      fact("Approved study-area records", v("planningAreas")) +
+        fact(
+          "CAISO / utility / CPUC records",
+          ["caisoAreas", "utilityAreas", "cpucAreas"]
+            .map((k) => number(m.val(i, k)))
+            .join(" / "),
+        ) +
+        fact("Approved study area coverage", v("projectCoverage")) +
+        fact("Fire tier at one point in the hex", v("fire")) +
+        fact("Tier 1 tree mortality", v("tierOne")) +
+        fact("Tier 2 elevated fire area", v("fireTwoPct")) +
+        fact("Tier 3 extreme fire area", v("fireThreePct")) +
+        classAndCoverage("growth") +
+        classAndCoverage("loadFull") +
+        classAndCoverage("loadPartial") +
+        '<button class="table-link" data-report="planning">Planning sources and methods</button>',
+    );
     html += detailSection(
       "One-mile tile",
       fact("Hex column, row", cell) +
@@ -576,8 +630,7 @@ function inspector() {
     );
     html += detailSection(
       "Energy & environment",
-      fact("Fire-threat designation", v("fire")) +
-        fact("Daily solar resource", v("solar")) +
+      fact("Daily solar resource", v("solar")) +
         fact("Normal July high", v("july")) +
         fact("Normal January low", v("january")) +
         fact("Annual precipitation", v("rain")) +
@@ -707,7 +760,7 @@ function chooseLens(id, fromDialog = false) {
 function legend() {
   const l = map.lens,
     items = map.legend;
-  const isCat = ["terrain", "fire", "tierOne"].includes(l.id);
+  const isCat = categorical(l.id);
   let body = "";
   if (isCat)
     body =
@@ -755,9 +808,7 @@ function legend() {
       : l.scope +
         " · " +
         (l.unit ? l.unit + " · " : "") +
-        (l.source === "sceOutages"
-          ? publisherTime(m.portals.stamp)
-          : source[2].split(" · ")[0]);
+        source[2].split(" · ")[0];
   const utilityKey = map.opts.utility
     ? '<div class="utility-key"><div class="utility-key-items">' +
       kinds
@@ -862,6 +913,7 @@ function drawStatus() {
               : "Select a hex to inspect";
 }
 function hovered(i, pos, label) {
+  if (label?.kind === "cooling") i = map.lookup.get(label.p.tile);
   lastHover = i;
   const utility = label?.kind === "utility";
   const native = label?.kind === "source";
@@ -884,14 +936,16 @@ function hovered(i, pos, label) {
   $("hover").innerHTML =
     "<b>" +
     esc(
-      utility
-        ? categories[label.assetKind].name
-        : formatValue(
-            map.lens,
-            native
-              ? map.sourceAreas.value(map.lens, label.index)
-              : map.values[i],
-          ),
+      label?.kind === "cooling"
+        ? label.p.name
+        : utility
+          ? categories[label.assetKind].name
+          : formatValue(
+              map.lens,
+              native
+                ? map.sourceAreas.value(map.lens, label.index)
+                : map.values[i],
+            ),
     ) +
     "</b><small>" +
     esc(scope) +
@@ -936,6 +990,10 @@ function showSelected(i, p = null, landmark = null) {
   scheduleHash();
 }
 function pick(i, label) {
+  if (label?.kind === "cooling") {
+    showSelected(map.lookup.get(label.p.tile));
+    return;
+  }
   if (label?.kind === "source") {
     showSource(label.layer, label.index);
     return;
@@ -1267,7 +1325,9 @@ function loadHash() {
   restoreHash = true;
   try {
     const p = new URLSearchParams(location.hash.slice(1)),
-      l = lensById(p.get("lens")) || lensById("terrain");
+      l =
+        lensById(p.get("lens")) ||
+        lensById(p.get("lens")?.startsWith("sce") ? "sceCooling" : "terrain");
     if (map.lens !== l) map.setLens(l);
     map.sourceAreas.enabled = p.get("geography") === "source";
     if (p.has("layers")) {
@@ -1315,7 +1375,7 @@ function loadHash() {
     layersOrDetail();
     map.queue();
     const requested =
-      p.get("report") ||
+      (p.get("report") === "outages" ? "cooling" : p.get("report")) ||
       {
         faith: "religion",
         faith_tradition: "religion",
@@ -1325,7 +1385,7 @@ function loadHash() {
     if (
       [
         "utility",
-        "outages",
+        "cooling",
         "planning",
         "religion",
         "counties",
@@ -1576,53 +1636,18 @@ function install() {
       almanac(el.dataset.report);
       return;
     }
-    if (el.dataset.outageZip) {
-      const key = el.dataset.feed;
-      const i = m.local.tables.zcta.rows.findIndex(
-        (row) => row[0] === el.dataset.outageZip,
+    if (el.dataset.coolingSite) {
+      const site = m.portals.cooling.sites.find(
+        (v) => String(v.id) === el.dataset.coolingSite,
       );
-      if (i < 0) return;
-      chooseLens("sce" + key[0].toUpperCase() + key.slice(1), true);
-      setSourceMode(true);
-      const [x0, y0, x1, y1] = m.outlines.zcta[i]
-        .slice(0, 4)
-        .map((n) => n / 1000);
-      const zoom =
-        Math.min(
-          (map.w - 90) / Math.max(1, x1 - x0),
-          (map.h - 90) / Math.max(1, y1 - y0),
-        ) / map.base;
-      map.go((x0 + x1) / 2, (y0 + y1) / 2, Math.max(1.4, Math.min(zoom, 40)));
-      showSource("zcta", i);
-      return;
-    }
-    const a = el.dataset.action;
-    if (a === "live-impact") {
-      const output = $("live-result"),
-        select = $("live-zip"),
-        zip = select.value;
-      el.disabled = select.disabled = true;
-      output.textContent = "Checking the Cal OES public feed…";
-      try {
-        const impact = await currentImpact(m, zip);
-        const time = new Date().toLocaleString("en-US", {
-          timeZone: "America/Los_Angeles",
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "2-digit",
-          timeZoneName: "short",
-        });
-        output.textContent = `${zip ? "ZIP " + zip : "SCE territory"} · ${number(impact.count)} active incidents · ${number(impact.customers)} customers reported affected. Checked ${time}.`;
-      } catch {
-        output.textContent =
-          "Current impact is unavailable. The dated SCE snapshot is below. Open the SCE Outage Center for current notices.";
-      } finally {
-        el.disabled = select.disabled = false;
+      if (site) {
+        chooseLens("sceCooling", true);
+        map.go(site.x, site.y, 30);
+        showSelected(map.lookup.get(site.tile));
       }
       return;
     }
+    const a = el.dataset.action;
     if (a === "library") showDialog("library", "Map lenses", library());
     if (a === "back") {
       clearSelected();
@@ -1712,20 +1737,18 @@ function install() {
   };
   $("mobile-close").onclick = () => $("sidebar").classList.remove("open");
   $("dialog-body").addEventListener("change", (e) => {
-    if (e.target.id === "sce-directory") almanac("outages", e.target.value);
-    if (e.target.id === "live-zip") $("live-result").textContent = "";
     if (e.target.id === "county-list") almanac("counties", e.target.value);
     if (e.target.id === "metro-list") almanac("metros", e.target.value);
   });
   $("dialog-body").addEventListener("input", (e) => {
-    if (e.target.id === "sce-city-filter") {
+    if (e.target.id === "cooling-filter") {
       const needle = e.target.value.trim().toLowerCase();
-      const rows = Array.from($("sce-city-table").tBodies[0].rows);
+      const rows = Array.from($("cooling-table").tBodies[0].rows);
       for (const row of rows)
-        row.hidden = ![row.cells[0], row.cells[1]].some((cell) =>
+        row.hidden = !Array.from(row.cells).some((cell) =>
           cell.textContent.toLowerCase().includes(needle),
         );
-      $("sce-directory-empty").hidden = rows.some((row) => !row.hidden);
+      $("cooling-empty").hidden = rows.some((row) => !row.hidden);
       return;
     }
     if (!["lens-filter", "source-filter"].includes(e.target.id)) return;
