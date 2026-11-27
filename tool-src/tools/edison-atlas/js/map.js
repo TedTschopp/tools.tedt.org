@@ -21,6 +21,17 @@ const ROW = Math.sqrt(3) / 2,
     [-0.5, -R / 2],
   ];
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const landscapeOptions = [
+  "art",
+  "places",
+  "water",
+  "grid",
+  "roads",
+  "rail",
+  "parks",
+  "counties",
+  "contours",
+];
 function polygon(c, x, y, size = 1) {
   c.moveTo(x, y - R * size);
   for (let i = 1; i < 6; i++)
@@ -187,8 +198,10 @@ export class HexMap {
     this.h = rect.height;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
     for (const c of [this.canvas, this.overlay]) {
-      c.width = Math.round(this.w * this.dpr);
-      c.height = Math.round(this.h * this.dpr);
+      const width = Math.round(this.w * this.dpr),
+        height = Math.round(this.h * this.dpr);
+      if (c.width !== width) c.width = width;
+      if (c.height !== height) c.height = height;
     }
     const [x0, y0, x1, y1] = this.fitBounds;
     const padX = this.w < 550 ? 26 : 68,
@@ -328,14 +341,19 @@ export class HexMap {
       -this.cacheBox[0] * pp,
       -this.cacheBox[1] * pp,
     );
-    c.clip(this.boundary, "evenodd");
+    // The map clips this completed overview image to the service territory.
     this.paintCells(c, null, 1.11);
     this.cache = cache;
+    this.landscape = null;
     this.queue();
   }
-  visible(margin = 1.4) {
+  viewport() {
     const [x0, y0] = this.world(0, 0),
       [x1, y1] = this.world(this.w, this.h);
+    return { x0, y0, x1, y1, s: this.scale, dpr: this.dpr };
+  }
+  visible({ x0, y0, x1, y1 } = this.viewport()) {
+    const margin = 1.4;
     const result = [];
     for (
       let r = Math.floor((y0 - margin) / ROW);
@@ -366,40 +384,189 @@ export class HexMap {
     if (!this.pending)
       this.pending = requestAnimationFrame(() => {
         this.pending = 0;
-        this.draw();
+        this.draw(false);
       });
   }
-  draw() {
+  draw(exact = true) {
     if (!this.cache) return;
     const c = this.ctx,
-      s = this.scale,
-      b = this.m.meta.backdrop;
-    const [x0, y0] = this.world(0, 0),
-      [x1, y1] = this.world(this.w, this.h);
-    const view = { x0, y0, x1, y1, s, dpr: this.dpr },
+      view = this.viewport();
+    this.drawLandscape(c, view, exact);
+    this.normal(c);
+    this.labels = [];
+    this.drawLabels(c);
+    this.highlights();
+    this.drawMini();
+    this.onDraw?.();
+  }
+  drawLandscape(screen, view, exact) {
+    // Cache the static geography with a pan margin, as in the USACiv renderer.
+    // Labels and hit targets are laid out against the live camera on every frame.
+    const { width, height } = screen.canvas;
+    const key = [
+      this.lens.id,
+      this.sourceAreas.enabled,
+      width,
+      height,
+      view.dpr,
+      ...landscapeOptions.map((option) => this.opts[option]),
+    ].join("|");
+    const prev = this.landscape;
+    const covers =
+      prev?.key === key &&
+      view.x0 >= prev.x0 &&
+      view.y0 >= prev.y0 &&
+      view.x1 <= prev.x1 &&
+      view.y1 <= prev.y1;
+    const ratio = covers ? view.s / prev.s : 1;
+    let left = covers ? (view.x0 - prev.x0) * prev.s * view.dpr : 0;
+    let top = covers ? (view.y0 - prev.y0) * prev.s * view.dpr : 0;
+    const fractional =
+      Math.abs(left - Math.round(left)) > 1e-5 ||
+      Math.abs(top - Math.round(top)) > 1e-5;
+    const needsDetail = Math.abs(ratio - 1) > 1e-6 || fractional;
+    clearTimeout(this.refineTimer);
+    if (!covers || ratio > 1.5 || (exact && needsDetail)) {
+      const pad = Math.ceil(
+        Math.min(160, Math.min(this.w, this.h) / 4) * view.dpr,
+      );
+      const margin = pad / (view.s * view.dpr);
+      const area = {
+        ...view,
+        x0: view.x0 - margin,
+        y0: view.y0 - margin,
+        x1: view.x1 + margin,
+        y1: view.y1 + margin,
+        key,
+      };
+      this.landscapeInk ??= document
+        .createElement("canvas")
+        .getContext("2d", { alpha: false });
+      const sheet = this.landscapeInk.canvas;
+      if (sheet.width !== width + 2 * pad) sheet.width = width + 2 * pad;
+      if (sheet.height !== height + 2 * pad) sheet.height = height + 2 * pad;
+      this.landscapeInk.save();
+      this.paintLandscape(this.landscapeInk, area);
+      this.landscapeInk.restore();
+      this.landscape = area;
+      left = top = pad;
+    } else if (needsDetail) {
+      // A wheel or pinch can reuse the current picture while it is moving.
+      // Repaint at the precise zoom and pixel origin once input settles.
+      this.refineTimer = setTimeout(() => this.draw(), 120);
+    }
+    const sourceScale = this.landscape.s / view.s;
+    screen.resetTransform();
+    screen.drawImage(
+      this.landscapeInk.canvas,
+      left,
+      top,
+      width * sourceScale,
+      height * sourceScale,
+      0,
+      0,
+      width,
+      height,
+    );
+  }
+  paintLandscape(c, view) {
+    const { s, dpr, x0, y0, x1, y1 } = view,
+      b = this.m.meta.backdrop,
       Rpx = s * R;
     const terrain = this.lens.id === "terrain",
       nativeArt = terrain && this.opts.art && Rpx >= GLYPHS_MIN_RPX;
-    this.normal(c);
+    c.resetTransform();
     c.fillStyle = "#dad6bf";
-    c.fillRect(0, 0, this.w, this.h);
-    this.frame(c);
+    c.fillRect(0, 0, c.canvas.width, c.canvas.height);
+    c.setTransform(dpr * s, 0, 0, dpr * s, -x0 * dpr * s, -y0 * dpr * s);
     c.drawImage(this.m.image, b[0], b[1], b[2] - b[0], b[3] - b[1]);
     if (s > 8) {
       const fade = Math.min(0.76, (s - 8) / 35);
       c.fillStyle = "rgba(227,223,199," + fade + ")";
-      c.fillRect(...this.world(0, 0), this.w / s, this.h / s);
+      c.fillRect(x0, y0, x1 - x0, y1 - y0);
       c.strokeStyle = "rgba(119,119,89,.36)";
       c.lineWidth = 0.7 / s;
       c.stroke(this.contours);
     }
     if (this.opts.water) this.drawOcean(c, view, b);
-    const visible = s >= 5 ? this.visible() : null;
-    c.save();
-    c.clip(this.boundary, "evenodd");
-    if (terrain && this.opts.water) c.clip(this.dryLand, "evenodd");
+    this.drawLand(c, view, nativeArt);
+    const stroke = (p, color, width, dash = []) => {
+      c.strokeStyle = color;
+      c.lineWidth = width / s;
+      c.setLineDash(dash.map((x) => x / s));
+      c.stroke(p);
+      c.setLineDash([]);
+    };
+    if (this.opts.water) {
+      c.fillStyle = terrain ? "#4092ca" : "rgba(75,139,168,.72)";
+      c.fill(this.lakes, "evenodd");
+      if (nativeArt) {
+        c.save();
+        c.clip(this.lakes, "evenodd");
+        drawOceanTexture(c, view, { Rpx });
+        c.restore();
+        stroke(this.lakes, "#a3d2d6", 1.3);
+        this.civ.rivers(c, s);
+      } else {
+        stroke(this.rivers[0], "#4d9bc0", s > 6 ? 1.6 : 0.85);
+        if (s > 3.7) stroke(this.rivers[1], "#73abc3", 1);
+      }
+    }
+    if (this.opts.parks) {
+      c.fillStyle = "rgba(70,112,71,.16)";
+      c.fill(this.parks, "evenodd");
+      stroke(this.parks, "#476c4b", 1.3, [4, 2]);
+    }
+    if (this.opts.counties)
+      stroke(this.countyLines, "rgba(70,75,65,.65)", 0.95, [4, 4]);
+    if (this.opts.contours) stroke(this.contours, "rgba(97,89,65,.54)", 0.7);
+    if (terrain && this.opts.art && Rpx >= ROAD_MIN_RPX) {
+      c.save();
+      if (this.opts.roads) drawRoads(c, this.network, view, { Rpx });
+      if (this.opts.rail) drawRail(c, this.network, view, { Rpx });
+      c.restore();
+    } else {
+      if (this.opts.roads) {
+        if (s > 4) {
+          stroke(this.highways[1], "rgba(106,89,65,.50)", 1.7);
+          stroke(this.highways[1], "#ecdbac", 0.85);
+        }
+        stroke(this.highways[0], "rgba(114,80,56,.64)", s > 5 ? 2.5 : 1.35);
+        stroke(this.highways[0], "#f2d89e", s > 5 ? 1.3 : 0.7);
+      }
+      if (this.opts.rail) {
+        stroke(this.rail[0], "#70685f", 1.1, [4, 2]);
+        if (s > 3.3) stroke(this.rail[1], "#81796c", 0.9, [3, 2]);
+      }
+    }
+    stroke(this.boundary, "rgba(247,237,190,.85)", s > 4 ? 3 : 2.3);
+    stroke(this.boundary, "#436247", s > 4 ? 1.6 : 1.2);
+  }
+  drawLand(screen, view, nativeArt) {
+    const s = view.s,
+      terrain = this.lens.id === "terrain",
+      b = this.m.meta.backdrop;
+    const visible = s >= 5 ? this.visible(view) : null;
     const sourceLayer =
       this.sourceAreas.enabled && this.sourceAreas.layer(this.lens);
+    screen.save();
+    screen.clip(this.boundary, "evenodd");
+    if (terrain && this.opts.water) screen.clip(this.dryLand, "evenodd");
+    // Applying these detailed clips to hundreds of individual draws is slow in
+    // Safari. Draw the land at native resolution and clip one image instead.
+    let c = screen;
+    if (visible || sourceLayer) {
+      this.landInk ??= document.createElement("canvas").getContext("2d");
+      c = this.landInk;
+      if (c.canvas.width !== screen.canvas.width)
+        c.canvas.width = screen.canvas.width;
+      if (c.canvas.height !== screen.canvas.height)
+        c.canvas.height = screen.canvas.height;
+      c.save();
+      c.resetTransform();
+      c.clearRect(0, 0, c.canvas.width, c.canvas.height);
+      c.setTransform(screen.getTransform());
+    }
     if (sourceLayer) this.sourceAreas.draw(c, this, sourceLayer, view);
     else if (s < 5) c.drawImage(this.cache, ...this.cacheBox);
     else this.paintCells(c, visible, 1 + 0.45 / s);
@@ -459,64 +626,12 @@ export class HexMap {
       }
       c.globalAlpha = 1;
     }
-    c.restore();
-    const stroke = (p, color, width, dash = []) => {
-      c.strokeStyle = color;
-      c.lineWidth = width / s;
-      c.setLineDash(dash.map((x) => x / s));
-      c.stroke(p);
-      c.setLineDash([]);
-    };
-    if (this.opts.water) {
-      c.fillStyle = terrain ? "#4092ca" : "rgba(75,139,168,.72)";
-      c.fill(this.lakes, "evenodd");
-      if (nativeArt) {
-        c.save();
-        c.clip(this.lakes, "evenodd");
-        drawOceanTexture(c, view, { Rpx });
-        c.restore();
-        stroke(this.lakes, "#a3d2d6", 1.3);
-        this.civ.rivers(c, s);
-      } else {
-        stroke(this.rivers[0], "#4d9bc0", s > 6 ? 1.6 : 0.85);
-        if (s > 3.7) stroke(this.rivers[1], "#73abc3", 1);
-      }
-    }
-    if (this.opts.parks) {
-      c.fillStyle = "rgba(70,112,71,.16)";
-      c.fill(this.parks, "evenodd");
-      stroke(this.parks, "#476c4b", 1.3, [4, 2]);
-    }
-    if (this.opts.counties)
-      stroke(this.countyLines, "rgba(70,75,65,.65)", 0.95, [4, 4]);
-    if (this.opts.contours) stroke(this.contours, "rgba(97,89,65,.54)", 0.7);
-    if (terrain && this.opts.art && Rpx >= ROAD_MIN_RPX) {
-      c.save();
-      if (this.opts.roads) drawRoads(c, this.network, view, { Rpx });
-      if (this.opts.rail) drawRail(c, this.network, view, { Rpx });
+    if (c !== screen) {
       c.restore();
-    } else {
-      if (this.opts.roads) {
-        if (s > 4) {
-          stroke(this.highways[1], "rgba(106,89,65,.50)", 1.7);
-          stroke(this.highways[1], "#ecdbac", 0.85);
-        }
-        stroke(this.highways[0], "rgba(114,80,56,.64)", s > 5 ? 2.5 : 1.35);
-        stroke(this.highways[0], "#f2d89e", s > 5 ? 1.3 : 0.7);
-      }
-      if (this.opts.rail) {
-        stroke(this.rail[0], "#70685f", 1.1, [4, 2]);
-        if (s > 3.3) stroke(this.rail[1], "#81796c", 0.9, [3, 2]);
-      }
+      screen.resetTransform();
+      screen.drawImage(c.canvas, 0, 0);
     }
-    stroke(this.boundary, "rgba(247,237,190,.85)", s > 4 ? 3 : 2.3);
-    stroke(this.boundary, "#436247", s > 4 ? 1.6 : 1.2);
-    this.normal(c);
-    this.labels = [];
-    this.drawLabels(c);
-    this.highlights();
-    this.drawMini();
-    this.onDraw?.();
+    screen.restore();
   }
   drawOcean(c, view, b) {
     c.save();

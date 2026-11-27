@@ -3,6 +3,37 @@ import {routeHeaderAssets} from '../shared-header.mjs';
 
 test.beforeEach(async ({page}) => { await routeHeaderAssets(page); });
 
+test('panning detailed terrain avoids one display-canvas fill per hex', async ({page}) => {
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=water,art');
+  await expect(page.locator('#loading')).toBeHidden();
+  const fills = await page.evaluate(async () => {
+    const nextFrame = () => new Promise(requestAnimationFrame);
+    await nextFrame();
+    const canvas = document.querySelector<HTMLCanvasElement>('#base')!;
+    const context = canvas.getContext('2d')!;
+    const fill = context.fill;
+    let count = 0;
+    // Safari's expensive work happens after these commands return. Count hex
+    // fills on the visible canvas so this also catches the regression in Chromium CI.
+    context.fill = new Proxy(fill, {
+      apply(target, receiver, args) {
+        if (!args.length) count++;
+        return Reflect.apply(target, receiver, args);
+      },
+    });
+    try {
+      document.querySelector('#map')!.dispatchEvent(new KeyboardEvent('keydown', {key:'ArrowRight'}));
+      await nextFrame();
+      await nextFrame();
+      return count;
+    } finally {
+      context.fill = fill;
+    }
+  });
+  await expect(page).not.toHaveURL(/x=120\.131(?:&|$)/);
+  expect(fills).toBeLessThan(32);
+});
+
 test('cooling center directory opens and shares the actual one-mile hex', async ({page}) => {
   await page.goto('/edison-atlas/#report=cooling');
   await expect(page.getByRole('heading', {name:'Cooling centers in SCE territory'})).toBeVisible();
@@ -18,6 +49,23 @@ test('cooling center directory opens and shares the actual one-mile hex', async 
   expect(link.pathname).toBe('/edison-atlas/');
   expect(view.get('lens')).toBe('sceCooling');
   expect(view.get('tile')).toBe('129,311');
+});
+
+test('switching roads off and on repaints the cached landscape at the same camera', async ({page}) => {
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=roads');
+  const roads = page.locator('[data-overlay="roads"]');
+  await expect(roads).toHaveAttribute('aria-checked', 'true');
+  const picture = () => page.locator('#base').evaluate(async (canvas: HTMLCanvasElement) => {
+    await new Promise(requestAnimationFrame);
+    const pixels = canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height);
+    const hash = await crypto.subtle.digest('SHA-256', pixels.data);
+    return Array.from(new Uint8Array(hash));
+  });
+  const withRoads = await picture();
+  await roads.click();
+  await expect.poll(picture).not.toEqual(withRoads);
+  await roads.click();
+  await expect.poll(picture).toEqual(withRoads);
 });
 
 test('one-mile planning data distinguishes partial polygons and overlapping source bands', async ({page}) => {
