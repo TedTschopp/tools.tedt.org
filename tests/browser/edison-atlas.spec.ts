@@ -34,6 +34,94 @@ test('panning detailed terrain avoids one display-canvas fill per hex', async ({
   expect(fills).toBeLessThan(32);
 });
 
+test('a fractional pan reuses terrain and crossing the cache edge paints only exposed strips', async ({page}) => {
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=utility,places,roads,water,art&tile=117,306&place=0619990');
+  await expect(page.locator('#loading')).toBeHidden();
+  const result = await page.evaluate(async () => {
+    const {HexMap} = await import(new URL('js/map.js', document.baseURI).href);
+    const proto = HexMap.prototype;
+    const original = proto.paintLandscape;
+    const areas: number[] = [];
+    let fullSize = 0;
+    const afterFrame = () => new Promise(requestAnimationFrame);
+    const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
+    // Capture the real map on the next normal keyboard repaint.
+    const draw = proto.draw;
+    const received = new Promise<any>(resolve => {
+      proto.draw = function(...args: any[]) { draw.apply(this,args); resolve(this); };
+    });
+    let map;
+    try {
+      document.querySelector('#map')!.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight'}));
+      map = await received;
+    } finally { proto.draw = draw; }
+    await afterFrame();
+    map.draw();
+    fullSize = map.landscapeInk.canvas.width * map.landscapeInk.canvas.height;
+    proto.paintLandscape = function(ctx: CanvasRenderingContext2D, ...args: any[]) {
+      areas.push(ctx.canvas.width * ctx.canvas.height);
+      return original.call(this,ctx,...args);
+    };
+    try {
+      const [x,y,z,s] = [map.x,map.y,map.z,map.scale];
+      map.go(x+.375/s,y+.25/s,z);
+      await afterFrame(); await wait(350);
+      const fractional = areas.splice(0);
+      map.go(x+200/s,y+70/s,z);
+      await afterFrame(); await wait(350);
+      const exposed = areas.splice(0);
+      // An export must be able to request precise native pixels immediately.
+      map.zoom(1.13); await afterFrame();
+      map.draw();
+      return {fractional,exposed,fullSize,exportScale:map.landscape.s,cameraScale:map.scale};
+    } finally { proto.paintLandscape = original; }
+  });
+  expect(result.fractional).toEqual([]);
+  expect(result.exposed.length).toBeGreaterThan(0);
+  expect(result.exposed.reduce((a,b)=>a+b,0)).toBeLessThan(result.fullSize/2);
+  expect(result.exportScale).toBe(result.cameraScale);
+});
+
+test('a settled zoom finishes at native detail and a layer change cancels old zoom work', async ({page}) => {
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=roads,water,art');
+  await expect(page.locator('#loading')).toBeHidden();
+  const {native,correctLayer,bands} = await page.evaluate(async () => {
+    const {HexMap} = await import(new URL('js/map.js', document.baseURI).href);
+    const proto = HexMap.prototype, draw = proto.draw, paint = proto.paintLandscape;
+    const nextFrame = () => new Promise(requestAnimationFrame);
+    const received = new Promise<any>(resolve => {
+      proto.draw = function(...args: any[]) { draw.apply(this,args); resolve(this); };
+    });
+    let m;
+    try {
+      document.querySelector('#map')!.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight'}));
+      m = await received;
+    } finally { proto.draw = draw; }
+    m.draw();
+    let bands = 0;
+    proto.paintLandscape = function(ctx: CanvasRenderingContext2D,...args: any[]) {
+      if (ctx.canvas.height < m.canvas.height) bands++;
+      return paint.call(this,ctx,...args);
+    };
+    try {
+      m.zoom(1.1);
+      for (let i=0; i<150 && m.landscape.s!==m.scale; i++) await nextFrame();
+      const native = m.landscape.s===m.scale;
+      m.zoom(1.1);
+      const previous = bands;
+      for (let i=0; i<150 && bands===previous; i++) await nextFrame();
+      document.querySelector<HTMLButtonElement>('[data-overlay="roads"]')!.click();
+      await nextFrame();
+      const current = m.landscape;
+      await new Promise(r => setTimeout(r,400));
+      return {native,bands,correctLayer:!m.opts.roads && m.landscape===current};
+    } finally { proto.paintLandscape = paint; }
+  });
+  expect(native).toBe(true);
+  expect(bands).toBeGreaterThan(1);
+  expect(correctLayer).toBe(true);
+});
+
 test('cooling center directory opens and shares the actual one-mile hex', async ({page}) => {
   await page.goto('/edison-atlas/#report=cooling');
   await expect(page.getByRole('heading', {name:'Cooling centers in SCE territory'})).toBeVisible();

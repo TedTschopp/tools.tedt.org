@@ -894,40 +894,55 @@ function legend() {
     drawUtilityArt(c, canvas.dataset.key, 8.5, 8.5, 16, false, false);
   }
 }
+function updateText(element, value) {
+  if (element && element.textContent !== value) element.textContent = value;
+}
 function drawStatus() {
   if (!map || !map.lens) return;
   const native = map.sourceAreas.enabled && map.sourceAreas.layer(map.lens);
   const reading = native
     ? shapeNames[native] + " · source polygons"
     : "1 mile across flats";
-  if ($("geography-status").textContent !== reading)
-    $("geography-status").textContent = reading;
+  updateText($("geography-status"), reading);
   const scope = $("utility-legend-scale");
-  if (scope && scope.textContent !== utilityScaleText())
-    scope.textContent = utilityScaleText();
+  if (scope) updateText(scope, utilityScaleText());
   const terrainNote = $("legend").querySelector(".legend-note");
   if (map.lens.id === "terrain" && terrainNote)
-    terrainNote.textContent =
+    updateText(
+      terrainNote,
       map.scale < 5
         ? "Zoom in to see individual hexes"
-        : "One-mile tiles · NLCD 2021";
+        : "One-mile tiles · NLCD 2021",
+    );
   const max = small() ? 65 : 88,
     goal = max / map.scale;
   const choices = [0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 25, 50, 100, 200];
   const d = choices.filter((v) => v <= goal).at(-1) || 0.1;
-  $("scale").style.width = d * map.scale + "px";
-  $("scale").querySelector("span").textContent = d + " mi";
-  $("zoom-in").disabled = map.z >= 59.99;
-  $("zoom-out").disabled = map.z <= 0.701;
-  $("status-mode").textContent =
-    map.lens.name + (map.opts.utility ? " · Utility" : "");
+  const scaleBar = $("scale"),
+    width = d * map.scale;
+  if (width !== drawStatus.scaleWidth) {
+    scaleBar.style.width = width + "px";
+    drawStatus.scaleWidth = width;
+  }
+  updateText(scaleBar.querySelector("span"), d + " mi");
+  const zoomIn = $("zoom-in"),
+    zoomOut = $("zoom-out");
+  const atMaxZoom = map.z >= 59.99,
+    atMinZoom = map.z <= 0.701;
+  if (zoomIn.disabled !== atMaxZoom) zoomIn.disabled = atMaxZoom;
+  if (zoomOut.disabled !== atMinZoom) zoomOut.disabled = atMinZoom;
+  updateText(
+    $("status-mode"),
+    map.lens.name + (map.opts.utility ? " · Utility" : ""),
+  );
   if (lastHover < 0)
-    $("status-info").textContent =
+    updateText(
+      $("status-info"),
       map.selected >= 0
         ? "Hex " +
-          m.val(map.selected, "col") +
-          ", " +
-          m.val(map.selected, "row")
+            m.val(map.selected, "col") +
+            ", " +
+            m.val(map.selected, "row")
         : map.utility.selection
           ? areaName(map.utility.selection.area) +
             " · Near " +
@@ -941,7 +956,8 @@ function drawStatus() {
               )[0]
             : map.sourceAreas.enabled && map.sourceAreas.layer(map.lens)
               ? "Select a source area to inspect"
-              : "Select a hex to inspect";
+              : "Select a hex to inspect",
+    );
 }
 function hovered(i, pos, label) {
   if (label?.kind === "cooling") i = map.lookup.get(label.p.tile);
@@ -1349,7 +1365,10 @@ function makeHash() {
 function scheduleHash() {
   if (restoreHash || !map?.lens) return;
   clearTimeout(hashTimer);
-  hashTimer = setTimeout(() => history.replaceState(null, "", makeHash()), 150);
+  hashTimer = setTimeout(() => {
+    const hash = makeHash();
+    if (location.hash !== hash) history.replaceState(null, "", hash);
+  }, 150);
 }
 function loadHash() {
   if (!location.hash) return;
