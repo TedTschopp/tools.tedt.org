@@ -3,6 +3,7 @@ import { amenities, gdpRow, growthSpan, industries, popLine, statRow, yieldGrid 
 import { icon } from "./usaciv/ui/icon.js";
 import { drawCityTile } from "./usaciv/render/art/city.js";
 import { CALIFORNIA } from "./civ-terrain.js";
+import { districtRows, mapSeal, metricStrip, populationHistory, residentFigures, shareMeter } from "./profile-art.js";
 
 export const section = (title, content) =>
   '<section class="detail-section cp-section"><h3>' + esc(title) + "</h3>" + content + "</section>";
@@ -23,7 +24,7 @@ const metroLink = r => profileLink("metro", r.id, r.name, "Metro");
 
 function head(kind, title, sub, extra = "", art = false) {
   return `<section class="detail-hero profile-head"><button class="back-btn" data-action="back">‹ Map layers</button>
-    ${art ? '<canvas class="profile-art" width="172" height="144" aria-hidden="true"></canvas>' : ""}
+    ${art === true ? '<canvas class="profile-art" width="172" height="144" aria-hidden="true"></canvas>' : art || ""}
     <span class="eyebrow">${esc(kind)}</span><h2>${esc(title)}</h2><p>${esc(sub)}</p>${extra}</section>`;
 }
 
@@ -57,7 +58,7 @@ export function tileArt(container, map, i, background) {
   map.civ.terrain(ctx, [i], scale, true, true, 2);
 }
 
-export function placeProfile(m, place, hex, lensCallout) {
+export function placeProfile(m, place, hex, lensCallout, localSections) {
   const o = m.profiles.places[place.id];
   const county = m.reg.counties.find(c => c.geoid === o.county);
   const metro = m.reg.metros[county?.cbsa];
@@ -65,22 +66,23 @@ export function placeProfile(m, place, hex, lensCallout) {
     (o.state === "CA" ? stateLink() : "");
   return head(o.kind, place.name, [county?.name, o.state, "Place " + place.id].filter(Boolean).join(" · "),
     `<div class="cp-pop">${icon("pop", "♟")} <b>${int(o.population)}</b> residents</div>`, true) +
+    (o.education ? section("Residents", residentFigures("education", o.education, m.reg.peopleGroups.education)) : "") +
     section("People & households",
       stat("i-professional", "Employed residents", o.employed) +
       stat("unemployment", "Unemployment", o.unemployment, percent) +
       stat("l-income", "Median household income", o.income, dollars) +
       stat("l-home", "Median home value", o.home, dollars) +
-      stat("l-homeownership", "Renter households", o.renters, percent) +
-      stat("r-solar", "Homes using electric heat", o.electricHeat, percent)) +
+      shareMeter("l-homeownership", "Renter households", o.renters, "#b593d0") +
+      shareMeter("r-solar", "Homes using electric heat", o.electricHeat, "#efbb61")) +
     section("SCE map location", hex ? lensCallout + profileLink("hex", hex, "Inspect one-mile hex", hex) :
       '<p class="fine">The Census reference point for this place falls outside the mapped service territory.</p>') +
-    (related ? section("Related geographies", related) : "") +
+    localSections + (related ? section("Related geographies", related) : "") +
     foot("Figures cover the whole Census place. ACS 2020–2024 five-year estimates. " + censusPlace(place.id));
 }
 
 function economy(m, o, isState) {
   const nation = m.profiles.nation;
-  return section("Yields", '<div class="yield-grid">' +
+  return section(isState ? "Yields · rank among states" : "Yields", '<div class="yield-grid">' +
       yieldGrid(nation, o.yields, isState ? o.ranks : null, m.profiles.stateCount) + "</div>" +
       '<p class="fine">Food, production, science and culture count workers by industry. Gold measures GDP in dollars.</p>') +
     section("Economy & housing", gdpRow(o) + amenities(o, nation.nation)) +
@@ -91,9 +93,20 @@ function metroProfile(m, r) {
   const nation = m.profiles.nation.nation, anchor = cityAnchor(m, r), badge = r.districts?.badge;
   const related = (anchor ? profileLink("place", anchor.id, anchor.name, "City proper") : "") +
     r.counties.map(id => m.reg.counties.find(c => c.geoid === id)).filter(Boolean).map(countyLink).join("") + stateLink();
-  return head("Metro area", r.name, r.full, popLine(r, growthSpan(r, nation)), true) +
-    (badge ? section("Specialization", `<div class="district-badge">${icon("d-" + badge.district, "✦")} ${esc(badge.label)}</div><p class="fine">${esc(badge.text)}</p>`) : "") +
-    economy(m, r, false) + section("Related geographies", related) +
+  const badgeHtml = badge ? `<span class="district-badge" style="--district:${m.profiles.districtColors[badge.district] || "#9575ad"}">${icon("d-"+badge.district,"✦")} ${esc(badge.label)}</span>` : "";
+  const residents = ["workforce","age","commute","education","nativity"].map(k =>
+    residentFigures(k,r.people?.[k]?.counts,m.reg.peopleGroups[k])).join("");
+  const districts = districtRows(m,(r.districts?.districts || []).map(d => [d.id,d.lq,d.emp,d.lower_bound]));
+  const overview = economy(m, r, false) + section("Related geographies", related);
+  const pages = [["overview","Overview","map",overview]];
+  if (residents) pages.push(["people","Residents","pop",section("Metro residents",residents)]);
+  if (districts) pages.push(["districts","Districts","i-manufacturing",section("Economic districts",
+    (badge ? '<p class="fine">' + esc(badge.text) + '</p>' : '') + districts +
+    '<p class="fine">The multiplier compares the industry’s share of metro jobs with its share nationwide.</p>')]);
+  return head("Metro area", r.name, r.full, badgeHtml + popLine(r, growthSpan(r, nation)), true) +
+    '<nav class="dossier-nav" aria-label="Metro profile sections">' + pages.map(([key,title,glyph],i) =>
+      `<button type="button" data-dossier="${key}" aria-pressed="${!i}" aria-controls="dossier-${key}">${icon(glyph,"◆",{size:16})}${title}</button>`).join("") + '</nav>' +
+    pages.map(([key,,,body],i) => `<div id="dossier-${key}" data-dossier-page="${key}" ${i ? "hidden" : ""}>${!i ? populationHistory(r) : ""}${body}</div>`).join("") +
     foot("Whole metro · CBSA " + esc(r.id) + " · " + esc(m.profiles.nation.vintage) +
       '. <button data-action="metro-report" data-id="' + esc(r.id) + '">Full metro almanac ›</button>');
 }
@@ -101,7 +114,9 @@ function metroProfile(m, r) {
 function stateProfile(m) {
   const o = m.profiles.state, nation = m.profiles.nation.nation;
   const metros = Object.values(m.reg.metros).sort((a, b) => b.population - a.population);
-  return head("State", o.name, "CA · FIPS 06", popLine(o, growthSpan(o, nation))) + economy(m, o, true) +
+  return head("State", o.name, "CA · FIPS 06", popLine(o, growthSpan(o, nation)), mapSeal(m,"06")) + economy(m, o, true) +
+    section("California land cover", shareMeter("land","Forest",o.land.forest*100,"#85a86c") +
+      shareMeter("y-food","Cropland",o.land.crop*100,"#d7ba69") + shareMeter("i-construction","Developed",o.land.developed*100,"#ab9eac")) +
     section("Metros in this atlas", metros.map(r => profileLink("metro", r.id, r.name, compact(r.population))).join("")) +
     section("Counties in this atlas", m.reg.counties.map(countyLink).join("")) +
     foot("Statewide figures · " + esc(m.profiles.nation.vintage) + '. <button data-report="state">Full state almanac ›</button>');
@@ -112,13 +127,15 @@ function countyProfile(m, c) {
     .sort((a, b) => (m.profiles.places[b.id].population || 0) - (m.profiles.places[a.id].population || 0)).slice(0, 8);
   const region = m.reg.metros[c.cbsa];
   return head("County", c.name, "California · FIPS " + c.geoid,
-    `<div class="cp-pop">${icon("pop", "♟")} <b>${int(c.population)}</b> residents</div>`) +
+    `<div class="cp-pop">${icon("pop", "♟")} <b>${int(c.population)}</b> residents</div>`, mapSeal(m,c.geoid)) +
+    section("County electricity", metricStrip([["r-solar","Solar MW",compact(c.solarMW),"#ebc15d"],
+      ["r-wind","Wind MW",compact(c.windMW),"#84c6bf"],["r-battery","Storage MW",compact(c.storageMW),"#a8c784"]])) +
+    (c.districts?.districts?.length ? section("Economic districts", districtRows(m,c.districts.districts) +
+      '<p class="fine">Job concentration compared with the U.S. share.</p>') : "") +
     section("People & housing", stat("l-income", "Median household income", c.income, dollars) +
       stat("l-home", "Median home value", c.home_value, dollars) +
       stat("l-homeownership", "Owner-occupied homes", c.homeownership == null ? null : c.homeownership * 100, percent)) +
     section("Electricity & transport", stat("i-utilities", "Electricity use · 2024", c.gwh, n => int(n) + " GWh") +
-      stat("r-solar", "Operating solar capacity", c.solarMW, n => int(n) + " MW") +
-      stat("r-wind", "Operating wind capacity", c.windMW, n => int(n) + " MW") +
       stat("r-ev-charging", "Public chargers", c.chargers) +
       '<p class="fine">Whole-county figures across electricity providers. The SCE boundary overlaps ' +
       esc(c.overlapSqMi.toLocaleString("en-US", { maximumFractionDigits: 2 })) + ' square miles of this county.</p>') +

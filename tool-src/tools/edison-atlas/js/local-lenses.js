@@ -15,6 +15,8 @@ const energy = "Energy",
   health = "Community health";
 // ID, title, group, source, units, thresholds, palette, icon, decimal places and method.
 export const localLenses = [
+  ["substations", "Substations", "SCE planning", "drpepStations", "records", [1, 3, 6, 12, 25],
+    "sea", "bolt", 0, "SCE substation inventory records in each clipped 12-mile reporting area. Transformer symbols identify reporting areas. Every one-mile hex shows the count for its area."],
   [
     "C000",
     "Workplace jobs",
@@ -104,6 +106,9 @@ export const localLenses = [
     ["caisoAreas", "CAISO-approved study areas"],
     ["utilityAreas", "Utility-approved study areas"],
     ["cpucAreas", "CPUC-approved study areas"],
+    ["drpPlan", "Projects in planning"],
+    ["drpBuild", "Projects in construction"],
+    ["drpOperate", "Projects in operation"],
   ].map(([id, title]) => [
     id,
     title,
@@ -116,6 +121,13 @@ export const localLenses = [
     0,
     "SCE study-area records with positive area inside this one-mile hex. A project can span several hexes and appear under more than one approval category.",
   ]),
+  ["evPermitStatus", "EV charging permit status", "SCE planning", "evPermits", "", [], ["#3e856b", "#dcad52", "#ad635f"], "plug", 0,
+    "GO-Biz permitting status covering the largest mapped share of this hex. City ordinances apply inside incorporated areas. Select a hex for each jurisdiction’s share, ordinance and checklist."],
+  ["evPermitCoverage", "EV permit geography coverage", "SCE planning", "evPermits", "%", [0.01, 25, 50, 75, 99.99], "sage", "map", 2,
+    "Percentage of the clipped hex with a published city or unincorporated county permitting status."],
+  ...[["portalTree", "SCE portal · tree mortality"], ["portalFire2", "SCE portal · elevated fire area"], ["portalFire3", "SCE portal · extreme fire area"]]
+    .map(([id, title]) => [id, title, "SCE planning", "drpepPublicFire", "%", [0.01, 10, 25, 50, 90], "heat", "flame", 2,
+      "Share of the clipped hex covered by the public SCE polygon displayed in DRPEP’s web map. The CPUC wildfire lens also shows the three-way area split."]),
   [
     "projectCoverage",
     "Approved study area coverage",

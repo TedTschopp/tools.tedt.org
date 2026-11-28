@@ -1,0 +1,154 @@
+--- a/render/art/sprites.js
++++ b/render/art/sprites.js
+@@ -93,0 +94,3 @@
++export function setPatternTile(key, sizePx, dpr, tile) {
++  patternTiles.set(`${key}|${sizePx}|${Math.max(1, Math.round(sizePx * dpr))}`, tile);
++}
+@@ -95 +98 @@
+-  const k = `${key}|${sizePx}|${dpr}`;
++  const k = `${key}|${sizePx}|${Math.max(1, Math.round(sizePx * dpr))}`;
+--- a/render/art/terrain.js
++++ b/render/art/terrain.js
+@@ -54 +54 @@
+-import { bucketPx, deviceScale, getSprite, drawSprite, makePattern, wrapDraw, rng, spriteStats } from "./sprites.js";
++import { bucketPx, deviceScale, getSprite, drawSprite, makePattern, setPatternTile, wrapDraw, rng, spriteStats } from "./sprites.js";
+@@ -69 +69 @@
+-export function drawTerrainGlyphs(ctx, cells, w, { Rpx, s, lod, bridges } = {}) {
++export function drawTerrainGlyphs(ctx, cells, w, { Rpx, s, lod, bridges, pixelRatio } = {}) {
+@@ -75 +75,3 @@
+-  const dpr = dev / s || 1;
++  // Canvas transforms can round the nominal 2x ratio differently at each
++  // zoom. The atlas supplies the actual display ratio to reuse pattern tiles.
++  const dpr = pixelRatio ?? (dev / s || 1);
+@@ -165,0 +168 @@
++  const bounds = visibleBounds(ctx), radius = w.grid.R + 1 / (s * dpr);
+@@ -166,0 +170,5 @@
++    if (bounds) {
++      const x = w.grid.cx(i), y = w.grid.cy(i);
++      if (x + radius < bounds.x0 || y + radius < bounds.y0 ||
++          x - radius > bounds.x1 || y - radius > bounds.y1) continue;
++    }
+@@ -240,0 +249,11 @@
++// Keep only translated copies that can ink this pattern tile. The gutter
++// includes the stroke cap and a device pixel of antialiasing at any density.
++function wrapMark(ctx, size, x, y, radius, draw) {
++  const reach = radius + 1 + size / ctx.canvas.width;
++  wrapDraw(size, (dx, dy) => {
++    const px = x + dx, py = y + dy;
++    if (px + reach >= 0 && py + reach >= 0 && px - reach <= size && py - reach <= size)
++      draw(dx, dy);
++  });
++}
++
+@@ -249 +268 @@
+-      wrapDraw(S, (dx, dy) => {
++      wrapMark(g, S, x, y, len, (dx, dy) => {
+@@ -262 +281 @@
+-      wrapDraw(S, (dx, dy) => {
++      wrapMark(g, S, x, y, rr, (dx, dy) => {
+@@ -305 +324 @@
+-      wrapDraw(S, (dx, dy) => {
++      wrapMark(g, S, pts[0][0], pts[0][1], 4 * 9, (dx, dy) => {
+@@ -326 +345 @@
+-      wrapDraw(S, (dx, dy) => {
++      wrapMark(g, S, x, y, len, (dx, dy) => {
+@@ -339 +358 @@
+-      wrapDraw(S, (dx, dy) => {
++      wrapMark(g, S, x, y, len, (dx, dy) => {
+@@ -350,0 +370,60 @@
++// These are the same authored brush tiles used by drawTextures. Bake them
++// once in the asset generator and decode them before users start zooming.
++const textureOpacities = [TEX_ALPHA.far, TEX_ALPHA.mid, TEX_ALPHA.near];
++const textureFamilies = Object.keys(TEXTURES);
++
++export function terrainPatternSheet(density) {
++  const n = TEX_SIZE * density;
++  const sheet = document.createElement("canvas");
++  sheet.width = textureFamilies.length * n;
++  sheet.height = textureOpacities.length * n;
++  const out = sheet.getContext("2d");
++  for (const [row, alpha] of textureOpacities.entries()) {
++    for (const [col, family] of textureFamilies.entries()) {
++      const tile = document.createElement("canvas");
++      tile.width = tile.height = n;
++      const ink = tile.getContext("2d");
++      ink.setTransform(density, 0, 0, density, 0, 0);
++      ink.lineCap = ink.lineJoin = "round";
++      bakedAlpha(alpha, TEXTURES[family])(ink, TEX_SIZE);
++      out.drawImage(tile, col * n, row * n);
++    }
++  }
++  return sheet;
++}
++
++const preparedPatterns = new Map();
++export function prepareTerrainPatterns(dpr, assetUrl) {
++  // Other pixel densities retain the original brushes at their exact size.
++  if (dpr !== 1 && dpr !== 2) return;
++  if (preparedPatterns.has(dpr)) return preparedPatterns.get(dpr);
++  const ready = (async () => {
++    const n = TEX_SIZE * dpr;
++    const image = new Image();
++    image.src = assetUrl("assets/terrain-patterns-" + dpr + "x.png");
++    await image.decode();
++    const sheet = document.createElement("canvas");
++    sheet.width = image.naturalWidth;
++    sheet.height = image.naturalHeight;
++    if (sheet.width !== textureFamilies.length * n ||
++        sheet.height !== textureOpacities.length * n)
++      throw Error("Unexpected terrain pattern dimensions");
++    const source = sheet.getContext("2d", { willReadFrequently: true });
++    source.drawImage(image, 0, 0);
++    // Give each pattern its own realized pixels. A cropped ImageBitmap can
++    // retain the entire PNG and defer costly decoding until the first fill.
++    for (const [row, alpha] of textureOpacities.entries()) {
++      for (const [col, family] of textureFamilies.entries()) {
++        const tile = document.createElement("canvas");
++        tile.width = tile.height = n;
++        const ink = tile.getContext("2d", { willReadFrequently: true });
++        ink.putImageData(source.getImageData(col * n, row * n, n, n), 0, 0);
++        setPatternTile("terrain-tex:" + family + "@" + alpha, TEX_SIZE, dpr, tile);
++      }
++    }
++    sheet.width = sheet.height = 0;
++  })().catch(() => { preparedPatterns.delete(dpr); });
++  preparedPatterns.set(dpr, ready);
++  return ready;
++}
++
+@@ -355 +434 @@
+-    wrapDraw(S, (dx, dy) => {
++    wrapMark(g, S, x, y, rr, (dx, dy) => {
+--- a/render/art/water.js
++++ b/render/art/water.js
+@@ -102 +102,3 @@
+-let patterns = null; // {ctx, dpr, waves, mottle}
++const oceanTiles = new Map();
++const oceanPatterns = new WeakMap();
++let lastOceanPatterns = null;
+@@ -174,7 +176,14 @@
+-  if (!patterns || patterns.dpr !== dpr || patterns.ctx !== ctx) {
+-    patterns = {
+-      ctx, dpr,
+-      waves: ctx.createPattern(makeWaveTile(dpr), "repeat"),
+-      mottle: ctx.createPattern(makeMottleTile(dpr), "repeat"),
+-    };
+-  }
++  let perContext = oceanPatterns.get(ctx);
++  if (!perContext) oceanPatterns.set(ctx, (perContext = new Map()));
++  let patterns = perContext.get(dpr);
++  if (!patterns) {
++    let tiles = oceanTiles.get(dpr);
++    if (!tiles) {
++      tiles = { waves: makeWaveTile(dpr), mottle: makeMottleTile(dpr) };
++      oceanTiles.set(dpr, tiles);
++    }
++    patterns = { ctx, waves: ctx.createPattern(tiles.waves, "repeat"),
++                 mottle: ctx.createPattern(tiles.mottle, "repeat") };
++    perContext.set(dpr, patterns);
++  }
++  lastOceanPatterns = patterns;
+@@ -322 +331,2 @@
+-    if (patterns && patterns.ctx === ctx) {
++    const patterns = lastOceanPatterns;
++    if (patterns?.ctx === ctx) {

@@ -28,15 +28,27 @@ from geography import (
     territory,
     write_json,
 )
+from grid_network import schematic as grid_schematic
 from local_sources import build_local, write_source_layers
 from planning import cooling_centers, planning_fields
+from planning_geography import add_planning_geography
 from pyproj import Geod
 from regional import regional
 from sce_feeds import reports as sce_reports
 from shapely.geometry import shape
+from substations import add_substations
 from utility import build_utility, utility_geojson
 
 PLANNING_NAMES = {
+    "drpPlan": "planning_stage_records",
+    "drpBuild": "construction_stage_records",
+    "drpOperate": "operational_stage_records",
+    "evPermitStatus": "ev_permit_status",
+    "portalTree": "portal_tree_mortality_pct",
+    "portalFire2": "portal_elevated_pct",
+    "portalFire3": "portal_extreme_pct",
+    "evPermitCoverage": "ev_permit_mapped_pct",
+    "permitJurisdiction": "ev_permit_largest_jurisdiction_fid",
     "planningAreas": "study_area_records",
     "projectCoverage": "study_area_pct",
     "caisoAreas": "caiso_study_areas",
@@ -110,7 +122,7 @@ def main():
     )
     acs, populations = tables()
     ids, counties, outlines, places, overlap = contexts(b, points, populations)
-    write_civ_geography(places, b, row, col, area, polygons)
+    write_civ_geography(places, b, row, col, area, polygons, ids)
     tract, tracts = demographics(b, points, acs)
     ces, scores = enviro(b, points)
     utility = build_utility(b, places)
@@ -118,11 +130,14 @@ def main():
         b, xy, polygons, col, row, tracts, utility
     )
     portals = sce_reports()
+    portals["network"] = grid_schematic(b)
+    add_substations(portals, local)
     portals["cooling"], local_columns["sceCooling"] = cooling_centers(
         local, polygons, col, row
     )
     add_community(local)
     planning = planning_fields(local, polygons, xy)
+    planning.update(add_planning_geography(portals, local["fields"], row, col, area, polygons))
     local_columns.update(planning)
     portals["mappedHexes"] = {
         key: int(np.count_nonzero(np.isfinite(values) & (values > 0)))
@@ -309,6 +324,7 @@ def main():
                     "developed",
                     "gwh",
                     "resGwh",
+                    "substations",
                 ):
                     spec = local["fields"][key]
                     if spec["layer"] == "hex":
@@ -335,6 +351,7 @@ def main():
                         "developed": "hex_developed_pct",
                         "gwh": "zip_sce_published_gwh",
                         "resGwh": "zip_sce_residential_gwh",
+                        "substations": "drpep_12mi_substation_records",
                     }[key]
                     props[field] = value
                 for key, name in PLANNING_NAMES.items():
@@ -357,6 +374,16 @@ def main():
         ):
             archive.write(OUT / name, name)
         archive.writestr("geography-profiles-and-land.txt", GIS_NOTE)
+        archive.writestr("drpep-planning-and-permits.txt",
+            "Join sce-portals.json projects.byHex and permits.split to the tile key in sce-one-mile.geojson. "
+            "projects.byHex indexes projects.records. Each approval has its published project name, stage and planned service year. "
+            "A project may have approvals from multiple bodies. Counts are approval records. "
+            "EV permit status codes are 1 streamlined, 2 in progress and 3 not streamlined. Each hex takes the status with the largest mapped area. "
+            "The largest jurisdiction is identified by its source FID. Split rows list each FID and its share in hundredths of one percent. "
+            "Incorporated areas take precedence over unincorporated county rules. A null code means no published jurisdiction. "
+            "The three portal fire coverage fields use the external public fire views selected in SCE’s web map. "
+            "Substation counts describe entire clipped 12-mile areas. Join the energy_12mi key to local.json energyArea rows or the col,row in sce-portals.json substations.areas. "
+            "The substation icons mark reporting areas. Avoid summing the repeated area count across one-mile hexes.\n")
         write_source_layers(archive, b, local)
         site_features = [
             {

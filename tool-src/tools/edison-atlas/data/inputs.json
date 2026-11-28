@@ -3180,10 +3180,406 @@
   "sha256": "0cc8414be7afa8125fcfdd249e9b618f855a86b20b30bb5a5f4136d8b9232191"
  },
  {
+  "file": "drpep/details/AVL_LOAD_CAP_TOGGLE-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_CAP_TOGGLE/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=plan_year&orderByFields=plan_year&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 353,
+  "sha256": "4eef170d9ce41eb906d83ad24261cad41a32a35d7a5cee030fe3bca845f26ef9"
+ },
+ {
+  "file": "drpep/details/AVL_LOAD_CAP_TOGGLE-1-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/AVL_LOAD_CAP_TOGGLE/FeatureServer/1/query?where=1%3D1&groupByFieldsForStatistics=plan_year&orderByFields=plan_year&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 353,
+  "sha256": "4eef170d9ce41eb906d83ad24261cad41a32a35d7a5cee030fe3bca845f26ef9"
+ },
+ {
+  "file": "drpep/details/DRP_PSPS_Layer-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_PSPS_Layer/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=year&orderByFields=year&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22minutes_deenergized%22%2C+%22outStatisticFieldName%22%3A+%22avg_minutes_deenergized%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 549,
+  "sha256": "e4a0261ed754acc8b869fa18b7b438a5b2dade8b36b1ca5303d0fc3d8e48086b"
+ },
+ {
+  "file": "drpep/details/DRP_PSPS_Layer-1-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_PSPS_Layer/FeatureServer/1/query?where=1%3D1&groupByFieldsForStatistics=year&orderByFields=year&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22minutes_deenergized%22%2C+%22outStatisticFieldName%22%3A+%22avg_minutes_deenergized%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 835,
+  "sha256": "f4822f916a971d29ee64c5431bd18ecf56d30bb9c9a223e9c05fbd13449ca910"
+ },
+ {
+  "file": "drpep/details/DRP_ScreenL_08202021-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_ScreenL_08202021/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=screen_l_pass_fail&orderByFields=screen_l_pass_fail&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 464,
+  "sha256": "fec4f7fb860fb22d7ba2bdff5d2ba11b5e8087606e4664469f9c3b3a2a62de4b"
+ },
+ {
+  "file": "drpep/details/DUPR_Layer-1-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/1/query?where=1%3D1&groupByFieldsForStatistics=grid_need&orderByFields=grid_need&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 724,
+  "sha256": "cf9a564dc9c5a98783891a6190cfcabb5139e013e55eeb821e51ee80e5a47d7b"
+ },
+ {
+  "file": "drpep/details/DUPR_Layer-2-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/2/query?where=1%3D1&groupByFieldsForStatistics=grid_need&orderByFields=grid_need&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 610,
+  "sha256": "b7ac24429f78c691e3bc132ef1b1a4501d22117392da8a4214bc90de335fa66d"
+ },
+ {
+  "file": "drpep/details/DUPR_Layer-date.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DUPR_Layer/FeatureServer/3/query?where=1%3D1&outFields=extract_name%2Cfgdb_date&returnGeometry=false&f=json",
+  "bytes": 413,
+  "sha256": "6818d1f617f90422470ae1e52ea04ee81497e340bf012951dc77cadcb6437141"
+ },
+ {
+  "file": "drpep/details/Distribution_circuits-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Distribution_circuits/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=circuit_type&orderByFields=circuit_type&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 370,
+  "sha256": "295f2e85c56a3fa600cf8b2128f5921a49d7eb89d6309552f5aa291d00aed238"
+ },
+ {
+  "file": "drpep/details/GNA_Layer-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=grid_need&orderByFields=grid_need&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 709,
+  "sha256": "662a3e75a93b1efc4d8910349b3874d7540b929d7cf3a801f543a10a23f9ba8b"
+ },
+ {
+  "file": "drpep/details/GNA_Layer-1-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/1/query?where=1%3D1&groupByFieldsForStatistics=grid_need&orderByFields=grid_need&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 772,
+  "sha256": "eb9ff6db90f4a97b335b99251d7834d00301c33c93d8840f112c21e0409527ad"
+ },
+ {
+  "file": "drpep/details/GNA_Layer-2-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/2/query?where=1%3D1&groupByFieldsForStatistics=grid_need&orderByFields=grid_need&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 610,
+  "sha256": "4ef1e62bb785471e150f0213aef47c9349b97b56d52c95f71ca3b53586b0a40b"
+ },
+ {
+  "file": "drpep/details/GNA_Layer-5-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/5/query?where=1%3D1&groupByFieldsForStatistics=year_value&orderByFields=year_value&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22base_demand%22%2C+%22outStatisticFieldName%22%3A+%22sum_base_demand%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22ev%22%2C+%22outStatisticFieldName%22%3A+%22sum_ev%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22pv%22%2C+%22outStatisticFieldName%22%3A+%22sum_pv%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22es%22%2C+%22outStatisticFieldName%22%3A+%22sum_es%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22ee%22%2C+%22outStatisticFieldName%22%3A+%22sum_ee%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22be%22%2C+%22outStatisticFieldName%22%3A+%22sum_be%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 2534,
+  "sha256": "75e8fbc3fcb3c02d3c274d3c62d8a80dddf3e22c89359ce1bdc22d5e21f3026d"
+ },
+ {
+  "file": "drpep/details/GNA_Layer-date.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/4/query?where=1%3D1&outFields=extract_name%2Cfgdb_date&returnGeometry=false&f=json",
+  "bytes": 412,
+  "sha256": "f8b4f0e0161bd00ecbffd122d32636c8806c2385ae08e8268321a34fbe90f909"
+ },
+ {
+  "file": "drpep/details/ICA_Layer-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=phase&orderByFields=phase&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 333,
+  "sha256": "3c7f25ca5f68d26d3e015eecee15c5a3e24ba42b7ef86473877b08aa76832a44"
+ },
+ {
+  "file": "drpep/details/ICA_Tables-1-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/1/query?where=1%3D1&groupByFieldsForStatistics=year%2Cmonth&orderByFields=year%2Cmonth&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22min_load_mw%22%2C+%22outStatisticFieldName%22%3A+%22avg_min_load_mw%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22max_load_mw%22%2C+%22outStatisticFieldName%22%3A+%22avg_max_load_mw%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 11592,
+  "sha256": "01d0969cc9887bbcdaead87623a318c83f3060c2b5432b72a02096fd0beafef9"
+ },
+ {
+  "file": "drpep/details/ICA_Tables-2-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/2/query?where=1%3D1&groupByFieldsForStatistics=year%2Cmonth&orderByFields=year%2Cmonth&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22min_load_mw%22%2C+%22outStatisticFieldName%22%3A+%22avg_min_load_mw%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22max_load_mw%22%2C+%22outStatisticFieldName%22%3A+%22avg_max_load_mw%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 11007,
+  "sha256": "33f758ecd477773bdeefc79d02f8c190a3aa9311c9afdacae529cdc440a8cf61"
+ },
+ {
+  "file": "drpep/details/ICA_Tables-4-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/4/query?where=1%3D1&groupByFieldsForStatistics=year%2Cmonth&orderByFields=year%2Cmonth&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22min_load_mw%22%2C+%22outStatisticFieldName%22%3A+%22avg_min_load_mw%22%7D%2C+%7B%22statisticType%22%3A+%22avg%22%2C+%22onStatisticField%22%3A+%22max_load_mw%22%2C+%22outStatisticFieldName%22%3A+%22avg_max_load_mw%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 7078,
+  "sha256": "ed496b11bd16b48a75b500b4bae01ed52759b3d7bce568146239aaa4a774e541"
+ },
+ {
+  "file": "drpep/details/ICA_Tables-date.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/0/query?where=1%3D1&outFields=extract_name%2Cfgdb_date&returnGeometry=false&f=json",
+  "bytes": 412,
+  "sha256": "98a184897aeab3912a69ee2b7c553920b66dcbeee51950f4358356c160280178"
+ },
+ {
+  "file": "drpep/details/LNBA_Layer-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=planning_year%2Cder_forecast_year&orderByFields=planning_year%2Cder_forecast_year&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 515,
+  "sha256": "45015bcc30055986f22ea1a680cd2c6790ab8e5f85f873dc16279a1a031a1e77"
+ },
+ {
+  "file": "drpep/details/LNBA_Layer-1-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/1/query?where=1%3D1&groupByFieldsForStatistics=lnba_results_1&orderByFields=lnba_results_1&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 377,
+  "sha256": "8328c6d11fa260c7dc37fab4f2f60d8d9964398ac1df46c4f2c6250919da8124"
+ },
+ {
+  "file": "drpep/details/LNBA_Layer-2-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/2/query?where=1%3D1&groupByFieldsForStatistics=lnba_results_1&orderByFields=lnba_results_1&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 494,
+  "sha256": "74065da82bc33f188f1c5b40cf27381d45e83c6aaf1604e0dda625f3aca5432b"
+ },
+ {
+  "file": "drpep/details/LNBA_Layer-3-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/3/query?where=1%3D1&groupByFieldsForStatistics=lnba_results_1&orderByFields=lnba_results_1&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 494,
+  "sha256": "ad89db8d2e5e48dff6a0bf712b48bb90479211fe55b6958360ef63f839b5ef99"
+ },
+ {
+  "file": "drpep/details/LNBA_Layer-date.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/LNBA_Layer/FeatureServer/4/query?where=1%3D1&outFields=extract_name%2Cfgdb_date&returnGeometry=false&f=json",
+  "bytes": 411,
+  "sha256": "0ba64df2680f01cf247baf3be2a6cd1353e4ec6d2207acadf3726325f5144c16"
+ },
+ {
+  "file": "drpep/details/SUBTRANS_HEATMAP-0-stats.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/SUBTRANS_HEATMAP/FeatureServer/0/query?where=1%3D1&groupByFieldsForStatistics=cluster_study&orderByFields=cluster_study&outStatistics=%5B%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
+  "bytes": 365,
+  "sha256": "458cbaf75f798f39de461e7959e5705d6942ce4bbc96c8adb251ce3ba76f1744"
+ },
+ {
+  "file": "drpep/details/caiso-projects.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/0/query?where=1%3D1&outFields=objectid%2Cproject_name%2Cproject_status%2Cplanned_in_service_year%2Ctype&returnGeometry=false&f=json&orderByFields=objectid",
+  "bytes": 3876,
+  "sha256": "cd5bcfd2903c68ceb47149f93767c53612180d04c2a74d366eded014c5dccd0c"
+ },
+ {
+  "file": "drpep/details/cpuc-projects.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/2/query?where=1%3D1&outFields=objectid%2Cproject_name%2Cproject_status%2Cplanned_in_service_year%2Ctype&returnGeometry=false&f=json&orderByFields=objectid",
+  "bytes": 2944,
+  "sha256": "e409ab0deaf4b8ca809c225a303954c208825f8fcdfcf0a5b3bf1fe3230117e4"
+ },
+ {
+  "file": "drpep/details/months-1.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/1/query?where=1%3D1&returnDistinctValues=true&outFields=month%2Cmonthlabel&returnGeometry=false&f=json",
+  "bytes": 14837,
+  "sha256": "d206e655a3c34330321adf4a21008c2f502ab9c8779881f4eb031731fd7ff298"
+ },
+ {
+  "file": "drpep/details/months-2.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/2/query?where=1%3D1&returnDistinctValues=true&outFields=month%2Cmonthlabel&returnGeometry=false&f=json",
+  "bytes": 14837,
+  "sha256": "d206e655a3c34330321adf4a21008c2f502ab9c8779881f4eb031731fd7ff298"
+ },
+ {
+  "file": "drpep/details/months-4.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Tables/FeatureServer/4/query?where=1%3D1&returnDistinctValues=true&outFields=month%2Cmonthlabel&returnGeometry=false&f=json",
+  "bytes": 14837,
+  "sha256": "d206e655a3c34330321adf4a21008c2f502ab9c8779881f4eb031731fd7ff298"
+ },
+ {
+  "file": "drpep/details/permits-0000.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=1%2C2%2C6%2C7%2C8%2C13%2C15%2C17%2C18%2C20%2C21%2C22&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 57859,
+  "sha256": "09aac233cb934958583b9d2e7eb19c4b8e02c71fa6c4ef633db945fffedfdf94"
+ },
+ {
+  "file": "drpep/details/permits-0012.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=27%2C28%2C29%2C30%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C42&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 66160,
+  "sha256": "75e4e47d95bf883285f19d468f6381f111a6851cf66cde6bce8efe368518752c"
+ },
+ {
+  "file": "drpep/details/permits-0024.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=43%2C45%2C47%2C48%2C50%2C53%2C54%2C55%2C58%2C59%2C61%2C62&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 80810,
+  "sha256": "abbf5815cdedd35176765af4e3f2667c7328bb193b219642e6eafd195911e9b7"
+ },
+ {
+  "file": "drpep/details/permits-0036.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=63%2C65%2C67%2C69%2C71%2C72%2C73%2C75%2C77%2C78%2C79%2C82&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 45417,
+  "sha256": "3ea804a656bd31696c0b5d2b5b8f843909920f4d8426d93f93c9d591f0f4a3a5"
+ },
+ {
+  "file": "drpep/details/permits-0048.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=86%2C87%2C88%2C91%2C94%2C95%2C98%2C100%2C103%2C105%2C107%2C108&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 60101,
+  "sha256": "acf44b8b16c325763a51e7dcba9e64f75f49f9f683328ace66f291d2f7e8085a"
+ },
+ {
+  "file": "drpep/details/permits-0060.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=110%2C112%2C118%2C119%2C120%2C121%2C125%2C126%2C130%2C135%2C136%2C137&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 37614,
+  "sha256": "aac5b9086f16b0aecc413a3e9e6cb1395859070e92ae62669017ff3d0a256214"
+ },
+ {
+  "file": "drpep/details/permits-0072.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=142%2C145%2C148%2C150%2C151%2C153%2C158%2C159%2C161%2C162%2C163%2C165&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 229431,
+  "sha256": "13fd7b3c7921e693848da2da3afff22912d80095f0d6e3ed2036e2bcd0223072"
+ },
+ {
+  "file": "drpep/details/permits-0084.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=166%2C168%2C169%2C171%2C173%2C181%2C182%2C183%2C186%2C188%2C189%2C190&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 49490,
+  "sha256": "e2071b5c63c47bad803f575255bd8b5f6e00383d21dd2d28312d846f1431957b"
+ },
+ {
+  "file": "drpep/details/permits-0096.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=191%2C197%2C198%2C199%2C202%2C203%2C204%2C205%2C206%2C207%2C209%2C210&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 131688,
+  "sha256": "e4a73e71f54465ef0ed762b5830eeb34f10a3eb324fb0c2353135ec450037033"
+ },
+ {
+  "file": "drpep/details/permits-0108.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=213%2C214%2C215%2C217%2C218%2C219%2C220%2C221%2C223%2C224%2C225%2C226&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 105416,
+  "sha256": "1202a7b8f09125a684a1c54c63b840641b7d0143e81bde8ed56516837e073bd7"
+ },
+ {
+  "file": "drpep/details/permits-0120.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=227%2C229%2C230%2C231%2C232%2C234%2C235%2C237%2C238%2C242%2C244%2C246&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 54499,
+  "sha256": "47833af702a4984656438d89f94517a9c5832f4d1e613652c2fb92e8bf3379ae"
+ },
+ {
+  "file": "drpep/details/permits-0132.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=251%2C252%2C253%2C254%2C256%2C259%2C260%2C264%2C265%2C266%2C267%2C268&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 371950,
+  "sha256": "ffd037ba761047e81722f24619ef126458b4fe5d48d92990b46be890aec8595b"
+ },
+ {
+  "file": "drpep/details/permits-0144.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=269%2C271%2C274%2C277%2C278%2C280%2C281%2C283%2C284%2C288%2C291%2C292&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 142746,
+  "sha256": "e9d3a558856af147c27b66be03e662457534dd8fb65acf868e3a0128c838c9ca"
+ },
+ {
+  "file": "drpep/details/permits-0156.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=294%2C296%2C298%2C299%2C300%2C302%2C307%2C311%2C316%2C317%2C318%2C323&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 181720,
+  "sha256": "b398b962955c1c7f2b1ee0f495e15db9790774a49e79bcc03fe1c20bc41c7998"
+ },
+ {
+  "file": "drpep/details/permits-0168.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=324%2C325%2C326%2C327%2C328%2C332%2C335%2C336%2C337%2C339%2C341%2C342&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 113676,
+  "sha256": "f03571388e1462b4dcad05655572a4cbe981b8e695429aefaab5ff7a12907fd3"
+ },
+ {
+  "file": "drpep/details/permits-0180.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=343%2C345%2C347%2C352%2C360%2C361%2C362%2C367%2C368%2C369%2C370%2C373&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 70619,
+  "sha256": "bab70cde97049da05fced1f2d8cf6227d10b3a7087058b7f6583807fbeb418ed"
+ },
+ {
+  "file": "drpep/details/permits-0192.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=374%2C376%2C377%2C379%2C384%2C385%2C388%2C389%2C390%2C398%2C399%2C401&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 238995,
+  "sha256": "cfbb38059aaa84b35619ddf8e3ac57d85b802eaed5784a8bcb89f3a6484f964c"
+ },
+ {
+  "file": "drpep/details/permits-0204.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=403%2C405%2C406%2C407%2C410%2C411%2C412%2C416%2C419%2C420%2C421%2C428&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 240684,
+  "sha256": "2e69e2ef55af5c5f4f4bc46d4c6bf151c03c8fdaab5a892753a6e8d08f9b53e9"
+ },
+ {
+  "file": "drpep/details/permits-0216.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=429%2C430%2C431%2C434%2C437%2C438%2C439%2C440%2C446%2C449%2C450%2C454&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 193445,
+  "sha256": "033f5d075f8516fd0e4fb8be4ef61a181b34e921ec347e8f1526e565f19f061d"
+ },
+ {
+  "file": "drpep/details/permits-0228.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=455%2C456%2C461%2C464%2C465%2C466%2C468%2C471%2C472%2C479%2C480%2C483&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 108240,
+  "sha256": "3dc036778536576fa26d184b2c0b46d1e26f30c3e76da56cb5acd26745817922"
+ },
+ {
+  "file": "drpep/details/permits-0240.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=484%2C485%2C487%2C492%2C493%2C495%2C497%2C498%2C501%2C504%2C505%2C506&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 256724,
+  "sha256": "cdf863465c7088cbc1388ce8de4d6cabae9377839ed5447f7d3aaadb3b71d1f6"
+ },
+ {
+  "file": "drpep/details/permits-0252.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=507%2C508%2C509%2C510%2C512%2C516%2C517%2C519%2C520%2C523%2C524%2C530&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 54521,
+  "sha256": "e7342b357c20a9e9e8884fc14ba41128a2ae710e15ff6d18154b31481c57d02d"
+ },
+ {
+  "file": "drpep/details/permits-0264.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?objectIds=534%2C539%2C540&outFields=FID%2CName%2CGovernment_Level%2CCompliance_Status%2CAdoption_Month%2CAdoption_Year%2CWebsite%2CChecklistURL%2COrdinanceBool%2CChecklistBool%2CAdminApprovalBool%2CHealthSafetyBool%2CeSignatureBool%2CNoAssociationBool%2COneNoticeBool&outSR=3310&geometryPrecision=2&returnGeometry=true&f=geojson",
+  "bytes": 12088,
+  "sha256": "2ba71f79d7d32bef66f36c6f85870aa7f5e3e86447e9bce33d5c971be3806bd1"
+ },
+ {
+  "file": "drpep/details/permits-ids.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0/query?where=1%3D1&returnIdsOnly=true&f=json&geometry=-48549.47213177887%2C-522824.45314293914%2C540014.5544767509%2C43501.384698815644&geometryType=esriGeometryEnvelope&inSR=3310&spatialRel=esriSpatialRelIntersects",
+  "bytes": 1049,
+  "sha256": "20712e80c8aea54ebe64d4239b203d2329a42d21e61d9fd6d121aa172109529e"
+ },
+ {
+  "file": "drpep/details/permits-schema.json",
+  "url": "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/AB_1236_Compliance_Status/FeatureServer/0?f=json",
+  "bytes": 14797,
+  "sha256": "743f7c2ab8bb126dbe4495b548f4a68b5eb1c706555b27180dbd536c1ddcc4a5"
+ },
+ {
+  "file": "drpep/details/portalFire2-features.json",
+  "url": "https://services5.arcgis.com/z6hI6KRjKHvhNO0r/arcgis/rest/services/SCE_HighFireRiskArea_PublicView/FeatureServer/0/query?where=LABEL+%3D+%27Tier+2%27&outFields=OBJECTID&returnGeometry=true&outSR=3310&geometryPrecision=2&f=geojson",
+  "bytes": 5732432,
+  "sha256": "3bbc055e9f554bc3a5bc085559eb069bced0d3343509ff1156363d07a1ab7da1"
+ },
+ {
+  "file": "drpep/details/portalFire2-ids.json",
+  "url": "https://services5.arcgis.com/z6hI6KRjKHvhNO0r/arcgis/rest/services/SCE_HighFireRiskArea_PublicView/FeatureServer/0/query?where=LABEL+%3D+%27Tier+2%27&returnIdsOnly=true&f=json",
+  "bytes": 56,
+  "sha256": "729c13448cab3c9e837af64606ac8da660f68b66bfbc830c9112d6679e37a02d"
+ },
+ {
+  "file": "drpep/details/portalFire3-features.json",
+  "url": "https://services5.arcgis.com/z6hI6KRjKHvhNO0r/arcgis/rest/services/SCE_HighFireRiskArea_PublicView/FeatureServer/0/query?where=LABEL+%3D+%27Tier+3%27&outFields=OBJECTID&returnGeometry=true&outSR=3310&geometryPrecision=2&f=geojson",
+  "bytes": 869802,
+  "sha256": "81b509366264a55a6362bd4293821172e7b2e8a401e27a54b450ad3d99fe96e2"
+ },
+ {
+  "file": "drpep/details/portalFire3-ids.json",
+  "url": "https://services5.arcgis.com/z6hI6KRjKHvhNO0r/arcgis/rest/services/SCE_HighFireRiskArea_PublicView/FeatureServer/0/query?where=LABEL+%3D+%27Tier+3%27&returnIdsOnly=true&f=json",
+  "bytes": 56,
+  "sha256": "d69fc1d102bba32a5380a263c24fb3459f0d8a5e971cf2a79fb318b7012167d9"
+ },
+ {
+  "file": "drpep/details/portalTree-features.json",
+  "url": "https://services5.arcgis.com/z6hI6KRjKHvhNO0r/arcgis/rest/services/SCE_HHZ_Tier1_PublicView/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&returnGeometry=true&outSR=3310&geometryPrecision=2&f=geojson",
+  "bytes": 8216514,
+  "sha256": "2bedc914be399899adf02ff84a9c73bdf4c3e877c483942d5a17ef5c315d98f9"
+ },
+ {
+  "file": "drpep/details/portalTree-ids.json",
+  "url": "https://services5.arcgis.com/z6hI6KRjKHvhNO0r/arcgis/rest/services/SCE_HHZ_Tier1_PublicView/FeatureServer/0/query?where=1%3D1&returnIdsOnly=true&f=json",
+  "bytes": 50,
+  "sha256": "9614757f23e04cd348dbad98e56509c8d402b0d8ac3811f9b32c1816cfea1518"
+ },
+ {
+  "file": "drpep/details/territory.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/17/query?where=1%3D1&outFields=existing_gen%2Cqueued_gen%2Ctotal_gen%2Cprojected_load%2Cpenetration_level&returnGeometry=false&f=json",
+  "bytes": 882,
+  "sha256": "8b40c31ee885aa76c502e8c71c060b4183aa25f7424217f60792a6d905e26d94"
+ },
+ {
+  "file": "drpep/details/utility-projects.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/DRP_Transmission_Projects/FeatureServer/1/query?where=1%3D1&outFields=objectid%2Cproject_name%2Cproject_status%2Cplanned_in_service_year%2Ctype&returnGeometry=false&f=json&orderByFields=objectid",
+  "bytes": 3876,
+  "sha256": "cd5bcfd2903c68ceb47149f93767c53612180d04c2a74d366eded014c5dccd0c"
+ },
+ {
+  "file": "drpep/details/webmap.json",
+  "url": "https://drpep.sce.com/arcgis_portal/sharing/rest/content/items/cd4865e42c154dfc9b52c024314c3263/data?f=json",
+  "bytes": 184331,
+  "sha256": "f9c32f6103cbcda4a13a2458eb0a1c5de8922df2c33f2510f8da883728b236e4"
+ },
+ {
   "file": "drpep/forecast-by-year.json",
   "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/GNA_Layer/FeatureServer/3/query?where=1%3D1&groupByFieldsForStatistics=year_value&orderByFields=year_value&outStatistics=%5B%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22base_demand%22%2C+%22outStatisticFieldName%22%3A+%22sum_base_demand%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22ev%22%2C+%22outStatisticFieldName%22%3A+%22sum_ev%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22pv%22%2C+%22outStatisticFieldName%22%3A+%22sum_pv%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22es%22%2C+%22outStatisticFieldName%22%3A+%22sum_es%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22ee%22%2C+%22outStatisticFieldName%22%3A+%22sum_ee%22%7D%2C+%7B%22statisticType%22%3A+%22sum%22%2C+%22onStatisticField%22%3A+%22be%22%2C+%22outStatisticFieldName%22%3A+%22sum_be%22%7D%2C+%7B%22statisticType%22%3A+%22count%22%2C+%22onStatisticField%22%3A+%22objectid%22%2C+%22outStatisticFieldName%22%3A+%22records%22%7D%5D&returnGeometry=false&f=json",
   "bytes": 2541,
   "sha256": "d8c36aaaaabc21e28832914ec10d916ec9b5df3022fe7ccae27c51ef131323e8"
+ },
+ {
+  "file": "drpep/grid-distribution-crossings.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Distribution_circuits/FeatureServer/0/query",
+  "bytes": 2001,
+  "sha256": "bf99fc145707a3680a565a426011518de6f1e07845c41d3e73b615179a60e99a"
+ },
+ {
+  "file": "drpep/grid-transmission-crossings.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/19/query",
+  "bytes": 1391,
+  "sha256": "be7d388c00bccd48b6ecd35f3e1358da9363393e4168f0db997a796466f7ee3b"
  },
  {
   "file": "drpep/hex/caiso/features-000000.json",
@@ -4042,6 +4438,12 @@
   "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted?f=json",
   "bytes": 1212,
   "sha256": "6bf748f87341e4de4038960bde8bb59140035ef7d6cd7043e79fecb2145968c5"
+ },
+ {
+  "file": "drpep/substation-area-counts.json",
+  "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/18/query",
+  "bytes": 9787,
+  "sha256": "efdb6270f983d7e06832789843dbe64d8358373bbb59c3ecdf3f9cfbc26a4007"
  },
  {
   "file": "drpep/upgrades-by-service.json",

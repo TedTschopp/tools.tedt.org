@@ -1,6 +1,7 @@
 import { assetUrl, portable } from "./assets.js";
 import { number, compact } from "./lenses.js";
 import { coverage, direct } from "./sources.js";
+import { additionalPlanning, serviceLink } from "./planning-panel.js";
 import { icon } from "./icons.js";
 export const esc = (s) =>
   String(s ?? "").replace(
@@ -503,7 +504,9 @@ function planning(m) {
     0,
   );
   return `<h3>Distribution planning</h3><p>SCE’s Distribution Resources Plan External Portal lists ${services.length} public feature services with ${count} layers and tables in the November 27, 2026 snapshot. The map measures the overlap of SCE’s published planning polygons with each one-mile hex inside the territory.</p>
-    <h4>Planning data by hex</h4><p>${number(m.portals.mappedHexes.planningAreas)} hexes intersect an approved project study area. Select a hex to see the number of CAISO, utility and CPUC approval records and the share of the hex inside any study area. The wildfire map colors each hex by its largest area share and shows all three percentages when selected.</p>
+    ${additionalPlanning(m, table, sourceLink)}
+    <h4>Planning data by hex</h4><p>${number(m.portals.mappedHexes.planningAreas)} hexes intersect an approved project study area. Select a hex for project titles, approval bodies, published status and planned service years. The wildfire map colors each hex by its largest area share and shows all three percentages when selected.</p>
+    <div class="actions"><button class="action-btn" data-lens="portalTree">SCE portal tree mortality</button><button class="action-btn" data-lens="portalFire2">SCE portal elevated area</button><button class="action-btn" data-lens="portalFire3">SCE portal extreme area</button></div>
     <div class="actions"><button class="action-btn" data-lens="planningAreas">Map approved study areas</button><button class="action-btn" data-lens="projectCoverage">Study area coverage</button><button class="action-btn" data-lens="fire">Wildfire tier by area</button><button class="action-btn" data-lens="tierOne">Tier 1 tree mortality</button><button class="action-btn" data-lens="fireTwoPct">Tier 2 fire area</button><button class="action-btn" data-lens="fireThreePct">Tier 3 fire area</button></div>
     <p>The load maps show the published MW band covering the greatest mapped area in each hex. The hex inspector gives the percentage with source coverage for each scenario. When SCE maps several bands over the same place, the inspector lists the area covered by each band. Their percentages can add up to more than 100%. Blank hexes have no published band. A MW band describes the source area and cannot be summed across hexes.</p>
     <div class="actions"><button class="action-btn" data-lens="growth">Load growth</button><button class="action-btn" data-lens="loadFull">Available load · full submittals</button><button class="action-btn" data-lens="loadPartial">Available load · full and partial</button></div>
@@ -535,10 +538,7 @@ function planning(m) {
     <h4>Published services</h4>${services
       .map(
         (s) =>
-          `<details><summary>${esc(s.name.replaceAll("_", " "))} · ${s.layers.length}</summary>${table(
-            ["SCE layer or table", "Source records"],
-            s.layers.map((r) => [r.name, number(r.count)]),
-          )}</details>`,
+          `<details><summary>${esc(s.name.replaceAll("_", " "))} · ${s.layers.length}</summary><table class="report-table"><thead><tr><th>Published layer or table</th><th>Source records</th></tr></thead><tbody>${s.layers.map(r => `<tr><td>${sourceLink(serviceLink(s.name,r.id),r.name)}</td><td>${number(r.count)}</td></tr>`).join("")}</tbody></table></details>`,
       )
       .join(
         "",
@@ -619,7 +619,7 @@ export function method(m) {
     " tiles, including " +
     number(a.boundaryCells) +
     " partial tiles. Some small islands occupy only a fraction of a cell. The Census internal point identifies a place’s tile. A place that crosses the boundary can have customers on both sides.</p>" +
-    "<h3>Reading the artwork</h3><p>USACiv’s painters draw buildings, fields, forests and ridges from land cover and elevation. Building layouts are illustrations. City skylines use local population bands and sit on the tile containing the Census place point. Green population caps mark points inside the service area. Gray caps mark nearby places. Selecting a banner opens the place record.</p><p>At close zoom, a Tile climate ribbon shows daily solar energy per square metre and the normal July high sampled for that hex. Metro banners display five economic measures under the city name. Select the name for the Census place or the icon row for its metro. State, county, metro and place profiles also link to each other.</p>" +
+    "<h3>Reading the artwork</h3><p>USACiv’s painters draw buildings, fields, forests and ridges from land cover and elevation. Building layouts are illustrations. City skylines use local population bands and sit on the tile containing the Census place point. Green population caps mark points inside the service area. Gray caps mark nearby places. Selecting a banner opens the place record.</p><p>Select a city to see the daily solar resource and normal July high at its reference hex. Metro banners display five economic measures under the city name. Select the name for the Census place or the icon row for its metro. State, county, metro and place profiles also link to each other.</p>" +
     "<h3>Military and restricted land</h3><p>Red slashes follow Census TIGER/Line military land and GreenInfo Network CPAD units labeled Restricted Access or No Public Access. Select a hex for percentages of its area inside SCE. Each class is dissolved independently, and different classes may overlap. Outlines are simplified for display.</p>" +
     "<h3>Utility resources</h3><p>Utility symbols summarize records inside the service polygon across all owners. The overview uses 48-mile hexes. Regional symbols cover 12-mile hexes. Public charging resolves to individual one-mile hexes at street-area zoom. Select a symbol to outline its reporting area and read the counts. The area name identifies a nearby Census place. Each scale groups the original records independently. Use a single scale for totals.</p>" +
     "<p>The October 2026 EIA-860M inventory covers plants with at least 1 MW of combined nameplate capacity. A site counts once per technology. The November 27 AFDC snapshot counts public stations and Level 1, Level 2 and DC fast ports. The capacity lenses use 12-mile areas and the charging lenses count ports in each clipped one-mile hex. Solar, wind and battery medallions come from USACiv. The charging medallion and four isometric miniatures were drawn for this atlas.</p>" +

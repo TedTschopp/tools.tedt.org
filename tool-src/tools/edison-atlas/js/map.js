@@ -3,6 +3,8 @@ import { drawRestricted } from "./usaciv/render/art/sites.js";
 import { CivArt, drawSites } from "./civart.js";
 import { TerrainRaster } from "./terrain-raster.js";
 import { UtilityLayer } from "./utility.js";
+import { drawSubstations } from "./substations.js";
+import { gridKinds, gridPaths, drawGridLines } from "./grid-network.js";
 import { SourceAreas } from "./source-areas.js";
 import {
   drawRoads,
@@ -238,6 +240,9 @@ export class HexMap {
     this.terrainRaster = new TerrainRaster(this.civ);
     this.renderRevision = 0;
     this.utility = new UtilityLayer(m.utility);
+    this.gridFilters = new Set(gridKinds);
+    this.powerGrid = gridPaths(m.portals.network);
+    this.stationSelection = null;
     this.sourceAreas = new SourceAreas(m);
     this.utilityHover = null;
     this.opts = {
@@ -503,6 +508,8 @@ export class HexMap {
     const key = [
       this.lens.id,
       this.sourceAreas.enabled,
+      this.opts.utility && this.gridFilters.has("transmission"),
+      this.opts.utility && this.gridFilters.has("distribution"),
       width,
       height,
       view.dpr,
@@ -853,6 +860,7 @@ export class HexMap {
         if (s > 3.3) stroke(this.rail[1], "#81796c", 0.9, [3, 2]);
       }
     }
+    if (this.opts.utility) drawGridLines(c, this.powerGrid, this.gridFilters, s, this.boundary);
     stroke(this.boundary, "rgba(247,237,190,.85)", s > 4 ? 3 : 2.3);
     stroke(this.boundary, "#436247", s > 4 ? 1.6 : 1.2);
   }
@@ -1002,6 +1010,7 @@ export class HexMap {
       );
     drawSites(c, this);
     if (this.opts.utility) this.utility.draw(c, this);
+    if (this.opts.utility && this.gridFilters.has("substations")) drawSubstations(c, this);
     if (this.lens.id === "sceCooling" && s >= 6) {
       c.save();
       for (const site of this.m.portals.cooling.sites) {
@@ -1042,7 +1051,7 @@ export class HexMap {
     this.frame(c);
     this.sourceAreas.highlight(c, this);
     const activeArea =
-      this.opts.utility && (this.utilityHover || this.utility.selection?.area);
+      this.opts.utility && (this.utilityHover || this.stationSelection || this.utility.selection?.area);
     if (activeArea) {
       const { col, row, width } = activeArea;
       const x = (col + Math.abs(row % 2) / 2) * width,
@@ -1215,7 +1224,7 @@ export class HexMap {
       }
       const i = this.cellAt(...this.world(...pos));
       const label = this.hitLabel(pos);
-      this.utilityHover = label?.kind === "utility" ? label.p : null;
+      this.utilityHover = ["utility", "substation"].includes(label?.kind) ? label.p : null;
       this.sourceAreas.hover = label?.kind === "source" ? label : null;
       this.hover = this.utilityHover || this.sourceAreas.hover ? -1 : i;
       this.highlights();

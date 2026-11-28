@@ -234,7 +234,7 @@ export function addLocalLenses(local) {
     );
   }
 }
-export const featured = ["terrain", "fire", "solar", "gwh", "home_value"];
+export const featured = ["terrain", "substations", "evPermitStatus", "fire", "solar", "gwh", "home_value"];
 export function valueAt(m, id, i) {
   if (i < 0) return null;
   const get = (k) => m.val(i, k);
@@ -250,6 +250,7 @@ export function valueAt(m, id, i) {
 }
 const capacityClasses = ["Above 3 MW", "1–3 MW", "0–1 MW", "Tied bands"];
 const planningClasses = {
+  evPermitStatus: ["Streamlined", "Streamlining in progress", "Not streamlined"],
   growth: ["Above 5 MW", "Above 3 through 5 MW", "0–3 MW", "Tied bands"],
   loadFull: capacityClasses,
   loadPartial: capacityClasses,

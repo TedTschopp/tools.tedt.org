@@ -121,7 +121,15 @@
             </button>
           </div>
           <section id="utility-panel" aria-label="Utility layer filters" hidden>
-            <h3>Utility resources</h3>
+            <h3>Electric grid</h3>
+            <div id="grid-kinds" role="group" aria-label="Electric grid layers">
+              <button class="utility-kind" data-grid-filter="substations" role="switch" aria-checked="true"><span class="station-key" aria-hidden="true"></span><span><b>Substations</b><small>Inventory by 12-mile area</small></span><i class="switch" aria-hidden="true"></i></button>
+              <button class="utility-kind" data-grid-filter="transmission" role="switch" aria-checked="true"><i class="grid-line transmission"></i><span><b>Transmission</b><small>Regional crossings · solid plum</small></span><i class="switch" aria-hidden="true"></i></button>
+              <button class="utility-kind" data-grid-filter="distribution" role="switch" aria-checked="true"><i class="grid-line distribution"></i><span><b>Distribution</b><small>Regional crossings · dashed teal</small></span><i class="switch" aria-hidden="true"></i></button>
+            </div>
+            <p>At regional zoom, each line joins two 24-mile areas where SCE maps circuit linework at their shared border.</p>
+            <button class="action-btn station-shortcut" data-lens="substations">Shade by substation count</button>
+            <h3>Generation, storage &amp; charging</h3>
             <p>Reported sites inside the SCE boundary, across all owners.</p>
             <div id="utility-kinds"></div>
             <label for="utility-area">Explore a 12-mile area</label>

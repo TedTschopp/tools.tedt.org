@@ -473,3 +473,49 @@ test('metro ribbon hit targets stay clear of overlapping utility icons at region
   });
   for (const row of checks) expect(row).toEqual(['metro','metro','metro','metro','metro']);
 });
+
+test('the territory map opens with separately switchable grid lines and clickable substation symbols', async ({page}) => {
+  await page.goto('/edison-atlas/');
+  const legend = page.locator('#legend');
+  await expect(legend).toContainText('24-mile regional crossings');
+  const panel = page.locator('#utility-panel');
+  await page.locator('#utility-menu').click();
+  for (const kind of ['transmission', 'distribution', 'substations']) {
+    await expect(panel.locator('[data-grid-filter="' + kind + '"]')).toBeChecked();
+  }
+  await panel.locator('[data-grid-filter="transmission"]').click();
+  await expect(legend).not.toContainText('Transmission');
+  await expect(legend).toContainText('Distribution');
+  await page.locator('#utility-menu').click();
+  await expect(page).toHaveURL(/gridlayers=/);
+  await page.reload();
+  await expect(legend).not.toContainText('Transmission');
+  await expect(legend).toContainText('Substations');
+
+  const hit = await page.evaluate(async () => {
+    const {HexMap} = await import(new URL('js/map.js', document.baseURI).href);
+    const draw = HexMap.prototype.draw;
+    const next = new Promise<any>(resolve => {
+      HexMap.prototype.draw = function(...args: any[]) { draw.apply(this,args); resolve(this); };
+    });
+    const canvas = document.querySelector<HTMLCanvasElement>('#map')!;
+    const bounds = canvas.getBoundingClientRect();
+    try {
+      canvas.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight'}));
+      const map = await next;
+      for (const label of map.labels.filter((v: any) => v.kind === 'substation')) {
+        const x = (label.x0 + label.x1) / 2, y = (label.y0 + label.y1) / 2;
+        if (map.hitLabel([x,y]) === label && document.elementFromPoint(bounds.x+x,bounds.y+y) === canvas)
+          return {x,y,count:label.p.count};
+      }
+      throw new Error('No visible substation marker at the territory zoom');
+    } finally { HexMap.prototype.draw = draw; }
+  });
+  await page.locator('#map').click({position:{x:hit.x,y:hit.y}});
+  const side = page.locator('#side-body');
+  await expect(side.getByRole('heading', {name:'Substations',exact:true})).toBeVisible();
+  await expect(side.locator('.lens-callout strong')).toContainText(hit.count + ' substation record');
+  await expect(page).toHaveURL(/stationarea=/);
+  await page.reload();
+  await expect(side.locator('.lens-callout strong')).toContainText(hit.count + ' substation record');
+});

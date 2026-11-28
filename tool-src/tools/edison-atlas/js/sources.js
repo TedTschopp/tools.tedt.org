@@ -1,6 +1,21 @@
 const SCE =
   "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/17";
 export const direct = {
+  drpepStations: [
+    "DRPEP substation inventory", "Southern California Edison", "November 27, 2026",
+    "https://drpep.sce.com/drpep/?page=Page",
+    "The project counts distinct SCE inventory records inside each 12-mile reporting area. An independent query of the original service-territory polygons verifies the total. A symbol marks the reporting area’s anchor.",
+  ],
+  evPermits: [
+    "EV Charging Station Permit Streamlining Map", "California Governor’s Office of Business and Economic Development",
+    "DRPEP map snapshot · November 27, 2026", "https://business.ca.gov/industries/zero-emission-vehicles/plug-in-readiness/",
+    "Each jurisdiction supplies a permitting status and can publish an ordinance, checklist, adoption date and scorecard criteria. The atlas intersects these boundaries with each hex and gives incorporated cities precedence over county polygons.",
+  ],
+  drpepPublicFire: [
+    "Public fire polygons displayed in DRPEP", "Southern California Edison", "November 27, 2026",
+    "https://drpep.sce.com/arcgis_portal/home/item.html?id=cd4865e42c154dfc9b52c024314c3263",
+    "SCE’s web map uses the public tree mortality view and the elevated and extreme filters of its high-fire-risk area view. Percentages use the part of each hex inside SCE.",
+  ],
   militaryLand: [
     "Military installation land boundaries", "U.S. Census Bureau", "TIGER/Line 2025",
     "https://www2.census.gov/geo/tiger/TIGER2025/MIL/",

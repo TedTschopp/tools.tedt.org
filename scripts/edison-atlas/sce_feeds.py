@@ -3,6 +3,8 @@
 import json
 from concurrent.futures import ThreadPoolExecutor
 
+from drpep_data import inputs as detail_inputs
+from drpep_data import territory_reports
 from fetch import RAW, download, query, sources
 from shapely import total_bounds
 from shapely.geometry import shape
@@ -68,6 +70,11 @@ def inputs():
     bbox = total_bounds(
         [shape(f["geometry"]) for f in raw("territory.json")["features"]]
     )
+    urls.update(detail_inputs(bbox))
+    from substations import capture
+    urls.update(capture())
+    from grid_network import capture as grid_crossings
+    urls.update(grid_crossings())
     for key, (service, layer_id, fields, batch_size) in SPATIAL_LAYERS.items():
         layer = f"{DRP}/{service}/FeatureServer/{layer_id}"
         urls[f"drpep/hex/{key}/schema.json"] = layer + "?f=json"
@@ -217,4 +224,5 @@ def reports():
         "planning": planning,
         "forecast": forecast,
         "upgrades": upgrades,
+        "additional": territory_reports(),
     }

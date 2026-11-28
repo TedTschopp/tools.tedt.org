@@ -26,3 +26,11 @@ The inspector shows the three shares to hundredths of a percent. The builder ass
 The access overlay combines Census TIGER/Line 2025 military land with the Restricted Access and No Public Access units in GreenInfo Network’s CPAD 2026a. The builder dissolves each class, intersects it with the service boundary in California Albers, and measures actual area inside each clipped hex. Different classes can overlap. The display uses a simplified union. In the GIS download, join the sparse table in `land-access.json` to the `tile` property of the one-mile GeoJSON. [Land-access and geography builder](civ_geography.py)
 
 The same builder reads ACS 2020–2024 place estimates, including employment, household income, housing and electric heat. Place profiles use the Census place GEOID. Whole-metro profiles use the CBSA and USACiv’s national comparisons. [Census military boundaries](https://www2.census.gov/geo/tiger/TIGER2025/MIL/) · [California Protected Areas Database](https://calands.org/cpad/)
+
+## Electric grid and planning geography
+
+The default map shows substation counts within clipped 12-mile areas. The two circuit layers use a 24-mile grid. For each shared border inside SCE, the builder asks the published transmission and distribution layers separately whether linework intersects the border. The map joins the two reporting areas only when the corresponding query returns a positive count. Regional links show geographic crossings. [Grid crossings](grid_network.py) · [Substation counts](substations.py) · [SCE planning portal](https://drpep.sce.com/drpep/?page=Page)
+
+Project study areas and EV permitting jurisdictions are intersected with individual hexes. Incorporated cities take precedence over county permitting areas. The atlas carries SCE’s project stages, planned service years and GO-Biz scorecards with their ordinance and checklist links. Forecasts, historical profiles and screening tables retain their published reporting scope. [One-mile joins](planning_geography.py) · [Planning tables](drpep_data.py)
+
+After fetching the source archive, run `python3 scripts/edison-atlas/sync_art.py` to reproduce the adapted MIT-licensed USACiv artwork.
