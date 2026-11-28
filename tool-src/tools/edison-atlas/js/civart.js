@@ -6,6 +6,7 @@ import {
   paintCivTerrain,
 } from "./civ-terrain.js";
 import { valueAt } from "./lenses.js";
+import { money } from "./usaciv/format.js";
 import { COVER } from "./usaciv/terrain.js";
 import {
   CITY_CLASSES,
@@ -62,7 +63,7 @@ const metroFields = Object.entries({
   key,
   color,
   icon: "y-" + key,
-  ...(key === "gold" ? { format: (n) => "$" + popFormat.format(n) } : {}),
+  ...(key === "gold" ? { format: money } : {}),
 }));
 const climateFields = [
   {
@@ -156,6 +157,7 @@ export class CivArt {
       Object.values(model.reg.metros).map((region) => [region.name, region]),
     );
     this.badges = new Map();
+    this.nation = model.profiles.nation;
     this.cities = places.map((p, cell) => {
       const [, tier, minTileRpx] = citySizes.find(
         ([min]) => (p.pop ?? 0) >= min,
@@ -181,7 +183,13 @@ export class CivArt {
         city.bannerFields = metroFields.filter(
           (f) => metro.yields?.[f.key] != null,
         );
-        this.badges.set(p.id, { label: "Metro yields", color: "#506a84" });
+        city.metroPopulation = metro.population;
+        city.jobs = metro.jobs;
+        const badge = metro.districts?.badge;
+        this.badges.set(p.id, {
+          label: badge ? badge.label + " · Metro" : "Metro yields",
+          color: model.profiles.districtColors[badge?.district] || "#506a84",
+        });
       } else if (p.inside) {
         city.yields = Object.fromEntries(
           climateFields.map((f) => [
@@ -196,6 +204,10 @@ export class CivArt {
       }
       return city;
     });
+    // Give metro anchors first choice of the limited label space at regional zooms.
+    this.overviewCities = [...this.cities].sort(
+      (a, b) => (b.metroPopulation || 0) - (a.metroPopulation || 0),
+    );
     this.byId = new Map(this.cities.map((c) => [c.id, c]));
     // Where two place points share a hex, its skyline belongs to the larger place.
     const occupied = new Set();
@@ -269,8 +281,9 @@ export class CivArt {
     const s = map.scale,
       Rpx = R * s;
     const sel = map.place && this.byId.get(map.place.id);
-    const cities = this.cities.filter((p) => {
-      if (p === sel) return true;
+    const candidates = s < 12 ? this.overviewCities : this.cities;
+    const cities = candidates.filter((p) => {
+      if (p === sel || p.metroId) return true;
       if (s < 3.4 && (p.priority < 0 || (p.name === "Avalon" && map.w < 480)))
         return false;
       return (
@@ -292,12 +305,19 @@ export class CivArt {
         cities,
         selectedCity: sel,
         cityBadges: this.badges,
+        metroYields: true,
+        nation: this.nation,
         minBannerPopulation: 0,
       },
       null,
     );
     for (const hit of hits) {
       const p = hit.city;
+      if (p.metroId && hit.yieldTop != null)
+        map.labels.push({
+          x0: hit.x, x1: hit.x + hit.w, y0: hit.yieldTop, y1: hit.y + hit.h,
+          p: p.source, kind: "metro", id: p.metroId,
+        });
       map.labels.push({
         x0: hit.x,
         y0: hit.y,

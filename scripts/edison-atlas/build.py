@@ -6,6 +6,7 @@ import zipfile
 
 import numpy as np
 import shapely as sh
+from civ_geography import GIS_NOTE, write_civ_geography
 from community import add_community
 from fetch import MILE, OUT, PRISM, RAW
 from geography import (
@@ -109,6 +110,7 @@ def main():
     )
     acs, populations = tables()
     ids, counties, outlines, places, overlap = contexts(b, points, populations)
+    write_civ_geography(places, b, row, col, area, polygons)
     tract, tracts = demographics(b, points, acs)
     ces, scores = enviro(b, points)
     utility = build_utility(b, places)
@@ -350,8 +352,11 @@ def main():
             "local.json",
             "inputs.json",
             "sce-portals.json",
+            "land-access.json",
+            "geography-profiles.json",
         ):
             archive.write(OUT / name, name)
+        archive.writestr("geography-profiles-and-land.txt", GIS_NOTE)
         write_source_layers(archive, b, local)
         site_features = [
             {

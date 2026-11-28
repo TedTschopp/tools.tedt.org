@@ -1,4 +1,5 @@
 import { assetUrl, portable } from "./assets.js";
+import { placeProfile, regionProfile, profileLink, landAccessSection, paintCityArt, tileArt } from "./profiles.js";
 import { HexMap } from "./map.js";
 import { prepareTerrainPatterns } from "./usaciv/render/art/terrain.js";
 import {
@@ -32,6 +33,7 @@ const small = () => matchMedia("(max-width:700px)").matches;
 const overlaySpec = {
   utility: ["Utility infrastructure", "bolt"],
   places: ["Places", "town"],
+  restricted: ["Military & restricted land", "map"],
   roads: ["Highways", "roads"],
   rail: ["Railroads", "rail"],
   water: ["Rivers & lakes", "drop"],
@@ -70,6 +72,7 @@ let m,
   map,
   sideMode = "layers",
   chosenPlace = null,
+  selectedRegion = null,
   selectedLandmark = null,
   legendOpen = true,
   searchItems = [],
@@ -105,6 +108,8 @@ async function start() {
     local,
     outlines,
     portals,
+    profiles,
+    access,
   ] = await Promise.all([
     data("atlas.json"),
     data("hexes.bin", "binary"),
@@ -115,6 +120,8 @@ async function start() {
     data("local.json"),
     data("local-boundaries.json"),
     data("sce-portals.json"),
+    data("geography-profiles.json"),
+    data("land-access.json"),
     prepareTerrainPatterns(Math.min(window.devicePixelRatio || 1, 2), assetUrl),
     pic.decode(),
     art.decode(),
@@ -141,6 +148,8 @@ async function start() {
     local,
     outlines,
     portals,
+    profiles,
+    access,
     image: reliefInk ? relief : pic,
     art,
     val: (i, k) => {
@@ -167,9 +176,11 @@ function layersOrDetail() {
   if (sideMode === "layers") layers();
   else if (sideMode === "utility") utilityDetail();
   else if (sideMode === "source") sourceDetail();
+  else if (sideMode === "region") renderRegion();
   else inspector();
 }
 function showSource(layer, index) {
+  selectedRegion = null;
   map.sourceAreas.selection = { layer, index };
   map.selected = -1;
   map.place = null;
@@ -184,9 +195,10 @@ function showSource(layer, index) {
   hovered(-1);
   $("side-body").scrollTop = 0;
   if (small()) $("sidebar").classList.add("open");
-  scheduleHash();
+  writeHash();
 }
 function sourceDetail() {
+  $("sidebar").dataset.profile = "source";
   const { layer, index } = map.sourceAreas.selection,
     row = map.sourceAreas.row(layer, index),
     l = map.lens;
@@ -307,6 +319,7 @@ function utilityMenu(open) {
 }
 function showUtility(area, kind) {
   if (!area?.values[kind] || !map.utility.filters.has(kind)) return;
+  selectedRegion = null;
   map.opts.utility = true;
   map.sourceAreas.selection = null;
   map.sourceAreas.hover = null;
@@ -325,7 +338,7 @@ function showUtility(area, kind) {
   hovered(-1);
   $("side-body").scrollTop = 0;
   if (small()) $("sidebar").classList.add("open");
-  scheduleHash();
+  writeHash();
 }
 function zoomUtility(area) {
   const target =
@@ -345,6 +358,7 @@ function resourceButtons(area, attribute, selected = null) {
     .join("");
 }
 function utilityDetail() {
+  $("sidebar").dataset.profile = "utility";
   const sel = map.utility.selection;
   if (!sel) return;
   const { area, kind } = sel,
@@ -424,6 +438,7 @@ function utilityDetail() {
   drawUtilityArt(c, kind, 44, 39, 76, true, false);
 }
 function layers() {
+  delete $("sidebar").dataset.profile;
   const quick = featured.includes(map.lens.id)
     ? featured
     : [...featured, map.lens.id];
@@ -466,7 +481,7 @@ function layers() {
     lenses.length +
     " lenses</span>" +
     icon("right", 14) +
-    '</button><div class="sce-shortcuts"><button data-report="cooling">Cooling centers</button><button data-report="planning">SCE grid planning</button></div></section>' +
+    '</button><div class="sce-shortcuts"><button data-report="cooling">Cooling centers</button><button data-report="planning">SCE grid planning</button><button data-profile-kind="state" data-id="06">California profile</button></div></section>' +
     '<section class="panel-section"><div class="section-head"><h3>Map overlays</h3></div>' +
     Object.entries(overlaySpec)
       .map(
@@ -530,66 +545,37 @@ function inspector() {
   const sourceArea = localArea(m, l.id, i);
   const county = i >= 0 ? m.reg.counties[m.val(i, "county")] : null,
     tract = i >= 0 ? m.tracts.rows[m.val(i, "tract")] : null;
+  $("sidebar").dataset.profile = selectedLandmark ? "landmark" : p ? "place" : "hex";
   const heading =
     selectedLandmark?.name ||
-    p?.name ||
     (i >= 0
       ? formatValue(lensById("terrain"), valueAt(m, "terrain", i)) + " hex"
       : "Map location");
   const cell = i >= 0 ? m.val(i, "col") + ", " + m.val(i, "row") : "";
   let html =
-    '<section class="detail-hero"><button class="back-btn" data-action="back">' +
+    '<section class="detail-hero profile-head"><button class="back-btn" data-action="back">' +
     icon("back", 14) +
-    'Map layers</button><span class="eyebrow">' +
-    (selectedLandmark
-      ? "Historic landmark"
-      : p
-        ? "Census place"
-        : "Tile inspector") +
-    "</span><h2>" +
-    esc(heading) +
-    "</h2><p>" +
-    esc(
-      p && !p.inside
-        ? "Place marker outside SCE territory"
-        : county?.name || "SCE service territory",
-    ) +
-    "</p>";
-  if (i >= 0)
-    html +=
-      '<div class="lens-callout"><button class="change-lens" data-action="library" aria-label="Change active map lens">' +
-      icon("layers", 14) +
-      "Change lens</button><span>" +
-      esc(l.name) +
-      "</span><strong>" +
-      esc(formatValue(l, map.values[i])) +
-      "</strong><small>" +
-      esc(l.scope) +
-      (sourceArea ? " · " + esc(sourceArea) : "") +
-      "</small>" +
-      (l.id === "home_value"
-        ? "<small>90% margin of error · " + esc(moe) + "</small>"
-        : "") +
-      "</div>";
-  html += "</section>";
+    'Map layers</button>' +
+    (i >= 0 ? '<canvas class="profile-art" width="172" height="144" aria-hidden="true"></canvas>' : "") +
+    '<span class="eyebrow">' + (selectedLandmark ? "Historic landmark" : "One-mile hex") +
+    "</span><h2>" + esc(heading) + "</h2><p>" +
+    esc((county?.name || "SCE service territory") + (cell ? " · Hex " + cell : "")) + "</p>";
+  const callout = i < 0 ? "" :
+    '<div class="lens-callout"><button class="change-lens" data-action="library" aria-label="Change active map lens">' +
+    icon("layers", 14) + "Change lens</button><span>" + esc(l.name) + "</span><strong>" +
+    esc(formatValue(l, map.values[i])) + "</strong><small>" + esc(l.scope) +
+    (sourceArea ? " · " + esc(sourceArea) : "") + "</small>" +
+    (l.id === "home_value" ? "<small>90% margin of error · " + esc(moe) + "</small>" : "") + "</div>";
+  const key = i >= 0 ? m.val(i, "col") + "," + m.val(i, "row") : "";
+  if (p) {
+    $("side-body").innerHTML = placeProfile(m, p, key, callout) +
+      (i >= 0 && l.id === "fire" ? fireCoverage(i) : "");
+    paintCityArt($("side-body"), map.civ.byId.get(p.id));
+    return;
+  }
+  html += callout + "</section>";
   if (i >= 0 && l.id === "fire") html += fireCoverage(i);
-  if (p)
-    html += detailSection(
-      "Place profile",
-      fact(
-        "Population · ACS 2020–2024",
-        p.pop == null ? "No data" : number(p.pop),
-      ) +
-        fact("Census place ID", p.id) +
-        '<p class="fine">The Census internal point identifies the tile. Population describes the entire place.</p>' +
-        (i < 0 && map.civ.byId.get(p.id)?.metroId
-          ? btn(
-              "Open metro profile",
-              "metro-report",
-              'data-id="' + map.civ.byId.get(p.id).metroId + '"',
-            )
-          : ""),
-    );
+  if (i >= 0) html += landAccessSection(m.access, key);
   if (i >= 0) {
     const cov = m.val(i, "coverage") / 1e6;
     if (l.id === "sceCooling" || m.val(i, "sceCooling") > 0) {
@@ -724,22 +710,9 @@ function inspector() {
             number(county.plugShare, 1) + "%",
           ) +
           fact("Public EV chargers · June 2026", number(county.chargers)) +
-          '<button class="detail-link" data-action="county-report" data-id="' +
-          county.geoid +
-          '">' +
-          icon("book", 15) +
-          "Open county report" +
-          icon("right", 14) +
-          "</button>" +
-          (m.reg.metros[county.cbsa]
-            ? '<button class="detail-link" data-action="metro-report" data-id="' +
-              county.cbsa +
-              '">' +
-              icon("building", 15) +
-              "Open metro profile" +
-              icon("right", 14) +
-              "</button>"
-            : ""),
+          profileLink("county", county.geoid, county.name, "County profile") +
+          (m.reg.metros[county.cbsa] ? profileLink("metro", county.cbsa, m.reg.metros[county.cbsa].name, "Metro profile") : "") +
+          profileLink("state", "06", "California", "State profile"),
       );
     const s = sourceFor(l.source, m.reg);
     html += detailSection(
@@ -777,6 +750,11 @@ function inspector() {
     if (nearby) html += detailSection("Utility resources", nearby);
   }
   $("side-body").innerHTML = html;
+  if (i >= 0) {
+    const terrain = lensById("terrain");
+    const swatch = bins(terrain, m).find(b => b.key === valueAt(m, "terrain", i));
+    tileArt($("side-body"), map, i, swatch?.color || "#b5bf87");
+  }
 }
 function chooseLens(id, fromDialog = false) {
   const l = lensById(id);
@@ -894,6 +872,7 @@ function legend() {
         '<p class="legend-note">' +
         esc(notes) +
         "</p>" +
+        (map.opts.restricted ? '<span class="key access-key"><i class="access-swatch"></i>Military / restricted land</span>' : "") +
         utilityKey +
         "</div>"
       : "");
@@ -973,12 +952,15 @@ function hovered(i, pos, label) {
   lastHover = i;
   const utility = label?.kind === "utility";
   const native = label?.kind === "source";
-  if ((i < 0 && !utility && !native) || !pos) {
+  const place = ["place", "metro"].includes(label?.kind);
+  if ((i < 0 && !utility && !native && !place) || !pos) {
     $("hover").hidden = true;
     drawStatus();
     return;
   }
-  const scope = utility
+  const scope = place
+    ? label.kind === "metro" ? "Metro yields · Open metro profile" : m.profiles.places[label.p.id].kind + " · Open place profile"
+    : utility
     ? areaName(label.p) +
       " · " +
       summary(label.assetKind, label.p.values[label.assetKind])
@@ -992,7 +974,7 @@ function hovered(i, pos, label) {
   $("hover").innerHTML =
     "<b>" +
     esc(
-      label?.kind === "cooling"
+      place || label?.kind === "cooling"
         ? label.p.name
         : utility
           ? categories[label.assetKind].name
@@ -1013,7 +995,7 @@ function hovered(i, pos, label) {
   $("hover").style.top =
     Math.max(4, Math.min(map.h - $("hover").offsetHeight - 4, pos[1] + 14)) +
     "px";
-  $("status-info").textContent = utility
+  $("status-info").textContent = place ? label.p.name + " · " + scope : utility
     ? areaName(label.p) + " · Near " + label.p.near
     : native
       ? scope
@@ -1028,6 +1010,7 @@ function hovered(i, pos, label) {
         "° W";
 }
 function showSelected(i, p = null, landmark = null) {
+  selectedRegion = null;
   map.sourceAreas.selection = null;
   map.sourceAreas.hover = null;
   map.utility.selection = null;
@@ -1043,7 +1026,7 @@ function showSelected(i, p = null, landmark = null) {
   hovered(-1);
   if (small()) $("sidebar").classList.add("open");
   $("side-body").scrollTop = 0;
-  scheduleHash();
+  writeHash();
 }
 function pick(i, label) {
   if (label?.kind === "cooling") {
@@ -1059,7 +1042,11 @@ function pick(i, label) {
     return;
   }
   if (label?.kind === "park") {
-    parkGo(label.p);
+    showRegion("park", label.p);
+    return;
+  }
+  if (label?.kind === "metro") {
+    showRegion("metro", m.reg.metros[label.id], false);
     return;
   }
   if (label?.kind === "place") {
@@ -1079,6 +1066,7 @@ function pick(i, label) {
   }
 }
 function clearSelected() {
+  selectedRegion = null;
   map.sourceAreas.selection = null;
   map.sourceAreas.hover = null;
   map.utility.selection = null;
@@ -1091,7 +1079,7 @@ function clearSelected() {
   sideMode = "layers";
   layers();
   map.queue();
-  scheduleHash();
+  writeHash();
 }
 function lookup(term) {
   const s = term.trim().toLowerCase();
@@ -1109,7 +1097,11 @@ function lookup(term) {
       name: p.name,
       kind: "place",
       item: p,
-      scope: p.inside ? "SCE place" : "Nearby place",
+      scope: m.profiles.places[p.id].kind + (p.inside ? " · SCE" : " · Nearby"),
+    })),
+    { name: "California", kind: "state", item: m.profiles.state, scope: "State", alias: "California state CA 06" },
+    ...Object.values(m.reg.metros).map(p => ({
+      name: p.name + " metro", kind: "metro", item: p, scope: "Metro area", alias: p.full + " " + p.id,
     })),
     ...m.reg.counties.map((p) => ({
       name: p.name,
@@ -1130,7 +1122,7 @@ function lookup(term) {
       scope: "NPS unit",
     })),
   ]
-    .filter((x) => x.name.toLowerCase().includes(s))
+    .filter((x) => x.name.toLowerCase().includes(s) || x.alias?.toLowerCase().includes(s))
     .sort((a, b) => {
       const score = (x) => {
         const n = x.name.toLowerCase();
@@ -1193,54 +1185,70 @@ function closeSearch() {
   $("find").setAttribute("aria-expanded", "false");
   $("find").removeAttribute("aria-activedescendant");
 }
-function countyGo(c) {
-  if (!c) return;
-  closeDialog();
-  clearSelected();
-  const b = c.mapBounds,
-    zoom =
-      Math.min(
-        (map.w - 110) / (b[2] - b[0] || 1),
-        (map.h - 110) / (b[3] - b[1] || 1),
-      ) / map.base;
-  map.go(
-    (b[0] + b[2]) / 2,
-    (b[1] + b[3]) / 2,
-    Math.max(1.4, Math.min(zoom, 24)),
-  );
-  const i = map.cellAt(...c.anchor);
-  if (i >= 0) {
-    showSelected(i);
-    if (m.reg.counties[m.val(i, "county")]?.geoid !== c.geoid)
-      message("County boundary fragment · " + c.name);
-  }
+function renderRegion() {
+  const { kind, item } = selectedRegion;
+  $("sidebar").dataset.profile = kind;
+  $("side-body").innerHTML = regionProfile(m, kind, item);
+  if (kind === "metro") paintCityArt($("side-body"), map.place && map.civ.byId.get(map.place.id));
 }
-function parkGo(p) {
-  clearSelected();
-  map.opts.parks = true;
-  layers();
-  const a = p.rings.flat(),
-    xs = a.map((v) => v[0]),
-    ys = a.map((v) => v[1]);
-  const b = [
-    Math.min(...xs),
-    Math.min(...ys),
-    Math.max(...xs),
-    Math.max(...ys),
-  ];
-  map.go(
-    (b[0] + b[2]) / 2,
-    (b[1] + b[3]) / 2,
-    Math.max(
-      2,
-      Math.min(
-        17,
-        (map.w - 100) / ((b[2] - b[0]) * map.base),
-        (map.h - 100) / ((b[3] - b[1]) * map.base),
-      ),
-    ),
-  );
-  message(p.name);
+
+function showRegion(kind, item, frame = true) {
+  if (!item) return;
+  closeDialog();
+  map.sourceAreas.selection = map.sourceAreas.hover = null;
+  map.utility.selection = map.utilityHover = null;
+  chosenPlace = selectedLandmark = map.landmark = map.place = null;
+  map.selected = -1;
+  selectedRegion = { kind, item };
+  sideMode = "region";
+  if (kind === "metro") map.place = m.meta.places.find(p => p.id.startsWith("06") && p.name === item.name);
+  if (kind === "park") {
+    map.opts.parks = true;
+    map.landmark = item;
+  }
+  if (frame) {
+    if (kind === "state") map.fit();
+    if (kind === "metro" && map.place) map.go(map.place.x, map.place.y, 5);
+    if (kind === "county" || kind === "park") {
+      let bounds = item.mapBounds;
+      if (!bounds) {
+        bounds = [Infinity, Infinity, -Infinity, -Infinity];
+        for (const ring of item.rings) for (const [x, y] of ring) {
+          bounds[0] = Math.min(bounds[0], x); bounds[2] = Math.max(bounds[2], x);
+          bounds[1] = Math.min(bounds[1], y); bounds[3] = Math.max(bounds[3], y);
+        }
+      }
+      const [x0, y0, x1, y1] = bounds;
+      const zoom = Math.min((map.w - 80) / (x1 - x0 || 1), (map.h - 90) / (y1 - y0 || 1)) / map.base;
+      map.go((x0 + x1) / 2, (y0 + y1) / 2, Math.max(1, Math.min(24, zoom)));
+    }
+  }
+  renderRegion();
+  $("side-body").scrollTop = 0;
+  if (small()) $("sidebar").classList.add("open");
+  hovered(-1);
+  map.queue();
+  writeHash();
+}
+
+function regionItem(kind, id) {
+  if (kind === "state" && id === "06") return m.profiles.state;
+  if (kind === "metro") return m.reg.metros[id];
+  if (kind === "county") return m.reg.counties.find(c => c.geoid === id);
+  if (kind === "park") return m.context.parks.find(p => p.code === id);
+}
+
+function openProfile(kind, id) {
+  if (kind === "place") {
+    const p = m.meta.places.find(p => p.id === id);
+    if (p) {
+      map.go(p.x, p.y, 9);
+      showSelected(p.inside ? map.cellAt(p.x, p.y) : -1, p);
+    }
+  } else if (kind === "hex") {
+    const i = map.lookup.get(id);
+    if (i != null) showSelected(i);
+  } else showRegion(kind, regionItem(kind, id));
 }
 function chooseResult(n) {
   const r = searchItems[n];
@@ -1254,9 +1262,8 @@ function chooseResult(n) {
     const xy = map.coords[p];
     map.go(xy[0], xy[1], 18);
     showSelected(p);
-  } else if (r.kind === "county") countyGo(p);
-  else if (r.kind === "park") {
-    parkGo(p);
+  } else if (["county", "metro", "state", "park"].includes(r.kind)) {
+    showRegion(r.kind, p);
   } else if (r.kind === "landmark") {
     map.opts.landmarks = true;
     map.go(p.x, p.y, 12);
@@ -1340,7 +1347,7 @@ function makeHash() {
     y: map.y.toFixed(3),
     z: map.z.toFixed(3),
     layers: Object.keys(map.opts)
-      .filter((k) => map.opts[k])
+      .filter((k) => k !== "restricted" && map.opts[k])
       .join(","),
   });
   if (map.selected >= 0)
@@ -1348,6 +1355,11 @@ function makeHash() {
       "tile",
       m.val(map.selected, "col") + "," + m.val(map.selected, "row"),
     );
+  if (!map.opts.restricted) p.set("access", "off");
+  if (selectedRegion) {
+    const { kind, item } = selectedRegion;
+    p.set(kind, item.geoid || item.fips || item.code || item.id);
+  }
   if (chosenPlace) p.set("place", chosenPlace.id);
   if (map.sourceAreas.enabled) p.set("geography", "source");
   if (map.sourceAreas.selection) {
@@ -1371,13 +1383,16 @@ function makeHash() {
     p.set("report", $("dialog").dataset.report);
   return "#" + p.toString();
 }
+function writeHash() {
+  if (restoreHash || !map?.lens) return;
+  clearTimeout(hashTimer);
+  const hash = makeHash();
+  if (location.hash !== hash) history.replaceState(null, "", hash);
+}
 function scheduleHash() {
   if (restoreHash || !map?.lens) return;
   clearTimeout(hashTimer);
-  hashTimer = setTimeout(() => {
-    const hash = makeHash();
-    if (location.hash !== hash) history.replaceState(null, "", hash);
-  }, 150);
+  hashTimer = setTimeout(writeHash, 150);
 }
 function loadHash() {
   if (!location.hash) return;
@@ -1393,6 +1408,7 @@ function loadHash() {
       const set = new Set(p.get("layers").split(","));
       for (const key of Object.keys(map.opts)) map.opts[key] = set.has(key);
     }
+    map.opts.restricted = p.get("access") !== "off";
     map.utility.filters = new Set(
       p.has("resources")
         ? p
@@ -1402,11 +1418,8 @@ function loadHash() {
         : kinds,
     );
     const cv = ["x", "y", "z"];
-    if (
-      cv.every(
-        (k) => p.has(k) && p.get(k) !== "" && Number.isFinite(Number(p.get(k))),
-      )
-    ) {
+    const hasCamera = cv.every(k => p.has(k) && p.get(k) !== "" && Number.isFinite(Number(p.get(k))));
+    if (hasCamera) {
       map.go(...cv.map((k) => Number(p.get(k))));
     }
     const i = map.lookup.get(p.get("tile")) ?? -1,
@@ -1423,11 +1436,18 @@ function loadHash() {
       layer && p.has("geoid")
         ? m.local.tables[layer].rows.findIndex((r) => r[0] === p.get("geoid"))
         : -1;
-    if (map.opts.utility && map.utility.filters.has(kind) && area?.values[kind])
+    const region = ["state", "county", "metro", "park"].find(k => p.has(k) && regionItem(k, p.get(k)));
+    if (region) showRegion(region, regionItem(region, p.get(region)), !hasCamera);
+    else if (map.opts.utility && map.utility.filters.has(kind) && area?.values[kind])
       showUtility(area, kind);
     else if (nativeIndex >= 0) showSource(layer, nativeIndex);
-    else if (i >= 0 || place || land)
-      showSelected(i, place || null, land || null);
+    else if (i >= 0 || place || land) {
+      if (!hasCamera) {
+        const [x, y] = place || land ? [(place || land).x, (place || land).y] : map.coords[i];
+        map.go(x, y, place ? 9 : 16);
+      }
+      showSelected(i >= 0 ? i : place?.inside ? map.cellAt(place.x, place.y) : -1, place || null, land || null);
+    }
     else clearSelected();
     syncUtilityControls();
     legend();
@@ -1646,6 +1666,11 @@ function install() {
   const click = async (e) => {
     const el = e.target.closest("button,a");
     if (!el) return;
+    if (el.dataset.profileKind) {
+      closeDialog();
+      openProfile(el.dataset.profileKind, el.dataset.id);
+      return;
+    }
     if (el.dataset.geography) {
       setSourceMode(el.dataset.geography === "source");
       return;
@@ -1658,6 +1683,7 @@ function install() {
       const k = el.dataset.overlay;
       map.opts[k] = !map.opts[k];
       el.setAttribute("aria-checked", map.opts[k]);
+      if (k === "restricted") legend();
       if (k === "utility") {
         if (!map.opts.utility) {
           map.utilityHover = null;
@@ -1729,7 +1755,7 @@ function install() {
     if (a === "county-report") almanac("counties", el.dataset.id);
     if (a === "metro-report") almanac("metros", el.dataset.id);
     if (a === "locate-county")
-      countyGo(m.reg.counties.find((c) => c.geoid === el.dataset.id));
+      openProfile("county", el.dataset.id);
     if (a === "tile-csv") tileCsv();
     if (a === "utility-zoom" && map.utility.selection) {
       zoomUtility(map.utility.selection.area);
@@ -1800,8 +1826,7 @@ function install() {
     $("nav-sources").removeAttribute("aria-current");
   });
   $("mobile-layers").onclick = () => {
-    sideMode = "layers";
-    layers();
+    clearSelected();
     $("sidebar").classList.add("open");
   };
   $("mobile-close").onclick = () => $("sidebar").classList.remove("open");

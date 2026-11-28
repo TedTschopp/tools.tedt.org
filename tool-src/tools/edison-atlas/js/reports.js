@@ -282,7 +282,8 @@ function metros(m, id) {
     stat("GDP · " + c.gdp_year, usd(c.gdp)) +
     stat("Median household income", money(c.median_income)) +
     "</div>" +
-    "<h4>City yields</h4><p>USACiv’s Food, Production, Science and Culture yields group ACS workers by industry. Gold represents gross domestic product in dollars.</p>" +
+    '<button class="link-btn" data-profile-kind="metro" data-id="' + esc(c.id) + '">View metro on map</button>' +
+    "<h4>Metro yields</h4><p>USACiv’s Food, Production, Science and Culture yields group ACS workers by industry. Gold represents gross domestic product in dollars.</p>" +
     table(
       ["Yield", "Real-world measure"],
       ["food", "production", "gold", "science", "culture"].map((k) => [
@@ -449,6 +450,7 @@ function state(m) {
   const s = m.reg.state;
   return (
     "<h3>California context</h3><p>These state-level figures provide the same regional context USACiv uses for defense, resources and extreme weather.</p>" +
+    '<button class="link-btn" data-profile-kind="state" data-id="06">View state profile on map</button>' +
     '<h4>Defense</h4><div class="tile-stats">' +
     stat("Active-duty personnel · Sep 2026", number(s.defense.active)) +
     stat("DoD spending · FY2024", usd(s.defense.spending)) +
@@ -617,7 +619,8 @@ export function method(m) {
     " tiles, including " +
     number(a.boundaryCells) +
     " partial tiles. Some small islands occupy only a fraction of a cell. The Census internal point identifies a place’s tile. A place that crosses the boundary can have customers on both sides.</p>" +
-    "<h3>Reading the artwork</h3><p>USACiv’s painters draw buildings, fields, forests and ridges from land cover and elevation. Building layouts are illustrations. City skylines use local population bands and sit on the tile containing the Census place point. Green population caps mark points inside the service area. Gray caps mark nearby places. Selecting a banner opens the place record.</p><p>At close zoom, a Tile climate ribbon shows daily solar energy per square metre and the normal July high sampled for that hex. A Metro yields ribbon shows USACiv’s five published economic measures for the named regional center. The Almanac defines each yield and lists the full values.</p>" +
+    "<h3>Reading the artwork</h3><p>USACiv’s painters draw buildings, fields, forests and ridges from land cover and elevation. Building layouts are illustrations. City skylines use local population bands and sit on the tile containing the Census place point. Green population caps mark points inside the service area. Gray caps mark nearby places. Selecting a banner opens the place record.</p><p>At close zoom, a Tile climate ribbon shows daily solar energy per square metre and the normal July high sampled for that hex. Metro banners display five economic measures under the city name. Select the name for the Census place or the icon row for its metro. State, county, metro and place profiles also link to each other.</p>" +
+    "<h3>Military and restricted land</h3><p>Red slashes follow Census TIGER/Line military land and GreenInfo Network CPAD units labeled Restricted Access or No Public Access. Select a hex for percentages of its area inside SCE. Each class is dissolved independently, and different classes may overlap. Outlines are simplified for display.</p>" +
     "<h3>Utility resources</h3><p>Utility symbols summarize records inside the service polygon across all owners. The overview uses 48-mile hexes. Regional symbols cover 12-mile hexes. Public charging resolves to individual one-mile hexes at street-area zoom. Select a symbol to outline its reporting area and read the counts. The area name identifies a nearby Census place. Each scale groups the original records independently. Use a single scale for totals.</p>" +
     "<p>The October 2026 EIA-860M inventory covers plants with at least 1 MW of combined nameplate capacity. A site counts once per technology. The November 27 AFDC snapshot counts public stations and Level 1, Level 2 and DC fast ports. The capacity lenses use 12-mile areas and the charging lenses count ports in each clipped one-mile hex. Solar, wind and battery medallions come from USACiv. The charging medallion and four isometric miniatures were drawn for this atlas.</p>" +
     "<p>The geographic overlay touches " +

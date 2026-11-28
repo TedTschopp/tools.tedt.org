@@ -108,6 +108,8 @@ def sources():
             },
         ),
         "counties.zip": f"{census}/tiger/GENZ2024/shp/cb_2024_us_county_500k.zip",
+        "military-land.zip": f"{census}/tiger/TIGER2025/MIL/tl_2025_us_mil.zip",
+        "cpad-2026a.zip": "https://data.cnra.ca.gov/dataset/0ae3cd9f-0612-4572-8862-9e9a1c41e659/resource/cadf9163-aa38-44ae-851a-86b35d4c6c0c/download/cpad_2026a_release.zip",
         "places.zip": f"{census}/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip",
         "roads.zip": f"{census}/tiger/TIGER2024/PRISECROADS/tl_2024_06_prisecroads.zip",
         "rail.zip": f"{natural}/10m_cultural/ne_10m_railroads.zip",

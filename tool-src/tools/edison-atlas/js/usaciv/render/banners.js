@@ -614,8 +614,9 @@ export function drawBanners(ctx, cam, w, state, yields, nation = state.nation) {
     const m = measure(ctx, city, city.bannerFields ?? yields, nation, L);
     // the yield tier: the selected and hovered cities, then the biggest few in view (or the focus cities)
     const tierOk = pinned || city === hov || (focus != null ? focused : tiers < tierMax);
-    let tiered = showYields && m.parts.length > 0 && tierOk;
-    const badge0 = badges && showYields ? badgeFor(badges, city) : null;
+    const rich = showYields || (state.metroYields && city.metroId);
+    let tiered = rich && m.parts.length > 0 && tierOk;
+    const badge0 = badges && rich ? badgeFor(badges, city) : null;
     let width, height, x, y, rect, ptr, tab;
     const layout = () => {
       width = Math.ceil(tiered ? Math.max(m.plateW, m.tierW + 12) : m.plateW);
@@ -671,7 +672,7 @@ export function drawBanners(ctx, cam, w, state, yields, nation = state.nation) {
     }
     ctx.globalAlpha = 1;
 
-    hits.push({ x, y: y - tab, w: width, h: height + tab, city, specialty: m.spec?.key ?? null });
+    hits.push({ x, y: y - tab, w: width, h: height + tab, yieldTop: tiered ? y + L.h - 2 : null, city, specialty: m.spec?.key ?? null });
   }
   return hits;
 }

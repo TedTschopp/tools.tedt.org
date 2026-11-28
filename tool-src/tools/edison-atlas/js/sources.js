@@ -1,6 +1,16 @@
 const SCE =
   "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/17";
 export const direct = {
+  militaryLand: [
+    "Military installation land boundaries", "U.S. Census Bureau", "TIGER/Line 2025",
+    "https://www2.census.gov/geo/tiger/TIGER2025/MIL/",
+    "Published military polygons intersected with SCE and its one-mile hexes. A military designation identifies the land use.",
+  ],
+  protectedAccess: [
+    "California Protected Areas Database · Public access", "GreenInfo Network", "CPAD 2026a · Units",
+    "https://calands.org/cpad/",
+    "The overlay includes Restricted Access and No Public Access units within SCE. Map outlines are generalized. Hex shares use the source polygons, dissolved within each access class.",
+  ],
   lodes: [
     "LEHD Origin-Destination Employment Statistics",
     "U.S. Census Bureau",
