@@ -477,7 +477,7 @@ test('metro ribbon hit targets stay clear of overlapping utility icons at region
 test('the territory map opens with separately switchable grid lines and clickable substation symbols', async ({page}) => {
   await page.goto('/edison-atlas/');
   const legend = page.locator('#legend');
-  await expect(legend).toContainText('24-mile regional crossings');
+  await expect(legend).toContainText('1 mile per pixel');
   const panel = page.locator('#utility-panel');
   await page.locator('#utility-menu').click();
   for (const kind of ['transmission', 'distribution', 'substations']) {
@@ -522,9 +522,40 @@ test('the territory map opens with separately switchable grid lines and clickabl
   await page.reload();
   await expect(side.locator('.lens-callout strong')).toContainText(hit.count + ' substation record');
   await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=30');
-  const zoomBack = legend.getByRole('button', {name:'Zoom to grid crossings'});
+  const zoomBack = legend.getByRole('button', {name:'Return to regional view'});
   await expect(zoomBack).toBeVisible();
   await zoomBack.click();
   await expect(zoomBack).toBeHidden();
-  await expect(legend.locator('#grid-scale-note')).toHaveText('Grid lines · 24-mile regional crossings');
+  await expect(legend.locator('#grid-scale-note')).toHaveText('SCE mapped routes · 1 mile per pixel');
+});
+
+test('the route overlay preserves the location of every source pixel at the atlas projection bounds', async ({page}) => {
+  await page.goto('/edison-atlas/');
+  await expect(page.locator('#loading')).toBeHidden();
+  const comparison = await page.evaluate(async () => {
+    const {loadGridImages, drawGridLines} = await import(new URL('js/grid-network.js', document.baseURI).href);
+    const {network} = await (await fetch('data/sce-portals.json')).json();
+    const grid = await loadGridImages(network);
+    const [left,top,right,bottom]=network.bounds;
+    const width=right-left,height=bottom-top;
+    const canvas=document.createElement('canvas');
+    canvas.width=width; canvas.height=height;
+    const c=canvas.getContext('2d')!;
+    const bounds=new Path2D(); bounds.rect(left,top,width,height);
+    const swaps=[];
+    for (const name of ['transmission','distribution','both']) {
+      c.setTransform(1,0,0,1,-left,-top);
+      c.clearRect(left,top,width,height);
+      const filters=new Set(name==='both' ? ['transmission','distribution'] : [name]);
+      drawGridLines(c,grid,filters,1,bounds);
+      const output=c.getImageData(0,0,width,height).data;
+      const original=grid.images[name].getContext('2d').getImageData(0,0,width,height).data;
+      let differences=0;
+      for(let i=3;i<output.length;i+=4)
+        if((output[i]>0)!==(original[i]>0)) differences++;
+      swaps.push(differences);
+    }
+    return {projection:network.projection,pixel:network.pixelMiles,swaps};
+  });
+  expect(comparison).toEqual({projection:3310,pixel:1,swaps:[0,0,0]});
 });

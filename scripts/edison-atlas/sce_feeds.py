@@ -73,8 +73,8 @@ def inputs():
     urls.update(detail_inputs(bbox))
     from substations import capture
     urls.update(capture())
-    from grid_network import capture as grid_crossings
-    urls.update(grid_crossings())
+    from grid_network import capture as grid_renderings
+    urls.update(grid_renderings())
     for key, (service, layer_id, fields, batch_size) in SPATIAL_LAYERS.items():
         layer = f"{DRP}/{service}/FeatureServer/{layer_id}"
         urls[f"drpep/hex/{key}/schema.json"] = layer + "?f=json"

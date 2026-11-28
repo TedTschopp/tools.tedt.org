@@ -1,40 +1,35 @@
 export const gridKinds = ["substations", "transmission", "distribution"];
 export const gridNames = {substations:"Substations", transmission:"Transmission", distribution:"Distribution"};
-export const regionalLimit = 12;
+export const regionalDetailScale = 12;
 
-export function gridPaths(network) {
-  const paths = {};
-  for (const [kind, links] of Object.entries(network.layers)) {
-    const path = new Path2D();
-    for (const [a,b] of links) {
-      path.moveTo(...network.nodes[a]);
-      path.lineTo(...network.nodes[b]);
-    }
-    paths[kind] = path;
-  }
-  return paths;
+// Decode once. Map pans, zooms, PNG exports and the overview use the same registered images.
+export async function loadGridImages(network) {
+  const [x0,y0,x1,y1] = network.bounds;
+  const images = {};
+  await Promise.all(Object.entries(network.images).map(async ([key, encoded]) => {
+    const img = new Image();
+    img.src = "data:image/png;base64," + encoded;
+    await img.decode();
+    if (img.naturalWidth !== x1-x0 || img.naturalHeight !== y1-y0)
+      throw new Error("The grid image does not match its one-mile map registration");
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    canvas.getContext("2d").drawImage(img,0,0);
+    images[key] = canvas;
+  }));
+  return {images, bounds:network.bounds};
 }
 
-export function drawGridLines(c, paths, filters, scale, boundary, weight = 1) {
-  if (scale >= regionalLimit || (!filters.has("transmission") && !filters.has("distribution"))) return;
+export function drawGridLines(c, grid, filters, scale, boundary) {
+  const t = filters.has("transmission"), d = filters.has("distribution");
+  if (!t && !d) return;
+  const [x0,y0,x1,y1] = grid.bounds;
   c.save();
-  c.globalAlpha *= Math.min(1, (regionalLimit - scale) / 4);
   c.clip(boundary, "evenodd");
-  c.lineCap = "round";
-  c.lineJoin = "round";
-  function stroke(path, color, width) {
-    c.strokeStyle = color;
-    c.lineWidth = width * weight / scale;
-    c.stroke(path);
-  }
-  if (filters.has("transmission")) {
-    stroke(paths.transmission, "#fff2d2", 3.7);
-    stroke(paths.transmission, "#803758", 2.5);
-  }
-  if (filters.has("distribution")) {
-    c.setLineDash([3 * weight / scale, 3.8 * weight / scale]);
-    stroke(paths.distribution, "#eef4d9", 2.0);
-    stroke(paths.distribution, "#16696c", 1.35);
-  }
+  // At close zoom, reveal the finite source pixels instead of interpolating street-level curves.
+  c.imageSmoothingEnabled = scale < regionalDetailScale;
+  c.globalAlpha *= scale >= regionalDetailScale ? 0.55 : 0.93;
+  c.drawImage(grid.images[t && d ? "both" : t ? "transmission" : "distribution"], x0,y0,x1-x0,y1-y0);
   c.restore();
 }

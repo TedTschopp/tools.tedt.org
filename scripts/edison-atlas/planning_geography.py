@@ -70,7 +70,9 @@ def intersections(geo, tiles, tree, area):
 
 def project_index(row, col, tiles, tree, area):
     projects, matches = [], defaultdict(list)
-    stages = {k: np.zeros(len(tiles), dtype=int) for k in set(STAGES.values())}
+    # Stable order for these three columns in the binary atlas and the GIS exchange.
+    columns = ("drpPlan", "drpOperate", "drpBuild")
+    stages = {key: np.zeros(len(tiles), dtype=int) for key in columns}
     for authority in STUDIES:
         attrs = {a["objectid"]: a for a in attributes(authority + "-projects.json")}
         folder = RAW / "drpep" / "hex" / authority

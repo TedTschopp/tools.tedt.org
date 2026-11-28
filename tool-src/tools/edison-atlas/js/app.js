@@ -27,7 +27,7 @@ import {
   summary,
 } from "./utility.js";
 import { categories, drawUtilityArt, kinds } from "./utility-art.js";
-import { gridKinds, gridNames, regionalLimit } from "./grid-network.js";
+import { gridKinds, gridNames, regionalDetailScale, loadGridImages } from "./grid-network.js";
 import { stationAreas } from "./substations.js";
 import { homeTable, localArea, localRow, localValue } from "./local-lenses.js";
 import { shapeNames } from "./source-areas.js";
@@ -154,6 +154,7 @@ async function start() {
     portals,
     profiles,
     access,
+    gridImages: await loadGridImages(portals.network),
     image: reliefInk ? relief : pic,
     art,
     val: (i, k) => {
@@ -896,10 +897,12 @@ function legend() {
       (map.gridFilters.has("substations") ? '<span class="key"><canvas width="34" height="34" data-key="substation" aria-hidden="true"></canvas>Substations · 12 mi</span>' : "") +
       ["transmission","distribution"].filter(k => map.gridFilters.has(k)).map(k =>
         '<span class="key"><i class="grid-line ' + k + '"></i>' + gridNames[k] + '</span>').join("") +
+      (map.gridFilters.has("transmission") && map.gridFilters.has("distribution") ?
+        '<span class="key"><i class="grid-line shared"></i>Both in one mile</span>' : "") +
       '</div><small id="utility-legend-scale">' +
       esc(utilityScaleText()) +
       "</small>" + (map.gridFilters.has("transmission") || map.gridFilters.has("distribution") ?
-        '<small id="grid-scale-note">Grid lines · 24-mile regional crossings</small><button class="grid-zoom" data-action="regional-grid" hidden>Zoom to grid crossings</button>' : "") + "</div>"
+        '<small id="grid-scale-note">SCE mapped routes · 1 mile per pixel</small><button class="grid-zoom" data-action="regional-grid" hidden>Return to regional view</button>' : "") + "</div>"
     : "";
   const shapeLayer = map.sourceAreas.layer(l);
   const switcher = shapeLayer
@@ -946,8 +949,8 @@ function updateText(element, value) {
 function updateGridLegend() {
   const note = $("grid-scale-note");
   if (!note) return;
-  const detailed = map.scale >= regionalLimit;
-  updateText(note, detailed ? "Zoom out for 24-mile regional crossings" : "Grid lines · 24-mile regional crossings");
+  const detailed = map.scale >= regionalDetailScale;
+  updateText(note, detailed ? "Route coverage · each colored pixel is one mile" : "SCE mapped routes · 1 mile per pixel");
   note.nextElementSibling.hidden = !detailed;
 }
 function drawStatus() {
@@ -1737,17 +1740,21 @@ function snapshot() {
       w - 30,
     );
     let gx = 15;
-    for (const kind of ["transmission", "distribution"].filter(k => map.gridFilters.has(k) && map.scale < regionalLimit)) {
+    for (const kind of ["transmission", "distribution"].filter(k => map.gridFilters.has(k))) {
       c.save();
       c.strokeStyle = kind === "transmission" ? "#e8a0bd" : "#80d6ce";
       c.lineWidth = 2;
-      if (kind === "distribution") c.setLineDash([3,3]);
       c.beginPath(); c.moveTo(gx,h+107); c.lineTo(gx+21,h+107); c.stroke();
       c.restore();
       c.fillText(gridNames[kind],gx+26,h+110);
       gx += 40 + c.measureText(gridNames[kind]).width;
     }
-    if (gx > 15) c.fillText("SCE · 24-mile regional crossings",gx,h+110,w-gx-15);
+    if (map.gridFilters.has("transmission") && map.gridFilters.has("distribution")) {
+      c.fillStyle = "#b1bbed"; c.fillRect(gx,h+104,14,5);
+      c.fillStyle = "#d8e1c9"; c.fillText("Both in one mile",gx+19,h+110);
+      gx += c.measureText("Both in one mile").width + 35;
+    }
+    if (gx > 15) c.fillText("SCE mapped routes · 1 mile per pixel",gx,h+110,w-gx-15);
   }
   c.strokeStyle = "#fbf7df";
   c.lineWidth = 1.5;

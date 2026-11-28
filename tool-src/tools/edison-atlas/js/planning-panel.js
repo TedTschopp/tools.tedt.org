@@ -68,9 +68,9 @@ export function additionalPlanning(m, table, link) {
     <p>SCE reports ${number(100*t.penetration_level,2)}% generation penetration. Its numerator includes existing and queued generation. ${link(serviceLink("ICA_Layer",17),"SCE territory record")}</p>
     <h4>Substations</h4><p>${int(stations.included)} of SCE’s ${int(stations.sourceCount)} inventory records fall inside this boundary. Each transformer symbol shows the count in a 12-mile reporting area.</p>
     <div class="actions"><button class="action-btn" data-lens="substations">Map substations</button></div>
-    <h4>Transmission and distribution crossings</h4>
-    <p>The default terrain map draws solid plum links for transmission and dashed teal links for distribution. Each link joins two 24-mile reporting areas where SCE maps a circuit at their shared border. Both layers can appear on the same link.</p>
-    <p>Of the ${int(m.portals.network.tested)} borders inside the service territory, ${int(m.portals.network.layers.transmission.length)} meet transmission linework and ${int(m.portals.network.layers.distribution.length)} meet distribution linework. ${link("https://drpep.sce.com/drpep/?page=Page","SCE's original circuit map")}</p>
+    <h4>Mapped transmission and distribution routes</h4>
+    <p>Plum traces SCE’s transmission routes and teal traces distribution. Indigo marks one-mile pixels containing both. The atlas and its overview inset use the same California Albers map registration.</p>
+    <p>The renderer processed all ${int(m.portals.network.layers.transmission.records)} published transmission records and ${int(m.portals.network.layers.distribution.records)} distribution records, then clipped the map to SCE’s service boundary. Zooming in shows the one-mile route coverage. ${link("https://drpep.sce.com/drpep/?page=Page","Open SCE’s original route map")}</p>
     <h4>EV charging permits and project stages</h4>
     <div class="actions"><button class="action-btn" data-lens="evPermitStatus">Map EV permits</button><button class="action-btn" data-lens="drpPlan">Planning</button><button class="action-btn" data-lens="drpBuild">Construction</button><button class="action-btn" data-lens="drpOperate">In operation</button></div>
     <details><summary>${int(permits.length)} permitting jurisdictions</summary><p>Choose a jurisdiction for a covered hex and its published scorecard.</p><div class="sce-scroll"><table class="report-table"><thead><tr><th>Jurisdiction</th><th>Permit status</th></tr></thead><tbody>${permitTable}</tbody></table></div></details>

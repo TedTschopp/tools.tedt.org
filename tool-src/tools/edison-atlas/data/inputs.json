@@ -3570,16 +3570,16 @@
   "sha256": "d8c36aaaaabc21e28832914ec10d916ec9b5df3022fe7ccae27c51ef131323e8"
  },
  {
-  "file": "drpep/grid-distribution-crossings.json",
+  "file": "drpep/grid-distribution-route-image.json",
   "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/Distribution_circuits/FeatureServer/0/query",
-  "bytes": 2001,
-  "sha256": "bf99fc145707a3680a565a426011518de6f1e07845c41d3e73b615179a60e99a"
+  "bytes": 14722,
+  "sha256": "3846d76575a78ee4a0748f6ebb7aef75870a28847eb16128f1179e697664dcd4"
  },
  {
-  "file": "drpep/grid-transmission-crossings.json",
+  "file": "drpep/grid-transmission-route-image.json",
   "url": "https://drpep.sce.com/arcgis_server/rest/services/Hosted/ICA_Layer/FeatureServer/19/query",
-  "bytes": 1391,
-  "sha256": "be7d388c00bccd48b6ecd35f3e1358da9363393e4168f0db997a796466f7ee3b"
+  "bytes": 9156,
+  "sha256": "8b9dd49b816f8bae56f10598cb52070b31c537a10d8dc9036bf6ef6e81beac5c"
  },
  {
   "file": "drpep/hex/caiso/features-000000.json",

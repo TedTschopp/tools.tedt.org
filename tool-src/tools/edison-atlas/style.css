@@ -1776,7 +1776,8 @@ dialog[data-view="share"] {
 .permit-links { padding:5px 0; }
 #utility-panel .station-shortcut { margin:0 0 12px; }
 .grid-line { display:inline-block; flex:0 0 20px; width:20px; height:0; border-top:3px solid #803758; }
-.grid-line.distribution { border-top:2px dashed #16696c; }
+.grid-line.distribution { border-top:3px solid #126464; }
+.grid-line.shared { border-top:3px solid #2d3670; }
 .utility-kind > .station-key { flex:0 0 20px; }
 .station-key canvas { width:22px; height:22px; vertical-align:middle; }
 .key .grid-line { flex:0 0 17px; width:17px; }

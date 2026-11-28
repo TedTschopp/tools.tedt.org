@@ -4,7 +4,7 @@ import { CivArt, drawSites } from "./civart.js";
 import { TerrainRaster } from "./terrain-raster.js";
 import { UtilityLayer } from "./utility.js";
 import { drawSubstations } from "./substations.js";
-import { gridKinds, gridPaths, drawGridLines } from "./grid-network.js";
+import { gridKinds, drawGridLines } from "./grid-network.js";
 import { SourceAreas } from "./source-areas.js";
 import {
   drawRoads,
@@ -241,7 +241,7 @@ export class HexMap {
     this.renderRevision = 0;
     this.utility = new UtilityLayer(m.utility);
     this.gridFilters = new Set(gridKinds);
-    this.powerGrid = gridPaths(m.portals.network);
+    this.powerGrid = m.gridImages;
     this.stationSelection = null;
     this.sourceAreas = new SourceAreas(m);
     this.utilityHover = null;
@@ -1132,7 +1132,7 @@ export class HexMap {
       base.fillStyle = "#819678";
       base.fill(this.boundary, "evenodd");
       if (transmission || distribution)
-        drawGridLines(base, this.powerGrid, this.gridFilters, s, this.boundary, 0.48);
+        drawGridLines(base, this.powerGrid, this.gridFilters, s, this.boundary);
       base.strokeStyle = "#627e60";
       base.lineWidth = 0.8 / s;
       base.stroke(this.boundary);

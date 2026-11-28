@@ -28,7 +28,7 @@ from geography import (
     territory,
     write_json,
 )
-from grid_network import schematic as grid_schematic
+from grid_network import route_images
 from local_sources import build_local, write_source_layers
 from planning import cooling_centers, planning_fields
 from planning_geography import add_planning_geography
@@ -130,7 +130,7 @@ def main():
         b, xy, polygons, col, row, tracts, utility
     )
     portals = sce_reports()
-    portals["network"] = grid_schematic(b)
+    portals["network"] = route_images()
     add_substations(portals, local)
     portals["cooling"], local_columns["sceCooling"] = cooling_centers(
         local, polygons, col, row
