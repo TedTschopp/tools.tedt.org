@@ -121,7 +121,15 @@
             </button>
           </div>
           <section id="utility-panel" aria-label="Utility layer filters" hidden>
-            <h3>Utility resources</h3>
+            <h3>Electric grid</h3>
+            <div id="grid-kinds" role="group" aria-label="Electric grid layers">
+              <button class="utility-kind" data-grid-filter="substations" role="switch" aria-checked="true"><span class="station-key" aria-hidden="true"></span><span><b>Substations</b><small>Inventory by 12-mile area</small></span><i class="switch" aria-hidden="true"></i></button>
+              <button class="utility-kind" data-grid-filter="transmission" role="switch" aria-checked="true"><i class="grid-line transmission"></i><span><b>Transmission</b><small>SCE mapped routes · plum</small></span><i class="switch" aria-hidden="true"></i></button>
+              <button class="utility-kind" data-grid-filter="distribution" role="switch" aria-checked="true"><i class="grid-line distribution"></i><span><b>Distribution</b><small>SCE mapped routes · teal</small></span><i class="switch" aria-hidden="true"></i></button>
+            </div>
+            <p>Lines follow SCE’s published routes. At close zoom, one colored pixel covers one square mile. Indigo marks miles with both types. <a href="https://drpep.sce.com/drpep/?page=Page" target="_blank" rel="noopener">Open SCE’s route map</a></p>
+            <button class="action-btn station-shortcut" data-lens="substations">Shade by substation count</button>
+            <h3>Generation, storage &amp; charging</h3>
             <p>Reported sites inside the SCE boundary, across all owners.</p>
             <div id="utility-kinds"></div>
             <label for="utility-area">Explore a 12-mile area</label>
@@ -157,7 +165,7 @@
         <button
           class="locator"
           id="locator"
-          title="Navigate with the overview map"
+          title="Navigate the territory and its mapped electric routes"
           aria-label="Overview map. Click to reposition or press Enter to fit the territory."
         >
           <canvas id="mini" width="144" height="92"></canvas>

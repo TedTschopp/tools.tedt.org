@@ -1,6 +1,8 @@
 import { assetUrl, portable } from "./assets.js";
 import { placeProfile, regionProfile, profileLink, landAccessSection, paintCityArt, tileArt } from "./profiles.js";
 import { HexMap } from "./map.js";
+import { hexPermits, hexProjects } from "./planning-panel.js";
+import { metricStrip } from "./profile-art.js";
 import { prepareTerrainPatterns } from "./usaciv/render/art/terrain.js";
 import {
   addLocalLenses,
@@ -25,6 +27,8 @@ import {
   summary,
 } from "./utility.js";
 import { categories, drawUtilityArt, kinds } from "./utility-art.js";
+import { gridKinds, gridNames, regionalDetailScale, loadGridImages } from "./grid-network.js";
+import { stationAreas } from "./substations.js";
 import { homeTable, localArea, localRow, localValue } from "./local-lenses.js";
 import { shapeNames } from "./source-areas.js";
 
@@ -150,6 +154,7 @@ async function start() {
     portals,
     profiles,
     access,
+    gridImages: await loadGridImages(portals.network),
     image: reliefInk ? relief : pic,
     art,
     val: (i, k) => {
@@ -181,6 +186,7 @@ function layersOrDetail() {
 }
 function showSource(layer, index) {
   selectedRegion = null;
+  map.stationSelection = null;
   map.sourceAreas.selection = { layer, index };
   map.selected = -1;
   map.place = null;
@@ -284,6 +290,14 @@ function setSourceMode(on) {
 }
 function syncUtilityControls() {
   const u = map.utility;
+  for (const el of document.querySelectorAll("[data-grid-filter]"))
+    el.setAttribute("aria-checked", String(map.opts.utility && map.gridFilters.has(el.dataset.gridFilter)));
+  if (!document.querySelector(".station-key canvas")) {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 44;
+    document.querySelector(".station-key").append(canvas);
+    drawUtilityArt(canvas.getContext("2d"), "substation", 22, 22, 41, false, false);
+  }
   for (const el of document.querySelectorAll('[data-overlay="utility"]'))
     el.setAttribute("aria-checked", String(map.opts.utility));
   const previous = document.activeElement?.dataset.utilityFilter;
@@ -305,7 +319,7 @@ function syncUtilityControls() {
 }
 function utilityScaleText() {
   const filters = map.utility.filters;
-  if (!filters.size) return "No utility resources selected";
+  if (!filters.size) return map.gridFilters.size ? "SCE grid inventory" : "No utility resources selected";
   if (map.scale >= 22 && filters.has("ev"))
     return filters.size === 1
       ? "Public charging · one-mile hexes"
@@ -320,6 +334,7 @@ function utilityMenu(open) {
 function showUtility(area, kind) {
   if (!area?.values[kind] || !map.utility.filters.has(kind)) return;
   selectedRegion = null;
+  map.stationSelection = null;
   map.opts.utility = true;
   map.sourceAreas.selection = null;
   map.sourceAreas.hover = null;
@@ -537,6 +552,24 @@ function inspector() {
     layers();
     return;
   }
+  if (map.stationSelection) {
+    const area = map.stationSelection;
+    const key = m.val(i,"col") + "," + m.val(i,"row");
+    $("sidebar").dataset.profile = "utility";
+    $("side-body").innerHTML = '<section class="detail-hero utility-hero"><button class="back-btn" data-action="back">' +
+      icon("back",14) + 'Map layers</button><canvas id="utility-model" width="180" height="146" aria-hidden="true"></canvas>' +
+      '<span class="eyebrow">12-mile reporting area</span><h2>Substations</h2><p>SCE inventory · Area ' + esc(area.id) +
+      '</p><div class="lens-callout"><span>Substation inventory</span><strong>' + number(area.count) +
+      (area.count === 1 ? ' substation record' : ' substation records') + '</strong></div></section>' +
+      detailSection("About this symbol", '<p>The transformer marks the reporting area. The count includes every SCE inventory record inside its service boundary in this area.</p>' +
+        '<button class="action-btn" data-lens="substations">Shade by substation count</button>' +
+        profileLink("hex", key, "Inspect the reference hex", key)) +
+      detailSection("Source", '<a href="https://drpep.sce.com/drpep/?page=Page" target="_blank" rel="noopener">SCE Distribution Resources Plan External Portal</a>');
+    const c = $("utility-model").getContext("2d");
+    c.scale(2,2);
+    drawUtilityArt(c,"substation",44,39,76,true,false);
+    return;
+  }
   const v = (id) => formatValue(lensById(id), valueAt(m, id, i));
   const bg = localRow(m, "bg", i)?.[0],
     zip = localRow(m, "zcta", i)?.[0];
@@ -568,13 +601,24 @@ function inspector() {
     (l.id === "home_value" ? "<small>90% margin of error · " + esc(moe) + "</small>" : "") + "</div>";
   const key = i >= 0 ? m.val(i, "col") + "," + m.val(i, "row") : "";
   if (p) {
-    $("side-body").innerHTML = placeProfile(m, p, key, callout) +
+    const climate = i >= 0 ? detailSection("Climate at the reference hex", metricStrip([
+      ["r-solar", "Daily solar", number(valueAt(m,"solar",i),2) + " kWh/m²", "#e9ba58"],
+      ["land", "Normal July high", v("july"), "#eea377"]]) + '<p class="fine">PRISM 1991–2020 · solar on an 800 m grid and temperature on a 4 km grid.</p>') : "";
+    const placePlanning = i >= 0 && l.id === "evPermitStatus" ? detailSection("EV charging permits",hexPermits(m,i,key)) : "";
+    $("side-body").innerHTML = placeProfile(m, p, key, callout, climate + placePlanning) +
       (i >= 0 && l.id === "fire" ? fireCoverage(i) : "");
     paintCityArt($("side-body"), map.civ.byId.get(p.id));
     return;
   }
   html += callout + "</section>";
+  if (i >= 0) html += metricStrip([["r-solar","Solar · kWh/m²/day",number(valueAt(m,"solar",i),2),"#e9ba58"],
+    ["r-ev-charging","Charging ports",number(valueAt(m,"chargers",i)),"#83c7c5"],
+    ["r-substation","Substations · 12 mi",number(valueAt(m,"substations",i)),"#aaa2d7"]]);
   if (i >= 0 && l.id === "fire") html += fireCoverage(i);
+  if (i >= 0 && l.id === "evPermitStatus") html += detailSection("EV charging permits", hexPermits(m, i, key));
+  if (i >= 0 && l.id === "substations")
+    html += detailSection("Substation reporting area", fact("Substation records", v("substations")) +
+      '<p class="fine">The transformer marks a 12-mile reporting area. Open Substations in the layer list on SCE’s map to see its source locations.</p><a href="https://drpep.sce.com/drpep/?page=Page" target="_blank" rel="noopener">Open SCE’s DRPEP map</a>');
   if (i >= 0) html += landAccessSection(m.access, key);
   if (i >= 0) {
     const cov = m.val(i, "coverage") / 1e6;
@@ -624,14 +668,19 @@ function inspector() {
             .join(" / "),
         ) +
         fact("Approved study area coverage", v("projectCoverage")) +
+        hexProjects(m.portals, key) +
         (l.id === "fire" ? "" : fact("Fire tier by largest area", v("fire"))) +
         fact("Tier 1 tree mortality", v("tierOne")) +
         classAndCoverage("growth") +
         classAndCoverage("loadFull") +
         classAndCoverage("loadPartial") +
+        '<details class="band-coverage"><summary>Fire polygons on SCE’s portal map</summary>' +
+        fact("High tree mortality", v("portalTree")) + fact("Elevated fire area", v("portalFire2")) +
+        fact("Extreme fire area", v("portalFire3")) + '</details>' +
         '<button class="table-link" data-report="planning">Planning sources and methods</button>',
     );
     if (l.id !== "fire") html += fireCoverage(i);
+    if (l.id !== "evPermitStatus") html += detailSection("EV charging permits", hexPermits(m, i, key));
     html += detailSection(
       "One-mile tile",
       fact("Hex column, row", cell) +
@@ -759,6 +808,11 @@ function inspector() {
 function chooseLens(id, fromDialog = false) {
   const l = lensById(id);
   if (!l) return;
+  if (id === "substations") {
+    map.opts.utility = true;
+    map.gridFilters.add("substations");
+    syncUtilityControls();
+  }
   map.setLens(l);
   if (
     map.sourceAreas.selection &&
@@ -840,9 +894,15 @@ function legend() {
             "</span>",
         )
         .join("") +
+      (map.gridFilters.has("substations") ? '<span class="key"><canvas width="34" height="34" data-key="substation" aria-hidden="true"></canvas>Substations · 12 mi</span>' : "") +
+      ["transmission","distribution"].filter(k => map.gridFilters.has(k)).map(k =>
+        '<span class="key"><i class="grid-line ' + k + '"></i>' + gridNames[k] + '</span>').join("") +
+      (map.gridFilters.has("transmission") && map.gridFilters.has("distribution") ?
+        '<span class="key"><i class="grid-line shared"></i>Both in one mile</span>' : "") +
       '</div><small id="utility-legend-scale">' +
       esc(utilityScaleText()) +
-      "</small></div>"
+      "</small>" + (map.gridFilters.has("transmission") || map.gridFilters.has("distribution") ?
+        '<small id="grid-scale-note">SCE mapped routes · 1 mile per pixel</small>' : "") + "</div>"
     : "";
   const shapeLayer = map.sourceAreas.layer(l);
   const switcher = shapeLayer
@@ -881,9 +941,16 @@ function legend() {
     c.scale(2, 2);
     drawUtilityArt(c, canvas.dataset.key, 8.5, 8.5, 16, false, false);
   }
+  updateGridLegend();
 }
 function updateText(element, value) {
   if (element && element.textContent !== value) element.textContent = value;
+}
+function updateGridLegend() {
+  const note = $("grid-scale-note");
+  if (!note) return;
+  const detailed = map.scale >= regionalDetailScale;
+  updateText(note, detailed ? "Route coverage · each colored pixel is one mile" : "SCE mapped routes · 1 mile per pixel");
 }
 function drawStatus() {
   if (!map || !map.lens) return;
@@ -894,6 +961,7 @@ function drawStatus() {
   updateText($("geography-status"), reading);
   const scope = $("utility-legend-scale");
   if (scope) updateText(scope, utilityScaleText());
+  updateGridLegend();
   const terrainNote = $("legend").querySelector(".legend-note");
   if (map.lens.id === "terrain" && terrainNote)
     updateText(
@@ -926,7 +994,7 @@ function drawStatus() {
   if (lastHover < 0)
     updateText(
       $("status-info"),
-      map.selected >= 0
+      map.stationSelection ? "Substations · " + number(map.stationSelection.count) + " records in this 12-mile area" : map.selected >= 0
         ? "Hex " +
             m.val(map.selected, "col") +
             ", " +
@@ -948,6 +1016,7 @@ function drawStatus() {
     );
 }
 function hovered(i, pos, label) {
+  if (label?.kind === "substation") i = label.p.tile;
   if (label?.kind === "cooling") i = map.lookup.get(label.p.tile);
   lastHover = i;
   const utility = label?.kind === "utility";
@@ -958,7 +1027,8 @@ function hovered(i, pos, label) {
     drawStatus();
     return;
   }
-  const scope = place
+  const station = label?.kind === "substation";
+  const scope = station ? number(label.p.count) + (label.p.count === 1 ? " record" : " records") + " · 12-mile reporting area" : place
     ? label.kind === "metro" ? "Metro yields · Open metro profile" : m.profiles.places[label.p.id].kind + " · Open place profile"
     : utility
     ? areaName(label.p) +
@@ -974,7 +1044,7 @@ function hovered(i, pos, label) {
   $("hover").innerHTML =
     "<b>" +
     esc(
-      place || label?.kind === "cooling"
+      station ? "Substations" : place || label?.kind === "cooling"
         ? label.p.name
         : utility
           ? categories[label.assetKind].name
@@ -995,7 +1065,7 @@ function hovered(i, pos, label) {
   $("hover").style.top =
     Math.max(4, Math.min(map.h - $("hover").offsetHeight - 4, pos[1] + 14)) +
     "px";
-  $("status-info").textContent = place ? label.p.name + " · " + scope : utility
+  $("status-info").textContent = station ? "Substations · " + scope : place ? label.p.name + " · " + scope : utility
     ? areaName(label.p) + " · Near " + label.p.near
     : native
       ? scope
@@ -1009,8 +1079,9 @@ function hovered(i, pos, label) {
         (-m.val(i, "lon") / 1e5).toFixed(3) +
         "° W";
 }
-function showSelected(i, p = null, landmark = null) {
+function showSelected(i, p = null, landmark = null, station = null) {
   selectedRegion = null;
+  map.stationSelection = station;
   map.sourceAreas.selection = null;
   map.sourceAreas.hover = null;
   map.utility.selection = null;
@@ -1029,6 +1100,10 @@ function showSelected(i, p = null, landmark = null) {
   writeHash();
 }
 function pick(i, label) {
+  if (label?.kind === "substation") {
+    showSelected(label.p.tile, null, null, label.p);
+    return;
+  }
   if (label?.kind === "cooling") {
     showSelected(map.lookup.get(label.p.tile));
     return;
@@ -1067,6 +1142,7 @@ function pick(i, label) {
 }
 function clearSelected() {
   selectedRegion = null;
+  map.stationSelection = null;
   map.sourceAreas.selection = null;
   map.sourceAreas.hover = null;
   map.utility.selection = null;
@@ -1195,6 +1271,7 @@ function renderRegion() {
 function showRegion(kind, item, frame = true) {
   if (!item) return;
   closeDialog();
+  map.stationSelection = null;
   map.sourceAreas.selection = map.sourceAreas.hover = null;
   map.utility.selection = map.utilityHover = null;
   chosenPlace = selectedLandmark = map.landmark = map.place = null;
@@ -1356,6 +1433,9 @@ function makeHash() {
       m.val(map.selected, "col") + "," + m.val(map.selected, "row"),
     );
   if (!map.opts.restricted) p.set("access", "off");
+  if (map.gridFilters.size !== gridKinds.length)
+    p.set("gridlayers", gridKinds.filter(k => map.gridFilters.has(k)).join(","));
+  if (map.stationSelection) p.set("stationarea", map.stationSelection.id);
   if (selectedRegion) {
     const { kind, item } = selectedRegion;
     p.set(kind, item.geoid || item.fips || item.code || item.id);
@@ -1409,6 +1489,9 @@ function loadHash() {
       for (const key of Object.keys(map.opts)) map.opts[key] = set.has(key);
     }
     map.opts.restricted = p.get("access") !== "off";
+    map.gridFilters = new Set(p.has("gridlayers") ? p.get("gridlayers").split(",").filter(k => gridKinds.includes(k)) : gridKinds);
+    const station = p.has("stationarea") && map.opts.utility && map.gridFilters.has("substations") &&
+      stationAreas(map).find(area => area.id === p.get("stationarea"));
     map.utility.filters = new Set(
       p.has("resources")
         ? p
@@ -1438,6 +1521,10 @@ function loadHash() {
         : -1;
     const region = ["state", "county", "metro", "park"].find(k => p.has(k) && regionItem(k, p.get(k)));
     if (region) showRegion(region, regionItem(region, p.get(region)), !hasCamera);
+    else if (station) {
+      if (!hasCamera) map.go(station.x,station.y,6);
+      showSelected(station.tile, null, null, station);
+    }
     else if (map.opts.utility && map.utility.filters.has(kind) && area?.values[kind])
       showUtility(area, kind);
     else if (nativeIndex >= 0) showSource(layer, nativeIndex);
@@ -1563,7 +1650,7 @@ function snapshot() {
   const d = map.dpr,
     w = Math.max(720, map.w),
     h = map.h,
-    footer = map.opts.utility ? 107 : 72,
+    footer = map.opts.utility ? 125 : 72,
     out = document.createElement("canvas");
   out.width = w * d;
   out.height = (h + footer) * d;
@@ -1638,14 +1725,35 @@ function snapshot() {
       c.fillText(categories[kind].name, x + 18, h + 76);
       x += c.measureText(categories[kind].name).width + 32;
     }
+    if (map.gridFilters.has("substations")) {
+      drawUtilityArt(c,"substation",x+7,h+73,14,false,false);
+      c.fillText("Substations · 12 mi",x+18,h+76);
+      x += c.measureText("Substations · 12 mi").width + 32;
+    }
     c.fillText(utilityScaleText(), x, h + 76, w - x - 15);
     c.fillStyle = "#d8e1c9";
     c.fillText(
-      "Operating inventory: EIA-860M, October 2026   /   Public charging: AFDC, November 27, 2026",
+      "Operating plants · EIA-860M, October 2026   /   Charging · AFDC, November 27, 2026",
       15,
       h + 92,
       w - 30,
     );
+    let gx = 15;
+    for (const kind of ["transmission", "distribution"].filter(k => map.gridFilters.has(k))) {
+      c.save();
+      c.strokeStyle = kind === "transmission" ? "#e8a0bd" : "#80d6ce";
+      c.lineWidth = 2;
+      c.beginPath(); c.moveTo(gx,h+107); c.lineTo(gx+21,h+107); c.stroke();
+      c.restore();
+      c.fillText(gridNames[kind],gx+26,h+110);
+      gx += 40 + c.measureText(gridNames[kind]).width;
+    }
+    if (map.gridFilters.has("transmission") && map.gridFilters.has("distribution")) {
+      c.fillStyle = "#b1bbed"; c.fillRect(gx,h+104,14,5);
+      c.fillStyle = "#d8e1c9"; c.fillText("Both in one mile",gx+19,h+110);
+      gx += c.measureText("Both in one mile").width + 35;
+    }
+    if (gx > 15) c.fillText("SCE mapped routes · 1 mile per pixel",gx,h+110,w-gx-15);
   }
   c.strokeStyle = "#fbf7df";
   c.lineWidth = 1.5;
@@ -1666,6 +1774,14 @@ function install() {
   const click = async (e) => {
     const el = e.target.closest("button,a");
     if (!el) return;
+    if (el.dataset.dossier) {
+      const container = $("side-body");
+      for (const button of container.querySelectorAll("[data-dossier]"))
+        button.setAttribute("aria-pressed", String(button === el));
+      for (const page of container.querySelectorAll("[data-dossier-page]"))
+        page.hidden = page.dataset.dossierPage !== el.dataset.dossier;
+      return;
+    }
     if (el.dataset.profileKind) {
       closeDialog();
       openProfile(el.dataset.profileKind, el.dataset.id);
@@ -1676,6 +1792,7 @@ function install() {
       return;
     }
     if (el.dataset.lens) {
+      if ($("utility-panel").contains(el)) utilityMenu(false);
       chooseLens(el.dataset.lens, $("dialog").contains(el));
       return;
     }
@@ -1687,13 +1804,26 @@ function install() {
       if (k === "utility") {
         if (!map.opts.utility) {
           map.utilityHover = null;
-          if (map.utility.selection) clearSelected();
+          if (map.utility.selection || map.stationSelection) clearSelected();
           utilityMenu(false);
         }
         syncUtilityControls();
         legend();
         if (sideMode === "detail") inspector();
       }
+      map.queue();
+      scheduleHash();
+      return;
+    }
+    if (el.dataset.gridFilter) {
+      const kind = el.dataset.gridFilter;
+      if (map.opts.utility && map.gridFilters.has(kind)) map.gridFilters.delete(kind);
+      else { map.opts.utility = true; map.gridFilters.add(kind); }
+      if (map.stationSelection && !map.gridFilters.has("substations")) clearSelected();
+      map.utilityHover = null;
+      syncUtilityControls();
+      legend();
+      layersOrDetail();
       map.queue();
       scheduleHash();
       return;

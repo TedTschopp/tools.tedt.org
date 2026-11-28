@@ -3,12 +3,15 @@
 import json
 import math
 import zipfile
+from base64 import b64decode
 from collections import Counter, defaultdict
+from io import BytesIO
 
 import numpy as np
 import shapely as sh
 from fetch import MILE, OUT, RAW
 from geography import FORWARD, HEX_AREA, INVERSE, grid, territory
+from PIL import Image
 from regional import workbook
 from shapely.geometry import shape
 from utility import regular_cell
@@ -212,6 +215,7 @@ def check():
         "upgrades",
         "cooling",
         "mappedHexes",
+        "projects", "permits", "additional", "substations", "network",
     }
     assert (
         "planningRegion" not in local["tables"] and "planningRegion" not in a["columns"]
@@ -227,6 +231,50 @@ def check():
         json.loads((RAW / "cooling/ids.json").read_bytes())["objectIds"]
     )
     tiles = {f"{c},{r}": i for i, (c, r) in enumerate(zip(x, row))}
+    project = portals["projects"]
+    assert len(project["records"]) == sum(layer["count"] for service in portals["planning"]
+        if service["name"] == "DRP_Transmission_Projects" for layer in service["layers"])
+    assert all(len(project["byHex"].get(k, [])) == col["planningAreas"][i] for k,i in tiles.items())
+    assert np.array_equal(col["drpPlan"]+col["drpBuild"]+col["drpOperate"], col["planningAreas"])
+    permit = portals["permits"]
+    assert set(np.unique(col["evPermitStatus"])) <= {a["noData"],1,2,3}
+    assert np.all((col["evPermitCoverage"] >= 0) & (col["evPermitCoverage"] <= 10000))
+    for key, pieces in permit["split"].items():
+        assert len(pieces) > 1 and pieces[0][0] == col["permitJurisdiction"][tiles[key]]
+        assert abs(sum(p for _,p in pieces) - col["evPermitCoverage"][tiles[key]]) <= (len(pieces)+1)/2
+        assert all(str(fid) in permit["jurisdictions"] for fid,_ in pieces)
+    for fid,j in permit["jurisdictions"].items():
+        key=j["hex"]; i=tiles[key]
+        assert int(fid) in [k for k,_ in permit["split"].get(key, [[col["permitJurisdiction"][i],0]])]
+    counts = portals["substations"]
+    network = portals["network"]
+    assert network["pixelMiles"] == 1 and network["projection"] == 3310
+    assert set(network["layers"]) == {"transmission", "distribution"}
+    assert set(network["images"]) == {"transmission", "distribution", "both"}
+    masks = {}
+    x0,y0,x1,y1 = network["bounds"]
+    for kind, report in network["layers"].items():
+        source = "ICA_Layer-19" if kind == "transmission" else "Distribution_circuits-0"
+        assert report["records"] == json.loads((RAW / f"drpep/counts/{source}.json").read_bytes())["count"]
+        assert report["checks"] == 24 and report["emptyFilterVerified"] and report["maxRegistrationMiles"] <= 0.5
+        im = Image.open(BytesIO(b64decode(network["images"][kind]))).convert("RGBA")
+        assert im.size == (x1-x0, y1-y0)
+        masks[kind] = np.array(im)[:,:,3]
+        assert np.count_nonzero(masks[kind]) == report["pixels"]
+        source_render = json.loads((RAW / f"drpep/grid-{kind}-route-image.json").read_bytes())
+        publisher_ink = np.array(Image.open(BytesIO(b64decode(source_render["alpha"])))) > 0
+        assert np.array_equal(publisher_ink, masks[kind] > 0)
+    both = np.array(Image.open(BytesIO(b64decode(network["images"]["both"]))))
+    assert np.array_equal(both[:,:,3], np.maximum(masks["transmission"],masks["distribution"]))
+    shared = (masks["transmission"]>0) & (masks["distribution"]>0)
+    assert shared.any() and np.all(both[shared,:3] == [45,54,112])
+    print("PASS · both SCE route images registered in California Albers, complete record batches, 48 independent geographic checks")
+    assert counts["sourceCount"] == 884 and sum(r["count"] for r in counts["areas"]) == counts["included"]
+    assert sum(r[local["fields"]["substations"]["index"]] for r in powers["rows"]) == counts["included"]
+    assert np.all((col["portalFire3"] >= 0) & (col["portalFire3"] <= 10000))
+    assert all(r[1] in ("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+               for t in portals["additional"]["tables"] if t["service"] == "ICA_Tables" for r in t["rows"])
+    assert all("records" not in area and "name" not in area for area in counts["areas"])
     counts = Counter()
     for site in cooling["sites"]:
         i = tiles[site["tile"]]
@@ -377,6 +425,8 @@ def check():
         "PASS · every block-group home estimate and margin against B25077; local joins, coverage, ZIP sales, ports, capacity and land percentages"
     )
     profiles = load("geography-profiles.json")
+    assert profiles["outlines"]["06"].startswith("M") and set(a["countyIds"]) <= set(profiles["outlines"])
+    assert sum(profiles["places"]["0644000"]["education"].values()) > 0
     access = load("land-access.json")
     assert set(profiles["places"]) == {p["id"] for p in a["places"]}
     assert profiles["places"]["0644000"]["population"] == 3857263

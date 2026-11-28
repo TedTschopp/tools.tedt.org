@@ -6,18 +6,42 @@ import json
 import tempfile
 import zipfile
 from collections import defaultdict
+from itertools import pairwise
 
 import numpy as np
 import shapefile
 import shapely as sh
+from fetch import MILE, OUT, RAW
+from geography import (
+    attributes_at,
+    grid,
+    parts,
+    pct,
+    project,
+    rings,
+    shape_records,
+    territory,
+    write_json,
+)
 from pyproj import CRS
 from shapely.geometry import shape
 
-from fetch import MILE, OUT, RAW
-from geography import attributes_at, grid, parts, pct, project, rings, shape_records, territory, write_json
+
+def silhouette(geo):
+    """Small Albers-projected outline for the illustrated geography header."""
+    west, south, east, north = geo.bounds
+    scale = min(78 / (east - west), 62 / (north - south))
+    dx, dy = 44 - (west + east) * scale / 2, 35 + (south + north) * scale / 2
+    commands = []
+    for polygon in parts(geo.simplify(0.48 / scale), "Polygon"):
+        for ring in [polygon.exterior, *polygon.interiors]:
+            coords = list(ring.coords)[:-1]
+            if len(coords) >= 3:
+                commands.append("M" + "L".join(f"{x*scale+dx:.1f},{dy-y*scale:.1f}" for x,y in coords) + "Z")
+    return "".join(commands)
 
 
-def profiles(places):
+def profiles(places, county_ids):
     by_id = {p["id"]: {} for p in places}
     with zipfile.ZipFile(RAW / "places.zip") as archive:
         rows = csv.DictReader(io.StringIO(archive.read(archive.namelist()[0]).decode("utf-8-sig")), delimiter="\t")
@@ -50,14 +74,33 @@ def profiles(places):
     for dest in by_id.values():
         for out, num, den in (("renters", "rented", "homes"), ("electricHeat", "electric", "heated"), ("unemployment", "unemployed", "labor")):
             dest[out] = pct(dest.pop(num, None), dest.pop(den, None))
+    # Use the place's own ACS education distribution for the illustrated residents.
+    groups = {"less_than_hs": range(2, 17), "high_school": (17, 18), "some_college": (19, 20, 21),
+              "bachelors": (22,), "graduate": (23, 24, 25)}
+    with (RAW / "B15003.dat").open(encoding="latin1") as f:
+        header = next(f).strip().split("|")
+        columns = [header.index(f"B15003_E{n:03}") for n in range(1, 26)]
+        for line in f:
+            if not line.startswith("1600000US"):
+                continue
+            row = line.rstrip().split("|")
+            place = by_id.get(row[0][9:])
+            if place is None or not all(row[j].isdigit() for j in columns):
+                continue
+            counts = [int(row[j]) for j in columns]
+            if counts[0] and sum(counts[1:]) == counts[0]:
+                place["education"] = {key: sum(counts[n - 1] for n in group) for key, group in groups.items()}
     with zipfile.ZipFile(RAW / "usaciv-source.zip") as z:
         def get(key):
             return json.loads(z.read("usaciv/web/data/" + key + ".json"))
         states = get("states")
+        ca = {key: geo for key, geo in counties if key.startswith("06")}
         return {
             "places": by_id, "nation": get("nation"),
             "state": next(s for s in states if s["fips"] == "06"), "stateCount": len(states),
             "districtColors": {d["id"]: d["color"] for d in get("districts")["catalog"]},
+            "outlines": {"06": silhouette(sh.union_all(list(ca.values()))),
+                         **{key: silhouette(ca[key]) for key in county_ids if key in ca}},
         }
 
 
@@ -89,7 +132,7 @@ def access_polygons(boundary):
                     # A few CPAD paths have collapsed holes. Reconstruct polygonal
                     # area from the source ring topology without those zero-area rings.
                     stops = [*item.parts, len(item.points)]
-                    lines = [item.points[a:b] for a, b in zip(stops, stops[1:]) if b - a >= 4]
+                    lines = [item.points[a:b] for a, b in pairwise(stops) if b - a >= 4]
                     geo = sh.make_valid(sh.build_area(sh.MultiLineString(lines)))
                 if boundary.intersects(geo):
                     by_type[kind].extend(parts(geo, "Polygon"))
@@ -136,12 +179,13 @@ geography-profiles.json contains whole-place ACS 2020-2024 five-year estimates k
 """
 
 
-def write_civ_geography(places, boundary, row, col, area, tiles):
-    write_json("geography-profiles.json", profiles(places))
+def write_civ_geography(places, boundary, row, col, area, tiles, county_ids):
+    write_json("geography-profiles.json", profiles(places, county_ids))
     write_json("land-access.json", land_access(boundary, row, col, area, tiles))
 
 
 if __name__ == "__main__":
     boundary = territory()
     row, col, _, area, tiles = grid(boundary)
-    write_civ_geography(json.loads((OUT / "atlas.json").read_bytes())["places"], boundary, row, col, area, tiles)
+    meta = json.loads((OUT / "atlas.json").read_bytes())
+    write_civ_geography(meta["places"], boundary, row, col, area, tiles, meta["countyIds"])

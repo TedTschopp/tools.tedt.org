@@ -21,12 +21,13 @@ The map covers all 20 pieces of Southern California Edison’s published service
 ## Explore the map
 
 - Inspect a neighborhood’s estimated home value and its margin of error. Select **Block groups** in the legend to see the Census boundary. [Open the Orange County coast](/edison-atlas/#lens=home_value&x=109.5&y=293.583&z=28&layers=places,roads,water,grid,art&geography=source&geoid=060590995041)
+- Trace SCE’s published transmission and distribution routes at one mile per pixel. Click a transformer symbol for the substation count in its 12-mile area. [Open the grid map](/edison-atlas/)
 - Compare solar farms, wind farms, battery storage, and public EV charging. Symbols cover all owners in the reporting area. [Explore the Mojave utility layer](/edison-atlas/#lens=terrain&x=108&y=207.846&z=12&layers=utility,places,roads,rail,water,grid,art&resource=solar@12:9,20)
 - Find one of 323 listed cooling centers in SCE territory by name, street, city, or ZIP. Select a facility for its location and hours. [Open Cooling centers](/edison-atlas/#report=cooling)
 - Color each hex by the wildfire tier covering its largest area. Click to see percentages for Tier 2, Tier 3, and the area outside both. [Explore wildfire tiers](/edison-atlas/#lens=fire)
 - Inspect the share of a one-mile hex in a project study area. Compare SCE’s published load growth and available-load bands and see where they overlap. [Open Grid planning](/edison-atlas/#report=planning)
 
-The atlas includes 101 map lenses. ZIP, tract, and block-group estimates retain their source geography. The Almanac preserves the original county reports and explains the coverage of local religious surveys. [Explore religion sources](/edison-atlas/#report=religion)
+The atlas includes 110 map lenses. City, metro, county, state and hex profiles have their own illustrations and charts. ZIP, tract, and block-group estimates retain their source geography. The Almanac preserves the original county reports and explains the coverage of local religious surveys. [Explore religion sources](/edison-atlas/#report=religion)
 
 ## Downloads
 

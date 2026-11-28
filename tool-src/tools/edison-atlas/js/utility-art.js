@@ -13,6 +13,7 @@ export const categories = {
   ev: { name: "EV charging", icon: "r-ev-charging" },
 };
 export const kinds = Object.keys(categories);
+const resourceGlyph = kind => kind === "substation" ? "r-substation" : categories[kind].icon;
 
 // Isometric miniatures use the same upper-left light, bronze rim and sprite
 // cache as the USACiv tile painters. Small zoom levels use its resource medallions.
@@ -137,7 +138,16 @@ function charge(g) {
     g.stroke();
   }
 }
-const painters = { solar, wind, battery, ev: charge };
+function transformer(g) {
+  box(g, -8, -6, 15, 11, 8, 0, ["#acd0d3", "#71979c", "#466d75"]);
+  for (const u of [-5, 0, 5]) {
+    line(g, [iso(u, -1, 8), iso(u, -1, 15)], "#ece5ba", 1.8);
+    for (const z of [10, 12, 14])
+      line(g, [iso(u - 1.5, -1, z), iso(u + 1.5, -1, z)], "#59655e", 1.3);
+    line(g, [iso(u, 5, 1.5), iso(u, 5, 6.7)], "#cee0d4", 1);
+  }
+}
+const painters = { solar, wind, battery, ev: charge, substation: transformer };
 function paintMiniature(g, kind) {
   g.scale(1 / 24, 1 / 24);
   g.translate(0, 5);
@@ -165,7 +175,7 @@ function paintMiniature(g, kind) {
 const boxBounds = { x0: -1.1, y0: -1.3, x1: 1.1, y1: 0.82 };
 export function drawUtilityArt(ctx, kind, x, y, size, detailed, selected) {
   if (!detailed) {
-    drawIcon(ctx, categories[kind].icon, x, y, size, {
+    drawIcon(ctx, resourceGlyph(kind), x, y, size, {
       ring: selected ? "#fff49d" : "#d9b361",
     });
     return;
@@ -178,7 +188,7 @@ export function drawUtilityArt(ctx, kind, x, y, size, detailed, selected) {
   drawSprite(ctx, sprite, x, y, scale);
   drawIcon(
     ctx,
-    categories[kind].icon,
+    resourceGlyph(kind),
     x + size * 0.29,
     y + size * 0.2,
     Math.min(18, Math.max(11, size * 0.32)),

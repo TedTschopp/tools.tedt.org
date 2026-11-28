@@ -121,6 +121,13 @@ def fire_tier_shares(hex_area, district_area, tier_three_area):
 def planning_fields(local, polygons, xy):
     coverage = HexCoverage(polygons, xy)
     result = {}
+    from drpep_data import FIRE_VIEWS, read
+    from planning_geography import geographic_rows
+    for key in FIRE_VIEWS:
+        expected = set(read(key + "-ids.json")["objectIds"])
+        shapes = [g for _, g in geographic_rows(RAW / "drpep" / "details", key + "-features.json", "OBJECTID", expected)]
+        result[key] = coverage.percent(coverage.overlap(np.asarray(shapes, dtype=object)))
+        register(local, key, 100)
     trees, _ = features("tree")
     tier_two, _ = features("fire2")
     tier_three, _ = features("fire3")

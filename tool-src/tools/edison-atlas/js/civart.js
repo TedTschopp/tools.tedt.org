@@ -5,7 +5,6 @@ import {
   terrainGrid,
   paintCivTerrain,
 } from "./civ-terrain.js";
-import { valueAt } from "./lenses.js";
 import { money } from "./usaciv/format.js";
 import { COVER } from "./usaciv/terrain.js";
 import {
@@ -65,19 +64,6 @@ const metroFields = Object.entries({
   icon: "y-" + key,
   ...(key === "gold" ? { format: money } : {}),
 }));
-const climateFields = [
-  {
-    key: "solar",
-    color: "#e8bc59",
-    icon: "r-solar",
-    format: (v) => v.toFixed(2) + " kWh/m²/d",
-  },
-  {
-    key: "july",
-    color: "#ed995c",
-    format: (v) => "Jul high " + Math.round(v) + "°F",
-  },
-];
 const parkMotifs = {
   YOSE: "peak",
   JOTR: "desert",
@@ -190,17 +176,6 @@ export class CivArt {
           label: badge ? badge.label + " · Metro" : "Metro yields",
           color: model.profiles.districtColors[badge?.district] || "#506a84",
         });
-      } else if (p.inside) {
-        city.yields = Object.fromEntries(
-          climateFields.map((f) => [
-            f.key,
-            valueAt(model, f.key, city.sampleIndex),
-          ]),
-        );
-        city.bannerFields = climateFields.filter(
-          (f) => city.yields[f.key] != null,
-        );
-        this.badges.set(p.id, { label: "Tile climate", color: "#476f70" });
       }
       return city;
     });
