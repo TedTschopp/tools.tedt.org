@@ -183,18 +183,23 @@ const atlasOut = path.join(out, 'edison-atlas');
 await bundle({absWorkingDir:atlasDir, entryPoints:['js/terrain-worker.js'], outfile:'js/terrain-painter.js',
   bundle:true, format:'iife', platform:'browser', target:'es2022', legalComments:'inline'});
 const atlasImports = {};
+const atlasData = {};
 for (const entry of (await fs.readdir(atlasDir, {recursive:true, withFileTypes:true})).filter(e => e.isFile()).map(e => path.relative(atlasDir, path.join(e.parentPath, e.name))).sort()) {
   if (entry === 'index.html') continue;
   await fs.mkdir(path.join(atlasOut, path.dirname(entry)), {recursive:true});
   await fs.copyFile(path.join(atlasDir, entry), path.join(atlasOut, entry));
   const url = entry.split(path.sep).join('/');
   staticFiles.push('/edison-atlas/' + url);
-  if (url.startsWith('js/') && url.endsWith('.js')) {
+  const isModule = url.startsWith('js/') && url.endsWith('.js');
+  const isData = url.startsWith('data/') && /\.(json|bin|webp)$/.test(url);
+  if (isModule || isData) {
     const bytes = await fs.readFile(path.join(atlasDir, entry));
     const digest = createHash('sha256').update(bytes).digest('hex').slice(0, 16);
-    const versioned = url.slice(0, -3) + '.' + digest + '.js';
+    const ext = path.posix.extname(url);
+    const versioned = url.slice(0, -ext.length) + '.' + digest + ext;
     await fs.writeFile(path.join(atlasOut, versioned), bytes);
-    atlasImports['./' + url] = './' + versioned;
+    if (isModule) atlasImports['./' + url] = './' + versioned;
+    else atlasData[url] = versioned;
     staticFiles.push('/edison-atlas/' + versioned);
   }
 }
@@ -205,6 +210,7 @@ const atlasPage = await fs.readFile(atlasIndex, 'utf8');
 const atlasEntry = '<script type="module" src="js/app.js"></script>';
 if (!atlasPage.includes(atlasEntry)) throw new Error('Missing Edison Atlas module entry');
 await fs.writeFile(atlasIndex, atlasPage.replace(atlasEntry,
+  '<script id="atlas-data-revisions" type="application/json">' + JSON.stringify(atlasData) + '</script>\n    ' +
   '<script type="importmap">' + JSON.stringify({imports:atlasImports}) + '</script>\n    ' +
   '<script type="module" src="' + atlasImports['./js/app.js'] + '"></script>'));
 execFileSync('python3', ['scripts/package-edison-atlas.py', atlasDir, path.join(atlasOut, 'Edison-Atlas-offline.zip')], {stdio:'inherit'});
