@@ -57,7 +57,8 @@ export class UtilityLayer {
       local = s >= 22;
     const hits = [],
       reserved = [],
-      names = map.labels.filter((h) => !h.symbol);
+      names = map.labels.filter((h) => !h.symbol),
+      metroPlates = names.filter((h) => h.metroPlate);
     const placeGroup = (area, enabled, size, detail, movable) => {
       if (!enabled.length) return;
       const [ax, ay] = map.screen(area.x, area.y);
@@ -80,23 +81,32 @@ export class UtilityLayer {
         py = ay;
       if (movable) {
         const shift = Math.min(18, s * area.width * 0.23);
+        const positions = [[0, 0], [0, shift], [0, -shift], [shift, 0], [-shift, 0]];
+        const halfWidth = Math.max(width / 2, tag ? 15 : 0);
+        const top = height / 2, bottom = height / 2 + (tag ? 11 : 0);
+        const boxAt = (dx, dy) => ({
+          x0: ax + dx - halfWidth, x1: ax + dx + halfWidth,
+          y0: ay + dy - top, y1: ay + dy + bottom,
+        });
+        // Keep reporting-area symbols nearby, using a leader when a ribbon covers the anchor.
+        const anchor = boxAt(0, 0);
+        for (const plate of metroPlates) {
+          if (!overlap(plate, anchor)) continue;
+          const exits = [
+            [0, plate.y1 + top + 3 - ay], [0, plate.y0 - bottom - 3 - ay],
+            [plate.x0 - halfWidth - 3 - ax, 0], [plate.x1 + halfWidth + 3 - ax, 0],
+          ].sort((a, b) => Math.hypot(...a) - Math.hypot(...b));
+          positions.push(...exits.filter(([dx, dy]) => {
+            const box = boxAt(dx, dy);
+            return box.x0 >= 0 && box.y0 >= 0 && box.x1 <= map.w && box.y1 <= map.h;
+          }));
+        }
         let score = Infinity;
-        for (const [dx, dy] of [
-          [0, 0],
-          [0, shift],
-          [0, -shift],
-          [shift, 0],
-          [-shift, 0],
-        ]) {
-          const box = {
-            x0: ax + dx - width / 2,
-            y0: ay + dy - height / 2,
-            x1: ax + dx + width / 2,
-            y1: ay + dy + height / 2 + (tag ? 11 : 0),
-          };
-          const cost =
-            reserved.filter((b) => overlap(b, box)).length * 3 +
-            names.filter((b) => overlap(b, box)).length;
+        for (const [dx, dy] of positions) {
+          const box = boxAt(dx, dy);
+          const cost = reserved.filter((b) => overlap(b, box)).length * 3 +
+            names.filter((b) => overlap(b, box)).length +
+            (metroPlates.some((b) => overlap(b, box)) ? 1 + names.length + 3 * reserved.length : 0);
           if (cost < score) {
             score = cost;
             px = ax + dx;
@@ -159,6 +169,14 @@ export class UtilityLayer {
       }
     };
     c.save();
+    if (metroPlates.length) {
+      // Banners are disjoint. Cut their rectangles out of the utility drawing
+      // so even a one-mile charger at its exact anchor cannot obscure the text.
+      const visible = new Path2D();
+      visible.rect(0, 0, map.w, map.h);
+      for (const p of metroPlates) visible.rect(p.x0, p.y0, p.x1 - p.x0, p.y1 - p.y0);
+      c.clip(visible, "evenodd");
+    }
     if (local && this.filters.has("ev")) {
       const size = Math.min(48, Math.max(16, s * 0.78));
       for (const a of this.data.levels[1])
@@ -175,8 +193,15 @@ export class UtilityLayer {
       placeGroup(a, show, size, detailed, true);
     }
     c.restore();
-    // Reverse painter order so the symbol visible on top receives the click.
-    map.labels.unshift(...hits.reverse());
+    // Hit-test in the same order as the visible layers, including the clip above.
+    if (!metroPlates.length) {
+      map.labels.unshift(...hits.reverse());
+      return;
+    }
+    const foreground = label => label.kind === "metro" || label.metroPlate;
+    const plates = map.labels.filter(foreground);
+    const others = map.labels.filter(label => !foreground(label));
+    map.labels = [...plates, ...hits.reverse(), ...others];
   }
 }
 
