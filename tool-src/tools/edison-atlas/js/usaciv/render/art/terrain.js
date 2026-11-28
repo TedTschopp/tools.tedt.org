@@ -51,7 +51,7 @@ import { FOREIGN } from "../../world.js";
 import { css, mix, shade, parseHex } from "../../color.js";
 import { cityIsDot, metroSpill, SUBURB_ART } from "./city.js";
 import { lodFor, atLeast } from "./lod.js";
-import { bucketPx, deviceScale, getSprite, drawSprite, makePattern, wrapDraw, rng, spriteStats } from "./sprites.js";
+import { bucketPx, deviceScale, getSprite, drawSprite, makePattern, setPatternTile, wrapDraw, rng, spriteStats } from "./sprites.js";
 
 /** Below this hex radius (css px) no terrain art is drawn at all (map.js checks it too). */
 export const GLYPHS_MIN_RPX = 7;
@@ -66,13 +66,15 @@ const WARM = [255, 241, 196], COOL = [38, 52, 86];
 
 // --- entry point -------------------------------------------------------------------------------------------------
 
-export function drawTerrainGlyphs(ctx, cells, w, { Rpx, s, lod, bridges } = {}) {
+export function drawTerrainGlyphs(ctx, cells, w, { Rpx, s, lod, bridges, pixelRatio } = {}) {
   const R = w.grid.R;
   s = s ?? Rpx / R;
   Rpx = Rpx ?? R * s;
   lod = lod ?? lodFor(Rpx);
   const dev = deviceScale(ctx); // device px per km
-  const dpr = dev / s || 1;
+  // Canvas transforms can round the nominal 2x ratio differently at each
+  // zoom. The atlas supplies the actual display ratio to reuse pattern tiles.
+  const dpr = pixelRatio ?? (dev / s || 1);
   const upx = bucketPx(R * dev, { min: 6, max: 256 });
   ctx.save();
   drawTextures(ctx, cells, w, s, dpr, lod, Rpx);
@@ -163,7 +165,13 @@ function texFamily(w, i) {
 function drawTextures(ctx, cells, w, s, dpr, lod, Rpx) {
   const owner = w.raw.owner;
   const groups = new Map(); // family key → cells
+  const bounds = visibleBounds(ctx), radius = w.grid.R + 1 / (s * dpr);
   for (const i of cells) {
+    if (bounds) {
+      const x = w.grid.cx(i), y = w.grid.cy(i);
+      if (x + radius < bounds.x0 || y + radius < bounds.y0 ||
+          x - radius > bounds.x1 || y - radius > bounds.y1) continue;
+    }
     if (w.water[i] || isFieldCell(w, i, Rpx)) continue; // fields are opaque: no texture under them
     const key = texFamily(w, i) + (owner[i] === FOREIGN ? "|f" : "");
     let list = groups.get(key);
@@ -238,6 +246,17 @@ function bakedAlpha(a, paint) {
   };
 }
 
+// Keep only translated copies that can ink this pattern tile. The gutter
+// includes the stroke cap and a device pixel of antialiasing at any density.
+function wrapMark(ctx, size, x, y, radius, draw) {
+  const reach = radius + 1 + size / ctx.canvas.width;
+  wrapDraw(size, (dx, dy) => {
+    const px = x + dx, py = y + dy;
+    if (px + reach >= 0 && py + reach >= 0 && px - reach <= size && py - reach <= size)
+      draw(dx, dy);
+  });
+}
+
 const TEXTURES = {
   grass(g, S) {
     const r = rng(11);
@@ -246,7 +265,7 @@ const TEXTURES = {
       const x = r() * S, y = r() * S, len = 3 + r() * 4, a = -1.1 + (r() - 0.5) * 0.7;
       g.strokeStyle = k % 2 ? "rgba(255,252,200,.13)" : "rgba(25,45,5,.13)";
       g.lineWidth = 0.9 + r() * 0.5;
-      wrapDraw(S, (dx, dy) => {
+      wrapMark(g, S, x, y, len, (dx, dy) => {
         g.beginPath();
         g.moveTo(x + dx, y + dy);
         g.lineTo(x + dx + Math.cos(a) * len, y + dy + Math.sin(a) * len);
@@ -259,7 +278,7 @@ const TEXTURES = {
     blotches(g, S, r, 30, 8, 22, "rgba(200,230,120,.05)", "rgba(0,20,0,.07)");
     for (let k = 0; k < 170; k++) {
       const x = r() * S, y = r() * S, rr = 2 + r() * 3.5;
-      wrapDraw(S, (dx, dy) => {
+      wrapMark(g, S, x, y, rr, (dx, dy) => {
         g.beginPath();
         g.arc(x + dx, y + dy, rr, 0, TAU);
         g.fillStyle = "rgba(5,25,5,.13)";
@@ -302,7 +321,7 @@ const TEXTURES = {
       let x = r() * S, y = r() * S;
       const pts = [[x, y]];
       for (let n = 0; n < 4; n++) pts.push([(x += (r() - 0.3) * 9), (y += (r() - 0.5) * 7)]);
-      wrapDraw(S, (dx, dy) => {
+      wrapMark(g, S, pts[0][0], pts[0][1], 4 * 9, (dx, dy) => {
         g.beginPath();
         pts.forEach(([px, py], n) => (n ? g.lineTo(px + dx, py + dy) : g.moveTo(px + dx, py + dy)));
         g.strokeStyle = "rgba(35,25,15,.12)";
@@ -323,7 +342,7 @@ const TEXTURES = {
       const x = r() * S, y = r() * S, len = 4 + r() * 9;
       g.strokeStyle = k % 3 ? "rgba(185,225,230,.12)" : "rgba(15,40,25,.14)";
       g.lineWidth = 1;
-      wrapDraw(S, (dx, dy) => {
+      wrapMark(g, S, x, y, len, (dx, dy) => {
         g.beginPath();
         g.moveTo(x + dx, y + dy);
         g.lineTo(x + dx + len, y + dy);
@@ -336,7 +355,7 @@ const TEXTURES = {
     blotches(g, S, r, 24, 10, 28, "rgba(255,255,255,.12)", "rgba(110,140,190,.07)");
     for (let k = 0; k < 60; k++) {
       const x = r() * S, y = r() * S, len = 8 + r() * 14;
-      wrapDraw(S, (dx, dy) => {
+      wrapMark(g, S, x, y, len, (dx, dy) => {
         g.beginPath();
         g.moveTo(x + dx - len, y + dy);
         g.quadraticCurveTo(x + dx, y + dy - 3, x + dx + len, y + dy);
@@ -348,11 +367,71 @@ const TEXTURES = {
   },
 };
 
+// These are the same authored brush tiles used by drawTextures. Bake them
+// once in the asset generator and decode them before users start zooming.
+const textureOpacities = [TEX_ALPHA.far, TEX_ALPHA.mid, TEX_ALPHA.near];
+const textureFamilies = Object.keys(TEXTURES);
+
+export function terrainPatternSheet(density) {
+  const n = TEX_SIZE * density;
+  const sheet = document.createElement("canvas");
+  sheet.width = textureFamilies.length * n;
+  sheet.height = textureOpacities.length * n;
+  const out = sheet.getContext("2d");
+  for (const [row, alpha] of textureOpacities.entries()) {
+    for (const [col, family] of textureFamilies.entries()) {
+      const tile = document.createElement("canvas");
+      tile.width = tile.height = n;
+      const ink = tile.getContext("2d");
+      ink.setTransform(density, 0, 0, density, 0, 0);
+      ink.lineCap = ink.lineJoin = "round";
+      bakedAlpha(alpha, TEXTURES[family])(ink, TEX_SIZE);
+      out.drawImage(tile, col * n, row * n);
+    }
+  }
+  return sheet;
+}
+
+const preparedPatterns = new Map();
+export function prepareTerrainPatterns(dpr, assetUrl) {
+  // Other pixel densities retain the original brushes at their exact size.
+  if (dpr !== 1 && dpr !== 2) return;
+  if (preparedPatterns.has(dpr)) return preparedPatterns.get(dpr);
+  const ready = (async () => {
+    const n = TEX_SIZE * dpr;
+    const image = new Image();
+    image.src = assetUrl("assets/terrain-patterns-" + dpr + "x.png");
+    await image.decode();
+    const sheet = document.createElement("canvas");
+    sheet.width = image.naturalWidth;
+    sheet.height = image.naturalHeight;
+    if (sheet.width !== textureFamilies.length * n ||
+        sheet.height !== textureOpacities.length * n)
+      throw Error("Unexpected terrain pattern dimensions");
+    const source = sheet.getContext("2d", { willReadFrequently: true });
+    source.drawImage(image, 0, 0);
+    // Give each pattern its own realized pixels. A cropped ImageBitmap can
+    // retain the entire PNG and defer costly decoding until the first fill.
+    for (const [row, alpha] of textureOpacities.entries()) {
+      for (const [col, family] of textureFamilies.entries()) {
+        const tile = document.createElement("canvas");
+        tile.width = tile.height = n;
+        const ink = tile.getContext("2d", { willReadFrequently: true });
+        ink.putImageData(source.getImageData(col * n, row * n, n, n), 0, 0);
+        setPatternTile("terrain-tex:" + family + "@" + alpha, TEX_SIZE, dpr, tile);
+      }
+    }
+    sheet.width = sheet.height = 0;
+  })().catch(() => { preparedPatterns.delete(dpr); });
+  preparedPatterns.set(dpr, ready);
+  return ready;
+}
+
 function blotches(g, S, r, n, r0, r1, light, dark) {
   for (let k = 0; k < n; k++) {
     const x = r() * S, y = r() * S, rr = r0 + r() * (r1 - r0);
     g.fillStyle = k % 2 ? light : dark;
-    wrapDraw(S, (dx, dy) => {
+    wrapMark(g, S, x, y, rr, (dx, dy) => {
       g.beginPath();
       g.ellipse(x + dx, y + dy, rr, rr * 0.7, 0, 0, TAU);
       g.fill();

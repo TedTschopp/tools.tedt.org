@@ -8,7 +8,8 @@ import {
   ROAD_MIN_RPX,
 } from "./usaciv/render/art/improvements.js";
 import { drawOceanTexture } from "./usaciv/render/art/water.js";
-import { GLYPHS_MIN_RPX } from "./usaciv/render/art/terrain.js";
+import { GLYPHS_MIN_RPX, prepareTerrainPatterns } from "./usaciv/render/art/terrain.js";
+import { assetUrl } from "./assets.js";
 
 const ROW = Math.sqrt(3) / 2,
   R = 1 / Math.sqrt(3),
@@ -260,7 +261,9 @@ export class HexMap {
     const prev = this.base;
     this.w = rect.width;
     this.h = rect.height;
-    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (this.dpr !== dpr) prepareTerrainPatterns(dpr, assetUrl);
+    this.dpr = dpr;
     for (const c of [this.canvas, this.overlay]) {
       const width = Math.round(this.w * this.dpr),
         height = Math.round(this.h * this.dpr);
@@ -496,6 +499,7 @@ export class HexMap {
       Math.abs(top - Math.round(top)) > 1e-5;
     const needsDetail = Math.abs(ratio - 1) > 1e-6 || fractional;
     clearTimeout(this.refineTimer);
+    clearTimeout(this.backdropTimer);
     cancelAnimationFrame(this.refineFrame);
     if ((!covers && !previewOut) || ratio > 3 || (exact && needsDetail)) {
       const area = this.landscapeArea(view, key);
@@ -537,6 +541,7 @@ export class HexMap {
       left = Math.round(left);
       top = Math.round(top);
     }
+    if (this.landscape.s === view.s) this.queueZoomBackdrop(view, key);
     const sourceScale = this.landscape.s / view.s;
     screen.resetTransform();
     screen.drawImage(
@@ -551,49 +556,66 @@ export class HexMap {
       height,
     );
   }
+  queueZoomBackdrop(view, key) {
+    // Prepaint enough geography for a button zoom about any point on screen.
+    // Moving within this margin reuses the same pixels across pans and zooms.
+    if (this.zoomPreview?.key === key && coversView(this.zoomPreview, view)) return;
+    const w = view.x1 - view.x0, h = view.y1 - view.y0;
+    const expected = {
+      x0: view.x0 - 0.7 * w, x1: view.x1 + 0.7 * w,
+      y0: view.y0 - 0.7 * h, y1: view.y1 + 0.7 * h,
+    };
+    this.backdropTimer = setTimeout(() => {
+      if (this.pending || this.landscape?.key !== key) return;
+      this.prepareZoomBackdrop(expected, key, Math.min(4, view.s / 3.4));
+    }, 32);
+  }
+  prepareZoomBackdrop(view, key, s, realize = true) {
+    const w = view.x1 - view.x0, h = view.y1 - view.y0;
+    const x0 = view.x0 - w / 4, y0 = view.y0 - h / 4;
+    const width = Math.ceil(1.5 * w * s), height = Math.ceil(1.5 * h * s);
+    this.previewInk ??= document.createElement("canvas").getContext("2d", {
+      alpha: false,
+      willReadFrequently: true,
+    });
+    const ink = this.previewInk, sheet = ink.canvas;
+    if (sheet.width !== width) sheet.width = width;
+    if (sheet.height !== height) sheet.height = height;
+    const area = { key, s, dpr: 1, x0, y0, x1: x0 + width / s, y1: y0 + height / s };
+    ink.save();
+    this.paintLandscape(ink, area);
+    ink.restore();
+    // Flush the small overview here. WebKit can otherwise replay its vector
+    // clips and drawing commands when the first zoom samples this canvas.
+    if (realize) ink.putImageData(ink.getImageData(0, 0, width, height), 0, 0);
+    this.zoomPreview = area;
+  }
   drawZoomBackdrop(screen, view, key) {
-    // Zooming out can expose geography outside the retained image. Paint a
-    // small overview of the same lens there until its native patches are ready.
-    let area = this.zoomPreview;
-    this.previewInk ??= this.landscapeContext();
-    const ink = this.previewInk,
-      sheet = ink.canvas;
-    if (area?.key !== key || !coversView(area, view)) {
-      const s = Math.min(4, view.s / 2);
-      const w = view.x1 - view.x0,
-        h = view.y1 - view.y0;
-      const x0 = view.x0 - w / 4,
-        y0 = view.y0 - h / 4;
-      const width = Math.ceil(1.5 * w * s),
-        height = Math.ceil(1.5 * h * s);
-      if (sheet.width !== width) sheet.width = width;
-      if (sheet.height !== height) sheet.height = height;
-      area = {
-        key,
-        s,
-        dpr: 1,
-        x0,
-        y0,
-        x1: x0 + width / s,
-        y1: y0 + height / s,
-      };
-      ink.save();
-      this.paintLandscape(ink, area);
-      ink.restore();
-      this.zoomPreview = area;
-    }
+    // Handles consecutive zooms that outrun the prepared margin.
+    if (this.zoomPreview?.key !== key || !coversView(this.zoomPreview, view))
+      this.prepareZoomBackdrop(view, key, Math.min(4, view.s / 2), false);
+    const area = this.zoomPreview, sheet = this.previewInk.canvas;
     screen.resetTransform();
-    screen.drawImage(
-      sheet,
-      (view.x0 - area.x0) * area.s,
-      (view.y0 - area.y0) * area.s,
-      (view.x1 - view.x0) * area.s,
-      (view.y1 - view.y0) * area.s,
-      0,
-      0,
-      screen.canvas.width,
-      screen.canvas.height,
-    );
+    const px = view.s * view.dpr, k = area.s / px;
+    const originX = (view.x0 - area.x0) * area.s;
+    const originY = (view.y0 - area.y0) * area.s;
+    const width = screen.canvas.width, height = screen.canvas.height;
+    const prev = this.landscape;
+    const x0 = clamp(Math.ceil((prev.x0 - view.x0) * px) + 1, 0, width);
+    const x1 = clamp(Math.floor((prev.x1 - view.x0) * px) - 1, x0, width);
+    const y0 = clamp(Math.ceil((prev.y0 - view.y0) * px) + 1, 0, height);
+    const y1 = clamp(Math.floor((prev.y1 - view.y0) * px) - 1, y0, height);
+    // Only paint the four strips outside the retained native image. Allow
+    // one device pixel of overlap to cover its filtered fractional edges.
+    const strip = (x, y, w, h) => {
+      if (w > 0 && h > 0)
+        screen.drawImage(sheet, originX + x * k, originY + y * k, w * k, h * k,
+                         x, y, w, h);
+    };
+    strip(0, 0, width, y0);
+    strip(0, y1, width, height - y1);
+    strip(0, y0, x0, y1 - y0);
+    strip(x1, y0, width - x1, y1 - y0);
   }
   landscapeContext() {
     return document.createElement("canvas").getContext("2d", { alpha: false });
@@ -846,7 +868,7 @@ export class HexMap {
       c.stroke();
     }
     if (nativeArt) {
-      this.civ.terrain(c, visible, s, this.opts.places, this.opts.water);
+      this.civ.terrain(c, visible, s, this.opts.places, this.opts.water, view.dpr);
     } else if (s > 6 && terrain && this.opts.art) {
       c.globalAlpha = Math.min(0.96, (s - 6) / 4);
       for (const i of visible) {

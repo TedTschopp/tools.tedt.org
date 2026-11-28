@@ -1,5 +1,6 @@
 import { assetUrl, portable } from "./assets.js";
 import { HexMap } from "./map.js";
+import { prepareTerrainPatterns } from "./usaciv/render/art/terrain.js";
 import {
   addLocalLenses,
   bins,
@@ -114,6 +115,7 @@ async function start() {
     data("local.json"),
     data("local-boundaries.json"),
     data("sce-portals.json"),
+    prepareTerrainPatterns(Math.min(window.devicePixelRatio || 1, 2), assetUrl),
     pic.decode(),
     art.decode(),
     document.fonts.ready,
