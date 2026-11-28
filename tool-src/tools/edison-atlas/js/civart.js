@@ -1,25 +1,23 @@
-import { makeGrid } from "./usaciv/hex.js";
+import {
+  R,
+  UNIT,
+  CALIFORNIA,
+  terrainGrid,
+  paintCivTerrain,
+} from "./civ-terrain.js";
 import { valueAt } from "./lenses.js";
 import { COVER } from "./usaciv/terrain.js";
-import { drawTerrainGlyphs } from "./usaciv/render/art/terrain.js";
 import {
   CITY_CLASSES,
   cityIsDot,
   drawCityDot,
-  drawCityTile,
 } from "./usaciv/render/art/city.js";
 import { drawBanners } from "./usaciv/render/banners.js";
 import { drawPlaque, drawWonder } from "./usaciv/render/art/sites.js";
-import { drawRivers, drawWaterGlyphs } from "./usaciv/render/art/water.js";
+import { drawRivers } from "./usaciv/render/art/water.js";
 
-// The original field patterns are authored for a 25-unit hex radius. Scaling the
-// drawing context retains those proportions on a one-mile, California Albers grid.
-const R = 1 / Math.sqrt(3),
-  ROW = Math.sqrt(3) / 2,
-  ART_R = 25,
-  UNIT = R / ART_R;
-const CALIFORNIA = [77, 148, 90],
-  CONTEXT = [97, 108, 110];
+const ROW = Math.sqrt(3) / 2;
+const CONTEXT = [97, 108, 110];
 const nlcd = {
   12: COVER.ICE,
   21: COVER.GRASS,
@@ -98,8 +96,7 @@ export class CivArt {
       row0 = 2 * Math.floor(north / (2 * ROW)) - 2;
     const cols = Math.ceil(east) - col0 + 3,
       rows = Math.ceil(south / ROW) - row0 + 3;
-    const native = makeGrid({ radius: ART_R, cols, rows });
-    const n = native.size,
+    const n = rows * cols,
       indices = (this.indices = new Int32Array(model.meta.cells));
     const present = new Uint8Array(n),
       cover = new Uint8Array(n),
@@ -108,19 +105,8 @@ export class CivArt {
     const geography = { lon: new Float32Array(n), lat: new Float32Array(n) };
     const relief = new Uint8Array(n),
       districtCells = new Map();
-    const grid = {
-      ...native,
-      cx: (j) => native.cx(j) + col0 * native.W,
-      cy: (j) => native.cy(j) + row0 * native.H,
-      cellAt(x, y) {
-        const j = native.cellAt(x - col0 * native.W, y - row0 * native.H);
-        return j >= 0 && present[j] ? j : -1;
-      },
-      neighbour(j, d) {
-        const k = native.neighbour(j, d);
-        return k >= 0 && present[k] ? k : -1;
-      },
-    };
+    this.gridLayout = { cols, rows, col0, row0, present };
+    const grid = terrainGrid(this.gridLayout);
     for (let i = 0; i < indices.length; i++) {
       const j = (indices[i] =
         (model.val(i, "row") - row0) * cols + model.val(i, "col") - col0);
@@ -238,29 +224,38 @@ export class CivArt {
   terrain(ctx, visible, scale, places, water, pixelRatio) {
     const world = places ? this.settled : this.land;
     const cells = visible.map((i) => this.indices[i]);
-    const Rpx = R * scale;
-    ctx.save();
-    ctx.scale(UNIT, UNIT);
-    drawTerrainGlyphs(ctx, cells, world, { Rpx, s: scale * UNIT, pixelRatio });
-    if (water && cells.some((j) => world.water[j])) {
-      drawWaterGlyphs(ctx, cells, world, { Rpx, s: scale * UNIT });
-    }
-    ctx.restore();
-    // The native city painter also supplies block layouts for medium/high-intensity
-    // NLCD cells. Only real place records produce a named city or population banner.
-    for (const j of cells) {
-      const city = world.cityByCell.get(j);
-      if (!city || cityIsDot(city, Rpx)) continue;
-      const seed = city.source ? j : j % 37;
-      drawCityTile(
-        ctx,
-        city,
-        world.grid.cx(j) * UNIT,
-        world.grid.cy(j) * UNIT,
-        R,
-        { Rpx, s: scale, seed, stateColor: CALIFORNIA },
-      );
-    }
+    paintCivTerrain(ctx, cells, world, scale, water, pixelRatio);
+  }
+
+  terrainData() {
+    const { raw, water, relief, cover, geography, cityByCell } = this.land;
+    // Banners include format functions. The worker needs only the city tile fields.
+    const places = this.cities
+      .filter((p) => p.tileIndex >= 0)
+      .map((p) => [
+        p.tileIndex,
+        {
+          id: p.id,
+          name: p.name,
+          capital: p.capital,
+          population: p.population,
+          artClass: p.artClass,
+          minTileRpx: p.minTileRpx,
+          source: true,
+        },
+      ]);
+    return {
+      layout: this.gridLayout,
+      places,
+      world: {
+        raw: { elev: raw.elev, owner: raw.owner },
+        water,
+        relief,
+        cover,
+        geography,
+        cityByCell,
+      },
+    };
   }
 
   rivers(ctx, scale) {

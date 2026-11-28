@@ -50,10 +50,14 @@ def main():
     for name in ("terrain-art.png", "terrain-patterns-1x.png", "terrain-patterns-2x.png"):
         art = WEB / "assets" / name
         files["assets/" + name] = ["image/png", encoded(art.read_bytes())]
+    worker_name = "js/terrain-painter.js"
+    files[worker_name] = ["text/javascript", encoded((WEB / worker_name).read_bytes())]
     # An import map lets the same real ES modules execute from disk, without a build dependency.
     imports = {}
     js_root = WEB / "js"
     for js in sorted(js_root.rglob("*.js")):
+        if js == WEB / worker_name:
+            continue  # The classic worker uses its own realm, including on file URLs.
         key = js.relative_to(js_root).as_posix()
 
         def module_ref(match, parent=key):
