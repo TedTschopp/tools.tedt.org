@@ -376,6 +376,18 @@ def check():
     print(
         "PASS · every block-group home estimate and margin against B25077; local joins, coverage, ZIP sales, ports, capacity and land percentages"
     )
+    profiles = load("geography-profiles.json")
+    access = load("land-access.json")
+    assert set(profiles["places"]) == {p["id"] for p in a["places"]}
+    assert profiles["places"]["0644000"]["population"] == 3857263
+    assert profiles["places"]["0644000"]["county"] == "06037"
+    assert reg["metros"]["31080"]["population"] == 12844441
+    assert access["classes"] == ["military", "restricted", "closed"]
+    assert set(access["byHex"]).issubset(tiles)
+    for values in access["byHex"].values():
+        assert len(values) == 3 and any(values) and all(-1 <= v <= 10000 for v in values)
+    assert access["byHex"]["137,140"] == [2069, 0, 0]
+    assert access["byHex"]["50,-25"] == [0, 0, 8330]
     utility = load("utility.json")
     check_utility(utility, b, set(zip(x, row)))
     # Reread the portable artifact as an independent WGS84 feature collection.
@@ -402,6 +414,9 @@ def check():
                 if col["county"][i] >= 0
                 else None
             )
+        assert json.loads(z.read("geography-profiles.json")) == profiles
+        assert json.loads(z.read("land-access.json")) == access
+        assert json.loads(z.read("inputs.json")) == load("inputs.json")
         assert json.loads(z.read("regional.json")) == reg
         assert json.loads(z.read("utility.json")) == utility
         assert json.loads(z.read("local.json")) == local

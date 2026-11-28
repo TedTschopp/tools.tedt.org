@@ -330,6 +330,12 @@
   "sha256": "142a104d6deebc5c789c1dfcc51387f8681891e4e300f787510cf8b7c23d67ca"
  },
  {
+  "file": "cpad-2026a.zip",
+  "url": "https://data.cnra.ca.gov/dataset/0ae3cd9f-0612-4572-8862-9e9a1c41e659/resource/cadf9163-aa38-44ae-851a-86b35d4c6c0c/download/cpad_2026a_release.zip",
+  "bytes": 178390570,
+  "sha256": "4d9ccb62b7116f1e32ddbf371ff523d13f83860e29f06ac46c126b4850e7e070"
+ },
+ {
   "file": "dem/35-100.png",
   "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/8/35/100.png",
   "bytes": 132554,
@@ -4186,6 +4192,12 @@
   "url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?where=Is_NHL%3D%27X%27+AND+State+IN+%28%27CA%27%2C%27California%27%2C%27CALIFORNIA%27%29&outFields=NRIS_Refnum%2CRESNAME%2CCity%2CCounty%2CState&outSR=4326&f=geojson",
   "bytes": 12694,
   "sha256": "52a9709302bffb1a4429e9cf0fc822e39ae7683c9a8112e9d3e22593ec681728"
+ },
+ {
+  "file": "military-land.zip",
+  "url": "https://www2.census.gov/geo/tiger/TIGER2025/MIL/tl_2025_us_mil.zip",
+  "bytes": 2917158,
+  "sha256": "5ec1a70c88021f287649ef0ca8996d7c88ee3b69d2f5506b447637601e789628"
  },
  {
   "file": "nlcd.tif",

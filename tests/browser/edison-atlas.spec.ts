@@ -372,3 +372,70 @@ test('planning inventory, local religion sources, and both downloads are availab
   await expect(body.getByRole('link', {name:'Download offline atlas'})).toHaveAttribute('href','Edison-Atlas-offline.zip');
   await expect(body.getByRole('link', {name:'Download one-mile GIS data'})).toHaveAttribute('href','data/SCE-one-mile-hexes.zip');
 });
+
+test('Los Angeles banner separates city and metro populations and links related profiles', async ({page}) => {
+  await page.goto('/edison-atlas/#metro=31080');
+  const side = page.locator('#sidebar');
+  await expect(side).toHaveAttribute('data-profile', 'metro');
+  await expect(side).toContainText('12,844,441');
+  await expect(side.locator('.yield-tile .val')).toHaveText(['23.7K','947K','$1.35T','854K','229K']);
+  // The upper nameplate and the yield strip are adjacent hit targets on the real canvas.
+  const hit = await page.evaluate(async () => {
+    const {HexMap} = await import(new URL('js/map.js', document.baseURI).href);
+    const original = HexMap.prototype.draw;
+    const nextDraw = new Promise<any>(resolve => {
+      HexMap.prototype.draw = function(...args: any[]) { original.apply(this, args); resolve(this); };
+    });
+    try {
+      document.querySelector('#map')!.dispatchEvent(new KeyboardEvent('keydown', {key:'ArrowRight'}));
+      const map = await nextDraw;
+      const row = map.labels.find((label: any) => label.kind === 'metro' && label.id === '31080');
+      return {x: (row.x0 + row.x1) / 2, y: (row.y0 + row.y1) / 2, nameY: row.y0 - 5};
+    } finally { HexMap.prototype.draw = original; }
+  });
+  await page.locator('#map').click({position:{x:hit.x, y:hit.y}});
+  await expect(side).toHaveAttribute('data-profile', 'metro');
+  await page.locator('#map').click({position:{x:hit.x, y:hit.nameY}});
+  await expect(side).toHaveAttribute('data-profile', 'place');
+  await expect(side).toContainText('3,857,263');
+  await expect(side).toContainText('$81,939');
+  await side.locator('[data-profile-kind="county"][data-id="06037"]').click();
+  await expect(side).toContainText('Electricity use');
+  await expect(page).toHaveURL(/county=06037/);
+  await page.reload();
+  await expect(side).toHaveAttribute('data-profile','county');
+  await side.locator('[data-profile-kind="state"]').click();
+  await expect(side.locator('.yield-tile .rank')).toHaveCount(5);
+  await side.locator('[data-profile-kind="metro"][data-id="31080"]').click();
+  await expect(page).toHaveURL(/metro=31080/);
+});
+
+test('partial military and protected-land hexes expose native land-access shares', async ({page}) => {
+  await page.goto('/edison-atlas/#lens=terrain&tile=137,140&x=137&y=121.24&z=10&layers=water,art');
+  const side = page.locator('#sidebar');
+  await expect(side).toHaveAttribute('data-profile','hex');
+  await expect(side).toContainText('20.69%');
+  await expect(page.locator('#legend')).toContainText('Military / restricted land');
+  await side.getByRole('button',{name:'Map layers'}).click();
+  await side.getByRole('switch',{name:'Military & restricted land'}).click();
+  await expect(page.locator('#legend')).not.toContainText('Military / restricted land');
+  await expect(page).toHaveURL(/access=off/);
+  await page.reload();
+  await expect(side.getByRole('switch',{name:'Military & restricted land'})).toHaveAttribute('aria-checked','false');
+  await page.goto('/edison-atlas/#tile=50,-25');
+  await expect(side).toContainText('no public access');
+  await expect(side).toContainText('83.3%');
+});
+
+test('a narrow screen keeps the map visible above the regional sheet', async ({page}) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/edison-atlas/#state=06');
+  const side = page.locator('#sidebar');
+  await expect(side).toHaveAttribute('data-profile','state');
+  const box = await side.boundingBox();
+  expect(box!.y).toBeGreaterThan(100);
+  expect(box!.width).toBeLessThanOrEqual(390);
+  await side.locator('[data-profile-kind="metro"][data-id="31080"]').click();
+  await expect(side).toContainText('12,844,441');
+  await expect(page).toHaveURL(/metro=31080/);
+});

@@ -1,4 +1,5 @@
 import { band, bins, valueAt } from "./lenses.js";
+import { drawRestricted } from "./usaciv/render/art/sites.js";
 import { CivArt, drawSites } from "./civart.js";
 import { TerrainRaster } from "./terrain-raster.js";
 import { UtilityLayer } from "./utility.js";
@@ -31,6 +32,7 @@ const landscapeOptions = [
   "roads",
   "rail",
   "parks",
+  "restricted",
   "counties",
   "contours",
 ];
@@ -185,6 +187,10 @@ export class HexMap {
     this.ink = overlay.getContext("2d");
     this.hitCtx = document.createElement("canvas").getContext("2d");
     this.boundary = pathOf(m.meta.territory, true);
+    this.accessLand = m.access.groups.map(({ bbox, rings }) => {
+      const path = pathOf(rings, true);
+      return { bbox, path, edges: path };
+    });
     this.countyLines = pathOf(m.context.counties.flat(), true);
     this.highways = lineGroups(m.context.roads, (x) => x === 1);
     this.rail = lineGroups(m.context.rail, (x) => x < 6);
@@ -242,6 +248,7 @@ export class HexMap {
       water: true,
       counties: false,
       parks: false,
+      restricted: true,
       landmarks: false,
       contours: false,
       grid: true,
@@ -818,6 +825,11 @@ export class HexMap {
       c.fillStyle = "rgba(70,112,71,.16)";
       c.fill(this.parks, "evenodd");
       stroke(this.parks, "#476c4b", 1.3, [4, 2]);
+    }
+    if (this.opts.restricted) {
+      c.save();
+      drawRestricted(c, this.accessLand, view, { Rpx: Math.max(5, Rpx) });
+      c.restore();
     }
     if (this.opts.counties)
       stroke(this.countyLines, "rgba(70,75,65,.65)", 0.95, [4, 4]);
