@@ -1781,4 +1781,3 @@ dialog[data-view="share"] {
 .utility-kind > .station-key { flex:0 0 20px; }
 .station-key canvas { width:22px; height:22px; vertical-align:middle; }
 .key .grid-line { flex:0 0 17px; width:17px; }
-.grid-zoom { font:inherit; font-size:11px; margin-top:3px; text-decoration:underline; }

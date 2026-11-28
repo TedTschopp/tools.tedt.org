@@ -902,7 +902,7 @@ function legend() {
       '</div><small id="utility-legend-scale">' +
       esc(utilityScaleText()) +
       "</small>" + (map.gridFilters.has("transmission") || map.gridFilters.has("distribution") ?
-        '<small id="grid-scale-note">SCE mapped routes · 1 mile per pixel</small><button class="grid-zoom" data-action="regional-grid" hidden>Return to regional view</button>' : "") + "</div>"
+        '<small id="grid-scale-note">SCE mapped routes · 1 mile per pixel</small>' : "") + "</div>"
     : "";
   const shapeLayer = map.sourceAreas.layer(l);
   const switcher = shapeLayer
@@ -951,7 +951,6 @@ function updateGridLegend() {
   if (!note) return;
   const detailed = map.scale >= regionalDetailScale;
   updateText(note, detailed ? "Route coverage · each colored pixel is one mile" : "SCE mapped routes · 1 mile per pixel");
-  note.nextElementSibling.hidden = !detailed;
 }
 function drawStatus() {
   if (!map || !map.lens) return;
@@ -1883,7 +1882,6 @@ function install() {
       legendOpen = !legendOpen;
       legend();
     }
-    if (a === "regional-grid") map.go(map.x,map.y,Math.min(map.z,5/map.base));
     if (a === "county-report") almanac("counties", el.dataset.id);
     if (a === "metro-report") almanac("metros", el.dataset.id);
     if (a === "locate-county")

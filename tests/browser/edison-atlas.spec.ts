@@ -522,10 +522,10 @@ test('the territory map opens with separately switchable grid lines and clickabl
   await page.reload();
   await expect(side.locator('.lens-callout strong')).toContainText(hit.count + ' substation record');
   await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=30');
-  const zoomBack = legend.getByRole('button', {name:'Return to regional view'});
-  await expect(zoomBack).toBeVisible();
-  await zoomBack.click();
-  await expect(zoomBack).toBeHidden();
+  await expect(legend.locator('#grid-scale-note')).toHaveText('Route coverage · each colored pixel is one mile');
+  await expect(legend).toContainText('Transmission');
+  await expect(legend).toContainText('Distribution');
+  await page.getByRole('button', {name:'Fit full territory',exact:true}).click();
   await expect(legend.locator('#grid-scale-note')).toHaveText('SCE mapped routes · 1 mile per pixel');
 });
 
