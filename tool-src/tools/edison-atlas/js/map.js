@@ -1,5 +1,6 @@
 import { band, bins, valueAt } from "./lenses.js";
 import { CivArt, drawSites } from "./civart.js";
+import { TerrainRaster } from "./terrain-raster.js";
 import { UtilityLayer } from "./utility.js";
 import { SourceAreas } from "./source-areas.js";
 import {
@@ -228,6 +229,8 @@ export class HexMap {
             (b.priority < 0 ? 999 : b.priority) || (b.pop || 0) - (a.pop || 0),
       );
     this.civ = new CivArt(m, this.places, (x, y) => this.cellAt(x, y));
+    this.terrainRaster = new TerrainRaster(this.civ);
+    this.renderRevision = 0;
     this.utility = new UtilityLayer(m.utility);
     this.sourceAreas = new SourceAreas(m);
     this.utilityHover = null;
@@ -254,6 +257,20 @@ export class HexMap {
     this.resize(true);
     new ResizeObserver(() => this.resize(false)).observe(canvas.parentElement);
     this.events();
+    window.addEventListener("pagehide", () => {
+      this.renderRevision++;
+      clearTimeout(this.backdropTimer);
+      clearTimeout(this.refineTimer);
+      this.terrainRaster.stop();
+      // Back/forward navigation can keep the DOM alive. Release private
+      // backing stores now and rebuild from the saved camera when restored.
+      for (const ink of [this.landscapeInk, this.nextLandscapeInk, this.landInk,
+                         this.patchInk, this.previewInk]) {
+        if (ink) ink.canvas.width = ink.canvas.height = 0;
+      }
+      this.landscape = this.zoomPreview = null;
+    });
+    window.addEventListener("pageshow", e => { if (e.persisted) this.queue(); });
   }
   resize(first) {
     const rect = this.canvas.parentElement.getBoundingClientRect();
@@ -395,10 +412,13 @@ export class HexMap {
     }
     const [x0, y0, x1, y1] = this.fitBounds,
       pp = 4;
-    const cache = document.createElement("canvas");
-    cache.width = Math.ceil((x1 - x0 + 3) * pp);
-    cache.height = Math.ceil((y1 - y0 + 3) * pp);
+    const cache = this.cache ?? document.createElement("canvas");
+    const width = Math.ceil((x1 - x0 + 3) * pp), height = Math.ceil((y1 - y0 + 3) * pp);
+    if (cache.width !== width) cache.width = width;
+    if (cache.height !== height) cache.height = height;
     const c = cache.getContext("2d");
+    c.resetTransform();
+    c.clearRect(0, 0, cache.width, cache.height);
     this.cacheBox = [x0 - 1.5, y0 - 1.5, cache.width / pp, cache.height / pp];
     c.setTransform(
       pp,
@@ -470,6 +490,8 @@ export class HexMap {
   drawLandscape(screen, view, exact) {
     // Cache the static geography with a pan margin, as in the USACiv renderer.
     // Labels and hit targets are laid out against the live camera on every frame.
+    // A new camera, layer or exact PNG render supersedes every pending patch.
+    this.renderRevision++;
     const { width, height } = screen.canvas;
     const key = [
       this.lens.id,
@@ -500,7 +522,6 @@ export class HexMap {
     const needsDetail = Math.abs(ratio - 1) > 1e-6 || fractional;
     clearTimeout(this.refineTimer);
     clearTimeout(this.backdropTimer);
-    cancelAnimationFrame(this.refineFrame);
     if ((!covers && !previewOut) || ratio > 3 || (exact && needsDetail)) {
       const area = this.landscapeArea(view, key);
       this.landscapeInk ??= this.landscapeContext();
@@ -640,21 +661,19 @@ export class HexMap {
       height,
     };
   }
-  paintRegion(target, area, x, y, width, height) {
+  regionView(area, x, y, width, height) {
+    const px = area.s * area.dpr;
+    return { s: area.s, dpr: area.dpr, width, height,
+      x0: area.x0 + x / px, y0: area.y0 + y / px,
+      x1: area.x0 + (x + width) / px, y1: area.y0 + (y + height) / px };
+  }
+  paintRegion(target, area, x, y, width, height, view = this.regionView(area, x, y, width, height)) {
     this.patchInk ??= this.landscapeContext();
-    const patch = this.patchInk,
-      canvas = patch.canvas;
+    const patch = this.patchInk, canvas = patch.canvas;
     if (canvas.width !== width) canvas.width = width;
     if (canvas.height !== height) canvas.height = height;
-    const px = area.s * area.dpr;
     patch.save();
-    this.paintLandscape(patch, {
-      ...area,
-      x0: area.x0 + x / px,
-      y0: area.y0 + y / px,
-      x1: area.x0 + (x + width) / px,
-      y1: area.y0 + (y + height) / px,
-    });
+    this.paintLandscape(patch, view);
     patch.restore();
     target.drawImage(canvas, x, y);
   }
@@ -670,9 +689,8 @@ export class HexMap {
     if (dx) this.paintRegion(c, area, x ? 0 : w, y, Math.abs(dx), h);
     if (dy) this.paintRegion(c, area, 0, y ? 0 : h, width, Math.abs(dy));
   }
-  refineLandscape(view, key) {
-    // A stopped zoom still needs native-scale artwork. Paint into a spare
-    // surface over several frames, keeping the current picture and hits live.
+  async refineLandscape(view, key) {
+    const revision = this.renderRevision;
     const area = this.landscapeArea(view, key);
     this.nextLandscapeInk ??= this.landscapeContext();
     const next = this.nextLandscapeInk;
@@ -680,36 +698,42 @@ export class HexMap {
     if (next.canvas.height !== area.height) next.canvas.height = area.height;
     const cols = Math.ceil(area.width / (384 * view.dpr));
     const rows = Math.ceil(area.height / (128 * view.dpr));
-    const width = Math.ceil(area.width / cols),
-      height = Math.ceil(area.height / rows);
-    let tile = 0;
-    const step = () => {
-      if (this.pending) return;
-      const start = performance.now();
-      // Small fixed-size patches bound cold sprite work and reuse one backing
-      // store. Warm patches can share a frame without using its whole budget.
-      const limit = Math.min(tile + 3, rows * cols);
-      do {
-        this.paintRegion(
-          next,
-          area,
-          (tile % cols) * width,
-          Math.floor(tile / cols) * height,
-          width,
-          height,
-        );
-        tile++;
-      } while (tile < limit && performance.now() - start < 4);
-      if (tile < rows * cols) {
-        this.refineFrame = requestAnimationFrame(step);
-      } else {
-        this.nextLandscapeInk = this.landscapeInk;
-        this.landscapeInk = next;
-        this.landscape = area;
-        this.draw(false);
+    const width = Math.ceil(area.width / cols), height = Math.ceil(area.height / rows);
+    const useWorker = this.lens.id === "terrain" && this.opts.art && view.s * R >= GLYPHS_MIN_RPX;
+    if (useWorker) this.terrainRaster.start();
+    await new Promise(requestAnimationFrame);
+    // Return one small, finished pixel buffer at a time. The visible map
+    // stays on its preview until the complete new scale is ready.
+    let frameStart = performance.now(), count = 0;
+    for (let tile = 0; tile < rows * cols; tile++) {
+      if (this.pending || revision !== this.renderRevision) return;
+      const x = tile % cols * width, y = Math.floor(tile / cols) * height;
+      const patch = this.regionView(area, x, y, width, height);
+      if (useWorker && this.terrainRaster.worker) {
+        const visible = this.visible(patch);
+        patch.artwork = await this.terrainRaster.paint(patch, visible, this.opts.places, this.opts.water);
+        patch.visible = visible;
+        if (this.pending || revision !== this.renderRevision) {
+          patch.artwork?.close();
+          return;
+        }
       }
-    };
-    this.refineFrame = requestAnimationFrame(step);
+      try {
+        this.paintRegion(next, area, x, y, width, height, patch);
+      } finally {
+        patch.artwork?.close();
+      }
+      if (++count >= 3 || performance.now() - frameStart >= 4) {
+        await new Promise(requestAnimationFrame);
+        frameStart = performance.now();
+        count = 0;
+      }
+    }
+    if (this.pending || revision !== this.renderRevision) return;
+    this.nextLandscapeInk = this.landscapeInk;
+    this.landscapeInk = next;
+    this.landscape = area;
+    this.draw(false);
   }
   drawRelief(c, view) {
     const image = this.m.image,
@@ -823,7 +847,7 @@ export class HexMap {
   drawLand(screen, view, nativeArt, oceanVisible) {
     const s = view.s,
       terrain = this.lens.id === "terrain";
-    const visible = s >= 5 ? this.visible(view) : null;
+    const visible = s >= 5 ? (view.visible ?? this.visible(view)) : null;
     const sourceLayer =
       this.sourceAreas.enabled && this.sourceAreas.layer(this.lens);
     screen.save();
@@ -867,7 +891,12 @@ export class HexMap {
           : "rgba(47,55,54,.20)";
       c.stroke();
     }
-    if (nativeArt) {
+    if (nativeArt && view.artwork) {
+      c.save();
+      c.resetTransform();
+      c.drawImage(view.artwork, 0, 0);
+      c.restore();
+    } else if (nativeArt) {
       this.civ.terrain(c, visible, s, this.opts.places, this.opts.water, view.dpr);
     } else if (s > 6 && terrain && this.opts.art) {
       c.globalAlpha = Math.min(0.96, (s - 6) / 4);

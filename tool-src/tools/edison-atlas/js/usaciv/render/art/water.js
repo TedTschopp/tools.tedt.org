@@ -99,7 +99,9 @@ const newCanvas = (wd, ht) => {
 // repetition is hard to spot: crisp wave marks (a pale crest over a dark trough) and soft light/dark mottling.
 
 const WAVE_TILE = 128, MOTTLE_TILE = 211;
-let patterns = null; // {ctx, dpr, waves, mottle}
+const oceanTiles = new Map();
+const oceanPatterns = new WeakMap();
+let lastOceanPatterns = null;
 
 function makeWaveTile(dpr) {
   const size = WAVE_TILE;
@@ -171,13 +173,20 @@ function makeMottleTile(dpr) {
  *  world. Drawn before the land tiles, so only the water keeps them. Leaves the identity transform set. */
 export function drawOceanTexture(ctx, vp, opts = {}) {
   const { s, dpr } = vp;
-  if (!patterns || patterns.dpr !== dpr || patterns.ctx !== ctx) {
-    patterns = {
-      ctx, dpr,
-      waves: ctx.createPattern(makeWaveTile(dpr), "repeat"),
-      mottle: ctx.createPattern(makeMottleTile(dpr), "repeat"),
-    };
+  let perContext = oceanPatterns.get(ctx);
+  if (!perContext) oceanPatterns.set(ctx, (perContext = new Map()));
+  let patterns = perContext.get(dpr);
+  if (!patterns) {
+    let tiles = oceanTiles.get(dpr);
+    if (!tiles) {
+      tiles = { waves: makeWaveTile(dpr), mottle: makeMottleTile(dpr) };
+      oceanTiles.set(dpr, tiles);
+    }
+    patterns = { ctx, waves: ctx.createPattern(tiles.waves, "repeat"),
+                 mottle: ctx.createPattern(tiles.mottle, "repeat") };
+    perContext.set(dpr, patterns);
   }
+  lastOceanPatterns = patterns;
   // One pattern pixel = one device pixel; the pattern origin sits at world (0, 0).
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   const ox = -vp.x0 * s * dpr, oy = -vp.y0 * s * dpr;
@@ -319,7 +328,8 @@ export function drawWaterGlyphs(ctx, cells, w, opts = {}) {
     ctx.fillStyle = LAKE_CSS;
     ctx.fill(lakes);
     // The ocean's mottle and waves again over the lakes (they were painted over), a little quieter.
-    if (patterns && patterns.ctx === ctx) {
+    const patterns = lastOceanPatterns;
+    if (patterns?.ctx === ctx) {
       ctx.save();
       ctx.clip(lakes);
       const m = ctx.getTransform();

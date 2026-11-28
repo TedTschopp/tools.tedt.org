@@ -178,6 +178,10 @@ staticFiles.push('/perplexity-projections/model.mjs');
 // Keep the atlas datasets, ES module imports, publisher URLs and license files byte-exact.
 const atlasDir = path.join(source, 'tools/edison-atlas');
 const atlasOut = path.join(out, 'edison-atlas');
+// The same self-contained classic worker runs over HTTPS and in the offline
+// HTML, where browsers restrict module workers. The atlas sources stay editable.
+await bundle({absWorkingDir:atlasDir, entryPoints:['js/terrain-worker.js'], outfile:'js/terrain-painter.js',
+  bundle:true, format:'iife', platform:'browser', target:'es2022', legalComments:'inline'});
 const atlasImports = {};
 for (const entry of (await fs.readdir(atlasDir, {recursive:true, withFileTypes:true})).filter(e => e.isFile()).map(e => path.relative(atlasDir, path.join(e.parentPath, e.name))).sort()) {
   if (entry === 'index.html') continue;

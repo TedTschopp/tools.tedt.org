@@ -219,6 +219,64 @@ for (const missing of [false, true]) {
   });
 }
 
+for (const blocked of [false, true]) {
+  test(`native zoom detail ${blocked ? 'recovers when the worker cannot load' : 'comes from bounded background patches'}`, async ({page}) => {
+    if (blocked) await page.route(/\/js\/terrain-painter(?:\.[a-f0-9]+)?\.js$/, route => route.abort());
+    await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008&layers=utility,places,roads,water,art');
+    await expect(page.locator('#loading')).toBeHidden();
+    const result = await page.evaluate(async () => {
+      const {HexMap} = await import(new URL('js/map.js', document.baseURI).href);
+      const proto = HexMap.prototype, draw = proto.draw;
+      const got = new Promise<any>(resolve => {
+        proto.draw = function(...args: any[]) { draw.apply(this, args); resolve(this); };
+      });
+      let map;
+      try {
+        document.querySelector('#map')!.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight'}));
+        map = await got;
+      } finally { proto.draw = draw; }
+      map.draw();
+      const service = map.terrainRaster, paint = service.paint.bind(service);
+      const sizes: number[][] = [];
+      let calls = 0;
+      service.paint = async (...args: any[]) => {
+        calls++;
+        const image = await paint(...args);
+        if (image) sizes.push([image.width, image.height]);
+        return image;
+      };
+      const frame = () => new Promise(requestAnimationFrame);
+      document.querySelector<HTMLButtonElement>('#zoom-in')!.click();
+      await frame();
+      for (let i=0; i<400 && map.landscape.s!==map.scale; i++) await frame();
+      const ready = map.landscape.s===map.scale;
+      // An exact PNG must stay authoritative even if an old worker reply is in flight.
+      map.zoom(.9);
+      await frame();
+      const previous = calls;
+      if (service.available) {
+        for (let i=0; i<60 && calls===previous; i++) await frame();
+      }
+      map.draw();
+      const exact = map.landscape;
+      await new Promise(r => setTimeout(r,300));
+      return {ready, authoritative: map.landscape===exact && exact.s===map.scale,
+              available:service.available, sizes, ratio:map.dpr};
+    });
+    expect(result.ready).toBe(true);
+    expect(result.authoritative).toBe(true);
+    expect(result.available).toBe(!blocked);
+    if (blocked) expect(result.sizes).toEqual([]);
+    else {
+      expect(result.sizes.length).toBeGreaterThan(1);
+      for (const [w,h] of result.sizes) {
+        expect(w).toBeLessThanOrEqual(384*result.ratio + 1);
+        expect(h).toBeLessThanOrEqual(128*result.ratio + 1);
+      }
+    }
+  });
+}
+
 test('cooling center directory opens and shares the actual one-mile hex', async ({page}) => {
   await page.goto('/edison-atlas/#report=cooling');
   await expect(page.getByRole('heading', {name:'Cooling centers in SCE territory'})).toBeVisible();

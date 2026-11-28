@@ -1638,6 +1638,7 @@ function snapshot() {
   c.textAlign = "right";
   c.fillText($("scale").textContent, w - 16, h + 38);
   out.toBlob((blob) => {
+    out.width = out.height = 0;
     if (blob) save(blob, "edison-atlas-" + l.id + ".png");
   }, "image/png");
 }
