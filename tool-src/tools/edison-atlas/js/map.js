@@ -1109,15 +1109,19 @@ export class HexMap {
       w = this.mini.width,
       h = this.mini.height,
       b = this.fitBounds;
+    const transmission = this.opts.utility && this.gridFilters.has("transmission");
+    const distribution = this.opts.utility && this.gridFilters.has("distribution");
     if (
       !this.miniBase ||
       this.miniBase.width !== w ||
-      this.miniBase.height !== h
+      this.miniBase.height !== h ||
+      this.miniT.transmission !== transmission ||
+      this.miniT.distribution !== distribution
     ) {
       const s = Math.min((w - 14) / (b[2] - b[0]), (h - 12) / (b[3] - b[1]));
       const ox = w / 2 - ((b[0] + b[2]) / 2) * s;
       const oy = h / 2 - ((b[1] + b[3]) / 2) * s;
-      this.miniT = { s, ox, oy };
+      this.miniT = { s, ox, oy, transmission, distribution };
       this.miniBase = document.createElement("canvas");
       this.miniBase.width = w;
       this.miniBase.height = h;
@@ -1127,6 +1131,8 @@ export class HexMap {
       base.setTransform(s, 0, 0, s, ox, oy);
       base.fillStyle = "#819678";
       base.fill(this.boundary, "evenodd");
+      if (transmission || distribution)
+        drawGridLines(base, this.powerGrid, this.gridFilters, s, this.boundary, 0.48);
       base.strokeStyle = "#627e60";
       base.lineWidth = 0.8 / s;
       base.stroke(this.boundary);

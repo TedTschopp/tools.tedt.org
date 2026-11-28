@@ -938,9 +938,17 @@ function legend() {
     c.scale(2, 2);
     drawUtilityArt(c, canvas.dataset.key, 8.5, 8.5, 16, false, false);
   }
+  updateGridLegend();
 }
 function updateText(element, value) {
   if (element && element.textContent !== value) element.textContent = value;
+}
+function updateGridLegend() {
+  const note = $("grid-scale-note");
+  if (!note) return;
+  const detailed = map.scale >= regionalLimit;
+  updateText(note, detailed ? "Zoom out for 24-mile regional crossings" : "Grid lines · 24-mile regional crossings");
+  note.nextElementSibling.hidden = !detailed;
 }
 function drawStatus() {
   if (!map || !map.lens) return;
@@ -951,11 +959,7 @@ function drawStatus() {
   updateText($("geography-status"), reading);
   const scope = $("utility-legend-scale");
   if (scope) updateText(scope, utilityScaleText());
-  const gridNote = $("grid-scale-note");
-  if (gridNote) {
-    updateText(gridNote, map.scale >= regionalLimit ? "Grid lines appear at regional zoom" : "Grid lines · 24-mile regional crossings");
-    gridNote.nextElementSibling.hidden = map.scale < regionalLimit;
-  }
+  updateGridLegend();
   const terrainNote = $("legend").querySelector(".legend-note");
   if (map.lens.id === "terrain" && terrainNote)
     updateText(

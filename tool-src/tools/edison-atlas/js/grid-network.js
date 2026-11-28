@@ -15,7 +15,7 @@ export function gridPaths(network) {
   return paths;
 }
 
-export function drawGridLines(c, paths, filters, scale, boundary) {
+export function drawGridLines(c, paths, filters, scale, boundary, weight = 1) {
   if (scale >= regionalLimit || (!filters.has("transmission") && !filters.has("distribution"))) return;
   c.save();
   c.globalAlpha *= Math.min(1, (regionalLimit - scale) / 4);
@@ -24,7 +24,7 @@ export function drawGridLines(c, paths, filters, scale, boundary) {
   c.lineJoin = "round";
   function stroke(path, color, width) {
     c.strokeStyle = color;
-    c.lineWidth = width / scale;
+    c.lineWidth = width * weight / scale;
     c.stroke(path);
   }
   if (filters.has("transmission")) {
@@ -32,7 +32,7 @@ export function drawGridLines(c, paths, filters, scale, boundary) {
     stroke(paths.transmission, "#803758", 2.5);
   }
   if (filters.has("distribution")) {
-    c.setLineDash([3 / scale, 3.8 / scale]);
+    c.setLineDash([3 * weight / scale, 3.8 * weight / scale]);
     stroke(paths.distribution, "#eef4d9", 2.0);
     stroke(paths.distribution, "#16696c", 1.35);
   }

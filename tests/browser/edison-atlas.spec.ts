@@ -483,7 +483,10 @@ test('the territory map opens with separately switchable grid lines and clickabl
   for (const kind of ['transmission', 'distribution', 'substations']) {
     await expect(panel.locator('[data-grid-filter="' + kind + '"]')).toBeChecked();
   }
+  const overview = () => page.locator('#mini').evaluate((c: HTMLCanvasElement) => c.toDataURL());
+  const withBothNetworks = await overview();
   await panel.locator('[data-grid-filter="transmission"]').click();
+  await expect.poll(overview).not.toEqual(withBothNetworks);
   await expect(legend).not.toContainText('Transmission');
   await expect(legend).toContainText('Distribution');
   await page.locator('#utility-menu').click();
@@ -518,4 +521,10 @@ test('the territory map opens with separately switchable grid lines and clickabl
   await expect(page).toHaveURL(/stationarea=/);
   await page.reload();
   await expect(side.locator('.lens-callout strong')).toContainText(hit.count + ' substation record');
+  await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=30');
+  const zoomBack = legend.getByRole('button', {name:'Zoom to grid crossings'});
+  await expect(zoomBack).toBeVisible();
+  await zoomBack.click();
+  await expect(zoomBack).toBeHidden();
+  await expect(legend.locator('#grid-scale-note')).toHaveText('Grid lines · 24-mile regional crossings');
 });
