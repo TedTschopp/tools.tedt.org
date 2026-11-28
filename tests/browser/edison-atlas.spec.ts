@@ -439,3 +439,37 @@ test('a narrow screen keeps the map visible above the regional sheet', async ({p
   await expect(side).toContainText('12,844,441');
   await expect(page).toHaveURL(/metro=31080/);
 });
+
+test('metro ribbon hit targets stay clear of overlapping utility icons at regional and street zoom', async ({page}) => {
+  await page.setViewportSize({width:1400,height:860});
+  await page.goto('/edison-atlas/#metro=31080');
+  await expect(page.locator('#sidebar')).toHaveAttribute('data-profile','metro');
+  const checks = await page.evaluate(async () => {
+    const {HexMap} = await import(new URL('js/map.js', document.baseURI).href);
+    const original = HexMap.prototype.draw;
+    const nextDraw = new Promise<any>(resolve => {
+      HexMap.prototype.draw = function(...args: any[]) { original.apply(this, args); resolve(this); };
+    });
+    let map;
+    try {
+      document.querySelector('#map')!.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight'}));
+      map = await nextDraw;
+    } finally { HexMap.prototype.draw = original; }
+    const rows = [];
+    // Drive different reporting scales around the same namesake city and always
+    // test exactly where each visible economic icon is painted.
+    for (const scale of [1.6, 7.9995, 12, 22, 30]) {
+      map.go(map.place.x, map.place.y, scale / map.base);
+      map.draw();
+      const latched = map.labels.find((l: any) => l.kind === 'metro' && l.id === '31080');
+      const transitions = [0.1,0.3,0.5,0.7,0.9].map(f => {
+        const x = latched.x0 + (latched.x1 - latched.x0) * f;
+        const y = (latched.y0 + latched.y1) / 2;
+        return map.hitLabel([x,y])?.kind;
+      });
+      rows.push(transitions);
+    }
+    return rows;
+  });
+  for (const row of checks) expect(row).toEqual(['metro','metro','metro','metro','metro']);
+});

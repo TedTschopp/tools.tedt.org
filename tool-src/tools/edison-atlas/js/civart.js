@@ -331,6 +331,7 @@ export class CivArt {
         y1: hit.y + hit.h + 4,
         p: p.source,
         kind: "place",
+        metroPlate: Boolean(p.metroId && hit.yieldTop != null),
       });
     }
     for (const p of cities) {
