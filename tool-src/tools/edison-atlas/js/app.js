@@ -1233,7 +1233,7 @@ function showRegion(kind, item, frame = true) {
 
 function regionItem(kind, id) {
   if (kind === "state" && id === "06") return m.profiles.state;
-  if (kind === "metro") return m.reg.metros[id];
+  if (kind === "metro" && Object.hasOwn(m.reg.metros, id)) return m.reg.metros[id];
   if (kind === "county") return m.reg.counties.find(c => c.geoid === id);
   if (kind === "park") return m.context.parks.find(p => p.code === id);
 }

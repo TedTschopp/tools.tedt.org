@@ -672,7 +672,7 @@ export function drawBanners(ctx, cam, w, state, yields, nation = state.nation) {
     }
     ctx.globalAlpha = 1;
 
-    hits.push({ x, y: y - tab, w: width, h: height + tab, yieldTop: tiered ? y + L.h - 2 : null, city, specialty: m.spec?.key ?? null });
+    hits.push({ x, y: y - tab, w: width, h: height + tab, plateTop: y, yieldTop: tiered ? y + L.h - 2 : null, city, specialty: m.spec?.key ?? null });
   }
   return hits;
 }

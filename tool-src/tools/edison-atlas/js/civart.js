@@ -313,11 +313,17 @@ export class CivArt {
     );
     for (const hit of hits) {
       const p = hit.city;
-      if (p.metroId && hit.yieldTop != null)
+      if (p.metroId && hit.yieldTop != null) {
         map.labels.push({
           x0: hit.x, x1: hit.x + hit.w, y0: hit.yieldTop, y1: hit.y + hit.h,
           p: p.source, kind: "metro", id: p.metroId,
         });
+        if (hit.plateTop > hit.y)
+          map.labels.push({
+            x0: hit.x, x1: hit.x + hit.w, y0: hit.y, y1: hit.plateTop,
+            p: p.source, kind: "metro", id: p.metroId,
+          });
+      }
       map.labels.push({
         x0: hit.x,
         y0: hit.y,
