@@ -235,13 +235,13 @@ export class CivArt {
     };
   }
 
-  terrain(ctx, visible, scale, places, water) {
+  terrain(ctx, visible, scale, places, water, pixelRatio) {
     const world = places ? this.settled : this.land;
     const cells = visible.map((i) => this.indices[i]);
     const Rpx = R * scale;
     ctx.save();
     ctx.scale(UNIT, UNIT);
-    drawTerrainGlyphs(ctx, cells, world, { Rpx, s: scale * UNIT });
+    drawTerrainGlyphs(ctx, cells, world, { Rpx, s: scale * UNIT, pixelRatio });
     if (water && cells.some((j) => world.water[j])) {
       drawWaterGlyphs(ctx, cells, world, { Rpx, s: scale * UNIT });
     }

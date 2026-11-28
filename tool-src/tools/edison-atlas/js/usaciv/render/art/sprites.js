@@ -91,8 +91,11 @@ export function drawSprite(ctx, spr, x, y, k) {
 // Patterns: the tile canvas is cached by (key, dpr); the CanvasPattern by context (patterns are cheap to make).
 const patternTiles = new Map();
 const patterns = new WeakMap(); // ctx → Map<key, CanvasPattern>
+export function setPatternTile(key, sizePx, dpr, tile) {
+  patternTiles.set(`${key}|${sizePx}|${Math.max(1, Math.round(sizePx * dpr))}`, tile);
+}
 export function makePattern(ctx, key, sizePx, dpr, paint) {
-  const k = `${key}|${sizePx}|${dpr}`;
+  const k = `${key}|${sizePx}|${Math.max(1, Math.round(sizePx * dpr))}`;
   let tile = patternTiles.get(k);
   if (!tile) {
     const n = Math.max(1, Math.round(sizePx * dpr));

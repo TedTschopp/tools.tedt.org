@@ -80,6 +80,7 @@ test('a fractional pan reuses terrain and crossing the cache edge paints only ex
     } finally { proto.draw = draw; }
     await afterFrame();
     map.draw();
+    while (!map.zoomPreview) await afterFrame();
     fullSize = map.landscapeInk.canvas.width * map.landscapeInk.canvas.height;
     proto.paintLandscape = function(ctx: CanvasRenderingContext2D, ...args: any[]) {
       areas.push(ctx.canvas.width * ctx.canvas.height);
@@ -170,20 +171,53 @@ test('both zoom buttons present a preview before rendering the exact scale', asy
       map = await got;
     } finally { proto.draw = draw; }
     map.draw();
+    while (!map.zoomPreview) await new Promise(requestAnimationFrame);
+    const paint = map.paintLandscape;
+    let paints = 0;
+    map.paintLandscape = function(...args: any[]) { paints++; return paint.apply(this, args); };
     const results = [];
     for (const selector of ['#zoom-in','#zoom-out']) {
       const oldScale = map.scale;
+      paints = 0;
       document.querySelector<HTMLButtonElement>(selector)!.click();
       await new Promise(requestAnimationFrame);
       const preview = map.landscape.s === oldScale && map.scale !== oldScale;
+      const previewPaints = paints;
       const underlay = selector==='#zoom-in' || map.zoomPreview?.s < map.scale;
       for (let n=0; n<240 && map.landscape.s!==map.scale; n++) await new Promise(requestAnimationFrame);
-      results.push([preview, underlay, map.landscape.s===map.scale]);
+      results.push([preview, underlay, previewPaints, map.landscape.s===map.scale]);
     }
+    map.paintLandscape = paint;
     return results;
   });
-  expect(sizes).toEqual([[true,true,true],[true,true,true]]);
+  expect(sizes).toEqual([[true,true,0,true],[true,true,0,true]]);
 });
+
+for (const missing of [false, true]) {
+  test(`terrain brushes ${missing ? 'fall back when the texture sheet is unavailable' : 'reuse the decoded artwork before a first zoom'}`, async ({page}) => {
+    let blocked = 0;
+    if (missing) await page.route(/\/assets\/terrain-patterns-[12]x\.png$/, r => { blocked++; return r.abort(); });
+    await page.goto('/edison-atlas/#lens=terrain&x=120.131&y=265.228&z=23.008');
+    await expect(page.locator('#loading')).toBeHidden();
+    const result = await page.evaluate(async () => {
+      const {makePattern} = await import(new URL('js/usaciv/render/art/sprites.js', document.baseURI).href);
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 200;
+      const ctx = canvas.getContext('2d')!;
+      let repaints = 0;
+      // This low-detail snow brush has never been drawn in the Duarte view.
+      const pattern = makePattern(ctx, 'terrain-tex:snow@0.55', 200, Math.min(devicePixelRatio, 2),
+        (ink: CanvasRenderingContext2D) => { repaints++; ink.fillRect(0, 0, 200, 200); });
+      ctx.fillStyle = pattern;
+      ctx.fillRect(0, 0, 200, 200);
+      return {repaints, ink: ctx.getImageData(0, 0, 200, 200).data.some((v, i) => i % 4 === 3 && v > 0)};
+    });
+    if (missing) expect(blocked).toBeGreaterThan(0);
+    expect(result).toEqual({repaints: missing ? 1 : 0, ink: true});
+    await page.locator('#zoom-in').click();
+    await expect(page).not.toHaveURL(/z=23\.008(?:&|$)/);
+  });
+}
 
 test('cooling center directory opens and shares the actual one-mile hex', async ({page}) => {
   await page.goto('/edison-atlas/#report=cooling');
